@@ -1,0 +1,1338 @@
+options:
+	# Skript
+		# BetterBubble
+			# Prefix
+		Prefix: &7(&c!&7)
+			# Version
+		Version: B25 # Early Release 1
+
+	# Functions
+		# Permissions
+		BypassPerm: anticheat.bypass
+		NotifyPerm: anticheat.notify
+		ReportPerm: anticheat.report
+		# Hack
+			# Block
+		CancelHit: true
+		CancelMove: true
+			# Detections
+		DoubleCheck: true
+		Experimental: false
+		OpBypass: false
+		PermBypass: false
+			# Lag
+		MaxPing: 350
+		MinTPS: 17
+		PingCancelCheck: false
+		TPSCancelCheck: false
+		# VL
+			# Message
+		ReportMessage: {Prefix} &c{Player} &ffailed &6{Cheat} &8(&eVL &a{VL}&8) &8(&eType: &a{Type}&8) &8(&e{Ping} &ams&8)
+		KickMessage: {Prefix} &c{Player} &fwas kicked for &6{Cheat} &8(&eVL &a{VL}&8) &8(&eType: &a{Type}&8) &8(&e{Ping} &ams&8)
+		Console: true
+		ConsoleReportMessage: {Prefix} &c{Player} &ffailed &6{Cheat} &8(&eVL &a{VL}&8) &8(&eType: &a{Type}&8) &8(&e{Ping} &ams&8) &7(Console)
+		ConsoleKickMessage: {Prefix} &c{Player} &fwas kicked for &6{Cheat} &8(&eVL &a{VL}&8) &8(&eType: &a{Type}&8) &8(&e{Ping} &ams&8) &7(Console)
+			# AutoKick
+		AutoKick: false
+		AutoKickDetection: 20
+		KickReason: &fFailed to login: Invalid session (Try restarting your game and the launcher)
+			# AutoBan
+		AutoBan: false
+		AutoBanDetection: 30
+		AggressiveAutoBan: false
+		BanCommand: tempban %{_player}% 1d Cheating
+			# Remove Player (Ban & Kick Effect)
+		EffectOnKick: false
+		EffectOnBan: true
+		RemovePlayerEffect: true
+		RemovePlayerWaterEffect: false
+		RemovePlayerLoop: 50
+			# Spam Prevention
+		AntiSpamMode: 0
+	
+	# Detections
+		# Aimbot
+			# -
+		AggressiveAimbot: false
+		AimbotLastJumpDifference: 0.95 seconds
+			# A
+		AimbotAVL: 4
+		AimbotAReach: 2.25
+		AimbotAYawDifference: 0
+		AimbotAPitchDifference: 11.80
+			# B
+		AimbotBVL: 5
+		AimbotBReach: 6
+		AimbotMaxCount: 12
+		# AutoClicker/Autoblock
+			# -
+		AggressiveAutoClicker: false
+		AutoblockHitTime: 0.5 seconds
+			# A
+		AutoClickerAToggled: true
+		AutoClickerAMaxCPS: 22
+		AutoClickerAVL: 2
+			# C
+		AutoClickerCMinCPS: 8
+		AutoClickerCVL: 1
+		# Critical
+			# -
+		AggressiveCritical: false
+			# B
+		CriticalBVL: 2
+		CriticalBGroundDistance: 0.05
+			# E
+		CriticalETick1: 0
+		CriticalETick2: 0.4
+		CriticalETick2: 0.75
+		CriticalETick2: 0.9
+		# KillAura
+			# -
+		AggressiveKillAura: false
+			# A
+		KillAuraADistance: 1.55
+		KillAuraAVL: 6
+			# E
+		KillAuraEAPS: 3
+		KillAuraEDistance: 4.25
+		KillAuraEVL: 6
+			# H
+		KillAuraHMobsPerSecond: 7
+		KillAuraHMobsPerSecondBlock: 8
+			# K
+		KillAuraKDistance: 3.55
+		KillAuraKVL: 3
+			# M
+		KillAuraMDistance: 3
+		KillAuraMPlayerOnly: false
+			# N
+		KillAuraNVL: 3
+			# O
+		KillAuraOVL: 3
+		# HitBox / Reach
+			# -
+		AggressiveHitBox: false
+			# A / F
+		HitBoxAMinDistance: 3.35
+		HitBoxAVL/ReachFVL: 4
+		HitBoxAMaxDistance/ReachFMinDistance: 3.75
+			# B / G
+		HitBoxBMinDistance: 3.35
+		HitBoxBVL/ReachGVL: 4
+		HitBoxBMaxDistance/ReachGMinDistance: 3.75
+		# Reach
+			# -
+		AggressiveReach: false
+		MaxReachPing: 300
+			# A
+		ReachAVL: 3
+		ReachADistance: 4.75
+			# B
+		ReachBVL: 3
+		ReachBDistance: 4.45
+			# C
+		ReachCVL: 3
+		ReachCDistance: 4.55
+			# D
+		ReachDVL: 3
+		ReachDPlayerDistance: 4.75
+		ReachDMobDistance: 5
+		# Velocity
+			# -
+		AggressiveVelocity: false
+			# A
+		VelocityAVL: 3
+		VelocityAKnockBack: 0
+		VelocityAMinBlockKnockBack: 2.65
+			# B
+		VelocityBVL: 4
+			# C
+		VelocityCVL: 3
+			# G
+		VelocityGKnockBack: 0.1
+		VelocityGXKnockBack: 0.09
+		VelocityGYKnockBack: 0.09
+		VelocityGZKnockBack: 0.09
+		VelocityGVL: 4
+		
+		# BETTERWAFFLE
+		BetterWaffle: false
+
+# Aimbot
+	
+on damage:
+	attacker is a player
+	victim is a player
+	damage cause is attack
+	{AC::detections::aimbot} is true
+	if disabler(attacker):
+		stop
+	if {AC::COUNTAMOUNT::%attacker's uuid%} is not set:
+		set {AC::COUNTAMOUNT::%attacker's uuid%} to 0
+	set {_count} to 0
+	set {_yaw.count} to 0
+	set {_pitch.count} to 0
+	set {_loc} to attacker's location
+	set {_r1} to victim's location
+	set y coordinate of {_r1} to attacker's y coordinate
+	set {_r1} to distance between attacker and victim
+	attacker's targeted entity is victim
+	#
+	while attacker's targeted entity is victim:
+		if attacker is offline:
+			stop loop
+		if victim is offline:
+			stop loop
+		if distance between victim and attacker > 4.75:
+			stop loop
+		if {_count} > 20:
+			set {_count} to 21
+			stop loop
+		#
+		set {_r2} to victim's location
+		set y coordinate of {_r2} to attacker's y coordinate
+		set {_r2} to distance between attacker and victim
+		set {_pitch} to attacker's pitch
+		set {_pitch} to (round({_pitch}*10))/10
+		if {_pitch} = {_last.pitch}:
+			add 1 to {_pitch.count}
+		set {_yaw} to attacker's yaw
+		set {_yaw} to floor({_yaw})
+		if {_yaw} = {_yaw.pitch}:
+			add 1 to {_yaw.count}
+		set {_yaw.pitch} to {_yaw}
+		set {_last.pitch} to {_pitch}
+		add 1 to {_count}
+		wait 1 tick
+	#
+	if {_count} <= 20:
+		if {_r1} >= 3.5:
+			if {_count} = 21:
+				Report(attacker, "Aimbot", "H")
+		if {_r1} >= 3.5:
+			if difference between {AC::COUNT::%attacker's uuid%} and {_count} >= 1:
+				if difference between {AC::COUNT::%attacker's uuid%} and {_count} <= 3:
+					Report(attacker, "Aimbot", "I-1")
+			if {AC::COUNT::%attacker's uuid%} is between 11 and 15:
+				if {_count} <= 8:
+					Report(attacker, "Aimbot", "I-2")
+		if difference between {AC::COUNT::%attacker's uuid%} and {_count} <= 1:
+			add 1 to {AC::COUNTAMOUNT::%attacker's uuid%}
+			if {AC::COUNTAMOUNT::%attacker's uuid%} >= 4:
+				Report(attacker, "Aimbot", "A")
+				delete {AC::COUNTAMOUNT::%attacker's uuid%}
+		else:
+			delete {AC::COUNTAMOUNT::%attacker's uuid%}
+		set {AC::COUNT::%attacker's uuid%} to {_count}
+	#
+	if {_count} <= 14:
+		#
+		if {_count} >= 8:
+			add 1 to {AC::AIM1::%attacker's uuid%}
+			if {AC::AIM1::%attacker's uuid%} >= 5:
+				Report(attacker, "Aimbot", "B")
+				delete {AC::AIM1::%attacker's uuid%}
+		else:
+			delete {AC::AIM1::%attacker's uuid%}
+		#
+		if {_yaw.count} >= 11:
+			if {_pitch.count} >= 5:
+				if {_r1} > {_r2}:
+					Report(attacker, "Aimbot", "E")
+		#
+		if {_count} <= 12:
+			if ((difference between x coordinate of {_loc} and attacker's x coordinate)+(difference between z coordinate of {_loc} and attacker's z coordinate)) >= 1.1:
+				add 1 to {AC::AIM5::%attacker's uuid%}
+				if {AC::AIM5::%attacker's uuid%} >= 3:
+					Report(attacker, "Aimbot", "F")
+			else:
+				delete {AC::AIM5::%attacker's uuid%}
+		else:
+			delete {AC::AIM5::%attacker's uuid%}
+		#
+		if {_yaw.count} < {_pitch.count}:
+			add 1 to {AC::TEMP::AIM6::%attacker's uuid%}
+			if {AC::TEMP::AIM6::%attacker's uuid%} >= 2:
+				Report(attacker, "Aimbot", "G")
+	else:
+		if {@AggressiveAimbot} is false:
+			delete {AC::AIM1::%attacker's uuid%}
+			delete {AC::AIM4::%attacker's uuid%}
+			delete {AC::AIM5::%attacker's uuid%}
+			delete {AC::TEMP::AIM6::%attacker's uuid%}		
+			
+# AutoClicker/Autoblock
+
+on break:
+	{@AggressiveAutoClicker} is false
+	{ac::detections::autoclicker} is true
+	delete {AC::cps::left::*}
+	set {AC::break::%player's uuid%} to true
+	wait 2 ticks
+	delete {AC::break::%player's uuid%}
+
+on left click:
+	{@AggressiveAutoClicker} is false
+	{AC::detections::autoclicker} is true
+	{AC::break::%player's uuid%} is not set
+	autoclick(player,"Left")
+	
+on right click:
+	{@AggressiveAutoClicker} is false
+	{AC::detections::autoclicker} is true
+	clicked block is not fence gate, daylight detector, redstone repeater, redstone comparator, lever, button, trapdoor or door
+	held item is not fishing rod
+	autoclick(player,"Right")
+
+function autoclick(player:player,click:text):
+	set {_uuid} to uuid of {_player}
+	if disabler({_player}):
+		stop
+	{AC::break::%{_uuid}%} is not set
+	#
+	set {_dif} to difference between {AC::%{_click}%::lastclick::%{_uuid}%} and now
+	add 1 to {AC::cps::%{_click}%::%{_uuid}%}
+	# AutoClicker/AutoBlock A
+	if {AC::LastHit::%{_uuid}%} is not set:
+		set {AC::LastHit::%{_uuid}%} to 1 second ago
+	if {AC::cps::%{_click}%::%{_uuid}%} >= {@AutoClickerAMaxCPS}:
+		if {@AutoClickerAToggled} is true:
+			add 1 to {AC::AutoClickerAVL::%{_uuid}%}
+			if {AC::AutoClickerAVL::%{_click}%.%{_uuid}%} >= {@AutoClickerAVL}:
+				{AC::break::%{_uuid}%} is not set
+				if {_click} is "Right":
+					if difference between {AC::LastHit::%{_uuid}%} and now >= {@AutoblockHitTime}:
+						Report({_player}, "AutoClicker&8(&c%{_click}%&8)", "A")
+					else:
+						Report({_player}, "AutoBlock", "A")
+				else:
+					Report({_player}, "AutoClicker&8(&c%{_click}%&8)", "A")
+	else:
+		delete {AC::AutoClickerAVL::%{_click}%.%{_uuid}%}
+	if {AC::min1::cps::%{_click}%::%{_uuid}%} >= {@AutoClickerCMinCPS}:
+		if {AC::min2::cps::%{_click}%::%{_uuid}%} = {AC::min1::cps::%{_click}%::%{_uuid}%}:
+			if {AC::min3::cps::%{_click}%::%{_uuid}%} = {AC::min2::cps::%{_click}%::%{_uuid}%}:
+				add 1 to {AC::AutoClickerCVL::%{_uuid}%}
+				if {AC::AutoClickerCVL::%{_click}%.%{_uuid}%} >= {@AutoClickerCVL}:
+					if {_click} is "Right":
+						if difference between {AC::LastHit::%{_uuid}%} and now <= {@AutoblockHitTime}:
+							Report({_player}, "AutoBlock", "B")
+					else:
+						Report({_player}, "AutoClicker&8(&c%{_click}%&8)", "C")		
+					if {@AggressiveAutoClicker} is false:
+						delete {AC::AutoClickerCVL::%{_click}%.%{_uuid}%}
+			else:
+				if {@AggressiveAutoClicker} is false:
+					delete {AC::AutoClickerCVL::%{_click}%.%{_uuid}%}
+		else:
+			if {@AggressiveAutoClicker} is false:
+				delete {AC::AutoClickerCVL::%{_click}%.%{_uuid}%}
+
+# Criticals
+
+on damage:
+	damage cause is not thorns
+	attacker is a player
+	{ac::detections::criticals} is true
+	if disabler(attacker):
+		stop
+	#
+	block under attacker is not water or pressure plate
+	block at attacker is not water or pressure plate
+	block north of attacker is not water or pressure plate
+	block east of attacker is not water or pressure plate
+	block south of attacker is not water or pressure plate
+	block west of attacker is not water or pressure plate
+	set {AC::hasAttack::%attacker's uuid%} to true
+	set {_health} to victim's health
+	# Critical B
+	if block under attacker is not air:
+		if block {@CriticalBGroundDistance} under attacker is not air:
+			if attacker is not on ground:
+				wait 1 tick
+				block under attacker is not air
+				block {@CriticalBGroundDistance} under attacker is not air
+				attacker is not on ground
+				{AC::hasDamage::%victim's uuid%} is not set
+				set {_crit} to true
+	if {_crit} is true:
+		add 1 to {AC::CriticaslBVL::%attacker's uuid%}
+		if {AC::CriticaslBVL::%attacker's uuid%} >= {@CriticalBVL}:
+			Report(attacker, "Criticals", "B")
+			if {CancelHit} is true:
+				if {_health} > victim's health:
+					set {_health} to {_health}-victim's health
+					heal the victim by {_health} hearts
+			{AC::%attacker's uuid%::criticals} is not set
+			set {AC::%attacker's uuid%::criticals} to true
+			wait 1 second
+			delete {AC::%attacker's uuid%::criticals}
+	else:
+		delete {AC::CriticaslBVL::%attacker's uuid%}
+	wait 10 ticks
+	delete {AC::hasAttack::%attacker's uuid%}
+	
+on damage:
+	if attacker is a player:
+		set {AC::LastHit::%attacker's uuid%} to now
+	else if victim is a player:
+		set {AC::hasDamage::%victim's uuid%} to true
+		wait 5 ticks
+		delete {AC::hasDamage::%victim's uuid%}
+	
+on jump:
+	{ac::detections::criticals} is true
+	if disabler(player):
+		stop
+	#
+	block under player is not water
+	block at player is not water
+	block north of player is not water
+	block east of player is not water
+	block south of player is not water
+	block west of player is not water
+	#
+	set {_victim} to targeted entity
+	set {_health} to {_victim}'s health
+	#
+	set {_loc} to player's y coordinate
+	set {_1} to difference between {_loc} and player's y coordinate
+	wait 1 tick
+	set {_2} to difference between {_loc} and player's y coordinate
+	wait 1 tick
+	set {_3} to difference between {_loc} and player's y coordinate
+	wait 1 tick
+	set {_4} to difference between {_loc} and player's y coordinate
+	set {_1} to "%{_1}%" parsed as integer
+	set {_2} to "%{_2}%" parsed as integer
+	set {_3} to "%{_3}%" parsed as integer
+	set {_4} to "%{_4}%" parsed as integer
+	#
+	{AC::hasAttack::%player's uuid%} is true
+	# Critical C
+	if {_1} = {_2}:
+		if {_2} = {_3}:
+			if {_3} = {_4}:
+				Report(player, "Criticals", "C")
+				if {@CancelHit} is true:
+					{_victim} is alive
+					if {_health} > {_victim}'s health:
+						set {_health} to {_health}-{_victim}'s health
+						heal {_victim} by {_health} hearts
+				set {AC::%player's uuid%::criticals} to true
+				wait 1 second
+				delete {AC::%player's uuid%::criticals}
+				stop
+	# Critical D
+	if {_1} = 0:
+		if {_2} = 0.01 or 0.1:
+			if {_3} = 0.01, 0.06, 0.1 or 0.12:
+				if {_4} =  0.01, 0.06, 0.1 or 0.12:
+					Report(player, "Criticals", "D")
+					if {@CancelHit} is true:
+						{_victim} is alive
+						if {_health} > {_victim}'s health:
+							set {_health} to {_health}-{_victim}'s health
+							heal {_victim} by {_health} hearts
+					{AC::%player's uuid%::criticals} is not set
+					set {AC::%player's uuid%::criticals} to true
+					wait 1 second
+					delete {AC::%player's uuid%::criticals}
+					stop
+	# Critical E
+	block above player is air
+	block north of block above player is air
+	block east of block above player is air
+	block west of block above player is air
+	block south of block above player is air
+	block north east of block above player is air
+	block south east of block above player is air
+	block north west of block above player is air
+	block south west of block above player is air
+	if {_1} = 0:
+		if {_2} <= 0.4:
+			if {_3} <= 0.75:
+				if {_4} <= 0.9:
+					Report(player, "Criticals", "E")
+					if {@CancelHit} is true:
+						{_victim} is alive
+						if {_health} > {_victim}'s health:
+							set {_health} to {_health}-{_victim}'s health
+							heal {_victim} by {_health} hearts
+					{AC::%player's uuid%::criticals} is not set
+					set {AC::%player's uuid%::criticals} to true
+					wait 1 second
+					delete {AC::%player's uuid%::criticals}
+
+# KillAura
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	attacker is not victim
+	projectile doesn't exist
+	if disabler(attacker):
+		stop
+	#
+	if distance between attacker and victim > distance between attacker and attacker's targeted block:
+		attacker's targeted block is not a flower, slab, short grass, carpet or brewing stand
+		attacker's targeted block is not block under victim
+		block at victim is not water
+		block above victim is not water
+		block above attacker is not water
+		block at attacker is not water
+		victim is not sprinting
+		if distance between victim and attacker's targeted block >= {@KillAuraADistance}:
+			add 1 to {AC::KillauraA::%attacker's uuid%}
+			if {AC::KillauraA::%attacker's uuid%} >= {@KillAuraAVL}:
+				delete {AC::KillauraA::%attacker's uuid%}
+				Report(attacker, "KillAura", "A")
+				if {@CancelHit} is true:
+					cancel event
+		else:
+			{AC::KillauraA::%attacker's uuid%}
+	else:
+		{AC::KillauraA::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	victim is not sprinting
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	#
+	projectile is not set
+	attacker doesn't have speed
+	#
+	add 1 to {AC::APS::%attacker's uuid%}
+	if {AC::APS::%attacker's uuid%} >= {@KillAuraEAPS}:
+		if distance between victim and attacker >= {@KillAuraEDistance}:
+			add 1 to {AC::FailedKillauraE::%attacker's uuid%}
+			if {AC::FailedKillauraE::%attacker's uuid%} > {@KillAuraEVL}:
+				delete {AC::FailedKillauraE::%attacker's uuid%}
+				if {@CancelHit} is true:
+					cancel event
+				Report(attacker, "KillAura", "E")
+		else:
+			delete {AC::FailedKillauraE::%attacker's uuid%}
+	else:
+		delete {AC::FailedKillauraE::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	#
+	victim is not {AC::PastVictim::%attacker's uuid%}
+	set {AC::PastVictim::%attacker's uuid%} to victim
+	add 1 to {AC::MultiAura::%attacker's uuid%}
+	set {_multi} to {AC::MultiAura::%attacker's uuid%}
+	if {_multi} >= {@KillAuraHMobsPerSecond}:
+		if {_multi} >= {@KillAuraHMobsPerSecondBlock}:
+			if {@CancelHit} is true:
+				victim is alive
+				cancel event
+		Report(attacker, "KillAura", "H")
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	#
+	if distance between block behind attacker and victim < distance between victim and attacker:
+		set {_f} to true
+		set {_t} to true
+	else if distance between block left of attacker and victim < distance between victim and attacker:
+		set {_i} to true
+		set {_t} to true
+	else if distance between block right of attacker and victim < distance between victim and attacker:
+		set {_i} to true
+		set {_t} to true
+	#
+	if {_t} is true:
+		if distance between victim and attacker <= {@KillAuraKDistance}:
+			stop
+	if {_i} is true:
+		if {@AggressiveKillAura} is false:
+			if attacker is not on ground:
+				delete {AC::KillAuraKVL::%attacker's uuid%}
+				stop
+			if {_f} is not set:
+				if attacker's targeted entity is victim:
+					delete {AC::KillAuraKVL::%attacker's uuid%}
+					stop
+		add 1 to {AC::KillAuraKVL::%attacker's uuid%}
+		if {AC::KillAuraKVL::%attacker's uuid%} >= {@KillAuraKVL}:
+			Report(attacker, "KillAura", "K")
+			if {@CancelHit} is true:
+				victim is alive
+				cancel event
+			delete {AC::KillAuraKVL::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	if {@KillAuraMPlayerOnly} is true:
+		if victim is not a player:
+			stop
+	#
+	set {_loc} to attacker's location
+	set {_health} to victim's health
+	set {_vloc} to victim's location
+	#
+	wait 1 tick
+	#
+	set y coordinate of {_loc} to y coordinate of attacker
+	set {_loc} to distance between {_loc} and attacker's location
+	if {_loc} >= {@KillAuraMDistance}:
+		Report(attacker, "KillAura", "M")
+		if {@CancelHit} is true:
+			victim is alive
+			if {_health} > victim's health:
+				set {_health} to {_health}-victim's health
+				heal victim by {_health} hearts
+				teleport victim to {_vloc}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	#
+	attacker is a player
+	victim is a player
+	set {_health} to victim's health
+	#
+	if attacker's targeted entity is not set:
+		add 1 to {AC::InvalidEntity::%attacker's uuid%}
+		if {AC::InvalidEntity::%attacker's uuid%} >= {@KillAuraNVL}:
+			Report(attacker, "KillAura", "N")
+			if {@CancelHit} is true:
+				victim is alive
+				cancel event
+	else:
+		delete {AC::InvalidEntity::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	{ac::detections::killaura} is true
+	if disabler(attacker):
+		stop
+	#
+	if attacker's pitch is 0:
+		add 1 to {AC::KillAuraO::%attacker's uuid%}
+		if {AC::KillAuraO::%attacker's uuid%} >= {@KillAuraOVL}:
+			Report(attacker, "KillAura", "O")
+			delete {AC::KillAuraO::%attacker's uuid%}
+			if {@CancelHit} is true:
+				cancel event
+	else:
+		delete {AC::KillAuraO::%attacker's uuid%}
+
+# HitBox/Reach
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	victim is a player
+	victim is not sprinting
+	{ac::detections::reach} is true
+	attacker doesn't have speed
+	if disabler(attacker):
+		stop
+	#
+	set {_l.a} to attacker's location
+	set {_l.v} to victim's location
+	set y coordinate of {_l.v} to y coordinate of {_l.a}
+	set {_dist.x} to difference between x coordinate of {_l.v} and x coordinate of {_l.a}
+	set {_dist.z} to difference between y coordinate of {_l.v} and y coordinate of {_l.a}
+	# HitBox A / Reach F
+	if {_dist.x} >= {@HitBoxAMinDistance}:
+		add 1 to {AC::FailedReachX::%attacker's uuid%}
+		if {AC::FailedReachX::%attacker's uuid%} >= {@HitBoxAVL/ReachFVL}:
+			delete {AC::FailedReachX::%attacker's uuid%}
+			if {_dist.x} >= {@HitBoxAMaxDistance/ReachFMinDistance}:
+				Report(attacker, "Reach&8(&c%{_dist.x}%&8)", "F")
+			else:
+				Report(attacker, "HitBox&8(&c%{_dist.x}%&8)", "A")
+			if {@CancelHit} is true:
+				cancel event
+	# HitBox B / Reach G
+	else if {_dist.z} >= {@HitBoxBMinDistance}:
+		add 1 to {AC::FailedReachZ::%attacker's uuid%}
+		if {AC::FailedReachZ::%attacker's uuid%} >= {@HitBoxBVL/ReachGVL}:
+			delete {AC::FailedReachZ::%attacker's uuid%}
+			if {_dist.z} >= {@HitBoxBMaxDistance/ReachGMinDistance}:
+				Report(attacker, "Reach&8(&c%{_dist.z}%&8)", "G")
+			else:
+				Report(attacker, "HitBox&8(&c%{_dist.z}%&8)", "B")
+			if {@CancelHit} is true:
+				cancel event
+	else:
+		{@AggressiveHitBox} is false
+		delete {AC::FailedReachX::%attacker's uuid%}
+		delete {AC::FailedReachZ::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	victim is not sprinting
+	{ac::detections::reach} is true
+	if disabler(attacker):
+		stop
+	#
+	victim is a player
+	set {_reach} to distance between attacker and victim
+	#  Reach A
+	if attacker's y coordinate = victim's y coordinate:
+		if {_reach} >= {@ReachADistance}:
+			add 1 to {AC::ReachAVL::%attacker's uuid%}
+			if {AC::ReachAVL::%attacker's uuid%} >= {@ReachAVL}:
+				Report(attacker, "Reach&8(&c%{_reach}%&8)", "A")
+				if {@CancelHit} is true:
+					cancel event
+		else:
+			delete {AC::ReachAVL::%attacker's uuid%}
+	#  Reach B
+	else if attacker's y coordinate > victim's y coordinate: 
+		if {_reach} >= {@ReachBDistance}:
+			add 1 to {AC::ReachBVL::%attacker's uuid%}
+			if {AC::ReachBVL::%attacker's uuid%} >= {@ReachBVL}:
+				Report(attacker, "Reach&8(&c%{_reach}%&8)", "B")
+				if {@CancelHit} is true:
+					cancel event
+		else:
+			delete {AC::ReachBVL::%attacker's uuid%}
+	#  Reach C
+	else:
+		if {_reach} >= {@ReachCDistance}:
+			add 1 to {AC::ReachCVL::%attacker's uuid%}
+			if {AC::ReachCVL::%attacker's uuid%} >= {@ReachCVL}:
+				Report(attacker, "Reach&8(&c%{_reach}%&8)", "C")
+				if {@CancelHit} is true:
+					cancel event
+		else:
+			delete {AC::ReachCVL::%attacker's uuid%}
+
+on damage:
+	attacker is a player
+	damage cause is attack
+	victim is not sprinting
+	{ac::detections::reach} is true
+	if disabler(attacker):
+		stop
+	# Reach D
+	set {_reach} to distance between attacker and victim
+	if {_reach} >= {@ReachDPlayerDistance}:
+		add 1 to {AC::ReachDVL::%attacker's uuid%}
+		if {AC::ReachDVL::%attacker's uuid%} >= {@ReachDVL}:
+			if victim is a player:
+				Report(attacker, "Reach&8(&c%{_reach}%&8)", "D")
+				if {@CancelHit} is true:
+					cancel event
+			else:
+				if {_reach} >= {@ReachDMobDistance}:
+					Report(attacker, "Reach&8(&c%{_reach}%&8)", "D")
+					if {@CancelHit} is true:
+						cancel event
+	else:
+		delete {AC::ReachDVL::%attacker's uuid%}
+
+# Velocity
+
+on damage:
+	#{@Experimental} is true
+	attacker is a player
+	victim is a player
+	damage cause is attack
+	{ac::detections::velocity} is true
+	projectile doesn't exist
+	if disabler(victim):
+		stop
+	#
+	if {AC::LastJump::%victim's uuid%} is set:
+		if difference between {AC::LastJump::%victim's uuid%} and now < 0.45 seconds:
+			stop
+	#
+	"%victim's helmet%" does not contain "Netherite"
+	"%victim's chestplate%" does not contain "Netherite"
+	"%victim's leggings%" does not contain "Netherite"
+	"%victim's boots%" does not contain "Netherite"
+	#
+	set {_kba} to attacker's location
+	set {_kbv} to victim's location
+	set y coordinate of {_kbv} to {_kba}'s y coordinate
+	#
+	block under victim is not magma block
+	victim is not burning
+	victim doesn't have poison
+	victim doesn't have wither
+	block at victim is air, grass or flower
+	block above victim is air, grass or flower
+	block north of victim is air, grass or flower
+	block east of victim is air, grass or flower
+	block west of victim is air, grass or flower
+	block south of victim is air, grass or flower
+	block north east of victim is air, grass or flower
+	block south east of victim is air, grass or flower
+	block north west of victim is air, grass or flower
+	block south west of victim is air, grass or flower
+	block north of block above victim is air, grass or flower
+	block east of block above victim is air, grass or flower
+	block west of block above victim is air, grass or flower
+	block south of block above victim is air, grass or flower
+	block north east of block above victim is air, grass or flower
+	block south east of block above victim is air, grass or flower
+	block north west of block above victim is air, grass or flower
+	block south west of block above victim is air, grass or flower
+	#
+	wait 1 tick
+	#
+	victim is online
+	attacker is online
+	#
+	set {_kba2} to attacker's location
+	set {_kbv2} to victim's location
+	set y coordinate of {_kbv2} to {_kba2}'s y coordinate
+	#
+	wait 1 tick
+	victim is online
+	attacker is online
+	#
+	set {_kba3} to attacker's location
+	set {_kbv3} to victim's location
+	set y coordinate of {_kbv3} to {_kba3}'s y coordinate
+	#
+	if distance between {_kbv} and {_kbv2} = 0:
+		if distance between {_kbv2} and {_kbv3} <= 0.385:
+			Report(victim, "Velocity", "L-1")
+	if distance between {_kbv} and {_kbv2} > 0.38:
+		if distance between {_kbv2} and {_kbv3} <= 0.205:
+			Report(victim, "Velocity", "L-2")
+	#
+	if distance between {_kbv} and {_kbv2} > 0:
+		if distance between {_kbv2} and {_kbv3} = 0:
+			Report(victim, "Velocity", "K")
+	#
+	if (distance between {_kba2} and {_kbv2})-(distance between {_kba} and {_kbv}) <= 0.22:
+		add 1 to {AC::KBCOUNTI::%victim's uuid%}
+		{AC::KBCOUNTI::%victim's uuid%} >= 5:
+			Report(victim, "Velocity", "I")
+	else:
+		delete {AC::KBCOUNTI::%victim's uuid%}
+	#
+	if {AC::KBCOUNTJ::%victim's uuid%} is not set:
+		set {AC::KBCOUNTJ::%victim's uuid%} to 0
+	set {_count} to ((round(((distance between {_kba2} and {_kbv2})-(distance between {_kba} and {_kbv}))*100))/100)
+	if {_count} = {AC::KBCOUNTJ::%victim's uuid%}:
+		add 1 to {AC::VLKBJ::%victim's uuid%}
+		if {AC::VLKBJ::%victim's uuid%} >= 2:
+			Report(victim, "Velocity", "J")
+	else:
+		delete {AC::VLKBJ::%victim's uuid%}
+	set {AC::KBCOUNTJ::%victim's uuid%} to {_count}
+
+on damage:
+	attacker is a player
+	victim is a player
+	damage cause is attack
+	{ac::detections::velocity} is true
+	projectile doesn't exist
+	if disabler(victim):
+		stop
+	#
+	if {AC::LastJump::%victim's uuid%} is set:
+		if difference between {AC::LastJump::%victim's uuid%} and now < 0.45 seconds:
+			stop
+	#
+	"%victim's helmet%" does not contain "Netherite"
+	"%victim's chestplate%" does not contain "Netherite"
+	"%victim's leggings%" does not contain "Netherite"
+	"%victim's boots%" does not contain "Netherite"
+	#
+	set {_health} to victim's health
+	set {_kb} to victim's location
+	set {_b2kb} to block 2 behind victim
+	set {_x} to victim's x coordinate
+	set {_y} to victim's y coordinate
+	set {_z} to victim's z coordinate
+	#
+	block under victim is not magma block
+	victim is not burning
+	victim doesn't have poison
+	victim doesn't have wither
+	block at victim is air, grass or flower
+	block above victim is air, grass or flower
+	block north of victim is air, grass or flower
+	block east of victim is air, grass or flower
+	block west of victim is air, grass or flower
+	block south of victim is air, grass or flower
+	block north east of victim is air, grass or flower
+	block south east of victim is air, grass or flower
+	block north west of victim is air, grass or flower
+	block south west of victim is air, grass or flower
+	block north of block above victim is air, grass or flower
+	block east of block above victim is air, grass or flower
+	block west of block above victim is air, grass or flower
+	block south of block above victim is air, grass or flower
+	block north east of block above victim is air, grass or flower
+	block south east of block above victim is air, grass or flower
+	block north west of block above victim is air, grass or flower
+	block south west of block above victim is air, grass or flower
+	#
+	wait 2 ticks
+	#
+	victim is online
+	attacker is online
+	#
+	{_health} > victim's health
+	if {AC::LastJump::%victim's uuid%} is set:
+		if difference between {AC::LastJump::%victim's uuid%} and now < 0.45 seconds:
+			stop
+	block at victim is air, grass or flower
+	block above victim is air, grass or flower
+	set {_kb} to distance between victim's location and {_kb}
+	set {_b2kb} to distance between victim's location and {_b2kb}
+	set {_x} to difference between {_x} and victim's x coordinate
+	set {_y} to difference between {_y} and victim's y coordinate
+	set {_z} to difference between {_z} and victim's z coordinate
+	# Velocity H
+	if {@Experimental} is true:
+		if "%{_kb}%" = "0.05", "0.06", "0.08", "0.09", "0.11", "0.12", "0.13", "0.16", "0.17", "0.21", "0.24", "0.25", "0.28", "0.29", "0.32", "0.33", "0.37", "0.43", "0.44", "0.49", "0.5", "0.56" or "0.66":
+			if "%{_kb}%" = "0.05", "0.04", "0.05" or "0.06":
+				if "%{_x}%" = "0.03", "0.04", "0.5" or "0.06":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05" or "0.1":
+						Report(victim, "Velocity", "H-1")
+			else if "%{_kb}%" = "0.08" or "0.09":
+				if "%{_x}%" = "0.05", "0.06", "0.07", "0.08", "0.09" or "0.1":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09" or "0.1":
+						Report(victim, "Velocity", "H-2")
+			else if "%{_kb}%" = "0.11", "0.12" or "0.13":
+				if "%{_x}%" = "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11" or "0.12":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09" or "0.1":
+						Report(victim, "Velocity", "H-3")
+			else if "%{_kb}%" = "0.16" or "0.17":
+				if "%{_x}%" = "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.12", "0.13", "0.14", "0.15", "0.16" or "0.17":
+					if "%{_y}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.12", "0.13", "0.14", "0.15", "0.16" or "0.17":
+						Report(victim, "Velocity", "H-4")
+			else if "%{_kb}%" = "0.25":
+				if "%{_x}%" = "0.21", "0.22", "0.23", "0.24" or "0.25":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04" or "0.05":
+						Report(victim, "Velocity", "H-5")
+			else if "%{_kb}%" = "0.21":
+				if "%{_x}%" = "0.1", "0.11", "0.12", "0.13", "0.14", "0.15", "0.19", "0.2" or "0.21":
+					if "%{_z}%" = "0.02", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.12", "0.15", "0.16" or "0.17":
+						Report(victim, "Velocity", "H-6")
+			else if "%{_kb}%" = "0.24", "0.25", "0.28" or "0.29":
+				if "%{_x}%" = "0", "0.01", "0.02", "0.03", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.22", "0.23", "0.24", "0.25", "0.26", "0.27", "0.28" or "0.29":
+					if "%{_z}%" = "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.12", "0.13", "0.19", "0.21", "0.22", "0.23", "0.24", "0.25", "0.26", "0.27", "0.28" or "0.29":
+						Report(victim, "Velocity", "H-7")
+			else if "%{_kb}%" = "0.32", "0.33" or "0.37":
+				if "%{_x}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.12", "0.13", "0.17", "0.19", "0.21", "0.22", "0.23", "0.24", "0.25", "0.26", "0.3", "0.31", "0.32", "0.33", "0.35", "0.36" or "0.37":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.12", "0.13", "0.16", "0.18", "0.19", "0.22", "0.23", "0.24", "0.25", "0.26", "0.27", "0.3", "0.32", "0.33", "0.34", "0.35", "0.36" or "0.37":
+						Report(victim, "Velocity", "H-8")
+			else if "%{_kb}%" = "0.43" or "0.44":
+				if "%{_x}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.22", "0.23", "0.4", "0.41", "0.43" or "0.44":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.16", "0.27", "0.28", "0.29", "0.3", "0.31", "0.32", "0.33", "0.34", "0.35", "0.36", "0.37", "0.42", "0.43", "0.44" or "0.45":
+						Report(victim, "Velocity", "H-9")
+			else if "%{_kb}%" = "0.49":
+				if "%{_x}%" = "0.27", "0.32", "0.33", "0.34", "0.35", "0.36", "0.37", "0.48" or "0.49":
+					if "%{_z}%" = "0.27", "0.32", "0.33", "0.34", "0.35", "0.36", "0.48" or "0.49":
+						Report(victim, "Velocity", "H-10")
+			else if "%{_kb}%" = "0.5" or "0.56":
+				if "%{_x}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.15", "0.18", "0.23", "0.33", "0.45", "0.46", "0.47", "0.48", "0.49", "0.5", "0.55" or "0.56":
+					if "%{_z}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.38", "0.43", "0.44", "0.45", "0.46", "0.47", "0.48", "0.49", "0.5", "0.55" or "0.56":
+						Report(victim, "Velocity", "H-11")
+			else if "%{_kb}%" = "0.66":
+				if "%{_x}%" = "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.44", "0.45", "0.6", "0.61", "0.62", "0.63", "0.64", "0.65" or "0.66":
+					if "%{_z}%" =  "0", "0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09", "0.1", "0.11", "0.24", "0.48", "0.49", "0.65" or "0.66":
+						Report(victim, "Velocity", "H-12")
+	# Velocity A
+	if "%{_x} + {_y} + {_z}%" = "0":
+		if {_kb} = {@VelocityAKnockBack}:
+			if {_b2kb} >= {@VelocityAMinBlockKnockBack}:
+				add 1 to {AC::VelocityA::%victim's uuid%}
+				{AC::VelocityA::%victim's uuid%} >= {@VelocityAVL}:
+					Report(victim, "Velocity", "A")
+					if {@CancelHit} is true:
+						if {_health} > victim's health:
+							set {_health} to {_health}-victim's health
+							heal the victim by {_health} hearts
+	# Velocity B
+	if "%{_b2kb}%" = "1.47", "1.81", "1.82", "2.04" or "2.08":
+		if "%{_x} + {_y} + {_z}%" = "0":
+			add 1 to {AC::VelocityB::%victim's uuid%}
+			if {AC::VelocityB::%victim's uuid%} >= {@VelocityBVL}:
+				Report(victim, "Velocity", "B")
+				if {@CancelHit} is true:
+					if {_health} > victim's health:
+						set {_health} to {_health}-victim's health
+						heal the victim by {_health} hearts
+				if {@AggressiveVelocity} is false:
+					delete {AC::VelocityB::%victim's uuid%}
+	# Velocity C
+			else if "%{_y}%" = "0.18", "0.36" or "0.64":
+				if "%{_z}%" = "0.18", "0.36" or "0.64":
+					add 1 to {AC::VelocityC::%victim's uuid%}
+					if {AC::VelocityC::%victim's uuid%} >= {@VelocityCVL}:
+						Report(victim, "Velocity", "C")
+						if {@CancelHit} is true:
+							if {_health} > victim's health:
+								set {_health} to {_health}-victim's health
+								heal the victim by {_health} hearts
+						if {@AggressiveVelocity} is false:
+							delete {AC::VelocityC::%victim's uuid%}
+	# Velocity B & C
+		else:
+			delete {AC::VelocityB::%victim's uuid%}
+	# Velocity E
+	if "%{_y}%" is not "0":
+		if "%{_y}%" = "0.54":
+			Report(victim, "Velocity", "E-B")
+	# Velocity G
+	if {_kb} <= {@VelocityGKnockBack}:
+		{_x} <= {@VelocityGXKnockBack}
+		{_y} <= {@VelocityGYKnockBack}
+		{_z} <= {@VelocityGZKnockBack}
+		add 1 to {AC::block2kbVL::%{_uuid}%}
+		if {AC::block2kbVL::%{_uuid}%} >= {@VelocityGVL}:
+			Report(victim, "Velocity", "G")
+			delete {AC::block2kbVL::%{_uuid}%}
+	else:
+		delete {AC::block2kbVL::%{_uuid}%}
+
+# Functions
+
+every 2 minutes:
+	delete {AC::TotalVL::*}
+
+every 1 minute:
+	delete {AC::VL::*}
+	delete {AC::FailedReachX::*}
+	delete {AC::FailedReachZ::*}
+	delete {AC::TEMP::*}
+
+every 15 seconds:
+	delete {AC::VelocityA::*}
+
+every 5 seconds:
+	delete {AC::Detection::*}
+
+every 2 seconds:
+	delete {AC::MultiAura::*}
+	delete {AC::APS::*}
+
+on join:
+	while player is online:
+		set {AC::min3::cps::left::%player's uuid%} to {AC::min2::cps::left::%player's uuid%}
+		set {AC::min3::cps::right::%player's uuid%} to {AC::min2::cps::right::%player's uuid%}
+		set {AC::min3::cps::damage::%player's uuid%} to {AC::min2::cps::damage::%player's uuid%}
+		set {AC::min2::cps::left::%player's uuid%} to {AC::min1::cps::left::%player's uuid%}
+		set {AC::min2::cps::right::%player's uuid%} to {AC::min1::cps::right::%player's uuid%}
+		set {AC::min2::cps::damage::%player's uuid%} to {AC::min1::cps::damage::%player's uuid%}
+		set {AC::min1::cps::left::%player's uuid%} to {AC::cps::left::%player's uuid%}
+		set {AC::min1::cps::right::%player's uuid%} to {AC::cps::right::%player's uuid%}
+		set {AC::min1::cps::damage::%player's uuid%} to {AC::cps::damage::%player's uuid%}
+		if {AC::cps::left::%player's uuid%} is not set:
+			set {AC::min1::cps::left::%player's uuid%} to 0
+		if {AC::cps::right::%player's uuid%} is not set:
+			set {AC::min1::cps::right::%player's uuid%} to 0
+		if {AC::cps::damage::%player's uuid%} is not set:
+			set {AC::min1::cps::damage::%player's uuid%} to 0
+		delete {AC::cps::left::*}
+		delete {AC::cps::right::*}
+		delete {AC::cps::damage::*}
+		wait 1.1 second
+
+on disconnect:
+		delete {AC::min3::cps::left::%player's uuid%}
+		delete {AC::min3::cps::right::%player's uuid%}
+		delete {AC::min3::cps::damage::%player's uuid%}
+		delete {AC::min2::cps::left::%player's uuid%}
+		delete {AC::min2::cps::right::%player's uuid%}
+		delete {AC::min2::cps::damage::%player's uuid%}
+		delete {AC::min1::cps::left::%player's uuid%}
+		delete {AC::min1::cps::right::%player's uuid%}
+		delete {AC::min1::cps::damage::%player's uuid%}
+		delete {AC::cps::left::*}
+		delete {AC::cps::right::*}
+		delete {AC::cps::damage::*}
+
+on join:
+	set {AC::Join::%player's uuid%} to now
+	#
+	if player's uuid is "035cec12-a1d8-405b-a216-faf759266902":
+		set {_i} to true
+	else if player is op:
+		set {_i} to true
+	#
+	if {_i} is true:
+		wait 1 tick
+		if {$::ServerPremium} is true:
+			send "%{AC::Setting::Prefix}% &7This server is using &eBetterBubble&7! &8(&cPremium&8) &8(&c{@Version}&8)" to player
+		else:
+			send "%{AC::Setting::Prefix}% &7This server is using &eBetterBubble&7! &8(&cFree&8) &8(&c{@Version}&8)" to player
+
+on world change:
+	set {AC::Teleport::%player's uuid%} to now
+
+on teleport:
+	if "%teleport cause%" is not "Plugin" or "Unknown":
+		set {AC::Teleport::%player's uuid%} to now
+	else if "%teleport cause%" is "Unknown":
+		set {AC::InvalidTeleport::%player's uuid%} to now
+
+on right click:
+	player's held item is enderpearl
+	set {AC::EnderPearl::%player's uuid%} to now
+
+on unload:
+	set {AC::Load} to now
+
+on respawn:
+	set {AC::respawn::%player's uuid%} to now
+
+on load:
+	delete {AC::KKA::Attacker::*}
+	delete {AC::KKA::Victim::*}
+	delete {AC::NPCAURACHECK}
+	#
+	set {AC::Load} to now
+	set {AC::Version} to "{@Version}"
+	#
+	if {AC::Setting::Prefix} is not set:
+		set {AC::Setting::Prefix} to "{@Prefix}"
+	#
+	if {ac::detections::aimbot} is not set:
+		set {ac::detections::aimbot} to true
+	if {ac::detections::autoclicker} is not set:
+		set {ac::detections::autoclicker} to true
+	if {ac::detections::criticals} is not set:
+		set {ac::detections::criticals} to true
+	if {ac::detections::killaura} is not set:
+		set {ac::detections::killaura} to true
+	if {ac::detections::reach} is not set:
+		set {ac::detections::reach} to true
+	if {ac::detections::velocity} is not set:
+		set {ac::detections::velocity} to true
+	#
+	set {AC::Setting::Prefix} to "{@Prefix}"
+	wait 1 tick
+	send "%{AC::Setting::Prefix}% &eBetterBubble &7has loaded! &8(&cFree&8) &8(&c{@Version}&8)" to console
+	#
+	if {@BetterWaffle} is true:
+		send "&6&lBETTERWAFFLE &8» &4&lIMPOSTOR DETECTOR ACTIVATED!" to console
+
+function kickCheck(player: player):
+	#
+	set {_uuid} to uuid of {_player}
+	add 1 to {AC::AutoKick::%{_uuid}%}
+	#
+	if {AC::AutoKick::%{_uuid}%} >= {@AutoKickDetection}:
+		if {AC::hasKicked::%{_uuid}%} is not set:
+			if {@EffectOnKick} is true:
+				if {@RemovePlayerEffect} is true:
+					loop 60 times:
+						push {_player} upwards with force 0.25
+						strike lightning effect at {_player}
+						set {_b} to block 2 above {_player}
+						if {@RemovePlayerWaterEffect} is true:
+							if block at {_b} is air:
+								set block at {_b} to water
+						wait 1 tick
+						if {@RemovePlayerWaterEffect} is true:
+							if block at {_b} is water:
+								set block at {_b} to air
+							wait 1 tick
+					push {_player} downwards with force 50
+			kick {_player} due to "{@KickReason}"
+			if {@AutoBan} is true:
+				if {@AggressiveAutoBan} is true:
+					delete {AC::AutoKick::%{_uuid}%}
+				set {AC::hasKicked::%{_uuid}%} to true
+		else:
+			if {AC::AutoKick::%{_uuid}%} >= {@AutoBanDetection}:
+				delete {AC::AutoKick::%{_uuid}%}
+				delete {AC::hasKicked::%{_uuid}%}
+				if {@EffectOnBan} is true:
+					if {@RemovePlayerEffect} is true:
+						loop 60 times:
+							push {_player} upwards with force 0.25
+							strike lightning effect at {_player}
+							set {_b} to block 2 above {_player}
+							if {@RemovePlayerWaterEffect} is true:
+								if block at {_b} is air:
+									set block at {_b} to water
+							wait 1 tick
+							if {@RemovePlayerWaterEffect} is true:
+								if block at {_b} is water:
+									set block at {_b} to air
+								wait 1 tick
+						push {_player} downwards with force 50
+				console command "{@BanCommand}"
+
+function disabler(player: player) :: boolean:
+	#
+	set {_uuid} to uuid of {_player}
+	#
+	if {_player}'s gamemode is creative or spectator:
+		add 1 to {_i}
+	if difference between {AC::respawn::%{_uuid}%} and now < 2 seconds:
+		add 1 to {_i}
+	if difference between {AC::Load} and now < 2 second:
+		add 1 to {_i}
+	if difference between {AC::Join::%{_uuid}%} and now < 2 second:
+		add 1 to {_i}
+	if difference between {AC::EnderPearl::%{_uuid}%} and now < 1 second:
+		add 1 to {_i}
+	if difference between {AC::WorldChange::%{_uuid}%} and now < 1 second:
+		add 1 to {_i}
+	if difference between {AC::Teleport::%{_uuid}%} and now < 1 second:
+		add 1 to {_i}
+	#
+	if {@OpBypass} is true:
+		if {_player} is op:
+			add 1 to {_i}
+	if {@PermBypass} is true:
+		if {_player} has permission "{@BypassPerm}":
+			add 1 to {_i}
+	if {@TPSCancelCheck} is true:
+		if tps from last minute >= {@MinTPS}:
+			add 1 to {_i}
+	if {@PingCancelCheck} is true:
+		if {_player}'s ping >= {@MaxPing}:
+			add 1 to {_i}
+	#
+	if {_i} > 0:
+		return true
+	else:
+		return false
+
+function Report(player:player,cheat:text,type:text):
+	if {@DoubleCheck} is true:
+		if disabler({_player}):
+			stop
+	# AutoKick
+	if {_player} is online:
+		add 1 to {_kick?}
+	if {@AutoKick} is true:
+		kickCheck({_player})
+	if {_player} is offline:
+		add 1 to {_kick?}
+	# Variable
+	set {_uuid} to uuid of {_player}
+	if {AC::total.flags::%{_uuid}%} is not set:
+		set {AC::total.flags::%{_uuid}%} to 0
+	# VL
+	add 1 to {AC::VL::%{_uuid}%.%{_cheat}%}
+	add 1 to {AC::total.flags::%{_uuid}%}
+	add 1 to {AC::TotalVL::%{_uuid}%}
+	if {@BetterWaffle} is false:
+		# VL Message
+		if {_kick?} = 2:
+			set {_reportmsg} to "{@KickMessage}"
+			replace all "{Cheat}" in {_reportmsg} with "%{_cheat}%"
+			replace all "{Ping}" in {_reportmsg} with "%{_player}'s ping%"
+			replace all "{Player}" in {_reportmsg} with "%{_player}%"
+			replace all "{Prefix} " in {_reportmsg} with "%{AC::Setting::Prefix}% "
+			replace all "{TPS}" in {_reportmsg} with "%tps from last minute%"
+			replace all "{Type}" in {_reportmsg} with "%{_type}%"
+			replace all "{VL}" in {_reportmsg} with "%{AC::VL::%{_uuid}%.%{_cheat}%}%"
+			if {@Console} is true:
+				set {_console.reportmsg} to "{@ConsoleKickMessage}"
+				replace all "{Cheat}" in {_console.reportmsg} with "%{_cheat}%"
+				replace all "{Ping}" in {_console.reportmsg} with "%{_player}'s ping%"
+				replace all "{Player}" in {_console.reportmsg} with "%{_player}%"
+				replace all "{Prefix} " in {_console.reportmsg} with "%{AC::Setting::Prefix}% "
+				replace all "{TPS}" in {_console.reportmsg} with "%tps from last minute%"
+				replace all "{Type}" in {_console.reportmsg} with "%{_type}%"
+				replace all "{VL}" in {_console.reportmsg} with "%{AC::VL::%{_uuid}%.%{_cheat}%}%"
+		else:
+			set {_reportmsg} to "{@ReportMessage}"
+			replace all "{Cheat}" in {_reportmsg} with "%{_cheat}%"
+			replace all "{Ping}" in {_reportmsg} with "%{_player}'s ping%"
+			replace all "{Player}" in {_reportmsg} with "%{_player}%"
+			replace all "{Prefix} " in {_reportmsg} with "%{AC::Setting::Prefix}% "
+			replace all "{TPS}" in {_reportmsg} with "%tps from last minute%"
+			replace all "{Type}" in {_reportmsg} with "%{_type}%"
+			replace all "{VL}" in {_reportmsg} with "%{AC::VL::%{_uuid}%.%{_cheat}%}%"
+			if {@Console} is true:
+				set {_console.reportmsg} to "{@ConsoleReportMessage}"
+				replace all "{Cheat}" in {_console.reportmsg} with "%{_cheat}%"
+				replace all "{Ping}" in {_console.reportmsg} with "%{_player}'s ping%"
+				replace all "{Player}" in {_console.reportmsg} with "%{_player}%"
+				replace all "{Prefix} " in {_console.reportmsg} with "%{AC::Setting::Prefix}% "
+				replace all "{TPS}" in {_console.reportmsg} with "%tps from last minute%"
+				replace all "{Type}" in {_console.reportmsg} with "%{_type}%"
+				replace all "{VL}" in {_console.reportmsg} with "%{AC::VL::%{_uuid}%.%{_cheat}%}%"
+		# Notification
+		if {_kick?} = 2:
+			send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+			if {@Console} is true:
+				send "%{_console.reportmsg}%" to console
+		else:
+			if {AC::LastCheckNotif::%{_uuid}%} is not set:
+				set {AC::LastCheckNotif::%{_uuid}%} to 3 ticks ago
+			if {@AntiSpamMode} = 0:
+				if {AC::VL::%{_uuid}%.%{_cheat}%} > 1:
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+					set {AC::LastCheckNotif::%{_uuid}%} to now
+			else if {@AntiSpamMode} = 1:
+				if difference between {AC::LastCheckNotif::%{_uuid}%} and now > 1 tick:
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+					set {AC::LastCheckNotif::%{_uuid}%} to now	
+			else if {@AntiSpamMode} = 2:
+				if difference between {AC::LastCheckNotif::%{_uuid}%} and now > 2 ticks:
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+					set {AC::LastCheckNotif::%{_uuid}%} to now
+			else if {@AntiSpamMode} is 3:
+				set {_check} to {AC::VL::%{_uuid}%.%{_cheat}%}/5
+				if "%{_check}%" doesn't contain "0.":
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+			else if {@AntiSpamMode} = 4:
+				set {_check} to {AC::VL::%{_uuid}%.%{_cheat}%}/3
+				if "%{_check}%" doesn't contain "0.":
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+			else if {@AntiSpamMode} = 5:
+				if {AC::Detection::%{_uuid}%} <= 25:
+					send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+					if {@Console} is true:
+						send "%{_console.reportmsg}%" to console
+			else:
+				send "%{_reportmsg}%" to all players where [player input has permission "{@NotifyPerm}"]
+				if {@Console} is true:
+					send "%{_console.reportmsg}%" to console
+	else:
+		if {_vl} <= 5:
+			send "&6&lBETTERWAFFLE &8» &c%{_player}% &fis kinda sussy! &8(&eCheat &a%{_cheat}%&8) &8(&eVL &a%{_VL}%&8) &8(&eType: &a%{_type}%&8) &8(&e%{_Ping}% &ams&8)" to all players where [player input has permission "{@NotifyPerm}"]
+		else if {_vl} <= 10:
+			send "&6&lBETTERWAFFLE &8» &c%{_player}% &fis might be sussy! &8(&eCheat &a%{_cheat}%&8) &8(&eVL &a%{_VL}%&8) &8(&eType: &a%{_type}%&8) &8(&e%{_Ping}% &ams&8)" to all players where [player input has permission "{@NotifyPerm}"]
+		else if {_vl} <= 15:
+			send "&6&lBETTERWAFFLE &8» &c%{_player}% &fis sussy! &8(&eCheat &a%{_cheat}%&8) &8(&eVL &a%{_VL}%&8) &8(&eType: &a%{_type}%&8) &8(&e%{_Ping}% &ams&8)" to all players where [player input has permission "{@NotifyPerm}"]
+		else if {_vl} <= 20:
+			send "&6&lBETTERWAFFLE &8» &c%{_player}% &fmight be impostor! &8(&eCheat &a%{_cheat}%&8) &8(&eVL &a%{_VL}%&8) &8(&eType: &a%{_type}%&8) &8(&e%{_Ping}% &ams&8)" to all players where [player input has permission "{@NotifyPerm}"]
+		else:
+			send "&6&lBETTERWAFFLE &8» &c%{_player}% &fis impostor! &8(&eCheat &a%{_cheat}%&8) &8(&eVL &a%{_VL}%&8) &8(&eType: &a%{_type}%&8) &8(&e%{_Ping}% &ams&8)" to all players where [player input has permission "{@NotifyPerm}"]
+	
+			

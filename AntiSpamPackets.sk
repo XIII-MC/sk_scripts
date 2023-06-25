@@ -1,0 +1,20 @@
+function Detect(p: player, r: text):
+	add 1 to {alertl::%{_p}%}
+	if {alertl::%{_p}%} > 20:
+		make console execute command "/§kicktoomany %{_p}%"
+	loop all players:
+		loop-player is op:
+			send "&8[&6&l!&8] &bAntiCheat &8» &6%{_p}% &7a été détecté pour: &c%{_r}% &6(%{alertl::%{_p}%}%)'" to loop-player
+			play sound "LEVEL_UP" to loop-player with volume 1 and pitch 2
+command /§kicktoomany <player>:
+	trigger:
+		kick arg 1 due to "&cVous envoyez trop de packets" 
+		Detect(arg-1, "&4Trop de packets (déconnexion)")
+on packet:
+	event-string is "PacketPlayInFlying" or "PacketPlayInPosition" or "PacketPlayInPositionLook" or "PacketPlayInLook"
+	add 1 to {counter::%event-player%}
+	if {counter::%event-player%} > 30:
+		Detect(event-player, "Too many packets")
+every 1 second:
+	clear {counter::*}
+	clear {alertl::*}

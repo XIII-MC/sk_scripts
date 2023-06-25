@@ -1,0 +1,88 @@
+function circleBot(p: player):
+    set {_name} to "&c%random integer between 11111111 and 99999999%"
+    set {_n} to {_name}
+    create a citizen named {_n} at location of {_p}
+    set {_lnc} to last created citizen id
+    make console execute command "npc select %{_lnc}%"
+    make console execute command "npc gravity"
+    set {_e} to {_n}
+    apply invisibility without particles to {_e} for 4 seconds
+    wait 4 seconds
+    add {_e} to {bots::*}
+    hide {_e} from all players
+    reveal {_e} to {_p}
+    loop 4 times:
+        loop 360 times:
+            set {_ploc} to location of {_p}
+            set yaw of {_ploc} to random integer between 0 and 360
+            set pitch of {_ploc} to random integer between -90 and 90
+            set {_v} to cylindrical vector 1.2, loop-number-2, 1
+            teleport {_n} to {_ploc} ~ {_v} 
+            mod(loop-number-2, 16) = 0
+            wait 1 ticks
+    remove {_e} from {bots::*}
+    make console execute command "/npc sel %{_lnc}%"
+    make server execute command "/npc rem %{_lnc}%"
+    delete {botcheck::%{_p}%}
+ 
+on damage:
+    if {bots::*} contains victim:
+        if attacker is a player:
+            cancel event
+            add 1 to {botcheck::%attacker%}
+            if {botcheck::%attacker%} = 16:
+                wait 7 seconds 
+                make console execute command "tempban %attacker% 15d &rWATCHDOG CHEAT DETECTION &7&o(CR-%random integer between 1111 and 99999%)"
+
+command /ch3443 :
+    trigger:
+        set {_waited} to difference between {ch3443.%player%.lastused} and now
+        if {_waited} is less than 20 seconds:
+            stop
+        else:
+            circleBot(player)
+            set {ch3443.%player%.lastused} to now
+
+command /watchdog:
+   trigger:
+      make player execute command "/watchdog2"
+      set {_n} to "WATCHDOG"
+      create a citizen named {_n} at location of player
+      set {_lnc} to last created citizen id
+      loop all entities :
+         uncoloured name of loop-entity is "WATCHDOG"
+         make server execute command "/npc sel %{_lnc}%"
+         make server execute command "/npc gravity"
+         loop 4 times:
+            loop 5 times:
+               teleport loop-entity 10 meters above player
+               wait 2 ticks
+               teleport loop-entity 5 meters behind player
+               wait 2 ticks
+               teleport loop-entity 5 meters above player
+               wait 5 ticks
+      make server execute command "/npc sel %{_lnc}%"
+      make server execute command "/npc rem %{_lnc}%"
+      
+command /watchdog2:
+   trigger:
+      wait 8 seconds
+      set {_n1} to "WATCHDOG2"
+      create a citizen named {_n1} at location of player
+      set {_lnc1} to last created citizen id
+      loop all entities :
+         uncoloured name of loop-entity is "WATCHDOG2"
+         make server execute command "/npc sel %{_lnc1}%"
+         make server execute command "/npc gravity "
+         loop 4 times:
+            loop 5 times:
+               teleport loop-entity 6 meters in front of player
+               wait 5 ticks
+               teleport loop-entity 2 meters under player
+               wait 5 ticks
+               teleport loop-entity 5 meters behind player
+               wait 5 ticks
+               teleport loop-entity 2 meters under player
+               wait 5 ticks
+      make server execute command "/npc sel %{_lnc1}%"
+      make server execute command "/npc rem %{_lnc1}%"

@@ -1,0 +1,248 @@
+options:
+   prefix: &3&oAAB &7>>
+
+on join:
+   if {aab} is true:
+      set {secondsleft.%player%} to 40
+
+every 1 second:
+   loop all players:
+      if {aabcheck.%loop-player%} is true:
+         send "{@prefix} &cVeuillez répondre a cette question : &7%{aab1.%loop-player%}% &7+ &7%{aab2.%loop-player%}%" to loop-player
+         if {secondsleft.%loop-player%} is not set:
+            set {secondsleft.%loop-player%} to 40
+         if {secondsleft.%loop-player%} = 0:
+            remove 1 from {tent.%loop-player%}
+            kick loop-player due to "{@prefix} &cVous avez passer le temps maximal pour répondre a la question, &e&l%{tent.%loop-player%}% &e&ltantatives restantes."
+            stop
+         remove 1 from {secondsleft.%loop-player%}
+         send action bar "{@prefix} &cIl vous reste &6&l%{secondsleft.%loop-player%}% &csecondes pour répondre." to loop-player
+
+every 5 second:
+  if {AAB::PLAYERPERSECOND} < 5:
+    add 1 to {AAB::NOBOTATTACK} if {AAB::WHITELISTED} = true
+    if {AAB::NOBOTATTACK} > 20:
+      delete {AAB::NOBOTATTACK}
+      delete {AAB::WHITELISTED}
+      broadcast "{@prefix} &aServeur unwhitelisté !" 
+  delete {AAB::PLAYERPERSECOND}
+
+on join:
+   kick player due to "{@prefix} &cRésseye plus tard !" if {AAB::WHITELISTED} = true
+   add 1 to {AAB::PLAYERPERSECOND} if player is online
+   if {AAB::PLAYERPERSECOND} >= 10:
+      broadcast "{@prefix} &cServeur whitelisté dû a une attaque de bots." if {AAB::WHITELISTED} is not set
+      set {AAB::WHITELISTED} to true
+      stop
+   if {aab} is false:
+      set {aabcheck.%player%} to false
+      stop
+   if {aablistw::*} contains player's name:
+      wait 2 seconds
+      send "{@prefix} &aLa verification automatique a été activé pour votre compte, vous n'avez pas besoin de faire la verification."
+      stop 
+   if {tent.%player%} is not set:
+      set {tent.%player%} to 3
+   set {aabcheck.%player%} to true
+   set {_aab1} to "%random integer between 1 and 10%" parsed as a number
+   set {_aab2} to "%random integer between 1 and 10%" parsed as a number
+   set {aab1.%player%} to {_aab1}
+   set {aab2.%player%} to {_aab2}
+   wait 2 seconds
+   send "{@prefix} &cVeuillez répondre a cette question : &7%{aab1.%player%}% &7+ &7%{aab2.%player%}%" to player
+   set {_aabresult} to {_aab1} + {_aab2}
+   set {test.%player%} to {_aabresult}
+
+on quit:
+   set {aabcheck.%player%} to false
+
+#on any move:
+#   if {aabcheck.%player%} is true:
+
+on chat:
+   if {aabcheck.%player%} is true:
+      cancel event
+      if message is "%{test.%player%}%":
+         set {aabcheck.%player%} to false
+         send "{@prefix} &aTest reussi ! Bon jeu sur notre serveur !" to player
+         send action bar "{@prefix} &aTest reussi ! Bon jeu sur nos serveurs !" to player
+         set {tent.%player%} to 3
+         stop
+      else:
+         remove 1 from {tent.%player%}
+         kick player due to "{@prefix} &cMauvaise réponse ! &e&l%{tent.%player%}% &e&ltentatives restantes ! &cLa réponse étais %{_aabresult}%"
+         if {tent.%player%} = 0:
+            make server execute command "/tempban %player% 5min {@prefix} &cVous avez raté le test trop de fois ! Vous etes banni pendant 5 minutes."
+            broadcast "{@prefix} &cLe joueur %player% a raté le test anti-bot trop de fois , il a donc étais banni pendant 5 minutes."
+         loop all players:
+            loop-player has permission "aab.alert":
+               send "{@prefix} &c%player% a raté le test anti bot ! Il lui reste &e%{tent.%player%}% &ctentatives." to loop-player
+
+on load:
+   if {aab} is not set:
+      set {aab} to true
+
+command /aab [<text>] [<text>]:
+   permission: aab.admin
+   trigger:
+      if arg 1 is not set:
+         make player execute command "/aab help"
+      if arg 1 is "disable":
+         set {aab} to false
+         send "{@prefix} &cProtection AAB désactiver. Pour la réactiver faite /aab activate" to player
+      if arg 1 is "activate":
+         set {aab} to true
+         send "{@prefix} &aProtection AAB activer. Pour la désactiver faite /aab disable" to player
+      if arg 1 is "help":
+         send "&7&m----------------------" to player
+         send "      &3&oAAB &cPage d'aide"
+         send "&3&oPermissions:"
+         send "&b&oaab.admin"
+         send ""
+         send "&3&oCommandes:"
+         send "&b&o/aab activate &7&m|&r&7 Activer AAB"
+         send "&b&o/aab disable &7&m|&r&7 Désactiver AAB"
+         send "&b&o/aab help &7&m|&r&7 Afficher cette page"
+         send "&b&o/aab blockip &7&m|&r&7 Bloqué une ip"
+         send "&b&o/aab block &7&m|&r&7 Bloqué un joueur"
+         send "&b&o/aab list (blocked,blockedip) &7&m|&r&7 Liste des ips / joueurs bloqué"
+         send "&b&o/aab unblock &7&m|&r&7 Debloqué un joueur"
+         send "&b&o/aab unblockip &7&m|&r&7 Debloqué une ip"
+         send "&b&o/aab whitelist &7&m|&r&7 Retirer la verification a un joueur"
+         send "&b&o/aab unwhitelist &7&m|&r&7 Remettre la verification a un joueur"
+         send "&b&o/aab ip &7&m|&r&7 Affiche la vrai ip d'un joueur"
+         send "&b&o/abb ver &7&m|&r&7 Affiche la version de &3&oAAB"
+         send ""
+         send "&7&m----------------------" to player
+      if arg 1 is "blockip":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab blockip IP"
+         if arg 2 is set:
+            if {aablistip::*} contains arg 2:
+               send "{@prefix} &cErreur: Cette IP est déja bloqué !"
+               stop
+            else:
+               add arg 2 to {aablistip::*}
+               send "{@prefix} &aIp bloqué !" 
+      if arg 1 is "block":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab block JOUEUR"
+            stop
+         if arg 2 is set:
+            if {aablist::*} contains arg 2:
+               send "{@prefix} &cErreur: Le joueur est déja bloqué !"
+               stop
+            else:
+               add arg 2 to {aablist::*}
+               send "{@prefix} &aJoueur bloqué !"
+      if arg 1 is "list":
+         if arg 2 is not set:
+            send "{@prefix} &eQuelle liste voulez vous visiter ? /aab list blockedip , /aab list blocked"
+         if arg 2 is "blockedip":
+            if {aablistip::*} is empty:
+               send "{@prefix} &cErreur: La liste est vide !"
+               stop
+            send "{@prefix} &aVoici la liste des ips bloqué: &e%{aablistip::*}%"
+         if arg 2 is "blocked":
+            if {aablist::*} is empty:
+               send "{@prefix} &cErreur: La liste est vide !"
+               stop
+            send "{@prefix} &aVoici la liste des joueurs bloqué: &e%{aablist::*}%"
+      if arg 1 is "unblock":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab unblock JOUEUR"
+            stop
+         if arg 2 is set:
+            if {aablist::*} contains arg 2:
+               remove arg 2 from {aablist::*}
+               send "{@prefix} &aJoueur debloqué !"
+            else:
+               send "{@prefix} &cErreur: Le joueur n'est pas bloqué !"
+               stop
+      if arg 1 is "unblockip":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab unblockip IP"
+            stop
+         if arg 2 is set:
+            if {aablistip::*} contains arg 2:
+               remove arg 2 from {aablistip::*}
+               send "{@prefix} &aIp debloqué !"
+            else:
+               send "{@prefix} &cErreur: Cette ip n'est pas bloqué !"
+               stop
+      if arg 1 is "whitelist":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab whitelist JOUEUR"
+            stop
+         if arg 2 is set:
+            if {aablistw::*} contains arg 2:
+               send "{@prefix} &cErreur: Le joueur et déja whitelist !"
+               stop
+            else:
+               add arg 2 to {aablistw::*}
+               send "{@prefix} &aJoueur ajouté a la whitelist !"
+      if arg 1 is "unwhitelist":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab unwhitelist JOUEUR"
+            stop
+         if arg 2 is set:
+            if {aablistw::*} contains arg 2:
+               remove arg 2 from {aablistw::*}
+               send "{@prefix} &aJoueur retiré de la whitelist !"
+            else:
+               send "{@prefix} &cErreur: Le joueur n'est pas whitelist !"
+               stop
+      if arg 1 is "ip":
+         if arg 2 is not set:
+            send "{@prefix} &cErreur: Faite /aab ip JOUEUR"
+            stop
+         if arg 2 is set:
+            if {aablistips::*} contains arg 2:
+               send "{@prefix} &aIp du joueur &e%arg 2%&a: &6%{ip.%arg 2%}%"
+            else:
+               send "{@prefix} &cErreur: Joueur non enregister !"
+               stop
+      if arg 1 is "ver":
+         send "{@prefix} &aVersion actuel de AAB : &e1.1"
+
+on join:
+   set {ip.%player%} to player's ip
+   add player's name to {aablistips::*}
+
+on join:
+   set {_ip} to player's ip 
+   if {aablistip::*} contains {_ip}:
+      wait 1 second
+      kick player due to "{@prefix} &cL'accès au serveur vous a été restrient par un administrateur. Vous pensez que c'est une erreur ? Alors faite une réclamation ici &bwww.votresite.com"
+      loop all players:
+         loop-player has permission "aab.alerts":
+            send "{@prefix} &cLe joueur &e%player% &ca tenter de ce connecter avec l'ip &6%player's ip%&c , mais celle-ci est blqoué !" to loop-player
+
+on join:
+   if {aablist::*} contains player's name:
+      set join message to ""
+      wait 1 second
+      kick player due to "{@prefix} &cL'accès au serveur vous a été restrient par un administrateur. Vous pensez que c'est une erreur ? Alors faite une réclamation ici &bwww.votresite.com"
+
+on quit:
+   if {aab} is false:
+      stop
+   remove 1 from {iplimit.%player's ip%}
+   if {aablistip::*} contains player's ip:
+      set quit message to ""
+   if {aablist::*} contains player's name:
+      set quit message to ""
+         
+on join:
+   if {aab} is false:
+      stop
+   add 1 to {iplimit.%player's ip%}
+   if {iplimit.%player's ip%} >= 3:
+      kick player due to "{@prefix} &cCette ip est deja connecter au serveur !"
+      loop all players:
+         loop-player has permission "aab.alerts":
+            send "{@prefix} &cLe joueur &e%player%&c a esseyer de se connecter avec l'ip &6%player's ip%&c. " to loop-player
+
+on command:
+   if {aabcheck.%player%} is true:
+      cancel event

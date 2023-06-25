@@ -1,0 +1,1091 @@
+#
+# Static Anticheat
+# Most Cheat Detections ever
+# By frogsmasha
+#
+
+
+# Dependencies
+# Skript 2.2-dev36
+# SkQuery 3.6.0
+# MundoSK 1.8.5
+# Ersatz 1.0
+# Tuske 1.8.2 Patch-3
+
+
+
+# Features
+# Automaticaly tells you when it needs to be updated
+# Detection Logs
+# Reports
+# VPN Blockage
+# Static GUI
+
+
+
+# Anticheat Detections
+
+
+
+
+# Log Creation
+# Sneak
+# Flight
+# Flight2
+# Flight Stop
+# Speed
+# Speed2
+# Speed Stop
+# AntiKB1
+# AntiKB2
+# Fast Place
+# AutoSteal
+# NoFall v1
+# NoFall v2
+# Regen
+# Bhop
+# Bhop Speed
+# Jesus
+# MultiAura
+# No Slowdown
+# Anti-VPN
+# AutoClicker
+# FastBow
+# AutoTool
+# FastEat
+# Regen
+# Criticals
+# AutoBlock
+# InventoryMove
+# Blink
+# Report
+# Static GUI
+# AntiCactus
+# Vclip
+# Reach (# ~ God Level Reach Detection ~ #) (1.8 - 1.12.2 TESTED)
+# Killaura (# ~ Semi-God Level Aura Detection ~ #) (1.8 - 1.12.2 TESTED)
+# Clear (# ~ Clear For Reach/Aura ~ #)
+
+
+
+
+
+options:
+	# Don't touch this.
+	PasteBinAPI: https://pastebin.com/raw/TNryZjgq
+
+	# Static Version
+	DownloadWebsite: ReplaceWebsiteDownHere
+	APIVersion: {Static.API.version}
+	Version: 1.28
+	
+	# ANTI-VPN
+	#Kicks Player
+	kick: true
+	#permission
+	command: antivpn
+	#admin permissions
+	permission: antivpn.admin
+	#list of databases used, set to false to disable them
+	iphub: true
+	stopforumspam: true
+	
+	# Report Permission
+	reportperm: Report.player
+	
+	# FASTBOW
+	#Main World. Reminder this is very important to set
+	world: world
+
+	# Autoclicker
+	# Minimum CPS
+	min cps: 15
+	
+	# Static GUI
+	# Command for the GUI
+	command2: Static
+
+# Log Creation
+on load:
+	wait 5 seconds
+	set {Static.API.version} to text from "{@PasteBinAPI}"
+	log "Succsesfully Started to load version {@Version} of StaticAntiCheat!" to "StaticAntiCheat/Version.log"
+	log "Succsesfully Started to load version {@Version} of StaticAntiCheat!" to "StaticAntiCheat/Detections.log"
+	log "Succsesfully Started to load version {@Version} of StaticAntiCheat!" to "StaticAntiCheat/Reports.log"
+	broadcast "&7[&3&lStatic&6AntiCheat&7] &ASuccessfully loaded all files/APIs!"
+	if {Static.API.version} is "{@Version}":
+		broadcast "&7[&3&lStatic&6AntiCheat&7] &ASuccessfully up to date!"
+	else:
+		broadcast ""
+		broadcast "&7[&3&lStatic&6AntiCheat&7] &cWarning a update of &3StaticAntiCheat &cis &aavailable &cat {@DownloadWebsite}"
+		broadcast ""
+		
+command /staticcheck:
+	trigger:
+		message "%{Static.API.version}%"
+
+# Sneak
+on inventory open:
+	wait 6 tick
+	if player is sneaking:
+		kick player because "&7[&3&lStatic&6AntiCheat&7] &6Sneak Cheat Detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+
+
+# Sneak
+on chat:
+	wait 3 tick
+	if player is sneaking:
+		kick player because "&7[&3&lStatic&6AntiCheat&7] &6Sneak Cheat Detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+
+# Sneak
+on inventory click:
+	wait 6 tick
+	player's gamemode is not creative
+	if player is sneaking:
+		kick player because "&7[&3&lStatic&6AntiCheat&7] &6Sneak Cheat Detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		
+# Sneak
+on sign change:
+	wait 6 tick
+	if player is sneaking:
+		kick player because "&7[&3&lStatic&6AntiCheat&7] &6Sneak Cheat Detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using sneak!" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		
+# Flight
+every 3 seconds:
+	loop all players:
+		if {flight.cancel.check.%loop-player%} is "false":
+			if {e.flight.cancel.check.%loop-player%} is "false":
+				loop-player is not flying
+				loop-player's gamemode is not creative
+				set {y.%loop-player%} to the y location of loop-player
+				wait 1 seconds
+				set {y2.%loop-player%} to the y location of loop-player
+				wait 1 ticks
+				if difference between {y.%loop-player%} and {y2.%loop-player%} is greater than 7:
+					send "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to all players where [player input has permission "AntiCheat.admin"]
+					# kick loop-player due to "&7[&3&lStatic&6AntiCheat&7] &6Fly Cheat Detection" # Disabld For False Detections
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to "StaticAntiCheat/Detections.log"
+					add "%loop-player%" to {Static.violations::*}
+			
+# Flight2
+every 3 seconds:
+	loop all players:
+		if {flight.cancel.check.%loop-player%} is "false":
+			if {e.flight.cancel.check.%loop-player%} is "false":
+				loop-player is not flying
+				loop-player's gamemode is not creative
+				set {x.%loop-player%} to the y location of loop-player
+				wait 1 seconds
+				set {x2.%loop-player%} to the y location of loop-player
+				wait 1 ticks
+				if difference between {x.%loop-player%} and {x2.%loop-player%} is greater than 7:
+					send "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to all players where [player input has permission "AntiCheat.admin"]
+					# kick loop-player due to "&7[&3&lStatic&6AntiCheat&7] &6Fly Cheat Detection" # Disabld For False Detections
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to "StaticAntiCheat/Detections.log"
+					add "%loop-player%" to {Static.violations::*}
+# Flight Stop
+
+on join:
+	set {flight.cancel.check.%player%} to "false"
+	set {e.flight.cancel.check.%player%} to "false"
+	
+on death of player:
+	set {flight.cancel.check.%player%} to "true"
+	wait 3 seconds
+	set {flight.cancel.check.%player%} to "false"
+
+on teleport:
+	set {flight.cancel.check.%player%} to "true"
+	wait 2 seconds
+	set {flight.cancel.check.%player%} to "false"
+	
+on world change:
+	set {flight.cancel.check.%player%} to "true"
+	wait 1 second
+	set {flight.cancel.check.%player%} to "false"
+	
+every 2 seconds:
+	loop all players:
+		if loop-player is wearing elytra:
+			if {e.flight.cancel.check.%loop-player%} is "false":
+				set {e.flight.cancel.check.%loop-player%} to "true"
+		else:
+			set {e.flight.cancel.check.%loop-player%} to "false"
+			
+on rightclick:
+	player's tool is a enderpearl:
+		set {flight.cancel.check.%player%} to "true" 
+		wait 10 seconds
+		set {flight.cancel.check.%player%} to "false"
+	
+
+
+# Speed
+every 3 seconds:
+	loop all players:
+		loop-player's gamemode is not creative
+		loop-player is not flying
+		set {speed.xlocation.%loop-player%} to the x location of loop-player
+		wait 2 seconds
+		set {speed.xlocation2.%loop-player%} to the x location of loop-player
+		if {speed.cancel.check.%loop-player%} is "false":
+			if {e.speed.cancel.check.%loop-player%} is "false":
+				if difference between {speed.xlocation.%loop-player%} and {speed.xlocation2.%loop-player%} > 20:
+					kick loop-player because "&7[&3&lStatic&6AntiCheat&7] &6Speed/Flight Cheat Detection"
+					send "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to "StaticAntiCheat/Detections.log"
+					add "%loop-player%" to {Static.violations::*}
+				
+# Speed2
+every 3 seconds:
+	loop all players:
+		loop-player's gamemode is not creative
+		loop-player is not flying
+		set {speed.zlocation.%loop-player%} to the z location of loop-player
+		wait 2 seconds
+		set {speed.zlocation2.%loop-player%} to the z location of loop-player
+		if {speed.cancel.check.%loop-player%} is "false":
+			if {e.speed.cancel.check.%loop-player%} is "false":
+				if difference between {speed.zlocation.%loop-player%} and {speed.zlocation2.%loop-player%} > 20:
+					kick loop-player because "&7[&3&lStatic&6AntiCheat&7] &6Speed/Flight Cheat Detection"
+					send "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using speed/flight" to "StaticAntiCheat/Detections.log"
+					add "%loop-player%" to {Static.violations::*}
+			
+# Speed Stop
+on join:
+	set {speed.cancel.check.%player%} to "false"
+	set {e.speed.cancel.check.%player%} to "false"
+			
+				
+on rightclick:
+	player's tool is a enderpearl:
+		set {speed.cancel.check.%player%} to "true" 
+		wait 10 seconds
+		set {speed.cancel.check.%player%} to "false"
+		
+on world change:
+	set {speed.cancel.check.%player%} to "true"
+	wait 1 second
+	set {speed.cancel.check.%player%} to "false"
+	
+on death of player:
+	set {speed.cancel.check.%player%} to "true"
+	wait 3 seconds
+	set {speed.cancel.check.%player%} to "false"
+	
+every 2 seconds:
+	loop all players:
+		if loop-player is wearing elytra:
+			if {e.speed.cancel.check.%loop-player%} is "false":
+				set {e.speed.cancel.check.%loop-player%} to "true"
+		else:
+			set {e.speed.cancel.check.%loop-player%} to "false"
+
+on teleport:
+	set {speed.cancel.check.%player%} to "true"
+	wait 2 seconds
+	set {soeed.cancel.check.%player%} to "false"
+	
+# AntiKB1
+on any movement:
+	loop all players:
+		set {AntiKB1.%loop-player%} to placeholder "player_ping"
+
+on damage of a player:
+	if victim's gamemode is survival or adventure:
+		if damage was caused by fall:
+			stop
+		if damage was caused by potion:
+			stop
+		if block behind victim is not air:
+			stop
+		if attacker is a player:
+			set {_loc1} to location of victim
+			wait 10 ticks
+			set {_loc2} to location of victim
+			block at victim is not cobweb:
+				victim is not riding:
+					distance between {_loc1} and {_loc2} = 0:
+						if {AntiKB1.%victim%} < 125:
+							add 3 to {knockback.%victim%}
+							if {kbtimer.%victim%} is less than 1:
+								send "&7[&3&lStatic&6AntiCheat&7] %victim% may be using AntiKB1 v1.1" to all players where [player input has permission "AntiCheat.admin"]
+								add 10 to {kbtimer.%victim%}
+						if {AntiKB1.%victim%} > 125:
+							add 1 to {knockback.%victim%}
+							if {kbtimer.%victim%} is less than 1:
+								send "&7[&3&lStatic&6AntiCheat&7] %victim% may be using AntiKB1 v1.2" to all players where [player input has permission "AntiCheat.admin"]
+								add 10 to {kbtimer.%victim%}
+# AntiKB2
+			attacker is an entity
+			victim is a player
+			victim's gamemode is survival or adventure
+			victim doesn't have regeneration
+			block at victim is not a barrier
+			set {_loc} to victim's location
+			wait 10 ticks
+			push victim backwards with force 0.01
+			wait 5 ticks
+			if distance between {_loc} and location of victim is 0:
+				send "&7[&3&lStatic&6AntiCheat&7] %victim% may be using AntiKB2 v1.1" to all players where [player input has permission "AntiCheat.admin"]
+				kick the victim due to "&7[&3&lStatic&6AntiCheat&7] &6AntiKB2 Cheat Detetion"
+				log "&7[&3&lStatic&6AntiCheat&7] &7%victim% may be using AntiKB2 v1.1" to "StaticAntiCheat/Detections.log"
+				add "%victim%" to {Static.violations::*}				
+			if distance between {_loc} and location of victim is 0.05:
+				send "&7[&3&lStatic&6AntiCheat&7] %victim% may be using AntiKB2 v1.2" to all players where [player input has permission "AntiCheat.admin"]
+				kick the victim due to "&7[&3&lStatic&6AntiCheat&7] &6AntiKB2 Cheat Detetion"
+				log "&7[&3&lStatic&6AntiCheat&7] &7%victim% may be using AntiKB2 v1.2" to "StaticAntiCheat/Detections.log"
+				add "%victim%" to {Static.violations::*}
+				
+
+# Fast Place
+on place:
+	if {fastplace.%player%} is bigger than 3:
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using fast place" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using fast place" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		delete {fastplace.%player%}
+		cancel event
+		stop
+	add 1 to {fastplace.%player%}
+	wait 5 tick
+	delete {fastplace.%player%}
+	
+# AutoSteal
+every 2 seconds:
+	loop all players:
+		clear {_Autosteal}
+		clear {_Autosteal2}
+
+on inventory click:
+	set {%player%.autosteal.ping} to placeholder "player_ping"
+	add 1 to {_Autosteal}
+	add 1 to {_Autosteal2}
+	if {_Autosteal} is greater than 8:
+		if {_Autosteal2} is greater than 10:
+			if {%player%.autosteal.ping} is greater than 50 and 8000000:
+				if {%player%.autosteal.ping} is greater than 200:
+					send "&7[&3&lStatic&6AntiCheat&7] %player% may be using AutoSteal ping: [&3&l%{%player%.autosteal.ping}%&7] &3[Non-Kick]" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using AutoSteal ping: [&3&l%{%player%.autosteal.ping}%&7] &3[Non-Kick]" to "StaticAntiCheat/Detections.log"
+					add "%player%" to {Static.violations::*}
+					stop
+				if {%player%.autosteal.ping} is less than 150:
+					send "&7[&3&lStatic&6AntiCheat&7] %player% may be using AutoSteal ping: [&3&l%{%player%.autosteal.ping}%&7] &3[Kick]" to all players where [player input has permission "AntiCheat.admin"]
+					kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6AutoSteal Cheat Detetion"
+					log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using AutoSteal ping: [&3&l%{%player%.autosteal.ping}%&7] &3[Kick]" to "StaticAntiCheat/Detections.log"
+					add "%player%" to {Static.violations::*}
+		
+# NoFall v1
+on any movement:
+	{ttme.%player%} is not set
+	player's gamemode is Adventure or Survival
+	player is on ground
+	block at player is air
+	block under player is air
+	set {_nofallcount} to 0
+	loop all blocks in radius 3 around player:
+		if loop-block is stairs:
+			stop
+		if loop-block is slab:
+			stop
+	loop all blocks in radius 2 around player:
+		if loop-block is not air:
+			add 1 to {_nofallcount}
+	if {_nofallcount} < 1:
+		loop all players:
+			loop-player is op:
+				kick the player due to "&7[&3&lStatic&6AntiCheat&7] Nofall Cheat Detection&9(V 1.1)"
+				log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Nofall &9(V 1.1)" to "StaticAntiCheat/Detections.log"
+				add "%player%" to {Static.violations::*}
+				stop
+	if {_nofallcount} > 0:
+		stop
+		
+# Nofall v2
+every 1 second:
+	loop all players:
+		loop-player's gamemode is Adventure or Survival
+		loop-player is on ground
+		loop all blocks in radius 3 around loop-player:
+			if loop-block is stairs:
+				stop
+			if loop-block is slab:
+				stop
+		block under loop-player is air
+		set {_y} to loop-player's y-location
+		wait 0.5 second
+		loop-player is on ground
+		set {_y2} to loop-player's y-location  
+		set {_yresult} to {_y} - {_y2}
+		if {_yresult} > 1:
+			loop all players:
+				loop-player-2 is op:
+					send "&7[&3&lStatic&6AntiCheat&7] %loop-player-1% may be using Nofall&9(V 1.2)" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player-1% may be using Nofall &9(V 1.2)" to "StaticAntiCheat/Detections.log"
+					add "%loop-player-1%" to {Static.violations::*}
+		
+# Regen
+on heal:
+	set {_mp} to {maxping} parsed as number
+	set {_playerping} to placeholder "player_ping"
+	if {_playerping} < {_mp}:
+		if player doesn't have permission "anticheat.bypass":
+			if player has regeneration:
+				stop
+			else:
+				set {_dif} to difference between {heal.%player%} and now
+				if {_dif} is less than 0.45 seconds:
+					cancel event
+					set {heal.%player%} to now
+					loop all players:
+						if loop-player has permission "anticheat.notify":
+							if {recieve.%loop-player%} is true:
+								send "&7[&3&lStatic&6AntiCheat&7] %player% may be using Regen" to all players where [player input has permission "AntiCheat.admin"]
+								log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Regen" to "StaticAntiCheat/Detections.log"
+								add "%player%" to {Static.violations::*}
+				set {heal.%player%} to now
+					
+# Bhop
+on any movement:
+	set {_mp} to {maxping} parsed as number
+	set {_playerping} to placeholder "player_ping"
+	if {_playerping} < {_mp}:
+		if player is not riding:
+			if player doesn't have permission "anticheat.bypass":
+				if player's gamemode is survival or adventure:
+					if player's flight mode is false:
+						if player has speed:
+							stop
+						else:
+							set {_blocks} to {speedblocks} parsed as number
+						if block under player is not air:
+							set {speed.tp.%player%} to true
+							set {_bhp1x} to x-coordinates of player
+							wait 1 second
+							set {_bhp2x} to x-coordinates of player
+							wait 1 tick
+							if {speed.tp.%player%} is not set:
+								stop
+							else:
+								if block under player is not ice:
+									if {t.bhp.lastcheck} is not set:
+										set {t.bhp.lastcheck} to now
+									set {_t} to difference between {_bhp1x} and {_bhp2x}
+									set {_t2} to difference between {_bhp1y} and {_bhp2y}
+									if {_t} > {_blocks}:
+										add 1 to {bhp.%player%}
+										set {_p} to placeholder "player_ping"
+										clear {speed.tp.%player%}
+										if difference between now and {t.bhp.lastcheck} is higher than 3 seconds:
+											loop all players:
+												if loop-player has permission "anticheat.notify":
+													if {recieve.%loop-player%} is true:
+														set {t.bhp.lastcheck} to now
+														send "&7[&3&lStatic&6AntiCheat&7] %player% may be using bhop &6V1.1" to all players where [player input has permission "AntiCheat.admin"]
+														log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using bhop &6V1.1" to "StaticAntiCheat/Detections.log"
+														add "%player%" to {Static.violations::*}
+									if {_2} > {_blocks}:
+										add 1 to {bhp.%player%}
+										set {_p} to placeholder "player_ping"
+										if difference between now and {t.bhp.lastcheck} is higher than 3 seconds:
+											loop all players:
+												if loop-player has permission "anticheat.notify":
+													if {recieve.%loop-player%} is true:
+														set {t.bhp.lastcheck} to now
+														send "&7[&3&lStatic&6AntiCheat&7] %player% may be using bhop &6V1.2" to all players where [player input has permission "AntiCheat.admin"]
+														log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using bhop &6V1.2" to "StaticAntiCheat/Detections.log"
+														add "%player%" to {Static.violations::*}
+									if {bhp.%player%} > 30:
+										remove 10 from {bhp.%player%}
+										kick player due to "&7[&3&lStatic&6AntiCheat&7] Bhop Cheat Detection"
+											
+# Bhop Speed
+on teleport:
+	if {speed.tp.%player%} is true:
+		clear {speed.tp.%player%}
+		stop
+
+# Jesus
+on any movement:
+	set {_mp} to {maxping} parsed as number
+	set {_playerping} to placeholder "player_ping"
+	if {_playerping} < {_mp}:
+		if player is not riding:
+			if player doesn't have permission "anticheat.bypass":
+				if player's gamemode is survival or adventure:
+					if player is not sneaking:
+						if block above player is air:
+							set {_b} to block under player
+							if block under {_b} is water:
+								set {_y1} to y-coordinates of player
+								set {_x1} to x-coordinates of player
+								set {_z1} to z-coordinates of player
+								set {_loc} to location of player
+								if block behind {_b} is water:
+									if block 1 meter south of {_b} is water:
+										if block 1 meter west of {_b} is water:
+											if block 1 meter east of {_b} is water:
+												if block 1 meter north of {_b} is water:
+													wait 5 ticks
+													set {_y2} to y-coordinates of player
+													set {_x2} to x-coordinates of player
+													set {_z2} to z-coordinates of player
+													set {_loc2} to location of player
+													if {_y1} = {_y2}:
+														if {_loc} = {_loc2}:
+															stop
+														else:
+															if difference between {_x2} and {_x1} is less than 1:
+																if difference between {_z2} and {_z1} is less than 1:
+																	stop
+															if difference between {_z2} and {_z1} is less than 1:
+																if difference between {_x2} and {_x1} is less than 1:
+																	stop
+															else:
+																add 1 to {jesus.%player%}
+																if {t.jesus.lastcheck} is not set:
+																	set {t.jesus.lastcheck} to now
+																set {_p} to placeholder "player_ping"
+																if difference between now and {t.jesus.lastcheck} is higher than 1.5 seconds:
+																	loop all players:
+																		if loop-player has permission "anticheat.notify":
+																			if {recieve.%loop-player%} is true:
+																				set {t.jesus.lastcheck} to now
+																				send "&7[&3&lStatic&6AntiCheat&7] %player% may be using jesus" to all players where [player input has permission "AntiCheat.admin"]
+																				log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using jesus" to "StaticAntiCheat/Detections.log"
+																				add "%player%" to {Static.violations::*}
+																		if {jesus.%player%} > 10:
+																			remove 5 from {jesus.%player%}
+																			kick player due to "&7[&3&lStatic&6AntiCheat&7] Bhop Cheat Detection"
+																			log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using jesus" to "StaticAntiCheat/Detections.log"
+																			add "%player%" to {Static.violations::*}
+
+
+# MultiAura
+on damage:
+	if attacker is a player:
+		if victim is not a player:
+			add 1 to {mobaura.%attacker%}
+			if {mobaura.%attacker%} >= 20:
+				if difference between {lastmobauracheck.%attacker%} and now is greater than 5 seconds:
+					set {lastmobauracheck.%attacker%} to now
+					add 1 to {killAuraB.%attacker%}
+					add 3 to {killAuraB.%attacker%.combined}
+					send "&7[&3&lStatic&6AntiCheat&7] &a%attacker% hit multiple entities: &e%{mobaura.%attacker%}% &a(&eVL %{killAuraB.%attacker%.combined}%" to all players where [player input has permission "AntiCheat.admin"]
+		if victim is a player:
+			add 1 to {multiaura.%attacker%}
+			if {multiaura.%attacker%} >= 20:
+				if difference between {lastmultiauracheck.%attacker%} and now is greater than 5 seconds:
+					set {lastmultiauracheck.%attacker%} to now
+					add 1 to {killAuraB.%attacker%}
+					add 3 to {killAuraB.%attacker%.combined}
+					send "&7[&3&lStatic&6AntiCheat&7] &a%attacker% hit multiple entities: &e%{multiaura.%attacker%}% &a(&eVL %{killAuraB.%attacker%.combined}%" to all players where [player input has permission "AntiCheat.admin"]
+
+# No Slowdown
+on any movement:
+	if {%player%.moving} is not set:
+		set {%player%.moving} to true
+		wait 10 ticks
+		delete {%player%.moving}
+	if {%player%.jumping} is not set:
+		set {%player%.alty} to player's altitude
+		wait 2 ticks
+		if {%player%.alty} is less than player's altitude:
+			set {%player%.jumping} to true
+			wait 10 ticks
+			delete {%player%.jumping}
+	block under player is not air:
+		block at player's position is not air:
+			set {%player%.groundpos} to player's position
+	block under player is soul sand:
+		player has potion of speed:
+			stop
+		player's walking speed is bigger than or equal to 0.3:
+			kick player due to "&7[&3&lStatic&6AntiCheat&7] &6NoSlowDown Cheat Detection"
+			send "&7[&3&lStatic&6AntiCheat&7] &a%player% may be using NoSlowDown Cheats" to all players where [player input has permission "AntiCheat.admin"]
+			log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using NoSlowDown" to "StaticAntiCheat/Detections.log"
+			add "%player%" to {Static.violations::*}
+			
+			
+# GuiMovement
+on inventory open:
+	wait 4 ticks
+	player's gamemode is not creative	
+	if player's flight mode is false:
+		if {%player%.moving} is "true":
+			kick player due to "&7[&3&lStatic&6AntiCheat&7] &6GuiMovement Cheat Detection"
+			send "&7[&3&lStatic&6AntiCheat&7] &a%player% may be using GuiMovement Cheats" to all players where [player input has permission "AntiCheat.admin"]
+			log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using GuiMoveMent" to "StaticAntiCheat/Detections.log"
+			add "%player%" to {Static.violations::*}
+		
+			
+# AntiVPN
+on join:
+	if {AntiVPN::VPNBypass::%player%} is set:
+		stop
+	if {AntiVPN::VPNBypassIP::%ip of player%} is set:
+		stop
+	if {@iphub} is true:
+		$ thread
+		set {_info} to text from "http://legacy.iphub.info/api.php?ip=%ip of player%&showtype=4"
+		set {_info::*} to {_info} split at ",""proxy"":"
+		set {_info} to {_info::2}
+		replace all "}" with "" in {_info}
+		if {_info} is "1":
+			if {@kick} is true:
+				kick player due to "&7[&3&lStatic&6AntiCheat&7] &6VPN Detection"
+				log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using a VPN" to "StaticAntiCheat/Detections.log"
+				set join message to ""
+				send "&7[&3&lStatic&6AntiCheat&7] &7%player%&a was kicked for using a &6&lVPN!" to all players where [player input has permission "AntiCheat.admin"]
+				stop
+				
+	if {@stopforumspam} is true:
+		$ thread
+		set {_info} to text from "http://api.stopforumspam.org/api?ip=%ip of player%"
+		set {_info::*} to {_info} split at "<appears>"
+		set {_info} to {_info::2}
+		set {_info::*} to {_info} split at "</appears>"
+		set {_info} to {_info::1}
+		if {_info} is "yes":
+			if {@kick} is true:
+				kick player due to "&7[&3&lStatic&6AntiCheat&7] &6VPN Detection"
+				log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using a VPN" to "StaticAntiCheat/Detections.log"
+				set join message to ""
+				send "&7[&3&lStatic&6AntiCheat&7] &7%player%&a was kicked for using a &6&lVPN!" to all players where [player input has permission "AntiCheat.admin"]
+		
+command /{@command} [<text>] [<text>]:
+	permission: {@permission}
+	trigger:
+		if arg-1 is "add":
+			if arg-2 is set:
+				if {AntiVPN::VPNBypass::%arg-2%} is not set:
+					set {AntiVPN::VPNBypass::%arg-2%} to true
+					send "&aAdded &c%arg-2%&a to VPN Bypass list!"
+				else:
+					send "&aThat player is already on the VPN Bypass list!"
+			else:
+				send "&cUsage: &a/{@command} add <player>"
+		else if arg-1 is "addip":
+			if arg-2 is set:
+				if {AntiVPN::VPNBypassIP::%arg-2%} is not set:
+					set {AntiVPN::VPNBypassIP::%arg-2%} to true
+					send "&aAdded &c%arg-2%&a to VPN Bypass IP list!"
+				else:
+					send "&aThat IP is already on the VPN Bypass list!"
+			else:
+				send "&cUsage: &a/{@command} addip <ip>"
+		else if arg-1 is "remove":
+			if arg-2 is set:
+				if {AntiVPN::VPNBypass::%arg-2%} is set:
+					delete {AntiVPN::VPNBypass::%arg-2%}
+					send "&aRemoved &c%arg-2%&a from VPN Bypass list!"
+				else:
+					send "&aThat player is not on the VPN Bypass list!"
+			else:
+				send "&cUsage: &a/{@command} remove <player>"
+		else if arg-1 is "removeip":
+			if arg-2 is set:
+				if {AntiVPN::VPNBypassIP::%arg-2%} is set:
+					delete {AntiVPN::VPNBypassIP::%arg-2%}
+					send "&aRemoved &c%arg-2%&a from VPN Bypass IP list!"
+				else:
+					send "&aThat player is not on the VPN Bypass IP list!"
+			else:
+				send "&cUsage: &a/{@command} removeip <ip>"
+		else if arg-1 is "list":
+			if arg-2 is not set:
+				if (size of {AntiVPN::VPNBypass::*}) is greater than 8:
+					send "&aVPNBypass List:"
+					send "&a%{_Temp::*}%"
+				else:
+					send "&aVPNBypass List:"
+					loop {AntiVPN::VPNBypass::*}:
+						send "&a%loop-index%"
+			else if arg-2 is "ip":
+				if (size of {AntiVPN::VPNBypassIP::*}) is greater than 8:
+					send "&aVPNBypass IP List:"
+					send "&a%{_Temp::*}%"
+				else:
+					send "&aVPNBypass IP List:"
+					loop {AntiVPN::VPNBypassIP::*}:
+						send "&a%loop-index%"
+		else:
+			send "&a[] &2= &aOptional &2| &a<> &2= &aRequired"
+			send "&cUsage: &a/{@command} add <player> &2| &aAdds a players to the bypass list"
+			send "&cUsage: &a/{@command} remove <player> &2| &aRemoves a player from the bypass list"
+			send "&cUsage: &a/{@command} addip <ip> &2| &aAdds an IP to the bypass list"
+			send "&cUsage: &a/{@command} removeip <ip> &2| &aRemoves an IP from the bypass list"
+			send "&cUsage: &a/{@command} list [ip] &2| &aLists users [IPs] on the bypass list"
+		
+		
+		
+
+
+# Autoclicker
+
+on any movement:
+	loop all players:
+		set {server.tps} to placeholder "server_tps"
+
+on leftclick:
+	{click.cooldown.%player%} is not true
+	add 1 to {click.cps.%player%}
+	if {click.cps.%player%} is greater than or equal to {@min cps}:
+		send "&7[&3&lStatic&6AntiCheat&7] %player% might be using a autoclicker TPS: &6[&3%{server.tps}%&6]" to all players where [player input has permission "AntiCheat.admin"]
+		kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6AutoClicker Cheat Detection"
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using a AutoCliker" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		set {click.cooldown.%player%} to true
+		wait 5 seconds
+		clear {click.cooldown.%player%}
+	wait 1 second
+	clear {click.cps.%player%}
+		
+# FastBow
+on any movement:
+	set {fastbow.tps} to placeholder "server_tps"
+	
+on any movement:
+	loop all players:
+		set {fastbow.ping.%loop-player%} to placeholder "player_ping"
+
+on shoot:
+	if projectile is an arrow:
+		if {fastbow.tps} is above 17:
+			if {fastbow.ping.%shooter%} is below 250:
+				if difference between {fastbow.lastshot.%shooter%} and now is less than 0.5 seconds:
+					add 1 to {fastbow.detect.%shooter%}
+					if {fastbow.detect.%shooter%} = 6:
+						kick shooter due to "&7[&3&lStatic&6AntiCheat&7] FastBow Cheat Detection"
+						send "&7[&3&lStatic&6AntiCheat&7] &7%shooter% might be using FastBow" to all players where [player input has permission "AntiCheat.admin"]
+						log "&7[&3&lStatic&6AntiCheat&7] &7%shooter% may be using FastBow" to "StaticAntiCheat/Detections.log"
+						add "%shooter%" to {Static.violations::*}
+					set {fastbow.lastshot.%shooter%} to now
+				
+every 1.0 seconds:
+	loop all players:
+		remove 1 from {fastbow.detect.%loop-player%}
+
+
+# AutoTool
+on tool change:
+	set {_autotool} to true
+	wait 1.55 ticks
+	clear {_autotool}
+	
+on left click:
+	wait 1 tick
+	if {_autotool} is true:
+		kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6AutoTool cheat detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using autotool!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using AutoTool" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		clear {_autotool}
+		
+on right click:
+	wait 1 tick
+	if {_autotool} is true:
+		kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6AutoTool cheat detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using autotool!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using AutoTool" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		clear {_autotool}
+		
+# FastEat
+every 1.25 seconds:
+	remove 1 from {_fasteast}
+
+on consume:
+	add 1 to {_fasteat}
+	if {_fasteat} is above 5:
+		kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6FastEat Cheat detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using FastEat!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using FastEat" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+
+# Regen
+on heal:
+	set {_regen} to player's health
+	if difference between {regen.%player%.last} and now is less than 3 ticks:
+		if {last.health.%player%} is not set:
+			set {last.health.%player%} to player's health
+		if difference between {last.health.%player%} and {_regen} > 4:
+			cancel event
+			set {regen.%player%.last} to now
+			send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Regen!" to all players where [player input has permission "AntiCheat.admin"]
+			log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Regen" to "StaticAntiCheat/Detections.log"
+			add "%player%" to {Static.violations::*}
+			add 1 to {regen.%player%.warn}
+			stop
+		set {regen.%player%.last} to now
+		delete {last.health.%player%}
+		
+every second:
+	loop all players:
+		if {regen.%loop-player%.warn} is 5:
+			kick the loop-player due to "&7[&3&lStatic&6AntiCheat&7] &6Regen cheat detection"
+			log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using Regen" to "StaticAntiCheat/Detections.log"
+			add "%loop-player%" to {Static.violations::*}
+
+
+# AutoBlock
+on leftclick:
+	set {_autoblock} to true
+	wait 14 ticks
+	clear {_autoblock}
+	
+on rightclick:
+	wait 1 tick
+	if {_autoblock} is true:
+		kick the player due to "&7[&3&lStatic&6AntiCheat&7] &6Autoblock cheat detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Autoblock!" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Autoblock" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		clear {_autoblock}
+		
+# InventoryMove
+on inventory open:
+	set {_inventory.open} to "true"
+
+on inventory close:
+	set {_inventory.open} to "false"
+
+on inventory click:
+	wait 10 ticks
+	if {_inventory.open} is "true":
+		kick player due to "&7[&3&lStatic&6AntiCheat&7] &6InventoryMove Cheat Detection"
+		send "&7[&3&lStatic&6AntiCheat&7] &a%player% may be using InventoryMove Cheats" to all players where [player input has permission "AntiCheat.admin"]
+		log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using InventoryMove" to "StaticAntiCheat/Detections.log"
+		add "%player%" to {Static.violations::*}
+		
+# Blink
+on any movement:
+	if difference between {blink.last.%player%} and now is less than 2 seconds:
+		set {server.tps.blink} to placeholder "server_tps"
+		player's gamemode is not creative
+		player's fly mode is false
+		set {_pos} to location of player
+		wait 0.5 seconds
+		if {server.tps.blink} is above 15:
+			if distance between {_pos} and player is bigger than 5:
+				if {blink.count.%player%} is not set:
+					set {blink.count.%player%} to 0
+				add 1 to {blink.count.%player%}
+				if {blink.count.%player%} is greater than 25:
+					kick player because "&7[&3&lStatic&6AntiCheat&7] &6Blink Cheat Detection"
+					send "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Blink!" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using Blink" to "StaticAntiCheat/Detections.log"
+					add "%player%" to {Static.violations::*}
+					delete {blink.count.%player%}
+					teleport player to {_pos}
+			set {blink.last.%player%} to now
+
+# Report
+
+on join:
+	if {report.cooldown.%player%} is not set:
+		set {report.cooldown.%player%} to "false"
+	if {report.cooldown.timer.%player%} is not set:
+		set {report.cooldown.timer.%player%} to 0
+
+command /report [<player>] [<text>]:
+	permission: {@reportperm}
+	permission message: &4No permission
+	trigger:
+		if arg-2 is set:
+			if {report.cooldown.%player%} is "false":
+				set {report.cooldown.%player%} to "true"
+				message "&7[&3&lStatic&6AntiCheat&7] %arg-1% has been reported for %arg-2%"
+				send "&7[&3&lStatic&6AntiCheat&7] &7%arg-1% has been reported for %arg-2% by %player%" to all players where [player input has permission "AntiCheat.admin"]
+				log "&7[&3&lStatic&6AntiCheat&7] &7%arg-1% has been reported for %arg-2% by %player%" to "StaticAntiCheat/Reports.log"
+				set {report.cooldown.timer.%player%} to 60
+			else:
+				message "&7[&3&lStatic&6AntiCheat&7] You must wait %{report.cooldown.timer.%player%}% seconds to report someone again"
+		if arg-2 is not set:
+			message "&7[&3&lStatic&6AntiCheat&7] /report player reason"
+			
+			
+every second:
+	loop all players:
+		if {report.cooldown.%loop-player%} is "true":
+			remove 1 from {report.cooldown.timer.%loop-player%}
+		if {report.cooldown.timer.%loop-player%} is 0:
+			set {report.cooldown.%loop-player%} to "false"
+			set {report.cooldown.timer.%loop-player%} to 60
+			send "&7[&3&lStatic&6AntiCheat&7] You can now report someone." to loop-player
+
+# AntiCactus
+every second:
+	loop all players:
+		set {_regen.cactus} to loop-player's health
+		set {_regen.last} to now
+		loop all blocks in radius 0.700 around loop-player:
+			if loop-block is cactus:
+				wait 3 tick
+				if difference between {_regen.cactus} and now is {_regen.last}:
+					kick loop-player due to "&7[&3&lStatic&6AntiCheat&7] &6AntiCactus Cheat Detection"
+					send "&7[&3&lStatic&6AntiCheat&7] &a%loop-player% may be using AntiCactus Cheats" to all players where [player input has permission "AntiCheat.admin"]
+					log "&7[&3&lStatic&6AntiCheat&7] &7%loop-player% may be using AntiCactus" to "StaticAntiCheat/Detections.log"
+
+# Vclip
+on teleport:
+	set {%player%.tp} to true
+	wait 1 second
+	set {%player%.tp} to false
+
+on any movement:
+	if {%player%.tp} is false:
+		if 1 = 1:
+			player doesn't have jump boost
+			if {%player%.location.last} is not set:
+				set {%player%.location.last} to location of player
+			if distance between {%player%.location.last} and location of player is less than 35:
+				set {_y1} to y-coordinate of {%player%.location.last}
+				set {_y2} to y-coordinate of location of player
+				set y-coordinate of {%player%.location.last} to {_y2}
+				set {_diff} to difference between {_y1} and {_y2}
+				loop all players:
+					if {Static.message.teleport.%loop-player%} is true:
+						send "&7[&3&lStatic&6AntiCheat&7] &7%player% moved to fast Last: %{%player%.location.last}% Now: %location of player%" to all players where [player input has permission "AntiCheat.admin"]
+				if {_y2} > {_y1}:
+					if {%player%.world.last} = world of player:
+						if {_diff} > 2:
+							set {_b} to block at player 
+							set {_h} to 0
+							while {_b} is 0:0:
+								set {_b} to block below {_b} 
+								add 1 to {_h}
+						teleport player to {_b}
+						send "&7[&3&lStatic&6AntiCheat&7] &a%player% may be using VClip/Flight Cheats (y1=%{_y1}%; y2=%{_y2}%; height: %{_h} + 1%)" to all players where [player input has permission "AntiCheat.admin"]
+						log "&7[&3&lStatic&6AntiCheat&7] &7%player% may be using VClip/Flight Cheats (y1=%{_y1}%; y2=%{_y2}%; height: %{_h} + 1%)" to "StaticAntiCheat/Detections.log"
+				set {%player%.location.last} to location of player
+				set {%player%.world.last} to world of player
+
+# - Reach - #
+# ~ God Level Reach Detection ~ #
+on damage:
+	attacker is a player:
+		gamemode of attacker is survival or adventure:
+			fly mode of attacker is false:
+				attacker is not riding a boat or pig or horse:
+					damage wasn't caused by projectile:
+						set {_y.a} to y coord of attacker
+						set {_y.v} to y coord of victim
+						set {_yans} to {_y.v} - {_y.a}
+						if {_yans} >= 0.01:
+							set {_ans} to distance between location of victim and location of attacker - ({_yans} / 2)
+						if {_yans} <= 0:
+							set {_ans} to distance between location of victim and location of attacker
+						{_ans} is bigger than 4.25:
+							add 1 to {%attacker's UUID%.notify.ac.reach}
+							if {%attacker's UUID%.notify.ac.reach} is 3 or above:
+								clear {%attacker's UUID%.notify.ac.reach}
+								send "&7[&3&lStatic&6AntiCheat&7] &3&l[%attacker%] &7Reach Cheat detection &7[&7Y Level: &b%{_yans}% &7Distance: &b%{_ans}%&7]" to all players where [player input has permission "AntiCheat.admin"]
+								log "&7[&3&lStatic&6AntiCheat&7] &3&l[%attacker%] &7Reach Cheat detection &7[&7Y Level: &b%{_yans}% &7Distance: &b%{_ans}%&7]" to "StaticAntiCheat/Detections.log"
+
+# - Killaura - #
+# ~ Semi-God Level Aura Detection ~ #
+every tick:
+	loop all players:
+		set {ac.killaura.infront.%loop-player's UUID%} to location of block 3.78 infront loop-player #3.78
+			
+on damage:
+	attacker is a player:
+		distance between {ac.killaura.infront.%attacker's UUID%} and block 3.78 infront attacker is bigger than 0.4782: # 0.48 #BEST: 0.478
+			add 1 to {%attacker's UUID%.ac.killaura}
+			if {%attacker's UUID%.ac.killaura} is 2 or above:
+				clear {%attacker's UUID%.ac.killaura}
+				send "&7[&3&lStatic&6AntiCheat&7] &l[%attacker%] &7Killaura Cheat detection &7[&7VictimPOS: &b%{ac.killaura.infront.%attacker's UUID%}%&7]" to all players where [player input has permission "AntiCheat.admin"]
+				log "&7[&3&lStatic&6AntiCheat&7] &l[%attacker%] &7Killaura Cheat detection &7[&7VictimPOS: &b%{ac.killaura.infront.%attacker's UUID%}%&7]" to "StaticAntiCheat/Detections.log"
+
+# - Clear - #
+every 15 seconds:
+	loop all players:
+		clear {%loop-player's UUID%.ac.killaura}
+		clear {%loop-player's UUID%.notify.ac.reach}
+
+# Static GUI
+command /staticgui:
+	permission: AntiCheat.admin
+	permission message: &4No permission
+	trigger:
+		create a gui with virtual chest named "&c&lStatic GUI" with 6 rows:
+			set {_W} to White Stained Glass pane
+			set {_C} to Cyan Stained Glass pane
+			set {_B} to Blue Stained Glass Pane
+			# Left Right
+			make gui slot 0 with {_W} named "&r"
+			make gui slot 8 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 17 with {_W} named "&r"
+			make gui slot 9 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 18 with {_W} named "&r"
+			make gui slot 26 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 35 with {_W} named "&r"
+			make gui slot 27 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 36 with {_W} named "&r"
+			make gui slot 44 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 53 with {_W} named "&r"
+			make gui slot 45 with {_C} named "&r"
+			# Top Bottom
+			make gui slot 46 with {_B} named "&r"
+			make gui slot 1 with {_B} named "&r"
+			wait 1 tick
+			make gui slot 2 with {_W} named "&r"
+			make gui slot 47 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 48 with {_W} named "&r"
+			make gui slot 3 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 4 with {_W} named "&r"
+			make gui slot 49 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 50 with {_W} named "&r"
+			make gui slot 5 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 6 with {_W} named "&r"
+			make gui slot 51 with {_C} named "&r"
+			wait 1 tick
+			make gui slot 52 with {_B} named "&r"
+			make gui slot 7 with {_B} named "&r"
+			# Update
+			set {_C} to Chest
+			set {_R} to Block of Redstone
+			set {_S} to Diamond Sword
+			if {Static.API.version} is "{@Version}":
+				set {Update.API.GUI} to "&2Updated"
+			else:
+				set {Update.API.GUI} to "&cNeeds Update"
+			make gui slot 20 with {_C} named "&6&lUpdate Checker" with lore "||&3&l&m----------||&7Update API: %{Update.API.GUI}%||&7Click to open the website||&3&l&m----------":
+				close player's inventory
+				send "&7[&3&lStatic&6AntiCheat&7] SkUnity Website: {@DownloadWebsite}"
+			make gui slot 22 with {_R} named "&6&lStatic Disabling" with lore "||&3&l&m----------||&7Click To Disable Static AntiCheat||&3&l&m----------":
+				add 1 to {Static.shutdown}
+				if {Static.shutdown} is 1:
+					send "&7[&3&lStatic&6AntiCheat&7] Are you sure you want to shutdown Static? (Click Again to proceed)"
+				if {Static.shutdown} is above 1:
+					close player's inventory
+					set {Static.shutdown} to 0
+					send "&7[&3&lStatic&6AntiCheat&7] Static AntiCheat Shutting down &7(&cTo Enable Again execute /sk enable Static&7)"
+					execute console command "/sk disable Static"	
+			make gui slot 24 with {_S} named "&6&lPlayer Violations" with lore "||&3&l&m----------||&7All Player anticheat Violations||&7Click to display||&3&l&m----------":
+				close player's inventory
+				send "&7[&3&lStatic&6AntiCheat&7] Player Detections: &8(&6&l%{Static.violations::*}%&8)"
+		open last gui to the player

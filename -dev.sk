@@ -1,0 +1,41 @@
+on step on redstone block:
+   push player up at speed 1
+   push player forward at speed 2
+
+on rightclick with paper:
+   set {kit.%player%} to true
+   make server execute command "/give %player% ironhelmet 1"
+   make server execute command "/give %player% ironboots 1"
+   make server execute command "/give %player% ironchestplate 1"
+   make server execute command "/give %player% ironleggings 1"
+   make server execute command "/give %player% ironsword 1"
+   make server execute command "/give %player% goldenapple 10"
+   make server execute command "/give %player% bow 1"
+   make server execute command "/give %player% arrow 32"
+   make server execute command "/ci %player% paper 1"
+
+on step on sponge:
+   if {kit.%player%} is false:
+      send "&cRight click the paper to get your kit !" to player
+      stop
+   push player up at speed 2
+   push player forward at speed 5
+
+on respawn:
+   wait 2 seconds
+   make server execute command "/minecraft:clear %player%"
+   make server execute command "/give %player% paper 1"
+   send "&aYou respawned "
+
+on step on soul sand:
+   if {kit.%player%} is false:
+      cancel event
+      send "&cRight click the paper to get your kit !" to player
+
+on death:
+   set {kit.%player%} to false
+
+every 2 second in "world":
+   loop all players:
+      if {kit.%loop-player%} is false:
+         make server execute command "/effect %loop-player% clear"

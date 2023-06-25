@@ -1,0 +1,5 @@
+on world change:
+   set {world1} to player's world
+   wait 1 second
+   set {world2} to player's world
+   send "%{world1}%,%{world2}%"

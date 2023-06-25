@@ -1,0 +1,168 @@
+on quit:
+   remove 1 from {all.onlineplayers}
+   remove 1 from {%player's world%.players}
+   set quit message to "&7[&c&l-&7] %colored player's prefix%&9%player%"
+
+on first join:
+    if {logins} is not set:
+        set {logins} to 0
+    add 1 to {logins}
+    if {FR::%player%::FIRSTJOIN} is not set:
+       set {FR::%player%::FIRSTJOIN} to now
+    broadcast "&b&lFish&e&lRoyale &7»  &bWelcome &6%player% &6To &b&lFish&e&lRoyale &7(&b%{logins}%&7)"
+   
+on world change:
+   set fly mode of player to false
+   clear player's inventory
+   heal player
+   extinguish player
+   clear player's level
+   set player's gamemode to advanture
+   if player's world is not "ul_world":
+      add 1 to {%player's world%.players}
+      remove 1 from {lobby}
+      delete {gamekill.%player%}
+
+on join:
+   add 1 to {all.onlineplayers}
+   if player has permission "VIP":
+      set join message to ""
+      broadcast ""
+      broadcast "&e>&6>&e> %player's display name% &6join the server ! &e<&6<&e<"
+      broadcast ""
+   else:
+      set join message to "&7[&2&l+&7] %colored player's prefix%&9%player%"
+   if player's world is not "ul_world":
+      remove 1 from {%player's world%.players}
+   make server execute command "/mvtp %player% ul_world"
+   add 1 to {lobby}
+
+#-----------------------------------------------------------------------------------#
+#
+#                                  SHOP 
+#
+#-----------------------------------------------------------------------------------#
+
+command /shop:
+   trigger:
+      send "{@prefix} &cUnder developement !"
+      stop
+      if player's world is "ul_world":
+         wait 1 tick
+         open chest with 1 row named "&9&l&oUpgrades &7> &6&lSolo Mode" to player
+         format slot 1 of player with feather named "&f&lSpeed Upgrades" with lore "&7Click me !" to close then run [make player execute command "/§shopspeed"]
+
+command /§shopspeed:
+   trigger:
+      if player's world is "ul_world":
+         wait 10 tick
+         open chest with 1 row named "&9&l&oUpgrades &7> &6&l&oSolo Mode &7> &f&l&oSpeed" to player
+         format slot 1 of player with feather named "&f&lSpeed I" with lore "&fGet speed 2 before a game starts.&6Cost 150 &a&lGems" to run [make player execute command "/§speed1"]
+
+command /§speed1:
+   trigger:
+      if {speed1g.%player%} is true:
+         stop
+      if {gems.%player%} >= 150:
+         set {speed1g.%player%} to true
+         send "{@prefix} &aSucess! You bought &eSpeed I&a for 150 gems !"
+         stop
+      if {gems.%player%} < 150:
+         send "{@prefix} &cERROR ! You don't have enought gems !"
+         stop
+
+#-----------------------------------------------------------------------------------#
+#
+#                                  REPORT 
+#
+#-----------------------------------------------------------------------------------#
+
+command /report [<player>] [<text>]:
+   trigger:
+      if {reporttime.%player%} is bigger than 0:
+         send "{@prefix} &cYou need to wait &4%{reporttime.%player%}% &4seconds &cbefore getting able to report someone again !"
+         stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            send "{@prefix} &aYour report has been registered !"
+            loop all players:
+               if loop-player has permission "report.see":
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason not specified." to loop-player
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason not specified." to loop-player
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason not specified." to loop-player
+                  set {reporttime.%player%} to 30
+                  stop
+      if arg 1 is set:
+         if arg 2 is set:
+            send "{@prefix} &aYour report has been registered !"
+            loop all players:
+               if loop- player has permission "report.see":
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason : &e%arg 2%&7" to loop-player
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason : &e%arg 2%&7" to loop-player
+                  send "{@prefix} &c%player% &7reported &c%arg 1% &7reason : &e%arg 2%&7" to loop-player
+                  set {reporttime.%player%} to 30
+                  stop
+      if arg 1 is not set:
+         send "{@prefix} &cPlease do /report PLAYER REASON or /report PLAYER !"
+         stop
+
+every 1 second:
+   loop all players:
+      if {vanish.%loop-player%} is true:
+         loop all players:
+            if loop-player-2 has permission "{@permissionalert}":
+               reveal the loop-player-1 from loop-player-2
+      if {vanish.%loop-player%} is true:
+         send action bar "{@prefix} &7You are currently vanished !" to loop-player
+      if {speed1g.%loop-player%} is true:
+         if {game.%loop-player's world%} is true:
+            make server execute command "/effect clear %loop-player%"
+      set {y.%loop-player%} to y location of loop-player
+      if {y.%loop-player%} < 10:
+         loop-player's world is "ul_world"
+         make server execute command "/mvspawn %loop-player%"
+      if block 4 under loop-player is not air:
+         loop chickens in radius 3 around loop-player:
+            kill loop-chicken
+      add 1 to {sec.%loop-player%}
+      if {sec.%loop-player%} >= 60:
+         remove 60 from {sec.%loop-player%}
+         add 1 to {min.%loop-player%}
+         if {min.%loop-player%} >= 60:
+            remove 60 from {min.%loop-player%}
+            add 1 to {he.%loop-player%}
+            if {he.%loop-player%} >= 24:
+               remove 24 from {he.%loop-player%}
+               add 1 to {day.%loop-player%}
+      if {reporttime.%loop-player%} = 0:
+         stop
+      if {reporttime.%loop-player%} is bigger than 0:
+         remove 1 from {reporttime.%loop-player%}
+
+#-----------------------------------------------------------------------------------#
+#
+#                                  OTHERS 
+#
+#-----------------------------------------------------------------------------------#
+
+
+
+on world change:
+   if {mod.%player%} is false:
+      set fly mode of player to false
+
+on join:
+   if player has permission "VIP":
+      set join message to ""
+      broadcast ""
+      broadcast "&e>&6>&e> %player's display name% &6join the server ! &e<&6<&e<"
+      broadcast ""
+
+
+
+
+on quit:
+   set quit message to "&7[&c&l-&7] %colored player's prefix%&9%player%"
+
+
+

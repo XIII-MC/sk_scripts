@@ -1,0 +1,36 @@
+#SCOREBOARD
+on join:
+   if {score.%player%} is not set:
+      set {score.%player%} to false
+
+command /scoreboard:
+   trigger:
+      if {score.%player%} is true:
+         wipe player's sidebar
+         set {score.%player%} to false
+         stop
+      if {score.%player%} is false:
+         set name of sidebar of player to "&e&l&oKnocki&c&lFFA"
+         wait 1 tick
+         set score "&7&m-------------------" in sidebar of player to 6
+         set score "      &2Kills: &7%{playerkill.%player%}%" in sidebar of player to 5
+         set score "      &cDeath: &7%{voiddeath.%player%}%" in sidebar of player to 4
+         set score "      &6Points: &7%{points.%player%}%" in sidebar of player to 3
+         set score "&7&m------------------" in sidebar of player to 2
+         set score "&r" in sidebar of player to 1
+         set score "&eKnocki&eFFA&e.minehut.gg" in sidebar of player to 0
+         set {score.%player%} to true
+
+every 5 seconds:
+   loop all players:
+      if {score.%loop-player%} is true:
+         wipe loop-player's sidebar
+         set name of sidebar of loop-player to "&e&l&oKnocki&c&lFFA"
+         wait 1 tick
+         set score "&7&m-------------------" in sidebar of loop-player to 6
+         set score "      &2Kills: &7%{playerkill.%loop-player%}%" in sidebar of loop-player to 5
+         set score "      &cDeath: &7%{voiddeath.%loop-player%}%" in sidebar of loop-player to 4
+         set score "      &6Points: &7%{points.%loop-player%}%" in sidebar of loop-player to 3
+         set score "&7&m------------------" in sidebar of loop-player to 2
+         set score "&r" in sidebar of loop-player to 1
+         set score "&eKnocki&eFFA&e.minehut.gg" in sidebar of loop-player to 0

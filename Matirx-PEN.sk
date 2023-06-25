@@ -1,0 +1,53 @@
+command /Pentagon [<text>] [<offline player>] [<timespan>]:
+   permission: OP
+   trigger:
+      if arg 1 is "ban":
+         if arg 2 is set:
+            if {invalid} is not set:
+               broadcast ""
+               broadcast "&c&lP&4&le&c&ln&4&lt&c&la&4&lg&c&lo&4&ln &7» &c%arg 2%&f has been removed for &cUnfair Advantage"
+               broadcast ""
+               set {tempban.time::%arg 2%} to arg 3
+               set {tempban.%arg 2%} to true
+               set {tempban.timestamp::%arg 2%} to now
+               set {banned.%arg 1%} to true
+               make server execute command "/kill %arg 2%"
+               send "&c&lP&4&le&c&ln&4&lt&c&la&4&lg&c&lo&4&ln &7»&c You have been banned for hacking , this ban will last : &e%arg 3%&c" to arg 2
+               stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            clear {tempban.time::%arg 2%}
+            clear {tempban.timestamp::%arg 2%}
+            clear {tempban.%arg 2%}
+            delete {banned.%arg 2%} 
+            send "&c&lP&4&le&c&ln&4&lt&c&la&4&lg&c&lo&4&ln &7» &c%arg 2% &7has been unbanned."
+            stop
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            set {banned.%player%} to false
+            set {tempban.%player%} to false
+            send "&c&lP&4&le&c&ln&4&lt&c&la&4&lg&c&lo&4&ln &7»&a You were unbanned."
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+
+on world change:
+   if {banned.%player%} is true:
+      make server execute command "/mvtp %player% spawn"
+
+on chat:
+   if {banned.%player%} is true:
+      cancel event

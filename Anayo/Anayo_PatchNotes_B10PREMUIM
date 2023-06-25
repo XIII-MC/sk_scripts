@@ -1,0 +1,33 @@
+Anayo B9-PREMUIM Patch Note:
+
+
+- NoSlow (A) | By getting damaged.
+- NoFall (B) | By getting damage or be in /fly or gamemode 1 or 3.
+- Added verbose while notifing in all checks.
+- Switched MorePackets and BadPackets to verbose only.
+- Fixed Reach (A,E,F) falses.
+- Fixed HitBox (A) false.
+- Slightly augmented KillAura (D) minimum reach trigger.
+- Slightly reduced Aim minimum reach trigger.
+- Fixed non sending notifications
+- Changed all variables/prefixs from WatchCat to Anayo.
+- Changed Anayo kick message from "killed by ANAYO for Unfair Advantage" to "Anayo -> has killed %player% for Unfair Advanatage".
+- Added Motion (A,B) HighJump / LowJump
+- Added NoSwing (A)
+- Added KillAura (F) Keep sprint
+- Changed Default reach to 5.150 *Reach H is not impacted*
+- Added toggle check command
+- Reduced Aim (E,F) verbose
+- Fixed Criticals (B,C)
+- Removed Nofall (C)
+- In dev/beta checks are disabled by default
+- Added Sprint (A) check *No food*
+- Removed Fly (B)
+- Added and renamed Aim (H) to Aim (D)
+- Added AutoClicker (D,C) 
+- Added AutoBlock (A)
+- Added more options
+- Changed verbose to contain only useful information
+- Changed the anticheat theme to red and gray
+- Change the anticheat name to Anayo
+- 

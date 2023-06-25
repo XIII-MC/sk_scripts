@@ -1,0 +1,2692 @@
+options:
+   core: &e&l&oKnocki&c&lFFA &7>>
+   kill: &8[&4&lKill&8]&c
+   death: &8[&4&lDeath&8]&c
+   version: 0.2.2
+
+   #counted in minutes.
+   change-map-time: 15
+   
+   #counted in seconds.
+   speed-cooldown: 10
+   
+   #counted in seconds.
+   jump-cooldown: 10
+
+   #counted in seconds.
+   bow-cooldown: 10  
+   
+   kill-message: &8[&4&lKill&8] &c%{_p}% &7has been killed by &c%{_killer}%
+   
+   death-message: &8[&4&lDeath&8] &c%{_p}% &7died.
+
+#END OF CONFIG
+#MAP ROTATION
+
+command /statreset [<offline player>]:
+   permission: OPERTATOR
+   trigger:
+      set {points.%arg 1%} to 0
+      set {playerkill.%arg 1%} to 0
+      set {voiddeath.%arg 1%} to 0
+
+#END OF SCOREBOARD
+
+command /import:
+   permission: op
+   trigger:
+      delete {Death::*}
+      delete {Kill::*}
+      add "&7has been killed by"  to {Kill::*}
+      add "&7got oofed by" to {Kill::*}
+      add "&7got eaten by" to {Kill::*}
+      add "&7got destroyed by" to {Kill::*}
+      add "&7got yeeted off the map by" to {Kill::*}
+      add "&7died" to {Death::*}
+      add "&7got eaten by the void !" to {Death::*}
+      add "&7slipped on a banana !" to {Death::*}
+      add "&7jumped off the edge !" to {Death::*}
+      add "&7missed his clutch !" to {Death::*}
+      send "Kills: &c%{Kill::*}%"
+      send "Death: &c%{Death::*}%"
+
+#KIT EDITING
+
+on place:
+   if {_editing} is true:
+      cancel event
+on projectile shoot:
+   if {_editing} is true:
+      cancel event
+
+on quit:
+   if {editing.%player%} is true:
+      loop items in player's inventory:
+         clear {inv.%player%::*}
+         add loop-item to {inv.%player%::*}
+         set {Kit.%player%} to true
+
+command /kitedit:
+   trigger:
+      if {editing.%player%} is not set:
+         set {editing.%player%} to false
+      if {editing.%player%} is false:
+         if "%region at player%" contains "spawn":
+            wait 1 tick
+            teleport player to {Edit}
+            send "{@core} &aYou can edit your kit here ! " to player
+            set {editing.%player%} to true
+            set {edited.%player%} to false
+            kffa_equip(player)
+            stop
+      if {editing.%player%} is true:
+         teleport player to {Spawn}
+         send "{@core} &aKit Editing done ! Go play with your need kit !"
+         set {editing.%player%} to false
+         set {edited.%player%} to true
+         inventoryManager("save",player)
+         kffa_clear(player)
+
+function inventoryManager(action: text, p: player):
+   if {_action} is "save":
+      clear {inv.%{_p}%::maingauche}
+      clear {inv.%{_p}%::items::*}
+      loop 36 times:
+         add slot (loop-number - 1) of {_p}'s inventory to {inv.%{_p}%::items::*}
+      set {inv.%{_p}%::maingauche} to slot 40 of {_p}'s inventory
+   if {_action} is "give":
+      set {_s} to 0
+      loop {inv.%{_p}%::items::*}:
+         set slot {_s} of {_p}'s inventory to loop-value
+         add 1 to {_s}
+      set slot 40 of {_p}'s inventory to {inv.%{_p}%::maingauche}
+
+command /kitt:
+   permission: OP 
+   trigger:
+      inventoryManager("give",player)
+
+
+command /setedit:
+   permission: op
+   trigger:
+      set {Edit} to player's location
+      send "&aImported. &e'EDIT_LOC'" to player
+#END OF KITEDIT 
+#CORE OF SERVER
+
+command /discord:
+   trigger:
+      send "&bDiscord: https://discord.gg/RA3zHV8nkN"
+
+function kffa_death(p: player):
+   if "%region at {_p}%" contains "spawn":
+      stop
+   set {_v-uuid} to uuid of {_p}
+   if metadata value "LAST-HIT" of {_p} is set:
+      set {_killer} to metadata value "LAST-HIT" of {_p}
+      #make server execute command "/smite %{_p}%"
+      set {_uuid} to uuid of {_killer}
+      if {QUEST.KILL10.%{_killer}%} is set:
+         add 1 to {QUEST.KILL1.%{_killer}%}
+      if {QUEST.KILL100.%{_killer}%} is set:
+         add 1 to {QUEST.KILL0.%{_killer}%}
+      teleport {_p} to {Spawn}
+      if {BT.%{_p}%} is true:
+         set {BT.%{_p}%} to false
+         add {BTP.%{_p}%} to {points.%{_killer}%}
+         broadcast "&8[&6&lBounty&8] &c%{_killer}% &7got the bounty of &c%{_p}%"
+         clear {BTP.%{_p}%}
+      if {event.LMS} is true:
+         if {event.LMS.ALIVE.%{_p}%} is true:
+            remove {_p} from {e.all.players::*}
+            set {event.LMS.ALIVE.%{_p}%} to false
+            send "{@core} &cYou were eliminated from the event !" to {_p}
+            broadcast ""
+            broadcast "&c&l%{e.all.players::*}% &7are left !"
+            broadcast ""
+      if {event.CTW} is true:
+         if {event.CTW.wool.%{_p}%} is true:
+            set {event.CTW.wool.%{_p}%} to false
+            set {event.CTW.wool.%{_killer}%} to true
+            clear {event.CTW.cd.%{_p}%}
+            broadcast ""
+            broadcast "&c%{_killer}% &7has the wool !"
+            broadcast ""
+            give {_killer} 1 blue wool named "&9Keep Me !"
+            set {event.CTW.cd.%{_killer}%} to 45
+      add 1 to {voiddeath.%{_p}%}
+      if {multiplier.common.%{_killer}%} is true:
+         add 1 to {points.%{_killer}%}
+      if {multiplier.rare.%{_killer}%} is true:
+         add 2 to {points.%{_killer}%}
+      if {multiplier.epic.%{_killer}%} is true:
+         add 4 to {points.%{_killer}%}
+      add 1 to {points.%{_killer}%}
+      add 1 to {playerkill.%{_killer}%}
+      add 1 to {all.PlayerKill}
+      if {multiplier.common.%{_killer}%} is true:
+         add 1 to {multiplier.maxkill.%{_killer}%}
+      if {multiplier.rare.%{_killer}%} is true:
+         add 1 to {multiplier.maxkill.%{_killer}%}
+      if {multiplier.epic.%{_killer}%} is true:
+         add 1 to {multiplier.maxkill.%{_killer}%}
+      if "%region at {_killer}%" contains "spawn":
+         wait 2 tick
+         stop
+      make server execute command "/xp give %{_killer}% 1L"
+      give 1 ender pearl to {_killer}
+      play sound "entity.experience_orb.pickup" with volume 50 and pitch 60 at {_killer} for {_killer}
+      play sound "block.anvil.destroy" with volume 50 and pitch 60 at {_p} for {_p}
+      if {multiplier.common.%{_killer}%} is true:
+         send action bar "&8[&e&lPoints&8] &e+2 Point" to {_killer}
+      else:
+         send action bar "&8[&e&lPoints&8] &a+1 Point" to {_killer}
+      if {multiplier.rare.%{_killer}%} is true:
+         send action bar "&8[&e&lPoints&8] &e+3 Point" to {_killer}
+      else:
+         send action bar "&8[&e&lPoints&8] &a+1 Point" to {_killer}
+      if {multiplier.epic.%{_killer}%} is true:
+         send action bar "&8[&e&lPoints&8] &e+5 Point" to {_killer}
+      else:
+         send action bar "&8[&e&lPoints&8] &a+1 Point" to {_killer}
+      set {_void} to false
+      set {_random} to random element out of {Kill::*}
+      broadcast "{@kill} &c%{_p}%&7 %{_random}% &c%{_killer}% &7!"
+      kffa_clear({_p})
+      set {_xp} to level of {_killer}
+      if {_xp} >= 2:
+         if {QUEST.KILLSTREAK20.%{_killer}%} is set:
+            add 1 to {QUEST.KILLSTREAK.%{_killer}%}
+         broadcast "&8[&c&lKillStreak&8] &c%{_killer}% &7is on a &c%{_xp}% &7kill streak !"
+      if {_xp} >= 5:
+         if {BTP.%{_killer}%} >= 10:
+            stop
+         add 10 to {BTP.%{_killer}%}
+         broadcast "&8[&6&lBounty&8] &c%{_killer}% &7has now a bounty of &610 Points &7!"
+         set {BT.%{_killer}%} to true
+         if {_xp} >= 5:
+            give {_killer} 3 arrow
+            send action bar "&aYou got 3 arrows !" to {_killer}
+         if {_xp} >= 10:
+            give {_killer} 10 arrow
+            send action bar "&aYou got 10 arrows and 10 points !" to {_killer}
+            add 5 to {points.%{_killer}%}
+      stop
+   else:
+      set {_random} to random element out of {Death::*}
+      broadcast "{@death} &c%{_p}%&7 %{_random}%"
+      #make server execute command "/smite %{_p}%"
+      add 1 to {voiddeath.%{_p}%}
+      teleport {_p} to {Spawn}
+      play sound "block.anvil.destroy" with volume 50 and pitch 60 at {_p} for {_p}
+      kffa_clear({_p})
+      if {event.CTW} is true:
+         if {event.CTW.wool.%{_p}%} is true:
+            set {event.CTW.wool.%{_p}%} to false
+            clear {event.CTW.cd.%{_p}%}
+            set {_x} to random element of {c.all.players::*}
+            broadcast ""
+            broadcast "&c%{_x}% &7has the wool !"
+            broadcast ""
+            give {_x} 1 blue wool named "&9Keep Me !"
+            set {event.CTW.cd.%{_x}%} to 45
+            set {event.CTW.wool.%{_x}%} to true
+      stop
+
+command /report [<player>] [<text>]:
+   trigger:
+      if {reporttime.%player%} is bigger than 0:
+         send "&8[&3&lReports&8] &cYou need to wait &4%{reporttime.%player%}% &4seconds &cbefore getting able to report someone again !"
+         stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            send "&8[&3&lReports&8] &aYour report has been registered !"
+            loop all players:
+               if loop-player has permission "report.see":
+                  send "&7&m------------------" to loop-player
+                  send "&b%player% reported:" to loop-player
+                  send "&b%arg 1%" to loop-player
+                  send "&7&m------------------" to loop-player
+                  set {reporttime.%player%} to 30
+                  stop
+      if arg 1 is set:
+         if arg 2 is set:
+            send "&8[&3&lReports&8] &aYour report has been registered !"
+            loop all players:
+               if loop- player has permission "report.see":
+                  send "&7&m------------------" to loop-player
+                  send "&b%player% reported:" to loop-player
+                  send "&b%arg 1%" to loop-player
+                  send "&bFor: &6%arg 2%" to loop-player
+                  send "&7&m------------------" to loop-player
+                  set {reporttime.%player%} to 30
+                  stop
+      if arg 1 is not set:
+         send "&8[&3&lReports&8] &cPlease do /report PLAYER REASON or /report PLAYER !"
+         stop
+
+every 1 second:
+   loop all players:
+      if {reporttime.%loop-player%} = 0:
+         stop
+      if {reporttime.%loop-player%} is bigger than 0:
+         remove 1 from {reporttime.%loop-player%}
+
+
+command /upgradereset:
+   trigger:
+      if {RESET.%player%} is not set:
+         set {RESET.%player%} to false
+      if {RESET.%player%} is false:
+         send "&8[&2&lSkill&8] &4&lWARNING: &cDo you really want to reset all of your upgrades ? You will not get refunded. To confirm do /upgradesreset again."
+         set {RESET.%player%} to true
+         stop
+      if {RESET.%player%} is true:
+         set {RESET.%player%} to false
+         send "&8[&2&lSkill&8] &eReseting upgrades..."
+         set {Upgrade1.%player%} to false
+         set {Upgrade2.%player%} to false
+         set {Upgrade3.%player%} to false
+         set {Upgrade4.%player%} to false
+         set {Upgrade5.%player%} to false
+         set {Upgrade6.%player%} to false
+         set {Upgrade7.%player%} to false
+         set {Upgrade8.%player%} to false
+         set {Upgrade9.%player%} to false
+         set {Upgrade10.%player%} to false
+         set {Upgrade11.%player%} to false
+         set {Upgrade12.%player%} to false
+         set {Upgrade13.%player%} to false
+         set {Upgrade14.%player%} to false
+         set {Upgrade15.%player%} to false
+         set {Upgrade16.%player%} to false
+         set {Upgrade17.%player%} to false
+         set {Upgrade18.%player%} to false
+         set {Upgrade19.%player%} to false
+         set {Upgrade20.%player%} to false
+         set {Upgrade21.%player%} to false
+         set {Upgrade21.%player%} to false
+         set {Upgrade22.%player%} to false
+         set {Upgrade23.%player%} to false
+         set {Upgrade24.%player%} to false
+         set {Upgrade25.%player%} to false
+         set {Upgrade26.%player%} to false
+         set {Upgrade27.%player%} to false
+         set {Upgrade28.%player%} to false
+         set {Upgrade29.%player%} to false
+         set {Upgrade30.%player%} to false
+         set {Upgrade31.%player%} to false
+         set {Upgrade32.%player%} to false
+         wait 200 ticks
+         send "&8[&2&lSkill&8] &aSucess! &eDELETED 'UPGRADE_1:30'"
+
+
+command /bounty [<player>] [<number>]:
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if {points.%player%} >= arg 2:
+               add arg 2 to {BTP.%arg 1%}
+               set {BT.%arg 1%} to true
+               broadcast "&8[&6&lBounty&8] &7Bounty of &6%{BTP.%arg 1%}% Points&7 on &c%arg 1% &7!"
+               send "&8[&6&lBounty&8] &cA bounty of %{BTP.%arg 1%}% &cPoints has been seted on your head !" to arg 1
+               remove arg 2 from {points.%player%}
+      if arg 1 is not set:
+         send "&8[&6&lBounty&8] &cUsage /bounty PLAYER NUMBER !" to player
+         stop
+
+on place:
+   set {_y} to y location of player
+   if {_y} >= 90:
+      if player's gamemode is not creative:
+         cancel event
+         send action bar "&8[&d&lBuild&8] &cBuild limit reached !" to player
+
+command /train:
+   trigger:
+      if "%region at player%" contains "spawn" or "train":
+         wait 1 tick
+         if {TRAINING.%player%} is not set:
+            set {TRAINING.%player%} to false
+         if {TRAINING.%player%} is false:
+            teleport player to {Train}
+            send "&8[&9&lTraining&8] &aHere you are ! Train for pearl clutching !"
+            wait 1 second
+            give player 64 ender pearl
+            give player 64 ender pearl
+            give player 64 ender pearl
+            give player 64 ender pearl
+            give player 64 ender pearl
+            give player 64 ender pearl
+            send "&8[&9&lTraining&8] &aEverytime you touch the ground you will be pushed back with speed 3 !"
+            set {TRAINING.%player%} to true
+            set fly mode of player to true
+            stop
+         if {TRAINING.%player%} is true:
+            teleport player to {Spawn}
+            clear player's inventory
+            send "&8[&9&lTraining&8] &cTraining session ended !"
+            set {TRAINING.%player%} to false
+            set fly mode of player to false
+
+on quit:
+   set fly mode of player to false
+
+command /sp:
+   permission: OP
+   trigger:
+      set {Train} to player's location
+
+on shoot:
+   if {TRAINING.%shooter%} is true:
+      give shooter 1 ender pearl
+
+on step on water:
+   if {TRAINING.%player%} is true:
+      teleport player to {Train} 
+      send "&8[&9&lTraining&8] &cTry again !"
+
+every 3 second:
+   loop all players:
+      if {TRAINING.%loop-player%} is true:
+         if block under loop-player is sponge:
+            push loop-player backwards at speed 3
+
+on hunger meter change:
+   cancel event
+
+on damage:
+   if victim is player:
+      if attacker is victim:
+         stop
+      set metadata value "LAST-HIT" of victim to attacker
+      
+on craft:
+   if player's gamemode is not creative:
+      cancel event
+
+on right click on anvil:
+   if player's gamemode is not creative:
+      cancel event
+
+on damage:
+   if damage cause is void:
+      kffa_death(victim)
+   if damage is greater than or equal to health of victim:
+      cancel event
+      kffa_death(victim)
+
+on any move:
+   set {_y} to y location of player
+   if {_y} < 40:
+      teleport {_p} to {Spawn}
+      wait 10 ticks
+      kffa_death(player)
+
+on join:
+   set {editing.%player%} to false
+   
+on inventory click:
+   if name of event-item contains "&3Speed" or "&eSuper Jump":
+      cancel event
+
+On place:
+   set {_y} to y location of event-block
+   if {_y} >= 90:
+      if player's gamemode is creative:
+         stop
+      cancel event
+      stop
+   if player's gamemode is not creative:
+      add 1 to {blockplaced.%player%}
+      if block at event-block is green concrete:
+         if event-block is air:
+            stop
+         wait 6 seconds
+         set block at event-block to orange concrete
+         wait 3 second
+         set block at event-block to red concrete
+         wait 1 second
+         set block at event-block to air
+         if amount of green concrete in player's inventory is less than 48:
+            if "%region at player%" contains "spawn":
+               wait 2 tick
+               stop
+            give player 1 green concrete
+         stop
+      if block at event-block is green glass:
+         if event-block is air:
+            stop
+         wait 6 seconds
+         set block at event-block to orange glass
+         wait 3 second
+         set block at event-block to red glass
+         wait 1 second
+         set block at event-block to air
+         if amount of green glass in player's inventory is less than 48:
+            if "%region at player%" contains "spawn":
+               wait 2 tick
+               stop
+            give player 1 green glass
+         stop
+      if block at event-block is purple wool:
+         if event-block is air:
+            stop
+         wait 6 seconds
+         set block at event-block to pink wool
+         wait 3 second
+         set block at event-block to red wool
+         wait 1 second
+         set block at event-block to air
+         if amount of purple wool in player's inventory is less than 48:
+            if "%region at player%" contains "spawn":
+               wait 2 tick
+               stop
+            give player 1 purple wool
+         stop
+      if block at event-block is emerald block:
+         wait 6 seconds
+         if event-block is air:
+            stop
+         set block at event-block to diamond block
+         wait 3 second
+         set block at event-block to gold block
+         wait 1 second
+         set block at event-block to air
+         if amount of emerald block in player's inventory is less than 48:
+            if "%region at player%" contains "spawn":
+               wait 2 tick
+               stop
+            give player 1 emerald block
+         stop
+      wait 6 seconds
+      if event-block is air:
+         stop
+      set block at event-block to orange wool
+      wait 3 second
+      set block at event-block to red wool
+      wait 1 second
+      set block at event-block to air
+      if amount of lime wool in player's inventory is less than 48:
+         if "%region at player%" contains "spawn":
+            wait 2 tick
+            stop
+         give player 1 lime wool
+
+on break:
+   if player's tool is iron pickaxe:
+      if event-block is green wool:
+         set event-block to red wool
+         wait 1 second
+         set event-block to air
+      if event-block is emerald block:
+         set event-block to gold block
+         wait 1 second
+         set event-block to air
+      if event-block is green glass:
+         set event-block to red glass
+         wait 1 second
+         set event-block to air
+      if event-block is purple wool:
+         set event-block to red wool
+         wait 1 second
+         set event-block to air
+      if event-block is green concrete:
+         set event-block to red concrete
+         wait 1 second
+         set event-block to air
+
+on break:
+   if player's tool is iron pickaxe:
+      if event-block is orange concrete:
+         send "&8[&d&lBuild&8] &cYou can only break blocks when they are green !"
+      if event-block is orange wool:
+         send "&8[&d&lBuild&8] &cYou can only break blocks when they are green !"
+      if event-block is pink wool:
+         send "&8[&d&lBuild&8] &cYou can only break blocks when they are green !"
+      if event-block is orange glass:
+         send "&8[&d&lBuild&8] &cYou can only break blocks when they are green !"
+      if event-block is gold block:
+         send "&8[&d&lBuild&8] &cYou can only break blocks when they are green !"
+
+on block break:
+   if player's gamemode is creative:
+      stop
+   cancel event
+
+on drop: 
+   cancel event
+   
+every 5 minutes:
+   loop all players:
+      add 1 to {points.%loop-player%}
+      send action bar "&8[&e&lPoints&8] &a+1 point &b(Time Played)" to loop-player
+
+function kffa_clear(p: player):  
+   clear {_p}'s inventory
+   clear {_p}'s level
+   heal {_p}
+   set {_p}'s hunger to 20
+   extinguish {_p}
+   clear {QUEST.KILLSTREAK.%{_p}%}
+   make server execute command "/effect clear %{_p}%"
+   loop "LAST-HIT", "SPEED-COOLDOWN", "JUMP-COOLDOWN" and "BOW-COOLDOWN": 
+      delete metadata value "%loop-value%" of {_p}
+
+command /clearkit:
+   trigger:
+      send "&8[&c&lKit&8] &eClearing your custom kit..."
+      delete {edited.%player%} 
+      send "&8[&c&lKit&8] &aSucess! &e'CLEAR_EDITED.KIT'"
+
+on place:
+   if event-block is ender dragon head:
+      cancel event
+   if event-block is player head:
+      cancel event
+   if event-block is red bed:
+      cancel event
+on right click on grass block:
+   cancel event
+on right click on dirt block:
+   cancel event
+on place:
+   if event-block is red bed:
+      cancel event
+
+on quit:
+   set {TRAINING.%player%} to false
+   clear player's inventory
+
+function kffa_equip(p: player):  
+   if "%region at {_p}%" contains "train":
+      wait 1 tick
+      stop
+   kffa_clear({_p})
+   clear {vl.FLYV1.%{_p}%}
+   if {edited.%{_p}%} is true:
+      inventoryManager("give",{_p})
+      stop
+   set slot 0 of {_p} to unbreakable stick of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.blaze.%{_p}%} is true:
+      set slot 0 of {_p} to blaze rod of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.iron.%{_p}%} is true:
+      set slot 0 of {_p} to iron ingot of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.gold.%{_p}%} is true:
+      set slot 0 of {_p} to gold ingot of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.diamond.%{_p}%} is true:
+      set slot 0 of {_p} to diamond of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.emerald.%{_p}%} is true:
+      set slot 0 of {_p} to emerald of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.netherite.%{_p}%} is true:
+      set slot 0 of {_p} to netherite ingot of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.head.%{_p}%} is true:
+      set slot 0 of {_p} to player head of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.ironhoe.%{_p}%} is true:
+      set slot 0 of {_p} to unbreakable iron hoe of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.dhoe.%{_p}%} is true:
+      set slot 0 of {_p} to unbreakable diamond hoe of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.dhead.%{_p}%} is true:
+      set slot 0 of {_p} to dragon head of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.fish.%{_p}%} is true:
+      set slot 0 of {_p} to pufferfish of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.bread.%{_p}%} is true:
+      set slot 0 of {_p} to bread of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.bed.%{_p}%} is true:
+      set slot 0 of {_p} to red bed of sharpness 1 and knockback 2 named "&6&lPuncher"
+   if {skin.star.%{_p}%} is true:
+      set slot 0 of {_p} to nether star of sharpness 1 and knockback 2 named "&6&lPuncher"
+   set slot 2 of {_p} to unbreakable bow named "&7︻デ═一"
+   set slot 1 of {_p} to 48 lime wool
+   if {block.conc.%{_p}%} is true:
+      set slot 1 of {_p} to 48 green concrete
+   if {block.glass.%{_p}%} is true:
+      set slot 1 of {_p} to 48 green glass
+   if {block.wool.%{_p}%} is true:
+      set slot 1 of {_p} to 48 purple wool
+   if {block.ore.%{_p}%} is true:
+      set slot 1 of {_p} to 48 emerald block
+   set slot 6 of {_p} to gold pressure plate named "&eSuper Jump"
+   set slot 7 of {_p} to feather named "&3Speed"      
+   set slot 8 of {_p} to ender pearl    
+   set slot 9 of {_p} to arrow
+   set slot 4 of {_p} to unbreakable iron pickaxe named "&dBlock Breaker" with lore "&cOnly works on full health blocks !"
+   if {Upgrade23.%{_p}%} is true:
+      set helmet of {_p} to leather helmet
+      set chestplate of {_p} to leather chestplate
+      set legging of {_p} to leather leggings
+      set boots of {_p} to leather boots
+   if {Upgrade24.%{_p}%} is true:
+      set helmet of {_p} to chainmail helmet
+      set chestplate of {_p} to chainmail chestplate
+      set legging of {_p} to chainmail leggings 
+      set boots of {_p} to chainmail boots   
+   if {Upgrade25.%{_p}%} is true:
+      set helmet of {_p} to iron helmet
+      set chestplate of {_p} to iron chestplate
+      set legging of {_p} to iron leggings   
+      set boots of {_p} to iron boots
+on place:
+   if event-block is gold pressure plate:
+      cancel event
+
+on right click with feather or gold pressure plate:
+   cancel event
+   if {editing.%player%} is true:
+      stop
+   if name of event-item is "&3Speed":
+      if metadata value "SPEED-COOLDOWN" of player is set:
+         stop
+      set metadata value "SPEED-COOLDOWN" of player to "SET"
+      apply speed 3 to player for 5 seconds
+      set {_int} to {@speed-cooldown}
+      loop {_int} times:
+         metadata value "SPEED-COOLDOWN" of player is set
+         set slot 7 of player to {_int} of feather of sharpness 1 named "&c%{_int}% &3Speed"
+         remove 1 from {_int}
+         if {_int} is 0:
+            set slot 7 of player to feather named "&3Speed"
+            delete metadata value "SPEED-COOLDOWN" of player
+            stop
+         wait a second
+   if name of event-item is "&eSuper Jump":
+      if metadata value "JUMP-COOLDOWN" of player is set:
+         stop
+      set metadata value "JUMP-COOLDOWN" of player to "SET"
+      set {_int} to {@jump-cooldown}
+      apply jump boost 3 to player for 5 seconds
+      loop {_int} times:
+         metadata value "JUMP-COOLDOWN" of player is set
+         set slot 6 of player to {_int} of clock of sharpness 1 named "&c%{_int}% &eSuper Jump"
+         remove 1 from {_int}
+         if {_int} is 0:
+            set slot 6 of player to gold pressure plate named "&eSuper Jump"
+            delete metadata value "JUMP-COOLDOWN" of player
+            stop
+         wait a second  
+
+
+on projectile shoot:
+   if projectile is ender pearl:
+      add 1 to {enderpearlshoot.%shooter%}
+
+on projectile shoot:
+   if projectile is arrow:
+      add 1 to {arrowshoot.%shooter%}
+
+on left click:
+   add 1 to {leftclick.%player%}
+
+on right click:
+   add 1 to {rightclick.%player%}
+
+command /mystats:
+   trigger:
+      send "&8[&5&lStats&8] &7Loading request..."
+      send "&8[&5&lStats&8] &7Loading variables..."
+      if {playerkill.%player%} is not set:
+         set {playerkill.%player%} to 0
+      if {voidkill.%player%} is not set:
+         set {voidkill.%player%} to 0
+      if {playerdeath.%player%} is not set:
+         set {playerdeath.%player%} to 0
+      if {voiddeath.%player%} is not set:
+         set {voiddeath.%player%} to 0
+      if {points.%player%} is not set:
+         set {points.%player%} to 0
+      if {blockplaced.%player%} is not set:
+         set {blockplaced.%player%} to 0
+      if {enderpearlshoot.%player%} is not set:
+         set {enderpearlshoot.%player%} to 0
+      if {arrowshoot.%player%} is not set:
+         set {arrowshoot.%player%} to 0
+      if {speedfeather.%player%} is not set:
+         set {speedfeather.%player%} to 0
+      if {leftclick.%player%} is not set:
+         set {leftclick.%player%} to 0
+      if {rightclick.%player%} is not set:
+         set {rightclick.%player%} to 0
+      wait 0.5 second
+      send ""
+      send "&6My &e&l&oKnocki&c&lStats&6:"
+      send ""
+      send "&aKills: &6%{playerkill.%player%}%"
+      send "&cDeaths: &6%{voiddeath.%player%}%"
+      send "&ePoints: &7%{points.%player%}%"
+      send ""
+      send "&2Blocks placed: &6%{blockplaced.%player%}%"
+      send "&5Ender pearls shooted: &6%{enderpearlshoot.%player%}%"
+      send "&fArrows shooted: &6%{arrowshoot.%player%}%"
+      send "&9You left clicked: &6%{leftclick.%player%}% &6Times"
+      send "&9You right clicked: &6%{rightclick.%player%}% &6Times"
+      send ""
+
+on first join:
+   broadcast ""
+   broadcast "&fWelcome &6%player% &fto &e&lKnocki&c&lFFA &f! Have fun !"
+   broadcast ""
+
+on join:
+   teleport player to {Spawn}
+
+on region leave:
+   wait 2 tick
+   if "%region at player%" contains "pvp":
+      wait 2 ticks
+      if player's gamemode is creative or spectator:
+         stop
+      kffa_clear(player)
+      set {_void} to false
+      kffa_equip(player)
+      play sound "entity.ender_dragon.growl" with volume 10 and pitch 1 at player for player
+      make server execute command "/effect give %player% regeneration 1 120"
+      send "" to player
+      send "                   &c&lF I G H T !" to player
+      send "  &cTeams of more than 2 players are not allowed !" to player
+      send "  &cIf someone is hacking please use /report PLAYER Cheating !" to player
+      send "" to player
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "spawn":
+      wait 2 ticks
+      set {_void} to false
+
+on join:
+   if player has permission "MODERATOR":
+      set join message to ""
+      send "{@core} &aWant to broadcast your join ? Then do /join" to player
+      stop
+   set join message to "&7[&2&l+&7] &7%player%"
+
+command /join:
+   permission: MODERATOR
+   trigger:
+      broadcast ""
+      broadcast "%player's display name% &carrived in the server !"
+      broadcast ""
+
+on quit:
+   if player has permission "MODERATOR":
+      set quit message to ""
+      stop
+   set quit message to "&7[&c&l-&7] &7%player%"
+
+on damage:
+   if victim is player:
+      if attacker is player:
+         play sound "enchant.thorns.hit" with volume 10 and pitch 1 at attacker for victim
+         play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at attacker for attacker
+
+on respawn:
+   teleport player to {Spawn}
+
+command /leave:
+   trigger:
+      send "&8[&a&lTeleport&8] &7&oSorry but this command got removed."
+      stop
+      if {points.%player%} < 10:
+         send "&8[&a&lTeleport&8] &7&oSorry but you need 5 points to teleport to spawn."
+         stop
+      else:
+         set {_loc1} to player's location
+         send "&8[&a&lTeleport&8] &7&oPlease wait 5 seconds...." to player
+         wait 1 second
+         if distance between {_loc1} and player's location is less than 1:
+            send "&8[&a&lTeleport&8] &7&oPlease wait 4 seconds..." to player
+            wait 1 second
+            if distance between {_loc1} and player's location is less than 1:
+               send "&8[&a&lTeleport&8] &7&oPlease wait 3 seconds..." to player
+               wait 1 second
+               if distance between {_loc1} and player's location is less than 1:
+                  send "&8[&a&lTeleport&8] &7&oPlease wait 2 seconds...." to player
+                  wait 1 second
+                  if distance between {_loc1} and player's location is less than 1:
+                     send "&8[&a&lTeleport&8] &7&oPlease wait 1 second..." to player
+                     wait 1 second
+                     if distance between {_loc1} and player's location is less than 1:
+                        kffa_clear(player)
+                        send "&8[&a&lTeleport&8] &7&oYou paid 5 points and got teleport to spawn." to player
+                        teleport player to {Spawn}
+                        remove 5 from {points.%player%}
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade17.%victim%} is true:
+            if victim is sneaking:
+               set {_loc} to victim's location
+               wait 5 tick
+               teleport victim to {_loc}
+               make server execute command "/effect give %victim% weakness 4 3"
+               make server execute command "/effect give %victim% slowness 4 3"
+               damage victim by 4 hearts
+               send action bar "&8[&2&lSkills&8] &aYour &2Reducer &aabiltiy canceled your knockback !" to victim
+               send action bar "&8[&2&lSkills&8] &4%victim% &ccanceled his knockback with his &2Reducer &cabiltiy !" to attacker
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade21.%attacker%} is true:
+            push victim backwards at speed 0.7
+            send action bar "&8[&2&lSkills&8] &aYour &cKnocker &aabiltiy has been used ! " to attacker
+            send action bar "&8[&2&lSkills&8] &cYou got pushed backwards ! &4%attacker% &cused his Knocker abiltiy !" to victim
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade22.%attacker%} is true:
+            make server execute command "/effect give %victim% weekness 5 1"
+            send action bar "&8[&2&lSkills&8] &aYour &8Weaker &aabiltiy has been used ! " to attacker
+            send action bar "&8[&2&lSkills&8] &cYou got &8Weakness &c, &4%attacker% &cused his &8Weaker &cAbilities !" to victim
+
+#SPEED
+every 3 seconds:
+   loop all players:
+      if {Upgrade1.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 1"
+every 3 seconds:
+   loop all players:
+      if {Upgrade2.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 2"
+every 3 seconds:
+   loop all players:
+      if {Upgrade3.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 3"
+
+#JUMPBOOST
+every 3 seconds:
+   loop all players:
+      if {Upgrade4.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 1"
+every 3 seconds:
+   loop all players:
+      if {Upgrade5.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 2"
+every 3 seconds:
+   loop all players:
+      if {Upgrade6.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 3"
+
+#HASTE
+every 3 seconds:
+   loop all players:
+      if {Upgrade11.%loop-player%} is true:
+         if {Upgrade12.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% haste 12 1"
+every 3 seconds:
+   loop all players:
+      if {Upgrade12.%loop-player%} is true:
+         if {Upgrade13.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% haste 12 2"
+every 3 seconds:
+   loop all players:
+      if {Upgrade13.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% haste 12 3"
+
+#regeneration
+every 3 seconds:
+   loop all players:
+      if {Upgrade18.%loop-player%} is true:
+         if {Upgrade19.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% regeneration 12 1"
+every 3 seconds:
+   loop all players:
+      if {Upgrade19.%loop-player%} is true:
+         if {Upgrade20.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% regeneration 12 2"
+every 3 seconds:
+   loop all players:
+      if {Upgrade20.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% regeneration 12 3"
+
+command /upgrades:
+   trigger:
+      wait 5 ticks
+      if "%region at player%" contains "spawn":
+         wait 5 tick
+         open chest with 6 rows named "                 &2&l&oShop Upgrades" to player
+         format slot 10 of player with feather named "&fSpeed I" with lore "&aCost 15 Points" to close then run [make player execute command "/§speed1"]
+         format slot 11 of player with feather named "&fSpeed II" with lore "&aCost 30 Points &cNeed Speed I Upgrade !" to close then run [make player execute command "/§speed2"]
+         format slot 12 of player with feather named "&fSpeed III" with lore "&aCost 60 Points &cNeed Speed II Upgrade !" to close then run [make player execute command "/§speed3"]
+
+         format slot 14 of player with rabbit foot named "&aJump Boost I" with lore "&aCost 60 Points" to close then run [make player execute command "/§jump1"]
+         format slot 15 of player with rabbit foot named "&aJump Boost II" with lore "&aCost 75 Points &cNeed Jump Boost I Upgrade !" to close then run [make player execute command "/§jump2"]
+         format slot 16 of player with rabbit foot named "&aJump Boost III" with lore "&aCost 90 Points &cNeed Jump Boost II Upgrade !" to close then run [make player execute command "/§jump3"]
+         format slot 23 of player with stone pickaxe named "&eHaste I" with lore "&aCost 255 Points" to close then run [make player execute command "/§haste1"]
+         format slot 24 of player with iron pickaxe named "&eHaste II" with lore "&aCost 270 Points &cNeed Haste I Upgrade !" to close then run [make player execute command "/§haste2"]
+         format slot 25 of player with diamond pickaxe named "&eHaste III" with lore "&aCost 300 Points &cNeed Haste II Upgrade !" to close then run [make player execute command "/§haste3"]
+
+         format slot 19 of player with anvil named "&2Reducer I" with lore "&aCost 300 Points" to close then run [make player execute command "/§ikbr1"]
+
+         format slot 28 of player with stone sword named "&dRegeneration I" with lore "&aCost 300 Points" to close then run [make player execute command "/§regeneration1"]
+         format slot 29 of player with iron sword named "&dRegeneration II" with lore "&aCost 340 Points &cNeed Regeneration I Upgrade !" to close then run [make player execute command "/§regeneration2"]
+         format slot 30 of player with diamond sword named "&dRegeneration III" with lore "&aCost 370 Points &cNeed Regeneration II Upgrade !" to close then run [make player execute command "/§regeneration3"]
+
+         format slot 20 of player with stick named "&cKnocker I" with lore "&aCost 370 Points" to close then run [make player execute command "/§ikb1"]
+
+         format slot 21 of player with wooden sword named "&8Weaker I" with lore "&aCost 400 Points" to close then run [make player execute command "/§week1"]
+         format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 45 of player with black glass pane named "" to be unstealable
+      format slot 46 of player with black glass pane named "" to be unstealable
+      format slot 47 of player with black glass pane named "" to be unstealable
+      format slot 48 of player with black glass pane named "" to be unstealable
+      format slot 49 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 49 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 49 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 51 of player with black glass pane named "" to be unstealable
+      format slot 52 of player with black glass pane named "" to be unstealable
+      format slot 53 of player with black glass pane named "" to be unstealable
+      format slot 36 of player with black glass pane named "" to be unstealable
+      format slot 44 of player with black glass pane named "" to be unstealable
+      format slot 35 of player with black glass pane named "" to be unstealable
+      format slot 27 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 50 of player with black glass pane named "" to be unstealable
+
+on join:
+   if {Upgrade1.%player%} is not set:
+      set {Upgrade1.%player%} to false 
+   if {Upgrade2.%player%} is not set:
+      set {Upgrade2.%player%} to false 
+   if {Upgrade3.%player%} is not set:
+      set {Upgrade3.%player%} to false 
+   if {Upgrade4.%player%} is not set:
+      set {Upgrade4.%player%} to false 
+   if {Upgrade5.%player%} is not set:
+      set {Upgrade5.%player%} to false 
+   if {Upgrade6.%player%} is not set:
+      set {Upgrade6.%player%} to false 
+   if {Upgrade7.%player%} is not set:
+      set {Upgrade7.%player%} to false 
+   if {Upgrade8.%player%} is not set:
+      set {Upgrade8.%player%} to false 
+   if {Upgrade9.%player%} is not set:
+      set {Upgrade9.%player%} to false 
+   if {Upgrade10.%player%} is not set:
+      set {Upgrade10.%player%} to false 
+   if {Upgrade11.%player%} is not set:
+      set {Upgrade11.%player%} to false 
+   if {Upgrade12.%player%} is not set:
+      set {Upgrade12.%player%} to false 
+   if {Upgrade13.%player%} is not set:
+      set {Upgrade13.%player%} to false 
+   if {Upgrade14.%player%} is not set:
+      set {Upgrade14.%player%} to false 
+   if {Upgrade15.%player%} is not set:
+      set {Upgrade15.%player%} to false 
+   if {Upgrade16.%player%} is not set:
+      set {Upgrade16.%player%} to false 
+   if {Upgrade17.%player%} is not set:
+      set {Upgrade17.%player%} to false 
+   if {Upgrade18.%player%} is not set:
+      set {Upgrade18.%player%} to false 
+   if {Upgrade19.%player%} is not set:
+      set {Upgrade19.%player%} to false 
+   if {Upgrade20.%player%} is not set:
+      set {Upgrade20.%player%} to false 
+   if {Upgrade21.%player%} is not set:
+      set {Upgrade21.%player%} to false 
+   if {Upgrade22.%player%} is not set:
+      set {Upgrade22.%player%} to false 
+
+
+#SPEED
+command /§speed1:
+   trigger:
+      if {Upgrade1.%player%} is false:
+         if {points.%player%} >= 15:
+            set {Upgrade1.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Speed I Upgrade." to player
+            remove 15 from {points.%player%}
+            stop
+         if {points.%player%} < 15:
+            send "&cSorry but , you don't have enought points !"
+            stop
+      if {Upgrade1.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§speed2:
+   trigger:
+      if {Upgrade2.%player%} is false:
+         if {Upgrade1.%player%} is true:
+            if {points.%player%} >= 30:
+               set {Upgrade2.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Speed II Upgrade." to player
+               remove 30 from {points.%player%}
+               stop
+         if {points.%player%} < 30:
+            send "&cSorry but , you don't have enought points !"
+            stop
+      if {Upgrade2.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§speed3:
+   trigger:
+      if {Upgrade3.%player%} is false:
+         if {Upgrade1.%player%} is true:
+            if {Upgrade2.%player%} is true:
+               if {points.%player%} >= 60:
+                  set {Upgrade3.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Speed III Upgrade." to player
+                  remove 60 from {points.%player%}
+                  stop
+      if {points.%player%} < 30:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade3.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+
+#JUMP BOOST
+command /§jump1:
+   trigger:
+      if {Upgrade4.%player%} is false:
+         if {points.%player%} >= 60:
+            set {Upgrade4.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Jump Boost I Upgrade." to player
+            remove 60 from {points.%player%}
+            stop
+      if {points.%player%} < 60:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade4.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§jump2:
+   trigger:
+      if {Upgrade5.%player%} is false:
+         if {Upgrade4.%player%} is true:
+            if {points.%player%} >= 75:
+               set {Upgrade5.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Jump Boost II Upgrade." to player
+               remove 75 from {points.%player%}
+               stop
+      if {points.%player%} < 75:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade5.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§jump3:
+   trigger:
+      if {Upgrade6.%player%} is false:
+         if {Upgrade4.%player%} is true:
+            if {Upgrade5.%player%} is true:
+               if {points.%player%} >= 90:
+                  set {Upgrade6.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Jump Boost III Upgrade." to player
+                  remove 90 from {points.%player%}
+                  stop
+      if {points.%player%} < 90:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade6.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#lime wool
+command /§sand1:
+   trigger:
+      if {Upgrade7.%player%} is false:
+         if {points.%player%} >= 90:
+            set {Upgrade7.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased lime wool I Upgrade." to player
+            remove 90 from {points.%player%}
+            stop
+      if {points.%player%} < 90:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade7.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand2:
+   trigger:
+      if {Upgrade8.%player%} is false:
+         if {Upgrade7.%player%} is true:
+            if {points.%player%} >= 125:
+               set {Upgrade8.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased lime wool II Upgrade." to player
+               remove 125 from {points.%player%}
+               stop
+      if {points.%player%} < 125:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade8.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand3:
+   trigger:
+      if {Upgrade9.%player%} is false:
+         if {Upgrade8.%player%} is true:
+            if {Upgrade7.%player%} is true:
+               if {points.%player%} >= 150:
+                  set {Upgrade9.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased lime wool III Upgrade." to player
+                  remove 150 from {points.%player%}
+                  stop
+      if {points.%player%} < 150:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade9.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand4:
+   trigger:
+      if {Upgrade10.%player%} is false:
+         if {Upgrade8.%player%} is true:
+            if {Upgrade7.%player%} is true:
+               if {Upgrade9.%player%} is true:
+                  if {points.%player%} >= 200:
+                     set {Upgrade10.%player%} to true
+                     send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased lime wool IV Upgrade." to player
+                     remove 200 from {points.%player%}
+                     stop
+         if {points.%player%} < 200:
+            send "&cSorry but , you don't have enought points !"
+            stop
+         if {Upgrade10.%player%} is true:
+            send "&cSorry but , you alerdy bought this upgrade !"
+            stop
+
+#SLOWNESS
+command /§slow1:
+   trigger:
+      if {Upgrade11.%player%} is false:
+         if {points.%player%} >= 200:
+            set {Upgrade11.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Slowness I Upgrade." to player
+            remove 200 from {points.%player%}
+            stop
+      if {points.%player%} < 200:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade11.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§slow2:
+   trigger:
+      if {Upgrade12.%player%} is false:
+         if {Upgrade11.%player%} is true:
+            if {points.%player%} >= 230:
+               set {Upgrade12.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Slowness II Upgrade." to player
+               remove 230 from {points.%player%}
+               stop
+      if {points.%player%} < 230:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade12.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§slow3:
+   trigger:
+      if {Upgrade13.%player%} is false:
+         if {Upgrade11.%player%} is true:
+            if {Upgrade12.%player%} is true:
+               if {points.%player%} >= 255:
+                  set {Upgrade13.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Slowness III Upgrade." to player
+                  remove 255 from {points.%player%}
+                  stop
+      if {points.%player%} < 255:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade13.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#HASTE
+command /§haste1:
+   trigger:
+      if {Upgrade14.%player%} is false:
+         if {points.%player%} >= 255:
+            set {Upgrade14.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Haste I Upgrade." to player
+            remove 255 from {points.%player%}
+            stop
+      if {points.%player%} < 255:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade14.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§haste2:
+   trigger:
+      if {Upgrade15.%player%} is false:
+         if {Upgrade14.%player%} is true:
+            if {points.%player%} >= 270:
+               set {Upgrade15.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Haste II Upgrade." to player
+               remove 270 from {points.%player%}
+               stop
+      if {points.%player%} < 270:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade15.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§haste3:
+   trigger:
+      if {Upgrade16.%player%} is false:
+         if {Upgrade14.%player%} is true:
+            if {Upgrade15.%player%} is true:
+               if {points.%player%} >= 300:
+                  set {Upgrade16.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Haste III Upgrade." to player
+                  remove 300 from {points.%player%}
+                  stop
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade16.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#REDUCER
+command /§ikbr1:
+   trigger:
+      if {Upgrade17.%player%} is false:
+         if {points.%player%} >= 300:
+            set {Upgrade17.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Reducer I Upgrade." to player
+            remove 300 from {points.%player%}
+            stop
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade17.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#regeneration
+command /§regeneration1:
+   trigger:
+      if {Upgrade18.%player%} is false:
+         if {points.%player%} >= 300:
+            set {Upgrade18.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased regeneration I Upgrade." to player
+            remove 300 from {points.%player%}
+            stop
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade18.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§regeneration2:
+   trigger:
+      if {Upgrade19.%player%} is false:
+         if {Upgrade18.%player%} is true:
+            if {points.%player%} >= 340:
+               set {Upgrade19.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased regeneration II Upgrade." to player
+               remove 300 from {points.%player%}
+               stop
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade19.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§regeneration3:
+   trigger:
+      if {Upgrade20.%player%} is false:
+         if {Upgrade19.%player%} is true:
+            if {Upgrade18.%player%} is true:
+               if {points.%player%} >= 370:
+                  set {Upgrade20.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased regeneration III Upgrade." to player
+                  remove 370 from {points.%player%}
+                  stop
+      if {points.%player%} < 370:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade20.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#KNOCKER
+command /§ikb1:
+   trigger:
+      if {Upgrade21.%player%} is false:
+         if {points.%player%} >= 370:
+            set {Upgrade21.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Knocker I Upgrade." to player
+            remove 370 from {points.%player%}
+            stop
+      if {points.%player%} < 370:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade21.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#WEAKER
+command /§week1:
+   trigger:
+      if {Upgrade22.%player%} is false:
+         if {points.%player%} >= 400:
+            set {Upgrade22.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Weaker I Upgrade." to player
+            remove 400 from {points.%player%}
+            stop
+      if {points.%player%} < 400:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade22.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#Armor
+command /§iarmor1:
+   trigger:
+      if {Upgrade23.%player%} is false:
+         if {points.%player%} >= 400:
+            set {Upgrade23.%player%} to true
+            send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Weaker I Upgrade." to player
+            remove 400 from {points.%player%}
+            stop
+      if {points.%player%} < 400:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade22.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§iarmor2:
+   trigger:
+      if {Upgrade24.%player%} is false:
+         if {Upgrade23.%player%} is true:
+            if {points.%player%} >= 450:
+               set {Upgrade24.%player%} to true
+               send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Armor II Upgrade." to player
+               remove 450 from {points.%player%}
+               stop
+      if {points.%player%} < 450:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade25.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§iarmor3:
+   trigger:
+      if {Upgrade25.%player%} is false:
+         if {Upgrade24.%player%} is true:
+            if {Upgrade23.%player%} is true:
+               if {points.%player%} >= 500:
+                  set {Upgrade25.%player%} to true
+                  send "&8[&2&lSkills&8] &aThanks for your purchase ! &eYou purchased Armor III Upgrade." to player
+                  remove 500 from {points.%player%}
+                  stop
+      if {points.%player%} < 500:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade25.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /help [<text>]:
+   trigger:
+      if arg 1 is not set:
+         send "       &c/Help Center" to player
+         send ""
+         send "&cPlease select a chapter !"
+         send ""
+         send "&c/help &agameplay"
+         send "&c/help &2shop"
+         send "&c/help &3upgrades"
+         send "&c/help &eother"
+         stop
+      if arg 1 is "gameplay":
+         send "       &c/Help Center" to player
+         send ""
+         send "&a&l&oGamePlay:"
+         send ""
+         send "&aHow to play ? Just off the platfrom ! You will automaticly get a premade kit "
+         send "&athen , you can go PvP other players , train for bridging , clutching ect !"
+         send "&aYou get 1 point every kill and lose 1 every death ! "
+         send "&aYou have a new player protection  for 1 hour after your first join ! It means you don't lose points for 1 hour after your first join !"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+         stop
+      if arg 1 is "shop":
+         send "       &c/Help Center" to player
+         send ""
+         send "&2&l&oShop:"
+         send ""
+         send "&2How does the shop works and how to access it ?"
+         send "&2You can use /shop at spawn and click on the upgrades you want to buy !"
+         send "&2Just make just you have the requirements ! Read upgrade's lore to know more !"
+         send "&2There is also no way to buy points with real money"
+         send "&2To get points you can ...."
+         send "&2- Kill other players"
+         send "&2- Afk , you get 1 point every 3 minutes on the server"
+         send "&2- Help Staff , by sending feedbacks , helping other players"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+      if arg 1 is "upgrades":
+         send "       &c/Help Center" to player
+         send ""
+         send "&3&l&oUpgrades:"
+         send ""
+         send "&3How does upgrades works , how to get them , what impact they have and why you SHOULD buy them."
+         send "&3Upgrades are like little boosters that give some cool advantages , but they are not too op !"
+         send "&3There prices are different by upgrades , some of them are easier to get and some harder !"
+         send "&3Why are prices so high ? Because if everyone could have everything under a day , this would not be funny :("
+         send "&3You should buy it because they give you a pretty good advantage !"
+         send ""
+         send "&3&l&oUpgrade Wiki:"
+         send ""
+         send "&fSpeed (I,II,III): Requirements (15,30,60) points (Previous upgrade) Gives you speed (I,II,III) !"
+         send "&aJump Boost (I,II,III): Requirements (60,75,90) points (Previous upgrade) Give you jumpst boost (I,II,III) !"
+         send "&fLime Wool (I,II,III,IV): Requirements (90,125,150,200) points (Previous upgrade) Give you (1,2) lime wool blocks every (30,20,10) seconds !"
+         send "&0Slowness (I,II,III): Requirements (200,230,255) points (Previous upgrade) Get 20percents chance to give your enemy slowness (I,II,III) for 5 seconds !"
+         send "&eHaste (I,II,III): Requirements (255,270,300) poits (Previous upgrade) Give you haste (I,II,III) !"
+         send "&2Reducer (I): Requirements (300) points Get a 20percents chance to cancel your knockback !"
+         send "&4regeneration (I,II,III): Requirements (300,340,370) points (Previous upgrade) Give you regeneration (I,II,III)"
+         send "&cKnocker (I): Requirements (370) points Get a 20percents chance to push your enemy backwards !"
+         send "&8Weaker (I): Requirements (400) points Get 20percents chance to give your enemy weakness I !"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+      if arg 1 is "other":
+         send "       &c/Help Center" to player
+         send ""
+         send "&eWe are not affilated with Minehut or Mojang"
+         send "&eWe are not selling or recolting any of your informations"
+         send "&eThis server was made for fun and not money" 
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+
+command /add [<offline player>] [<text>] [<number>]:
+   permission: OP
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 3 is set:
+               add arg 3 to {%arg 2%.%arg 1%}
+
+command /tagshop:
+   trigger:
+      wait 5 tick
+      open chest with 4 rows named "&c&l&oT&9&l&oa&e&l&og&a&l&os &2&l&oS&b&l&oh&6&l&oo&d&l&op" to player
+      format slot 10 of player with coal named "&7&lWarrior" with lore "&aCost 100 Points" to close then run [make player execute command "/§scoal"]
+      format slot 11 of player with iron ingot named "&f&lDuelist" with lore "&aCost 200 Points" to close then run [make player execute command "/§siron"]
+      format slot 12 of player with gold ingot named "&6&lSkilled" with lore "&aCost 300 Points" to close then run [make player execute command "/§sgold"]
+      format slot 13 of player with diamond named "&b&lSniper" with lore "&aCost 400 Points" to close then run [make player execute command "/§sdiamond"]
+      format slot 14 of player with emerald named "&a&lClutcher" with lore "&aCost 500 Points" to close then run [make player execute command "/§semerald"]
+      format slot 15 of player with blaze rod named "&d&lUnVoidable" with lore "&aCost 600 Points" to close then run [make player execute command "/§sunvoid"]
+      format slot 16 of player with diamond block named "&5&lPearl Clutcher" with lore "&aCost 700 Points" to close then run [make player execute command "/§spclutch"]
+      format slot 19 of player with player head named "&7[&4&lVAC&7]" with lore "&aCost 800 Points" to close then run [make player execute command "/§svac"]
+      format slot 20 of player with diamond axe named "&2&lhaxx" with lore "&aCost 850 Points" to close then run [make player execute command "/§shaxx"]
+      format slot 21 of player with lava bucket named "&e&l&oGOD" with lore "&aCost 900 Points" to close then run [make player execute command "/§sgod"]
+      format slot 22 of player with grass block named "&2&l&oM&a&l&oi&2&l&on&a&l&oe&2&l&oc&a&l&or&2&l&oa&a&l&of&2&l&ot" with lore "&aCost 950 Points" to close then run [make player execute command "/§smc"]
+      format slot 23 of player with water bucket named "&9&l&oAngel" with lore "&aCost 1000 Points" to close then run [make player execute command "/§sangel"]
+      format slot 24 of player with magma block named "&9&lAngel &e&lOf &4&lDeath" with lore "&aCost 1500 Points" to close then run [make player execute command "/§sangeld"]
+      format slot 25 of player with dragon egg named "&0&l&oNo&4&l&oHacks&d&l&oJust&c&l&oJDS" with lore "&aCost 2000 Points" to close then run [make player execute command "/§sjds"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 27 of player with black glass pane named "" to be unstealable
+      format slot 28 of player with black glass pane named "" to be unstealable
+      format slot 29 of player with black glass pane named "" to be unstealable
+      format slot 30 of player with black glass pane named "" to be unstealable
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 32 of player with black glass pane named "" to be unstealable
+      format slot 33 of player with black glass pane named "" to be unstealable
+      format slot 34 of player with black glass pane named "" to be unstealable
+      format slot 35 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+
+
+command /§scoal:
+   trigger:
+      if {points.%player%} >= 100:
+         make server execute command "/lp user %player% parent add Warrior"
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &7&lWarrior &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &7&lWarrior &7tag !"
+         broadcast ""
+         set {tag.coal.%player%} to true
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§siron:
+   trigger:
+      if {points.%player%} >= 200:
+         make server execute command "/lp user %player% parent add duelist"
+         remove 200 from {points.%player%} 
+         send "{@core} &aYou purchased &f&lDuelist &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &f&lDuelist &7tag !"
+         broadcast ""
+         set {tag.iron.%player%} to true
+         stop
+      if {points.%player%} < 200:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sgold:
+   trigger:
+      if {points.%player%} >= 300:
+         make server execute command "/lp user %player% parent add skilled"
+         remove 300 from {points.%player%} 
+         send "{@core} &aYou purchased &6&lSkilled &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &6&lSkilled &7tag !"
+         broadcast ""
+         set {tag.gold.%player%} to true
+         stop
+      if {points.%player%} < 300:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sdiamond:
+   trigger:
+      if {points.%player%} >= 400:
+         make server execute command "/lp user %player% parent add sniper"
+         remove 400 from {points.%player%} 
+         send "{@core} &aYou purchased &b&lSniper &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &b&lSniper &7tag !"
+         broadcast ""
+         set {tag.diamond.%player%} to true
+         stop
+      if {points.%player%} < 400:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§semerald:
+   trigger:
+      if {points.%player%} >= 500:
+         make server execute command "/lp user %player% parent add clutcher"
+         remove 500 from {points.%player%} 
+         send "{@core} &aYou purchased &a&lClutcher &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &a&lClutcher &7tag !"
+         broadcast ""
+         set {tag.emerald.%player%} to true
+         stop
+      if {points.%player%} < 500:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§spclutch:
+   trigger:
+      if {points.%player%} >= 700:
+         make server execute command "/lp user %player% parent add pclutcher"
+         remove 700 from {points.%player%} 
+         send "{@core} &aYou purchased &5&lPearl Clutcher &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &5&lPearl Clutcher &7tag !"
+         broadcast ""
+         set {tag.pclutch.%player%} to true
+         stop
+      if {points.%player%} < 700:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sunvoid:
+   trigger:
+      if {points.%player%} >= 600:
+         make server execute command "/lp user %player% parent add unvoid"
+         remove 600 from {points.%player%} 
+         send "{@core} &aYou purchased &d&lUnVoidable &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &d&lUnVoidable &7tag !"
+         broadcast ""
+         set {tag.unvoid.%player%} to true
+         stop
+      if {points.%player%} < 600:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§svac:
+   trigger:
+      if {points.%player%} >= 800:
+         make server execute command "/lp user %player% parent add vac"
+         remove 800 from {points.%player%} 
+         send "{@core} &aYou purchased &7[&4&lVAC&7] &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &7[&4&lVAC&7] &7tag !"
+         broadcast ""
+         set {tag.vac.%player%} to true
+         stop
+      if {points.%player%} < 800:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§smc:
+   trigger:
+      if {points.%player%} >= 950:
+         make server execute command "/lp user %player% parent add mc"
+         remove 950 from {points.%player%} 
+         send "{@core} &aYou purchased &2&l&oM&a&l&oi&2&l&on&a&l&oe&2&l&oc&a&l&or&2&l&oa&a&l&of&2&l&ot &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &2&l&oM&a&l&oi&2&l&on&a&l&oe&2&l&oc&a&l&or&2&l&oa&a&l&of&2&l&ot &7tag !"
+         broadcast ""
+         set {tag.mc.%player%} to true
+         stop
+      if {points.%player%} < 950:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§shaxx:
+   trigger:
+      if {points.%player%} >= 850:
+         make server execute command "/lp user %player% parent add haxx"
+         remove 850 from {points.%player%} 
+         send "{@core} &aYou purchased &2&lhaxx &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &2&lhaxx &7tag !"
+         broadcast ""
+         set {tag.haxx.%player%} to true
+         stop
+      if {points.%player%} < 850:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sgod:
+   trigger:
+      if {points.%player%} >= 900:
+         make server execute command "/lp user %player% parent add god"
+         remove 900 from {points.%player%} 
+         send "{@core} &aYou purchased &e&l&oGOD &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &e&l&oGOD &7tag !"
+         broadcast ""
+         set {tag.god.%player%} to true
+         stop
+      if {points.%player%} < 900:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sangel:
+   trigger:
+      if {points.%player%} >= 1000:
+         make server execute command "/lp user %player% parent add angel"
+         remove 1000 from {points.%player%} 
+         send "{@core} &aYou purchased &9&l&oAngel &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &9&l&oAngel &7tag !"
+         broadcast ""
+         set {tag.angel.%player%} to true
+         stop
+      if {points.%player%} < 1000:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sangeld:
+   trigger:
+      if {points.%player%} >= 1500:
+         make server execute command "/lp user %player% parent add angeld"
+         remove 1500 from {points.%player%} 
+         send "{@core} &aYou purchased &9&lAngel &e&lOf &4&lDeath &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &9&lAngel &e&lOf &4&lDeath &7tag !"
+         broadcast ""
+         set {tag.angeld.%player%} to true
+         stop
+      if {points.%player%} < 1500:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sjds:
+   trigger:
+      if {points.%player%} >= 2000:
+         make server execute command "/lp user %player% parent add jds"
+         remove 2000 from {points.%player%} 
+         send "{@core} &aYou purchased &0&l&oNo&4&l&oHacks&d&l&oJust&c&l&oJDS &atag !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &0&l&oNo&4&l&oHacks&d&l&oJust&c&l&oJDS &7tag !"
+         broadcast ""
+         set {tag.jds.%player%} to true
+         stop
+      if {points.%player%} < 2000:
+         send "{@core} &cSadly you don't have enough points :'("
+
+
+command /tags:
+   trigger:
+      send "&8[&d&lTags&8] &cSorry but this command has been disabled."
+      stop
+      wait 5 tick
+      open chest with 4 rows named "&c&l&oT&9&l&oa&e&l&og&a&l&os" to player
+      format slot 10 of player with coal named "&7&lWarrior" with lore "&7Click to enable!" to close then run [make player execute command "/§icoal"]
+      format slot 11 of player with iron ingot named "&f&lDuelist" with lore "&7Click to enable!" to close then run [make player execute command "/§iiron"]
+      format slot 12 of player with gold ingot named "&6&lSkilled" with lore "&7Click to enable!" to close then run [make player execute command "/§igold"]
+      format slot 13 of player with diamond named "&b&lSniper" with lore "&7Click to enable!" to close then run [make player execute command "/§idiamond"]
+      format slot 14 of player with emerald named "&a&lClutcher" with lore "&7Click to enable!" to close then run [make player execute command "/§iemerald"]
+      format slot 15 of player with blaze rod named "&d&lUnVoidable" with lore "&7Click to enable!" to close then run [make player execute command "/§iunvoid"]
+      format slot 16 of player with diamond block named "&5&lPearl Clutcher" with lore "&7Click to enable!" to close then run [make player execute command "/§ipclutch"]
+      format slot 19 of player with player head named "&7[&4&lVAC&7]" with lore "&7Click to enable!" to close then run [make player execute command "/§ivac"]
+      format slot 21 of player with lava bucket named "&e&l&oGOD" with lore "&7Click to enable!" to close then run [make player execute command "/§igod"]
+      format slot 23 of player with water bucket named "&9&l&oAngel" with lore "&7Click to enable!" to close then run [make player execute command "/§iangel"]
+      format slot 25 of player with dragon egg named "&0&l&oNo&4&l&oHacks&d&l&oJust&c&l&oJDS" with lore "&7Click to enable!" to close then run [make player execute command "/isjds"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 27 of player with black glass pane named "" to be unstealable
+      format slot 28 of player with black glass pane named "" to be unstealable
+      format slot 29 of player with black glass pane named "" to be unstealable
+      format slot 30 of player with black glass pane named "" to be unstealable
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 32 of player with black glass pane named "" to be unstealable
+      format slot 33 of player with black glass pane named "" to be unstealable
+      format slot 34 of player with black glass pane named "" to be unstealable
+      format slot 35 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+
+command /§icoal:
+   trigger:
+      if {tag.coal.%player%} is true:
+         make server execute command "/lp user %player% parent add Warrior"
+         send "{@core} &aYou selected &7&lWarrior &atag !"
+         stop
+      if {tag.coal.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§iiron:
+   trigger:
+      if {tag.iron.%player%} is true:
+         make server execute command "/lp user %player% parent add duelist"
+         send "{@core} &aYou selected &f&lDuelist &atag !"
+         stop
+      if {tag.iron.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§igold:
+   trigger:
+      if {tag.gold.%player%} is true:
+         make server execute command "/lp user %player% parent add skilled"
+         send "{@core} &aYou selected &6&lSkilled &atag !"
+         stop
+      if {tag.gold.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§idiamond:
+   trigger:
+      if {tag.diamond.%player%} is true:
+         make server execute command "/lp user %player% parent add sniper"
+         send "{@core} &aYou selected &b&lSniper &atag !"
+         stop
+      if {tag.diamond.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§iemerald:
+   trigger:
+      if {tag.emerald.%player%} is true:
+         make server execute command "/lp user %player% parent add clutcher"
+         send "{@core} &aYou selected &a&lClutcher &atag !"
+         stop
+      if {tag.emerald.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§ipclutch:
+   trigger:
+      if {tag.pclutch.%player%} is true:
+         make server execute command "/lp user %player% parent add pcluch"
+         send "{@core} &aYou selected &5&lPearl Clutcher &atag !"
+         stop
+      if {tag.pclutch.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§iunvoid:
+   trigger:
+      if {tag.unvoid.%player%} is true:
+         make server execute command "/lp user %player% parent add unvoid"
+         send "{@core} &aYou selected &d&lUnVoidable &atag !"
+         stop
+      if {tag.unvoid.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§ivac:
+   trigger:
+      if {tag.vac.%player%} is true:
+         make server execute command "/lp user %player% parent add vac"
+         send "{@core} &aYou selected &7[&4&lVAC&7] &atag !"
+         stop
+      if {tag.vac.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§igod:
+   trigger:
+      if {tag.god.%player%} is true:
+         make server execute command "/lp user %player% parent add god"
+         send "{@core} &aYou selected &e&l&oGOD &atag !"
+         stop
+      if {tag.god.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§iangel:
+   trigger:
+      if {tag.angel.%player%} is true:
+         make server execute command "/lp user %player% parent add angel"
+         send "{@core} &aYou selected &9&l&oAngel &atag !"
+         stop
+      if {tag.angel.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+command /§ijds:
+   trigger:
+      if {tag.jds.%player%} is true:
+         make server execute command "/lp user %player% parent add jds"
+         send "{@core} &aYou selected &0&l&oNo&4&l&oHacks&d&l&oJust&c&l&oJDS &atag !"
+         stop
+      if {tag.jds.%player%} is not set:
+         send "{@core} &cSadly you don't have this tag :'("
+
+
+command /itemshop:
+   trigger:
+      wait 5 tick
+      open chest with 4 rows named "&c&l&oI&9&l&ot&e&l&oe&a&l&om &2&l&oS&b&l&oh&6&l&oo&d&l&op" to player
+      format slot 10 of player with blaze rod named "&6Blazer Rod" with lore "&aCost 100 Points" to close then run [make player execute command "/§sblaze"]
+      format slot 11 of player with iron ingot named "&fIron Ingot" with lore "&aCost 100 Points" to close then run [make player execute command "/§sirong"]
+      format slot 12 of player with gold ingot named "&eGold Ingot" with lore "&aCost 100 Points" to close then run [make player execute command "/§sgoldg"]
+      format slot 13 of player with diamond named "&bDiamond" with lore "&aCost 100 Points" to close then run [make player execute command "/§sdiamondg"]
+      format slot 14 of player with emerald named "&aEmerald" with lore "&aCost 100 Points" to close then run [make player execute command "/§semeraldg"]
+      format slot 15 of player with netherite ingot named "&dNetherite Ingot" with lore "&aCost 100 Points" to close then run [make player execute command "/§snetherite"]
+      format slot 16 of player with pufferfish named "&9Raw Fish" with lore "&aCost 100 Points" to close then run [make player execute command "/§sfish"]
+      format slot 19 of player with player head named "&7Player Head" with lore "&aCost 100 Points" to close then run [make player execute command "/§shead"]
+      format slot 20 of player with bread named "&6Baguette" with lore "&aCost 100 Points" to close then run [make player execute command "/§sbread"]
+      format slot 21 of player with iron hoe named "&fIron Hoe" with lore "&aCost 100 Points" to close then run [make player execute command "/§sironhoe"]
+      format slot 22 of player with red bed named "&cRed Bed" with lore "&aCost 100 Points" to close then run [make player execute command "/§sbed"]
+      format slot 23 of player with diamond hoe named "&bDiamond Hoe" with lore "&aCost 100 Points" to close then run [make player execute command "/§sdhoe"]
+      format slot 24 of player with nether star named "&3Nether Star" with lore "&aCost 300 Points" to close then run [make player execute command "/§sstar"]
+      format slot 25 of player with dragon head named "&0Dragon Head" with lore "&aCost 500 Points" to close then run [make player execute command "/§sdhead"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 27 of player with black glass pane named "" to be unstealable
+      format slot 28 of player with black glass pane named "" to be unstealable
+      format slot 29 of player with black glass pane named "" to be unstealable
+      format slot 30 of player with black glass pane named "" to be unstealable
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 32 of player with black glass pane named "" to be unstealable
+      format slot 33 of player with black glass pane named "" to be unstealable
+      format slot 34 of player with black glass pane named "" to be unstealable
+      format slot 35 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+
+command /§sblaze:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &6Blaze Rod &askin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &6Blaze Rod &7skin !"
+         broadcast ""
+         set {skin.blaze.%player%} to true
+         clear {skin.iron.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sirong:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &fIron Ingot &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &fIron Ingot &7skin !"
+         broadcast ""
+         set {skin.iron.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sgoldg:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &eGold Ingot &skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &eGold Ingot &7skin !"
+         broadcast ""
+         set {skin.gold.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sdiamondg:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &bDiamond &7skin"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &bDiamond &7skin !"
+         broadcast ""
+         set {skin.diamond.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§semeraldg:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &aEmerald &7skin"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &aEmerald &7skin !"
+         broadcast ""
+         set {skin.emerald.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§snetherite:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &dNetherite &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &dNetherite &7skin !"
+         broadcast ""
+         set {skin.netherite.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sfish:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &9Fish &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &9Fish &7skin !"
+         broadcast ""
+         set {skin.fish.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§shead:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &8Player Head &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &8Player Skin &7skin !"
+         broadcast ""
+         set {skin.head.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sironhoe:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &fIron Hoe &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &fIron Hoe &7skin !"
+         broadcast ""
+         set {skin.ironhoe.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.iron.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sdhoe:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &bDiamond Hoe &7skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &bDiamond Hoe !"
+         broadcast ""
+         set {skin.dhoe.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.head.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sdhead:
+   trigger:
+      if {points.%player%} >= 500:
+         remove 500 from {points.%player%} 
+         send "{@core} &aYou purchased &0Dragon Head &askin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &0Dragon Head &askin !"
+         broadcast ""
+         set {skin.dhead.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         stop
+      if {points.%player%} < 500:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sbread:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &6Baguette &askin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &6Baguette &askin !"
+         broadcast ""
+         set {skin.bread.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.star.%player%}
+         clear {skin.bed.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sbed:
+   trigger:
+      if {points.%player%} >= 100:
+         remove 100 from {points.%player%} 
+         send "{@core} &aYou purchased &cRed Bed &askin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &cRed Bed &askin !"
+         broadcast ""
+         set {skin.bed.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.bread.%player%}
+         clear {skin.star.%player%}
+         stop
+      if {points.%player%} < 100:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sstar:
+   trigger:
+      if {points.%player%} >= 300:
+         remove 300 from {points.%player%} 
+         send "{@core} &aYou purchased &3Nether Star &askin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &3Nether Star &askin !"
+         broadcast ""
+         set {skin.star.%player%} to true
+         clear {skin.blaze.%player%}
+         clear {skin.gold.%player%}
+         clear {skin.netherite.%player%}
+         clear {skin.diamond.%player%}
+         clear {skin.emerald.%player%}
+         clear {skin.nethertie.%player%}
+         clear {skin.fish.%player%}
+         clear {skin.ironhoe.%player%}
+         clear {skin.dhoe.%player%}
+         clear {skin.head.%player%}
+         clear {skin.iron.%player%}
+         clear {skin.dhead.%player%}
+         clear {skin.bed.%player%}
+         clear {skin.bread.%player%}
+         stop
+      if {points.%player%} < 500:
+         send "{@core} &cSadly you don't have enough points :'("
+
+
+command /blockshop:
+   trigger:
+      wait 5 tick
+      open chest with 4 rows named "&c&l&oB&9&l&ol&e&l&oo&a&l&oc&5&l&ok &2&l&oS&b&l&oh&6&l&oo&d&l&op" to player
+      format slot 10 of player with blue concrete named "&6Concrete Block Skin" with lore "&aCost 400 Points" to close then run [make player execute command "/§sconc"]
+      format slot 11 of player with red stained glass named "&9Stained Glass Block Skin" with lore "&aCost 400 Points" to close then run [make player execute command "/§sglass"]
+      format slot 12 of player with green wool named "&5Wool Block Skin" with lore "&aCost 400 Points" to close then run [make player execute command "/§swool"]
+      format slot 13 of player with emerald block named "&dOres Block Skin" with lore "&aCost 1000 Points" to close then run [make player execute command "/§sblock"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 27 of player with black glass pane named "" to be unstealable
+      format slot 28 of player with black glass pane named "" to be unstealable
+      format slot 29 of player with black glass pane named "" to be unstealable
+      format slot 30 of player with black glass pane named "" to be unstealable
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 31 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+      format slot 32 of player with black glass pane named "" to be unstealable
+      format slot 33 of player with black glass pane named "" to be unstealable
+      format slot 34 of player with black glass pane named "" to be unstealable
+      format slot 35 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+
+command /§sconc:
+   trigger:
+      if {points.%player%} >= 400:
+         remove 400 from {points.%player%} 
+         send "{@core} &aYou purchased &6Concrete &ablock skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &8Player Skin &7block skin !"
+         broadcast ""
+         set {block.conc.%player%} to true
+         stop
+      if {points.%player%} < 400:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sglass:
+   trigger:
+      if {points.%player%} >= 400:
+         remove 400 from {points.%player%} 
+         send "{@core} &aYou purchased &9Glass &ablock skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &9Glass &7block skin !"
+         broadcast ""
+         set {block.glass.%player%} to true
+         stop
+      if {points.%player%} < 400:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§swool:
+   trigger:
+      if {points.%player%} >= 400:
+         remove 400 from {points.%player%} 
+         send "{@core} &aYou purchased &5Wool &ablock skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &5Wool &7block skin !"
+         broadcast ""
+         set {block.wool.%player%} to true
+         stop
+      if {points.%player%} < 400:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /§sblock:
+   trigger:
+      if {points.%player%} >= 1000:
+         remove 1000 from {points.%player%} 
+         send "{@core} &aYou purchased &dOre &ablock skin !"
+         broadcast ""
+         broadcast "{@core} &e%player% &7purchased &dOre &7block skin !"
+         broadcast ""
+         set {block.ore.%player%} to true
+         stop
+      if {points.%player%} < 1000:
+         send "{@core} &cSadly you don't have enough points :'("
+
+command /shop:
+   trigger:
+      wait 4 ticks
+      open chest with 1 row named "   &6&l&oSelect the shop to visit" to player
+      wait 4 ticks
+      format slot 1 of player with feather named "&fAbilities" with lore "&7Click to visit !" to close then run [make player execute command "/upgrades"]
+      format slot 3 of player with blaze rod named "&6Item Skins" with lore "&7Click to visit !" to close then run [make player execute command "/itemshop"]
+      format slot 5 of player with emerald block named "&5Block Skins" with lore "&7Click to visit !" to close then run [make player execute command "/blockshop"]
+      format slot 7 of player with name tag named "&dTags" with lore "&7Click to visit !" to close then run [make player execute command "/tagshop"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+
+command /quests:
+   trigger:
+      if {QUEST.KILL1.%player%} is not set:
+         set {QUEST.KILL1.%player%} to 0
+      if {QUEST.KILL0.%player%} is not set:
+         set {QUEST.KILL0.%player%} to 0
+      if {QUEST.KILLSTREAK.%player%} is not set:
+         set {QUEST.KILLSTREAK.%player%} to 0
+      if {QUEST.BLOCK.%player%} is not set:
+         set {QUEST.BLOCK.%player%} to 0
+      if {QUEST.PLAY.%player%} is not set:
+         set {QUEST.PLAY.%player%} to 0
+      if {QUEST.ENDER.%player%} is not set:
+         set {QUEST.ENDER.%player%} to 0
+      if {QUEST.PARKOUR.%player%} is not set:
+         set {QUEST.PARKOUR.%player%} to 0
+      open chest with 3 rows named "            &8[&b&lQuests&8]" to player
+      wait 2 ticks
+      if {QUEST.KILL10.%player%} is not set:
+         format slot 10 of player with red glass pane named "&cKill 10 players" with lore "&7&oClick to do the quest &r&7[&6Prize: 30P &7] !" to close then run [make player execute command "/§q1"]
+      else:
+         format slot 10 of player with green glass pane named "&cKill 10 players" with lore "&7&oClick to finish &r&8[%{QUEST.KILL1.%player%}%&8/10]" to close then run [make player execute command "/§q1"]
+      if {QUEST.KILL100.%player%} is not set:
+         format slot 11 of player with red glass pane named "&cKill 100 players" with lore "&7&oClick to do the quest &r&7[&6Prize: 150P &7] !" to close then run [make player execute command "/§q2"]
+      else:
+         format slot 11 of player with green glass pane named "&cKill 10 players" with lore "&7&oClick to finish !&r&8[%{QUEST.KILL0.%player%}%&8/100]" to close then run [make player execute command "/§q2"]
+      if {QUEST.KILLSTREAK20.%player%} is not set:
+         format slot 12 of player with red glass pane named "&cGet a 20 kill streak" with lore "&7&oClick to do the quest &r&7[&6Prize: 90P &7] !" to close then run [make player execute command "/§q3"]
+      else:
+         format slot 12 of player with green glass pane named "&cGet a 20 kill streak" with lore "&7&oClick to finish !&r&8[%{QUEST.KILLSTREAK.%player%}%&8/10]" to close then run [make player execute command "/§q3"]
+      if {QUEST.BLOCK500.%player%} is not set:
+         format slot 13 of player with red glass pane named "&cPlace 500 Blocks" with lore "&7&oClick to do the quest &r&7[&6Prize: 100P &7] !" to close then run [make player execute command "/§q4"]
+      else:
+         format slot 13 of player with green glass pane named "&cPlace 500 Blocks" with lore "&7&oClick to finish !&r&8[%{QUEST.BLOCK.%player%}%&8/500]" to close then run [make player execute command "/§q4"]
+      if {QUEST.ENDER50.%player%} is not set:
+         format slot 14 of player with red glass pane named "&cShoot an Ender Pearl 50 Times" with lore "&7&oClick to do the quest &r&7[&6Prize: 30P &7] !" to close then run [make player execute command "/§q5"]
+      else:
+         format slot 14 of player with green glass pane named "&cShoot an Ender Pearl 50 Times" with lore "&7&oClick to finish !&r&8[%{QUEST.ENDER.%player%}%&8/50]" to close then run [make player execute command "/§q5"]
+      if {QUEST.PLAY1.%player%} is not set:
+         format slot 15 of player with red glass pane named "&cPlay for 1 Hour" with lore "&7&oClick to do the quest &r&7[&6Prize: 40P &7] !" to close then run [make player execute command "/§q6"]
+      else:
+         format slot 15 of player with green glass pane named "&cPlay for 1 Hour" with lore "&7&oClick to finish !&r&8[%{QUEST.PLAY.%player%}%&8/60]" to close then run [make player execute command "/§q6"]
+      if {QUEST.PAKOUR1.%player%} is not set:
+         format slot 16 of player with red glass pane named "&cFinish the Parkour" with lore "&7&oClick to do the quest &r&7[&6Prize: 120P &7] !" to close then run [make player execute command "/§q7"]
+      else:
+         format slot 16 of player with green glass pane named "&cFinish the Parkour" with lore "&7&oClick to finish !&r&8[%{QUEST.PARKOUR.%player%}%&8/1]" to close then run [make player execute command "/§q7"]
+      format slot 0 of player with black glass pane named "" to be unstealable
+      format slot 1 of player with black glass pane named "" to be unstealable
+      format slot 2 of player with black glass pane named "" to be unstealable
+      format slot 3 of player with black glass pane named "" to be unstealable
+      format slot 4 of player with black glass pane named "" to be unstealable
+      format slot 5 of player with black glass pane named "" to be unstealable
+      format slot 6 of player with black glass pane named "" to be unstealable
+      format slot 7 of player with black glass pane named "" to be unstealable
+      format slot 8 of player with black glass pane named "" to be unstealable
+      format slot 9 of player with black glass pane named "" to be unstealable
+      format slot 18 of player with black glass pane named "" to be unstealable
+      format slot 19 of player with black glass pane named "" to be unstealable
+      format slot 20 of player with black glass pane named "" to be unstealable
+      format slot 21 of player with black glass pane named "" to be unstealable
+      format slot 23 of player with black glass pane named "" to be unstealable
+      format slot 22 of player with sign named "&7&oClose Menu !" to close 
+      format slot 22 of player with sign named "&7&oClose Menu !" to close
+      format slot 22 of player with sign named "&7&oClose Menu !" to close
+      format slot 22 of player with sign named "&7&oClose Menu !" to close
+      format slot 24 of player with black glass pane named "" to be unstealable
+      format slot 25 of player with black glass pane named "" to be unstealable
+      format slot 26 of player with black glass pane named "" to be unstealable
+      format slot 17 of player with black glass pane named "" to be unstealable
+      
+on place:
+   if player's gamemode is not creative:
+      set {_y} to y location of player
+      if {_y} < 90:
+         if {QUEST.BLOCK500.%player%} is set:
+            add 1 to {QUEST.BLOCK.%player%}
+
+on shoot:
+   if projectile is ender pearl:
+      if {QUEST.ENDER50.%shooter%} is set:
+         add 1 to {QUEST.ENDER.%shooter%}
+
+every 1 minute:
+   loop all players:
+      if {QUEST.PLAY1.%loop-player%} is set:
+         add 1 to {QUEST.PLAY.%loop-player%}
+
+command /§q1:
+   trigger:
+      if {QUEST.KILL10.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.KILL10.%player%} is not set:
+         set {QUEST.KILL10.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c10 Kills &7has been started !"
+         delete {QUEST.KILL1.%player%}
+         stop
+      if {QUEST.KILL10.%player%} is set:
+         if {QUEST.KILL1.%player%} < 10:
+            send "&8[&b&lQuests&8] &7You still need some kills to finish this quest !"
+            stop
+         if {QUEST.KILL1.%player%} >= 10:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 30 points !"
+            add 30 to {points.%player%}
+            delete {QUEST.KILL1.%player%}
+            set {QUEST.KILL10.%player%.COOLDOWN} to true
+            delete {QUEST.KILL10.%player%}
+            wait 30 minute
+            delete {QUEST.KILL10.%player%.COOLDOWN}
+
+command /§q2:
+   trigger:
+      if {QUEST.KILL100.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.KILL100.%player%} is not set:
+         set {QUEST.KILL100.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c100 Kills &7has been started !"
+         delete {QUEST.KILL0.%player%}
+         stop
+      if {QUEST.KILL100.%player%} is set:
+         if {QUEST.KILL0.%player%} < 100:
+            send "&8[&b&lQuests&8] &7You still need some kills to finish this quest !"
+            stop
+         if {QUEST.KILL0.%player%} >= 100:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 150 points !"
+            add 150 to {points.%player%}
+            delete {QUEST.KILL0.%player%}
+            set {QUEST.KILL100.%player%.COOLDOWN} to true
+            delete {QUEST.KILL100.%player%}
+            wait 30 minute
+            delete {QUEST.KILL100.%player%.COOLDOWN}
+
+command /§q3:
+   trigger:
+      if {QUEST.KILLSTREAK20.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.KILLSTREAK20.%player%} is not set:
+         set {QUEST.KILLSTREAK20.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c20 KillStreak &7has been started !"
+         delete {QUEST.KILL0.%player%}
+         stop
+      if {QUEST.KILLSTREAK20.%player%} is set:
+         if {QUEST.KILLSTREAK.%player%} < 20:
+            send "&8[&b&lQuests&8] &7You still need some kills to finish this quest !"
+            stop
+         if {QUEST.KILLSTREAK.%player%} >= 20:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 90 points !"
+            add 90 to {points.%player%}
+            delete {QUEST.KILLSTREAK20.%player%}
+            set {QUEST.KILLSTREAK20.%player%.COOLDOWN} to true
+            delete {QUEST.KILLSTREAK.%player%}
+            wait 30 minute
+            delete {QUEST.KILLSTREAK20.%player%.COOLDOWN}
+
+command /§q4:
+   trigger:
+      if {QUEST.BLOCK500.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.BLOCK500.%player%} is not set:
+         set {QUEST.BLOCK500.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c500 Blocks Place &7has been started !"
+         delete {QUEST.BLOCK.%player%}
+         stop
+      if {QUEST.BLOCK500.%player%} is set:
+         if {QUEST.BLOCK.%player%} < 500:
+            send "&8[&b&lQuests&8] &7You still need to place some blocks to finish this quest !"
+            stop
+         if {QUEST.BLOCK500.%player%} >= 500:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 100 points !"
+            add 100 to {points.%player%}
+            delete {QUEST.BLOCK500.%player%}
+            set {QUEST.BLOCK500.%player%.COOLDOWN} to true
+            delete {QUEST.BLOCK5.%player%}
+            wait 30 minute
+            delete {QUEST.BLOCK500.%player%.COOLDOWN}
+
+command /§q5:
+   trigger:
+      if {QUEST.ENDER50.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.ENDER50.%player%} is not set:
+         set {QUEST.ENDER50.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c20 Ender Pearl Shoot &7has been started !"
+         delete {QUEST.ENDER.%player%}
+         stop
+      if {QUEST.ENDER50.%player%} is set:
+         if {QUEST.ENDER.%player%} < 50:
+            send "&8[&b&lQuests&8] &7You still need to shoot some ender pearls to finish this quest !"
+            stop
+         if {QUEST.ENDER.%player%} >= 50:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 30 points !"
+            add 30 to {points.%player%}
+            delete {QUEST.ENDER50.%player%}
+            set {QUEST.ENDER50.%player%.COOLDOWN} to true
+            delete {QUEST.ENDER.%player%}
+            wait 30 minute
+            delete {QUEST.ENDER50.%player%.COOLDOWN}
+
+command /§q5:
+   trigger:
+      if {QUEST.PLAY1.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.PLAY1.%player%} is not set:
+         set {QUEST.PLAY1.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c1 Hour Playtime &7has been started !"
+         delete {QUEST.PLAY.%player%}
+         stop
+      if {QUEST.PLAY1.%player%} is set:
+         if {QUEST.PLAY.%player%} < 60:
+            send "&8[&b&lQuests&8] &7You still need some minutes to finish this quest !"
+            stop
+         if {QUEST.PLAY.%player%} >= 60:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 40 points !"
+            add 40 to {points.%player%}
+            delete {QUEST.PLAY1.%player%}
+            set {QUEST.PLAY1.%player%.COOLDOWN} to true
+            delete {QUEST.PLAY.%player%}
+            wait 30 minute
+            delete {QUEST.PLAY1.%player%.COOLDOWN}
+
+command /§q6:
+   trigger:
+      if {QUEST.PAKOUR1.%player%.COOLDOWN} is set:
+         send "&8[&b&lQuests&8] &7Sorry but you need to wait 30 minutes to do it again !"
+         stop
+      if {QUEST.PAKOUR1.%player%} is not set:
+         set {QUEST.PAKOUR1.%player%} to true
+         send "&8[&b&lQuests&8] &7Quest &c1 Hour Playtime &7has been started !"
+         delete {QUEST.PAKOUR.%player%}
+         stop
+      if {QUEST.PAKOUR1.%player%} is set:
+         if {QUEST.PAKOUR.%player%} < 1:
+            send "&8[&b&lQuests&8] &7You still need to finish the parkour to finish the quest !"
+            stop
+         if {QUEST.PAKOUR.%player%} >= 1:
+            send "&8[&b&lQuests&8] &7You finished the quest ! You got 120 points !"
+            add 120 to {points.%player%}
+            delete {QUEST.PAKOUR1.%player%}
+            set {QUEST.PAKOUR1.%player%.COOLDOWN} to true
+            delete {QUEST.PAKOUR.%player%}
+            wait 30 minute
+            delete {QUEST.PAKOUR1.%player%.COOLDOWN}
+

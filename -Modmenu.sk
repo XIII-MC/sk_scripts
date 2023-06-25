@@ -1,0 +1,254 @@
+command /antifisher:
+   trigger:
+      send "&b&l[Anti&5&lFisher]"
+      send "&eDevlopped by LananasBleu"
+      send "&eVersion 1.1"
+      send "&e&lCurrent checks:"
+      send "&6Autoclickers"
+      send "&6Reach"
+      send "&6Killaura"
+      send "&6Jesus"
+      send "&6Fly / Nofall"
+      send "&6Regen"
+      send "&6No clip"
+      send "&6AntiKb "
+      send "&6Autofish"
+      send "&6Speed"
+      send "&6Badpackets"
+      send "&6Autobot"
+      send "&6Glide"
+      send "&6Inventory move / More carry"
+      send "&6Hitbox"
+
+command /cc <text> [<player>]:
+	permission: staff
+	usage: &bUse/cc help
+	trigger:
+		if arg 1 is "v":
+			if {ccv.%arg 2%} is false:
+				set {ccv.%arg 2%} to true
+				send "&6[CheckCheat] &fLancement du test, veuillez patienter..." to sender
+				set {loc.%arg 2%} to argument-player's location
+				make console execute command "gamemode 3 %arg 2%"
+				make console execute command "npc create %arg 2%"
+				make console execute command "npc gamemode 0"
+				make console execute command "effect %arg 2% speed 10 2"			
+				set {loc1.%arg 2%} to y coordinate of arg 2
+				push the argument-player upwards at speed 50
+				wait 1 seconds
+				set {loc2.%arg 2%} to y coordinate of arg 2
+				wait 3 ticks
+				make console execute command "/speed walk 0 %arg 2%"
+				make console execute command "/speed fly 0 %arg 2%"
+				wait 20 ticks
+				if {loc1.%arg 2%} = {loc2.%arg 2%}:
+					send "&6[CheckCheat] &fRésultats: &bDETECTED &f(VL: &b%{vl}%&f)" to sender
+				else:
+					send "&6[CheckCheat] &fRésultats: &bNOTHING &f(VL: &b0&f)" to sender
+				teleport arg 2 to {loc.%arg 2%}
+				make console execute command "effect %arg 2% clear"
+				make console execute command "gamemode 0 %arg 2%"	
+				make console execute command "/speed walk 1 %arg 2%"
+				make console execute command "/speed fly 1 %arg 2%"
+				make console execute command "npc remove"
+				set {ccv.%arg 2%} to false
+			else:
+				send "&b&l[Anti&5&lFisher] &fThis player is alerdy begin verfied by a moderator" to sender
+
+		if arg 1 is "c" or "cps":
+			if arg 2 is set:
+				send "&b&l[Anti&5&lFisher] &fChecking player , please wait ..." to sender
+				set {clicks.%arg 2%} to 0
+				set {click.%arg 2%} to true
+				wait 1 seconds
+				send "&b&l[Anti&5&lFisher] &b%arg 2% &7>> &fResults: &b%{clicks.%arg 2%}% &fCLICKS !" to sender
+				set {click.%arg 2%} to false
+			else:
+				send "&b&l[Anti&5&lFisher] &fChoose a player!" to sender
+
+		if arg 1 is "help" or "h":
+			if arg 2 is set:
+				send "  " to sender
+			else:
+				send "&e-------------------------------"
+				send "&6Help : &b&l[Anti&5&lFisher] "
+				send "&e/mod"
+				send "&e/cc velocity/v &b<player>"
+				send "&e/cc forcefield/ff &b<player> &c&l(DISABLED)"
+				send "&e/cc reports/r &b<player>"
+				send "&e/cc cps/c &b<player>"
+				send "&e/cc t/tools"
+				send "&e-------------------------------"
+
+		if arg 1 is "r" or "reports":
+			if arg 2 is set:
+				send "&b&l[Anti&5&lFisher] &cCannot send report &7(ERROR_SERVER_DID_NOT_ACCEPT) " to sender
+			else:
+				send "&b&l[Anti&5&lFisher] &cCannot send report &7(ERROR_SERVER_DID_NOT_ACCEPT) " to sender
+
+		if arg 1 is "t" or "tools":		
+			if {vn.%player%} is true:
+				set {mod.%player%} to true
+				set {vanishset.%player%} to true
+				hide player from all players
+				make console execute command "/gms %player%"
+				set player's flight mode to true
+				clear player's inventory
+				set slot 1 of player's inventory to stone hoe named "&f&oToggle Vanish (10 clicks)"
+				set slot 2 of player's inventory to iron hoe named "&f&oToggle Vanish (10 ticks)"
+				set slot 3 of player's inventory to golden sword of unbreaking 10 named "&bKB I"
+				set slot 5 of player's inventory to wooden sword of knockback 2 and unbreaking 10 named "KB II"
+				set slot 6 of player's inventory to wooden sword of knockback 10 and unbreaking 10 named "KB X"
+				set slot 7 of player's inventory to diamond pickaxe of efficiency 3 and unbreaking 10 named "&bPickaxe"
+			else:
+				send "&dYou are not in /mod"
+
+on join:
+	set {alreadycheck.%player%} to false
+	set {ccv.%player%} to false
+	
+every 1 seconds:
+	set {vl} to random integer between 1 and 5000
+			
+on join:
+	if {vn.%player%} is true:
+		set {vn.%player%} to false
+		send "&6&lStaff: &c&lOFF" to player
+		make console execute command "/gms %player%"
+		clear player's inventory
+		give {inventaire.%player%} to player
+		set helmet of player to {exemple.%player%::casque} #Remets le casque du joueur
+		set chestplate of player to {exemple.%player%::plastron} #Remets le plastron du joueur
+		set leggings of player to {exemple.%player%::pantalon} #Remets les jambières du joueur
+		set boots of player to {exemple.%player%::bottes} #Remets les bottes du joueur
+		set {mod.%player%} to false
+		message "&5Tools: &cOFF"
+		make console execute command "/gms %player%"
+		set {vanishset.%player%} to false
+		reveal player from all players
+		set {mod.%player%} to false
+	else:
+		make console execute command "/gms %player%"
+		set {vanishset.%player%} to false
+		reveal player from all players
+		set {vn.%player%} to false
+		set {mod.%player%} to false
+			
+
+command /mod [<text>]:
+	permission: staff
+	trigger:
+		if {vn.%player%} is true:
+			make console execute command "/gms %player%"
+			clear player's inventory   
+			set {mod.%player%} to false
+			set {vanishseta.%player%} to false
+			set {vanishset.%player%} to false
+			send "&6&lStaff: &c&lOFF" to sender
+			make console execute command "/gms %player%"
+			set {vanishset.%player%} to false
+			set player's flight mode to false
+			reveal player from all players
+		else:
+			if arg 1 is set:
+				if arg 1 is "confirm":
+					set {vn.%player%} to true
+					wait 1 ticks
+					clear player's inventory
+					loop 2 times:
+						send " " to sender
+					send "&6&lStaff: &a&lON" to player
+					send " " to sender
+					make player execute command "/vanish"
+					make console execute command "/gmsp %player%"
+				else:
+					send "&6[SS] &fDo &b/mod confirm" to player
+			else:
+				send " " to player
+				make player execute command "/mod confirm"
+				send " " to player
+
+
+on hunger meter change:
+	if {vn.%player%} is true:
+		set player's food bar to 10
+
+
+#---------------------Event------------------			
+on any move:
+	if {check.%player%} is true:
+		cancel event
+		
+on inventory click:
+	if {mod.%player%} is true:
+		cancel event
+
+on pickup:
+	if {mod.%player%} is true:
+		cancel event
+			
+on damage:
+	if {vn.%victim%} is true:
+		cancel event
+		send "&b[Damage] &f%attacker% = &f1.0" to victim
+		
+every 3 seconds:
+	loop all players:	
+		if {vn.%loop-player%} is true:
+			make server execute command ""
+
+on rightclick:
+	if player has permission "sk.modmenu":
+		name of tool is "&f&oToggle Vanish (10 clicks)"
+		cancel event
+		add 1 to {clickvanish.%player%}
+		if {clickvanish.%player%} = 10:
+			if {vanishseta.%player%} is false:
+				set {vanishseta.%player%} to true
+				set {vanishset.%player%} to false
+				reveal player from all players
+				send "&dVisible: &aON" to player
+				clear {clickvanish.%player%}
+			else:
+				set {vanishseta.%player%} to false
+				set {vanishset.%player%} to false
+				hide player from all players
+				send "&dVisible: &cOFF" to player
+				clear {clickvanish.%player%}
+			
+on join:
+	set {vanishset.%player%} to false
+	
+on rightclick:
+	if player has permission "sk.modmenu":
+		name of tool is "&f&oToggle Vanish (10 ticks)"
+		cancel event
+		if {vanishset.%player%} is false:
+			set {vanishset.%player%} to true
+			set {vanishseta.%player%} to true
+			wait 10 ticks
+			reveal player from all players
+			send "&dVisible: &aON" to player
+		else:
+			set {vanishset.%player%} to false
+			set {vanishseta.%player%} to false
+			wait 10 ticks
+			hide player from all players
+			send "&dVisible: &cOFF" to player
+
+on drop:
+	if {mod.%player%} is true:
+		cancel event
+		
+on place:
+	if {mod.%player%} is true:
+		cancel event
+			
+on damage:
+    if {kb.test.%victim%} is true:
+        damage was caused by fall
+        cancel event
+
+on leftclick:
+    if {click.%player%} is true:
+        add 1 to {clicks.%player%}

@@ -1,0 +1,350 @@
+#               === LOAD EVENTS ===
+
+on load:
+    delete {-ai::checks::*}
+
+    add "Bad Packets A" to {-ai::checks::*}
+    add "Range A" to {-ai::checks::*}
+    add "Auto Clicker A" to {-ai::checks::*}
+    add "Movement A" to {-ai::checks::*}
+    add "Movement B" to {-ai::checks::*}
+    add "Movement C" to {-ai::checks::*}
+    add "Movement D" to {-ai::checks::*}
+
+    loop {-ai::checks::*}:
+        delete {ai::check::%loop-value%::required-ban-vl}
+
+    set {ai::check::Range A::required-ban-vl} to 8
+    set {ai::check::Auto Clicker A::required-ban-vl} to 8
+    set {ai::check::Movement A::required-ban-vl} to 10
+    set {ai::check::Bad Packets A::required-ban-vl} to 4
+
+function reverseList(list: objects) :: objects:
+    set {_length} to size of {_list::*}
+    loop {_length} times:
+        set {_index} to {_length} - loop-number - 1
+        add {_list::%{_index}%} to {_returnList::*}
+    return {_returnList::*}
+
+#               === FUNCTIONS ===
+
+function verbose(p: player, check: string, increase: number, max: number, resetIfFlag: boolean, info: strings) :: boolean:
+    if {-ai::checks::*} contains {_check}:
+        set {_iString} to ""
+        set {_i} to 0
+        loop {_info::*}:
+            if {_iString} is "":
+                set {_iString} to loop-value 
+            else:
+                set {_iString} to "%{_iString}% %loop-value%"
+        set {_u} to uuid of {_p}
+        add {_increase} to {-ai::%{_u}%::verbose::%{_check}%}
+        set {_verbose} to {-ai::%{_u}%::verbose::%{_check}%}
+        if {_increase} > 0:
+            message "<tooltip:&7%{_iString}%>&c[&e&l⚠&c] &f%{_p}% &7verbosed &f%{_check}%&7.<reset>" to all players where [checkReceivingVerbose(input)]
+        if {_verbose} < 0:
+            set {-ai::%{_u}%::verbose::%{_check}%} to 0 
+            set {_verbose} to 0
+        if {_verbose} > {_max}:
+            if {_resetIfFlag} is true:
+                set {-ai::%{_u}%::verbose::%{_check}%} to 0
+            return true 
+        else:
+            return false 
+    else:
+        message "Check '%{_check}%' does not exist!" to console 
+
+function checkReceivingVerbose(p: player) :: boolean:
+    if {_p} does not have permission "antiidiot.verbose":
+        return false 
+    set {_u} to uuid of {_p}
+    if {-ai::receiving-verbose::%{_u}%} is set:
+        return true 
+    return false 
+
+function checkReceivingAlerts(p: player) :: boolean:
+    if {_p} does not have permission "antiidiot.alerts":
+        return false 
+    set {_u} to uuid of {_p}
+    if {-ai::receiving-alerts::%{_u}%} is set:
+        return true 
+    return false
+
+function checkReceivingDebug(p: player) :: boolean:
+    if {_p} does not have permission "antiidiot.debug":
+        return false 
+    set {_u} to uuid of {_p}
+    if {-ai::receiving-debug::%{_u}%} is set:
+        return true 
+    return false
+
+function toggleDebug(p: player, b: boolean):
+    set {_u} to uuid of {_p}
+    if {_b} is true:
+        set {-ai::receiving-debug::%{_u}%} to true 
+    else:
+        delete {-ai::receiving-debug::%{_u}%}
+
+function toggleVerbose(p: player, b: boolean):
+    set {_u} to uuid of {_p}
+    if {_b} is true:
+        set {-ai::receiving-verbose::%{_u}%} to true 
+    else:
+        delete {-ai::receiving-verbose::%{_u}%}
+
+function toggleAlerts(p: player, b: boolean):
+    set {_u} to uuid of {_p}
+    if {_b} is true:
+        set {-ai::receiving-alerts::%{_u}%} to true 
+    else:
+        delete {-ai::receiving-alerts::%{_u}%}
+
+function flag(p: player, check: string, info: strings):
+    set {_u} to uuid of {_p}
+    if {-ai::checks::*} contains {_check}:
+        set {_iString} to ""
+        set {_i} to 0
+        loop {_info::*}:
+            if {_iString} is "":
+                set {_iString} to loop-value 
+            else:
+                set {_iString} to "%{_iString}% %loop-value%"
+        if {ai::total-flags::%{_u}%::%{_check}%} is not set:
+            set {ai::total-flags::%{_u}%::%{_check}%} to 0
+        if {ai::check::%{_check}%::required-ban-vl} is set:
+            if {ai::total-flags::%{_u}%::%{_check}%} >= {ai::check::%{_check}%::required-ban-vl}:
+                set {ai::total-flags::%{_u}%::%{_check}%} to 0
+                if {_p} is an op:
+                    message "&c[&e&l⚠&c] &f%{_p}% &7would've been banned for &f%{_check}%&7, but is exempt from auto bans." to all players where [checkReceivingAlerts(input)]
+                else:
+                    broadcast "&r"
+                    broadcast "&c[&e&l⚠&c] &r%{_p}% &7has been caught cheating and has been removed from the server."
+                    broadcast "&r"
+                    strike fake fake lightning at location of {_p}
+                    loop all players:
+                        show 1 EXPLOSION_HUGE particles at location of {_p} for loop-player offset by 0, 0 and 0 at speed 0
+                    create a fake explosion at location of {_p}
+                    kick {_p} due to "&c[&e&l⚠&c] &7You have been banned for cheating."
+        add 1 to {ai::total-flags::%{_u}%::%{_check}%}
+        add "[%now%] %{_check}% - %{_iString}% - VL %{ai::total-flags::%{_u}%::%{_check}%}%" to {ai::logs::%{_u}%::*}
+        message "<tooltip:&7%{_iString}%>&c[&e&l⚠&c] &f%{_p}% &7failed &f%{_check}%&f. &cVL. %{ai::total-flags::%{_u}%::%{_check}%}%<reset>" to all players where [checkReceivingAlerts(input)]
+    else:
+        message "Check '%{_check}%' does not exist!" to console 
+
+#               === EVENTS ===
+
+on join:
+    loop {-ai::checks::*}:
+        set {ai::total-flags::%uuid of player%::%loop-value%} to 0
+        set {-ai::%uuid of player%::verbose::%loop-value%} to 0
+
+#               === COMMANDS ===
+
+command /alerts [<text>]:
+    trigger:
+        if player does not have permission "antiidiot.alerts":
+            message "&cYou do not have permission to use this command."
+        else:
+            if checkReceivingAlerts(player) is false:
+                toggleAlerts(player, true) 
+                message "&aYou are now receiving alerts."
+            else:
+                toggleAlerts(player, false)
+                message "&cYou are no longer receiving alerts."
+
+command /verbose [<text>]:
+    trigger:
+        if player does not have permission "antiidiot.verbose":
+            message "&cYou do not have permission to use this command."
+        else:
+            if checkReceivingVerbose(player) is false:
+                toggleVerbose(player, true) 
+                message "&aYou are now receiving anticheat verbose messages."
+            else:
+                toggleVerbose(player, false)
+                message "&cYou are no longer receiving anticheat verbose messages."
+
+command /debug [<text>]:
+    trigger:
+        if player does not have permission "antiidiot.debug":
+            message "&cYou do not have permission to use this command."
+        else:
+            if checkReceivingDebug(player) is false:
+                toggleDebug(player, true) 
+                message "&aYou are now receiving anticheat debug messages."
+            else:
+                toggleDebug(player, false)
+                message "&cYou are no longer receiving anticheat debug messages."
+
+#               === CHECKS ===
+
+on damage:  
+    if damage cause is not fall:
+        set {-ai::last-damage::%uuid of victim%} to now 
+    set {_flag} to false 
+    set {_aL} to location of attacker 
+    set {_vL} to location of victim 
+    set {_distance} to distance between attacker and victim
+    set {_buffer} to 3.01
+    set {_pingReduceA} to ping of attacker
+    set {_pingReduceV} to ping of victim 
+    remove (({_pingReduceA} * 0.0035) + ({_pingReduceV} * 0.0035) + 0.2) from {_distance}
+    if attacker is sprinting:
+        remove 0.42 from {_distance} #0.5
+    if victim is sprinting:
+        remove 0.83 from {_distance} #0.73
+    message "&c[&e&l⚠&c] &f%attacker% &7Debug: &f(Range A) &7- &fdistance=%{_distance}% buffer=%{_buffer}%" to all players where [checkReceivingDebug(input)]
+    if {_distance} > {_buffer}:
+        set {_flag} to true 
+    if {_flag} = true:
+        set {_increase} to 1
+        if {_distance} < ({_buffer} + 0.85):
+            set {_increase} to 0.75
+        if verbose(attacker, "Range A", {_increase}, 1, false, ("distance=%{_distance}%", "buffer=%{_buffer}%", "ping=%ping of attacker%")) is true:
+            flag(attacker, "Range A", ("distance=%{_distance}%", "buffer=%{_buffer}%", "ping=%ping of attacker%"))
+    else:
+        verbose(attacker, "Range A", -1, -1, false, "")
+
+every 30 seconds:
+    loop all players:
+        delete {ai::total-flags::%uuid of loop-player%::*}
+
+on any movement:    
+    if food level of player <= 3:
+        if player is sprinting:
+            wait 4 ticks 
+            if player is sprinting:
+                if verbose(player, "Bad Packets A", 1, 0, false, ("ping=%ping of player%")) is true:
+                    flag(player, "Bad Packets A", ("ping=%ping of player%"))
+                else:
+                    verbose(player, "Bad Packets", -1, -1, false, "")
+
+on left click:
+    if {-ai::clicks::%uuid of player%} is not set:
+        set {-ai::clicks::%uuid of player%} to 0
+    add 1 to {-ai::clicks::%uuid of player%}
+    set {_clicks} to {-ai::clicks::%uuid of player%}/1.5
+    if {_clicks} > 15:
+        if verbose(player, "Auto Clicker A", 1, 0, false, ("clicks=%{_clicks}%", "ping=%ping of player%")):
+            flag(player, "Auto Clicker A", ("clicks=%{_clicks}%", "ping=%ping of player%"))
+        else:
+            verbose(player, "Auto Clicker A", -1, -1, false, "")
+
+every 1.5 seconds:
+    loop all players:
+        set {-ai::clicks::%uuid of loop-player%} to 0
+
+every tick:
+    loop all players where [{-ai::debug-mode::%uuid of input%} is set]:
+        if {-ai::debug-mode::%uuid of loop-player%} is "Auto Clicker A":
+            show action bar "&c[&e&l⚠&c] &7CPS: &f%{-ai::clicks::%uuid of loop-player%}/1.5%" to loop-player
+
+command /debugmode [<string>] [<text>]:
+    trigger:
+        if player is an op:
+            if arg 1 is not set:
+                message "&c[&e&l⚠&c] &7Usage: &f/debugmode <check>"
+            else:
+                set {_found} to false
+                if arg 1 is "off":
+                    message "&c[&e&l⚠&c] &7Disabled debug mode."
+                    delete {-ai::debug-mode::%uuid of player%}
+                else:
+                    loop {-ai::checks::*}:
+                        set {_check} to loop-value 
+                        replace all " " with "" in {_check}
+                        if arg 1 is {_check}:
+                            set {_display} to loop-value
+                            set {_found} to true 
+                            stop loop 
+                    if {_found} is false:
+                        message "&c[&e&l⚠&c] &7The specified check could not be found."
+                    else:
+                        if arg 1 is "AutoClickerA":
+                            set {-ai::debug-mode::%uuid of player%} to "Auto Clicker A"
+                            message "&c[&e&l⚠&c] &7Now debugging &fAuto Clicker A&7."
+                        else:
+                            message "&c[&e&l⚠&c] &7Check &f%{_display}% &7does not have a debug method assigned."
+
+
+on any movement:
+
+    if difference between now and {-ai::last-damage::%uuid of player%} < 0.6 seconds:
+        stop
+
+    set {_loc} to location of player 
+    wait 1 ticks 
+    set {_loc2} to location of player
+
+    set {_x} to difference between x coordinate of {_loc} and x coordinate of {_loc2}
+    set {_z} to difference between z coordinate of {_loc} and z coordinate of {_loc2}
+
+    if block 0.1 below player is not air:
+        stop 
+
+    if block 1.02 below player is any ice:
+        stop 
+
+    set y coordinate of {_loc} to 0
+    set y coordinate of {_loc2} to 0
+
+    if abs({_x}) > 0.675:
+        flag(player, "Movement A", ("x=%{_x}%"))
+    if abs({_z}) > 0.675:
+        flag(player, "Movement A", "z=%{_z}%")
+
+command /antiidiot [<text>]:
+    aliases: ai
+    trigger:
+        if executor does not have permission "antiidiot.admin":
+            message "&cNo permission."
+        else:
+            wait 1 tick 
+            open virtual chest inventory with size 3 named "&c[&e&l⚠&c] &rAntiIdiot 1.0" to player 
+            format gui slot 11 of player with redstone named "&cReset Violations" to run:
+                loop all players:
+                    delete {ai::total-flags::%uuid of loop-player%::*}
+                message "&c[&e&l⚠&c] &7Cleared violations for all players forcefully."
+
+command /clearlogs [<offline player>] [<text>]:
+    trigger:
+        if executor does not have permission "antiidiot.clearlogs":
+            message "&cNo permission."
+        else:
+            if arg 1 is not set:
+                message "&c[&e&l⚠&c] &7Usage: &f/clearlogs <player>"
+            else:       
+                delete {ai::logs::%uuid of arg-1%::*}
+                message "&c[&e&l⚠&c] &7Cleared &f%arg-1%&7's anticheat logs."
+
+command /logs [<offline player>] [<integer=1>] [<text>]:
+    trigger:
+        if executor does not have permission "antiidiot.logs":
+            message "&cNo permission."
+        else:
+            if arg 1 is not set:
+                message "&c[&e&l⚠&c] &7Usage: &f/logs <player>"
+            else:
+                set {_page} to arg 2
+                set {_log} to (({_page} - 1) * 9) + 1
+                set {_index} to 0
+                if size of {ai::logs::%uuid of arg-1%::*} is 0:
+                    message "&c[&e&l⚠&c] &f%arg-1% &7does not have any recorded logs."
+                else:
+                    set {_maxpages} to ceil(size of {ai::logs::%uuid of arg-1%::*}/9)
+
+                    set {-ai::temp-logs::%uuid of arg-1%::*} to {ai::logs::%uuid of arg-1%::*}
+
+                    set {-ai::temp-logs::%uuid of arg-1%::*} to reverseList({-ai::temp-logs::%uuid of arg-1%::*})
+                    
+                    message "&c&m-------------------------------"
+                    message "&7Anticheat logs for &f%arg-1% &7(Page %{_page}%/%{_maxpages}%):"
+                    loop 10 times:
+                        if {_index} > 9:
+                            stop loop 
+                        if {-ai::temp-logs::%uuid of arg-1%::%{_log}%} is not set:
+                            stop loop 
+                        message "&e - %{-ai::temp-logs::%uuid of arg-1%::%{_log}%}%"
+                        add 1 to {_index}
+                        add 1 to {_log}
+                    message "&c&m-------------------------------"

@@ -1,0 +1,499 @@
+#ArUwU | ArUwO Remaked!
+
+#Special caracters used! 🢒 ‧
+
+options:
+   a: &6&lArUwO &8❘&7
+
+
+#Plugins:
+
+#BackToTheRoots (1.8 PvP) [*]
+#LuckPerms [*]
+#Vault [*]
+#WorldEdit [*]
+#WorldGuard [*]
+#Holographic Display [*]
+#TAB Reborn [*]
+#ProtocolSupport [*]
+
+function KP_CD(player: player):
+  if {ARUWO::%{_player}%::COOLDOWN} is set:
+    if {ARUWO::%{_player}%::COOLDOWN} > 0:
+      remove 1 from {ARUWO::%{_player}%::COOLDOWN}
+    else:
+      delete {ARUWO::%{_player}%::COOLDOWN}
+      send "{@a} &7You are no longer in &cCombat" to {_player}
+      delete {ARUWO::%{_player}%::COOLDOWN.SAFE}
+function KP_Kit(player: player):
+  clear {_player}'s inventory
+  clear {_player}'s level
+  extinguish {_player}
+  heal {_player}
+  set {_player}'s hunger to 20
+  set helmet of {_player} to unbreakable iron helmet 
+  set chestplate of {_player} to unbreakable iron chestplate 
+  set leggings of {_player} to unbreakable iron leggings 
+  set boots of {_player} to unbreakable iron boots 
+  set slot 0 of {_player} to unbreakable stone sword of sharpness 1
+  set slot 1 of {_player} to unbreakable bow
+  set slot 2 of {_player} to 10 arrows
+function KP_Level(a: player):
+  add 25 to {ARUWO::%{_a}%::XP}
+  add {ARUWO::%{_a}%::XPBARPKILL} to {ARUWO::%{_a}%::XPBAR}
+  if {ARUWO::%{_a}%::XP} >= {ARUWO::%{_a}%::LEVELXP}:
+    set {ARUWO::%{_a}%::XP} to 0
+    add 1 to {ARUWO::%{_a}%::LEVEL}
+    play sound "minecraft:entity.player.levelup" with volume 10 and pitch 1 at {_a} for {_a}
+    send "{@a} Level up ! You are now level &6%{ARUWO::%{_a}%::LEVEL}%&7 !" to {_a}
+    set {ARUWO::%{_a}%::XPBAR} to 0
+    set {ARUWO::%{_a}%::LEVELXP} to ({ARUWO::%{_a}%::LEVEL} * 75)
+    set {ARUWO::%{_a}%::XPBARPKILL} to (100 / ({ARUWO::%{_a}%::LEVELXP} / 25))
+function KP_Death(v: player):
+  if metadata value "LAST-HIT" of {_v} is set:
+    set {_a} to metadata value "LAST-HIT" of {_v}
+    KP_Level({_a})
+    give {_a} 5 arrows
+    heal {_a} by 4 hearts
+    set {ARUWO::%{_v}%::KILLSTREAK} to 0
+    apply speed 1 to {_a} for 5 second
+    apply regeneration 1 to {_a} for 15 second
+    play sound "minecraft:entity.experience_orb.pickup" with volume 10 and pitch 1 at {_a} for {_a}
+    play sound "minecraft:entity.skeleton.death" with volume 10 and pitch 1 at {_v} for {_v}
+    add 1 to {ARUWO::%{_a}%::KILLS}
+    add 1 to {ARUWO::%{_a}%::KILLSTREAK}
+    if {ARUWO::%{_a}%::KILLSTREAK} > 4:
+      broadcast "&7[&6STREAK&7] &e%{_a}%&7 is on a killstreak of &e%{ARUWO::%{_a}%::KILLSTREAK}%&7!"
+    if {ARUWO::%{_a}%::KILLSTREAK} > {ARUWO::%{_a}%::BESTKILLSTREAK}:
+      set {ARUWO::%{_a}%::BESTKILLSTREAK} to {ARUWO::%{_a}%::KILLSTREAK}
+    add 1 to {ARUWO::%{_v}%::DEATHS}
+    give {_a} 1 golden apple
+    send "&o&7You have killed &6%{_v}% &7&o(+25xp)! Your current &6killstreak &o&7is %{ARUWO::%{_a}%::KILLSTREAK}%" to {_a}
+    add 25 to {ARUWO::%{_a}%::XP}
+    set {_v}'s gamemode to spectator
+    delete metadata value "LAST-HIT" of {_v}
+    delete {ARUWO::%{_v}%::COOLDOWN.SAFE}
+    delete {ARUWO::%{_v}%::COOLDOWN}
+    apply blindness 1 to {_v} for 4 second
+    push {_v} backwards at speed 1
+    send title "&6&l3" with subtitle "&7You are respawning !" to {_v}
+    wait 1 second
+    send title "&6&l2" with subtitle "&7You are respawning !" to {_v}
+    wait 1 seconds
+    send title "&6&l1" with subtitle "&7You are respawning !" to {_v}
+    wait 1 second
+    teleport {_v} to {ARUWO::SPAWN}
+    set {_v}'s gamemode to survival
+    KP_Kit({_v})
+  else:
+    add 1 to {ARUWO::%{_v}%::DEATHS}
+    delete {ARUWO::%{_v}%::COOLDOWN.SAFE}
+    delete {ARUWO::%{_v}%::COOLDOWN}
+    set {_v}'s gamemode to spectator
+    delete metadata value "LAST-HIT" of {_v}
+    apply blindness 1 to {_v} for 4 second
+    push {_v} backwards at speed 1
+    send title "&6&l3" with subtitle "&7You are respawning !" to {_v}
+    wait 1 second
+    send title "&6&l2" with subtitle "&7You are respawning !" to {_v}
+    wait 1 seconds
+    send title "&6&l1" with subtitle "&7You are respawning !" to {_v}
+    wait 1 second
+    teleport {_v} to {ARUWO::SPAWN}
+    set {_v}'s gamemode to survival
+    KP_Kit({_v})
+on join:
+   wait 5 seconds
+   while player is online:
+      KP_CD(player)
+      wait 1 second
+on join:
+   make server execute command "/effect clear %player%"
+   if {ARUWO::%player%::BANNED} is set:
+      set {_diff} to difference between {ARUWO::%player%::BANNED} and now
+      if {_diff} > {ARUWO::%player%::BANTIME}:
+         set join message to ""
+         delete {ARUWO::%player%::BANNED} 
+         delete {ARUWO::%player%::BANTIME}
+         delete {ARUWO::%player%::BANREASON}
+         send "&6&lUNBAN &8❘&7 You were automaticly unbanned !" to player
+         stop
+      else:
+         if {ARUWO::%player%::BANTIME} is not set:
+            kick player due to "&6&lBAN &8❘&7 You were banned for &6%{ARUWO::%player%::BANREASON}%&7, duration &e'FOREVER'&7 !"
+         else:
+            kick player due to "&6&lBAN &8❘&7 You were banned for &6%{ARUWO::%player%::BANREASON}%&7, duration &e'%{_diff}%&e'&7 !"
+   KP_Kit(player)
+   loop players in {ARUWO::VANISHLIST}:
+      if {ARUWO::%loop-value%::VANISH} is set:
+         hide loop-value from all players
+   if {ARUWO::%player%::FCJ} is not set:
+      set {ARUWO::%player%::FCJ} to true
+      set {ARUWO::%player%::XPBARPKILL} to 25
+      set {ARUWO::%player%::XPBAR} to 0
+      set {ARUWO::%player%::XP} to 0
+      set {ARUWO::%player%::LEVELXP} to 100
+      set {ARUWO::%player%::LEVEL} to 1
+      set {ARUWO::%player%::KILLS} to 0
+      set {ARUWO::%player%::KILLSTREAK} to 0
+      set {ARUWO::%player%::BESTKILLSTREAK} to 0
+      set {ARUWO::%player%::DEATHS} to 0
+      set {ARUWO::%player%::COOLDOWN} to 0
+      teleport player to {ARUWO::SPAWN}
+      add 1 to {ARUWO::FJC}
+      set join message to "&7[&a+&7] %colored player's prefix%%player% &6[NEW] &8(##%{ARUWO::FJC}%&8)"
+      stop
+   else:
+      set join message to "&7[&a+&7] %colored player's prefix%%player%"
+on quit:
+   if {ARUWO::%player%::BANNED} is set:
+      set quit message to ""
+   else:
+      set quit message to "&7[&c-&7] %colored player's prefix%%player%"
+
+command /setspawn:
+   permission: ADMIN
+   trigger:
+      set {ARUWO::SPAWN} to player's location
+      send "{@a} Spawn set to your current location." to player
+command /spawn:
+   trigger:
+      if {ARUWO::%player%::COOLDOWN} is set:
+         send "{@a} You are in &cCombat"
+         stop
+      else:
+         send "{@a} You will be teleported to &6Pit Spawn &7in 2 seconds. Do not move." to player
+         set {_temp} to player's location 
+         wait 2 second 
+         distance between {_temp} and player's location < 0.05:
+            teleport player to {ARUWO::SPAWN}
+            play sound "minecraft:entity.enderman.teleport" with volume 10 and pitch 1 at player for player
+         else:
+            send "{@a} /spawn cancelled due to movement." to player
+command /admin:kit:
+   permission: ADMIN
+   trigger:
+      KP_Kit(player)
+      send "{@a} Debug ended."
+command /admin:death:
+   permission: ADMIN
+   trigger:
+      KP_Death(player)
+      send "{@a} Debug ended."
+command /admin:vardel [<text>]:
+   permission: ADMIN
+   trigger:
+      delete {ARUWO::%player%::%arg 1%}
+      send "{@a} Debug ended."
+command /admin:varset [<text>] [<text>]:
+   permission: ADMIN
+   trigger:
+      set {ARUWO::%player%::%arg 1%} to arg 2
+      send "{@a} Debug ended."
+command /admin:varadd [<text>] [<text>]:
+   permission: ADMIN
+   trigger:
+      add arg 2 to {ARUWO::%player%::%arg 1%}
+      send "{@a} Debug ended."
+command /admin:varremove [<text>] [<text>]:
+   permission: ADMIN
+   trigger:
+      remove arg 2 from {ARUWO::%player%::%arg 1%} 
+      send "{@a} Debug ended."
+command /admin:level:
+   permission: ADMIN
+   trigger:
+      KP_Level(player)
+      send "{@a} Debug ended."
+command /admin:resetstats [<offline player>]:
+   permission: ADMIN
+   trigger:
+      set {ARUWO::%arg 1%::XPBARPKILL} to 25
+      set {ARUWO::%arg 1%::XPBAR} to 0
+      set {ARUWO::%arg 1%::XP} to 0
+      set {ARUWO::%arg 1%::LEVELXP} to 100
+      set {ARUWO::%arg 1%::LEVEL} to 0
+      set {ARUWO::%arg 1%::KILLS} to 0
+      set {ARUWO::%arg 1%::KILLSTREAK} to 0
+      set {ARUWO::%arg 1%::BESTKILLSTREAK} to 0
+      set {ARUWO::%arg 1%::DEATHS} to 0
+      set {ARUWO::%arg 1%::COOLDOWN} to 0
+on death:
+   clear drops
+on damage:
+   victim's y location < 114
+   if damage cause is attack:
+      if victim is not attacker:
+         attacker is a player
+         set {ARUWO::%attacker%::COOLDOWN} to 15
+         set {ARUWO::%victim%::COOLDOWN} to 15
+         set metadata value "LAST-HIT" of victim to attacker
+         {ARUWO::%attacker%::COOLDOWN.SAFE} is not set
+         send "{@a} &7You are now in &cCombat &7with &6%attacker%" to victim
+         send "{@a} &7You are now in &cCombat &7with &6%victim%" to attacker
+         set {ARUWO::%attacker%::COOLDOWN.SAFE} to true
+   if damage is greater than or equal to health of victim:
+      if victim is a player:
+         cancel event
+         KP_Death(victim)
+on hunger meter change:
+   cancel event
+
+
+
+
+command /fly [<player>]:
+   permission: JRMOD
+   trigger:
+      if arg 1 is not set:
+         if {ARUWO::%player%::FLY} is not set:
+            set {ARUWO::%player%::FLY} to false 
+         if {ARUWO::%player%::FLY} is true:
+            set {ARUWO::%player%::FLY} to false 
+            set flight mode of player to false
+            send "{@a} &cDisabled flight, you can no longer flight." to player
+            stop
+         else:
+            set {ARUWO::%player%::FLY} to true 
+            set flight mode of player to true
+            send "{@a} &aEnabled flight, you can now flight." to player 
+            stop
+      else:
+         if {ARUWO::%arg 1%::FLY} is not set:
+            set {ARUWO::%arg 1%::FLY} to false 
+         if {ARUWO::%arg 1%::FLY} is true:
+            set {ARUWO::%arg 1%::FLY} to false 
+            set flight mode of arg 1 to false
+            send "{@a} &cYou can no longer flight." to arg 1
+            send "{@a} &6%arg 1% &ccan no longer flight." to player 
+            stop
+         else:
+            set {ARUWO::%arg 1%::FLY} to true 
+            set flight mode of arg 1 to true
+            send "{@a} &aYou can now flight." to arg 1
+            send "{@a} &6%arg 1% &acan now flight." to player 
+            stop
+command /gamemode [<gamemode>] [<player>]:
+   permission: MOD
+   aliases: gm
+   trigger:
+      if arg 2 is not set:
+         set player's gamemode to arg 1
+         send "{@a} You are now in &6%arg 1%&7." to player
+      else:
+         set gamemode of arg 2 to arg 1
+         send "{@a} You are now in &6%arg 1%&7." to arg 2
+         send "{@a} &6%arg 2%&7 is now in &c%arg 1%&7." to player
+command /tp [<player>] [<player>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            teleport player to arg 1
+            send "{@a} You have teleported to &e%arg 1%"
+      if arg 1 is set:
+         if arg 2 is set:
+            teleport arg 1 to arg 2
+            send "{@a} You teleported &e%arg 1%&7 to &6%arg 2%" to player
+command /gmc:
+   permission: MOD
+   trigger:
+      set player's gamemode to creative
+      send "{@a} You are now in &6Creative&7." to player
+command /gmsp:
+   permission: MOD
+   trigger:
+      set player's gamemode to spectator
+      send "{@a} You are now in &6Spectator&7." to player
+command /gma:
+   permission: MOD
+   trigger:
+      set player's gamemode to adventure
+      send "{@a} You are now in &6Adventure&7." to player
+command /gms:
+   permission: MOD
+   trigger:
+      set player's gamemode to survival
+      send "{@a} You are now in &6Survival&7." to player
+command /heal [<player>]:
+   permission: MOD
+   trigger:
+      if arg 1 is not set:
+         heal player
+         extinguish player
+         set hunger level of player to 20
+         send "{@a} You were healed." to player
+      else:
+         heal arg 1
+         extinguish arg 1
+         set hunger level of arg 1 to 20
+         send "{@a} You were healed." to arg 1
+         send "{@a} &6%arg 1%&7 has been healed." to player
+command /feed [<player>]:
+   permission: MOD
+   trigger:
+      if arg 1 is not set:
+         set hunger level of player to 20
+         send "{@a} You were feeded." to player
+      else:
+         set hunger level of arg 1 to 20
+         send "{@a} You were feeded." to arg 1
+         send "{@a} &6%arg 1%&7 has been feeded." to player
+command /mute [<offline player>] [<text>] [<time span>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 3 is not set:
+               broadcast "&6&lMUTE &8❘&7 &c%arg 1% &7has been muted by &6%player%&7 for &e%arg 2%&7 !"
+               set {ARUWO::%arg 1%::MUTED} to now
+               set {ARUWO::%arg 1%::MUTEREASON} to arg 2
+               send "" to arg 1
+               send "&6&lMUTE &8❘&7 You were muted for &6EVER&7 !" to arg 1
+               send "" to arg 1 
+            else:
+               broadcast "&6&lMUTE &8❘&7 &c%arg 1% &7has been muted by &6%player%&7 for &e%arg 3%&7, reason &e'%arg 2%&e'&7 !"
+               set {ARUWO::%arg 1%::MUTETIME} to arg 3
+               set {ARUWO::%arg 1%::MUTED} to now
+               set {ARUWO::%arg 1%::MUTEREASON} to arg 2
+               send "" to arg 1
+               send "&6&lMUTE &8❘&7 You were muted for &6%arg 3%&7, reason &e'%arg 3%&e'&7 !" to arg 1
+               send "" to arg 1
+               stop
+command /unmute [<offline player>]:
+   permission: MOD 
+   trigger:
+      if arg 1 is set:
+         delete {ARUWO::%arg 1%::MUTED}
+         delete {ARUWO::%arg 1%::MUTETIME}
+         delete {ARUWO::%arg 1%::MUTEREASON}
+         broadcast "&6&lUNMUTE &8❘&7 &c%arg 1% &7has been unmuted by &6%player%&7 !"
+         send "" to arg 1
+         send "&6&lUNMUTE &8❘&7 You were unmuted !" to arg 1
+         send "" to arg 1 
+         stop
+
+command /kick [<player>] [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            kick arg 1 due to "&6&lKICK &8❘&7 You were kicked !"
+            broadcast "&6&lKICK &8❘&7 &c%arg 1% &7has been kicked by &6%player%&7 !"
+            stop
+         else:
+            kick arg 1 due to "&6&lKICK &8❘&7 You were kicked, reason &e'%arg 2%&e' !"
+            broadcast "&6&lKICK &8❘&7 &c%arg 1% &7has been kicked by &6%player%&7 reason &e'%arg 2%&e' !"
+            stop
+
+command /unban [<offline player>]:
+   permission: SRMOD
+   trigger:
+      if arg 1 is set:
+         delete {ARUWO::%arg 1%::BANNED}
+         delete {ARUWO::%arg 1%::BANTIME}
+         delete {ARUWO::%arg 1%::BANREASON}
+         broadcast "&6&lUNBAN &8❘&7 &c%arg 1% &7has been unbanned by &6%player%&7 !"
+         stop
+
+command /ban [<offline player>] [<text>] [<time span>]:
+   permission: MOD
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 3 is not set:
+               broadcast "&6&lBAN &8❘&7 &c%arg 1% &7has been banned by &6%player%&7 for &e'%arg 2%&e' &7[FOREVER]&7 &7 !"
+               set {ARUWO::%arg 1%::BANREASON} to arg 2
+               set {ARUWO::%arg 1%::BANNED} to now
+               kick arg 1 due to "Timed out"
+               ban arg 1 due to "&6&lBAN &8❘&7 You were banned for &6%arg 2%&7 &7[FOREVER]&7 !"
+            else:
+               broadcast "&6&lBAN &8❘&7 &c%arg 1% &7has been banned by &6%player%&7 for &e'%arg 2%&e' &7[FOREVER]&7 &7 !"
+               set {ARUWO::%arg 1%::BANTIME} to arg 2
+               set {ARUWO::%arg 1%::BANNED} to now
+               set {ARUWO::%arg 1%::BANREASON} to arg 3
+               kick arg 1 due to "Timed out"
+               ban arg 1 due to "&6&lBAN &8❘&7 You were banned for &6%arg 2%&7, duration &e'%arg 3%&e'&7 !"
+               stop
+on chat:
+   cancel event 
+   if {ARUWO::CHAT} is true:
+      if {ARUWO::%player%::MUTED} is not set:
+         if player has permission "VIP":
+            broadcast "&8[&7%{ARUWO::%player%::LEVEL}%&7✪&8] %colored player's prefix%%player%&7:&f %message%"
+         else:
+            broadcast "&8[&7%{ARUWO::%player%::LEVEL}%&7✪&8] %colored player's prefix%%player%&7: %message%"
+      else:
+         set {_now} to now
+         set {_diff} to difference between {ARUWO::%player%::MUTED} and now
+         if {_diff} > {ARUWO::%player%::MUTETIME}:
+            delete {ARUWO::%player%::MUTED}
+            delete {ARUWO::%player%::MUTETIME}
+            delete {ARUWO::%player%::MUTEREASON}
+            send "&6&lUNMUTE &8❘&7 You were automaticly unmuted !" to player
+            broadcast "&8[&7%{ARUWO::%player%::LEVEL}%&7✪&8] %colored player's prefix%%player%&7: %message%"
+            stop
+         else:
+            if {ARUWO::%player%::MUTETIME} is not set:
+               send "&6&lMUTE &8❘&7 You are muted forever !"
+               stop
+            else:
+               send "&6&lMUTE &8❘&7 You are still muted for &6%{_diff}%&7 !"
+               stop
+   else:
+      send "{@a} Chat is currently muted !" to player 
+      stop
+command /mutechat:
+   permission: MOD
+   trigger:
+      if {ARUWO::CHAT} is not set:
+         set {ARUWO::CHAT} to true
+      if {ARUWO::CHAT} is true:
+         set {ARUWO::CHAT} to false 
+         broadcast "{@a} Chat has been silenced by &6%player% &7!"
+         stop
+      else:
+         set {ARUWO::CHAT} to true 
+         broadcast "{@a} Chat is no longer silenced !"
+         stop
+on any move:
+   if player's y location < 60:
+      {ARUWO::%player%::TPFALSEWTF} is not set 
+      set {ARUWO::%player%::TPFALSEWTF} to true
+      teleport player to {ARUWO::SPAWN}
+      KP_Death(player)
+      wait 2 second
+      delete {ARUWO::%player%::TPFALSEWTF}
+on place:
+   if {ARUWO::%player%::BUILD} is not set:
+      cancel event
+on break:
+   if {ARUWO::%player%::BUILD} is not set:
+      cancel event
+command /build:
+   permission: ADMIN
+   trigger:
+      if {ARUWO::%player%::BUILD} is true:
+         delete {ARUWO::%player%::BUILD}
+         send "{@a} You can no longer build." to player 
+         stop
+      if {ARUWO::%player%::BUILD} is not set:
+         set {ARUWO::%player%::BUILD} to true
+         send "{@a} You can now build." to player
+command /vanish:
+   aliases: v
+   permission: ADMIN
+   trigger:
+      if {ARUWO::%player%::VANISH} is not set:
+         set {ARUWO::%player%::VANISH} to true
+      if {ARUWO::%player%::VANISH} is true:
+         set {ARUWO::%player%::VANISH} to false
+         reveal player from all players
+         remove player from {ARUWO::VANISHLIST::*}
+         send "{@a} You are no longer vanished." to player 
+         stop
+      else:
+         hide player from all players
+         add player to {ARUWO::VANISHLIST::*}
+         set {ARUWO::%player%::VANISH} to true
+         send "{@a} You are now vanished." to player

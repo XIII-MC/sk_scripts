@@ -1,0 +1,69 @@
+on join:
+   set join message to "&7[&a+&7] &7%player%"
+
+on quit:
+   set quit message to "&7[&c-&7] &7%player%"
+
+on first join:
+   set {anticheat.guard.%player%} to true
+   make player execute command "/ac GUARD"
+
+command /ac [<text>] [<text>]:
+   trigger:
+      set {_guard::*} to "", "&7Version: 1.0.0-BETA-PRIVATE", "&7Author/s: XIII___" and ""
+      set {_overseer::*} to "", "&7Version: 2.1.0", "&7Author/s: JTNCrafter" and ""
+      set {_UAC::*} to "", "&7Version: 0.2-ALPHA", "&7Author/s: Ethan" and ""
+      if arg 1 is not set:
+         open chest with 2 rows named "Anticheats" to player
+         format slot 1 of player with grass named "&aVanilla" with lore "&7No anti cheat" to close then run [make player execute command "/ac Vanilla"]
+         format slot 2 of player with golden axe named "&aGUARD" with lore {_guard::*} to close then run [make player execute command "/ac GUARD"]
+         format slot 3 of player with ender pearl named "&aThe Overseer" with lore {_overseer::*} to close then run [make player execute command "/ac Overseer"]
+         format slot 4 of player with diamond named "&aUAC &7(Ultra AntiCheat)" with lore {_UAC::*} to close then run [make player execute command "/ac UAC"]
+      if arg 1 is set:
+         if arg 1 is "GUARD":
+            set {ac.guard.%player%} to true
+            set {os.admin.%player%} to false
+            set {ac.UAC.%player%} to false 
+            send "&6&lServer &8| &aYou selected &6GUARD &a!"
+            stop
+         if arg 1 is "Overseer":
+            set {os.admin.%player%} to true
+            set {ac.guard.%player%} to false
+            set {ac.UAC.%player%} to false 
+            send "&6&lServer &8| &aYou selected &6The Overseer &a!"
+            stop
+         if arg 1 is "UAC":
+            set {os.admin.%player%} to false
+            set {ac.guard.%player%} to false
+            set {ac.UAC.%player%} to true 
+            send "&6&lServer &8| &aYou selected &6UAC &a!"
+            stop
+         if arg 1 is "Vanilla":
+            if player has permission "AC.VANILLA":
+               set {os.admin.%player%} to false
+               set {ac.guard.%player%} to false
+               set {ac.UAC.%player%} to false 
+               send "&6&lServer &8| &aYou selected &6Vanilla &a!"
+               stop
+            else:
+               send "&6&lServer &8| &cSorry but you need &5Dev &crank or higher to use this !"
+               stop
+
+every 5 minutes:
+	execute command "/fill 236 57 166 291 70 206 air"
+	execute command "/fill 236 70 166 291 83 206 air"
+	execute command "/fill 236 83 166 291 96 206 air"
+	execute command "/fill 236 93 166 291 109 206 air"
+	execute command "/fill 236 109 166 291 122 206 air"
+	execute command "/fill 236 122 166 291 83 135 air"
+	execute command "/fill 236 135 166 291 148 206 air"
+	execute command "/fill 236 148 166 291 161 206 air"
+	execute command "/fill 236 161 166 291 174 206 air"
+	execute command "/fill 236 174 166 291 187 206 air"
+	execute command "/fill 236 187 166 291 83 200 air"
+	execute command "/fill 236 200 166 291 83 213 air"
+	execute command "/fill 236 213 166 291 83 226 air"
+	execute command "/fill 236 226 166 291 239 206 air"
+	execute command "/fill 236 239 166 291 252 206 air"
+	execute command "/fill 236 252 166 291 239 255 air"
+	broadcast "&6&lServer &8| &aScaffold area has been cleared !"

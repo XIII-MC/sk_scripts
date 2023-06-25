@@ -1,0 +1,54 @@
+every 1 minute:
+    if {%{BOOMBOOMtop}%.%{BOOMBOOMtopplayer}%} != {BOOMBOOM.%{BOOMBOOMtopplayer}%}:
+        set {BOOMBOOMtop} to 1
+        set {BOOMBOOMtopplayer} to ""
+    if {%{deathstop}%.%{deathstopplayer}%} != {deaths.%{deathstopplayer}%}:
+        set {deathstop} to 1
+        set {deathstopplayer} to ""
+    if {%{tokenstop}%.%{tokenstopplayer}%} != {tokens.%{tokenstopplayer}%}:
+        set {tokenstop} to 1
+        set {tokenstopplayer} to ""
+    loop all players:
+        if {BOOMBOOM.%loop-player%} > {BOOMBOOMtop}:
+            set {BOOMBOOMtop} to {BOOMBOOM.%loop-player%}
+            set {BOOMBOOMtopplayer} to loop-player
+        if {deaths.%loop-player%} > {deathstop}:
+            set {deathstop} to {deaths.%loop-player%}
+            set {deathstopplayer} to loop-player
+        if {tokens.%loop-player%} > {tokenstop}:
+            set {tokenstop} to {tokens.%loop-player%}
+            set {tokenstopplayer} to loop-player
+    execute console command "holo setline kills 3 &7&o##1 &c%{BOOMBOOMtopplayer}% &8| &c&o%{BOOMBOOMtop}% &c&oKills"
+    execute console command "holo setline deaths 3 &7&o##1 &4%{deathstopplayer}% &8| &4&o%{deathstop}% &4&oDeaths"
+    execute console command "holo setline tokens 3 &7&o##1 &e%{tokenstopplayer}% &8| &e&o%{tokenstop}% &e&oTokens"
+
+command /lbrefresh:
+   permission: op
+   trigger:
+      if {%{BOOMBOOMtop}%.%{BOOMBOOMtopplayer}%} != {BOOMBOOM.%{BOOMBOOMtopplayer}%}:
+         set {BOOMBOOMtop} to 1
+         set {BOOMBOOMtopplayer} to ""
+      if {%{deathstop}%.%{deathstopplayer}%} != {deaths.%{deathstopplayer}%}:
+         set {deathstop} to 1
+         set {deathstopplayer} to ""
+      if {%{tokenstop}%.%{tokenstopplayer}%} != {tokens.%{tokenstopplayer}%}:
+         set {tokenstop} to 1
+         set {tokenstopplayer} to ""
+      loop all players:
+         if {BOOMBOOM.%loop-player%} > {BOOMBOOMtop}:
+            set {BOOMBOOMtop} to {BOOMBOOM.%loop-player%}
+            set {BOOMBOOMtopplayer} to loop-player
+         if {deaths.%loop-player%} > {deathstop}:
+            set {deathstop} to {deaths.%loop-player%}
+            set {deathstopplayer} to loop-player
+         if {tokens.%loop-player%} > {tokenstop}:
+            set {tokenstop} to {tokens.%loop-player%}
+            set {tokenstopplayer} to loop-player
+      execute console command "holo setline kills 3 &7&o##1 &c%{BOOMBOOMtopplayer}% &8| &c&o%{BOOMBOOMtop}% &c&oKills"
+      execute console command "holo setline deaths 3 &7&o##1 &4%{deathstopplayer}% &8| &4&o%{deathstop}% &4&oDeaths"
+      execute console command "holo setline tokens 3 &7&o##1 &e%{tokenstopplayer}% &8| &e&o%{tokenstop}% &e&oTokens"
+
+on death:
+   if victim is a player:
+      add 1 to {deaths.%victim%}
+      add 1 to {BOOMBOOM.%attacker%}

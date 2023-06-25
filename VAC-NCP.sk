@@ -1,0 +1,192 @@
+options:
+   dc: &7[&4&lVAC&7] &f
+
+command /vacclear:
+   permission: ADMIN
+   trigger:
+      clear {VAC.bans.total}
+      clear {VAC.kicks.total}
+
+command /vacban [<offline player>] [<timespan>]:
+    permission: VAC.NOTIFY
+    trigger:
+        if arg 1 is not set:
+            message "{@dc} &fUsage : /vacban <player> <time>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                if {tempban.time::%{_player}%} is not set:
+                    send "{@dc} &f%arg 1% has been banned"
+                    add 1 to {vacbans.%arg 1%}
+                    add 1 to {VAC.bans.total}
+                    set {banner.%arg 1%} to player
+                    set {vacbanned.%arg 1%} to true
+                    set {bantime.%arg 1%} to now
+                    broadcast "&c&m----------------------------------"
+                    broadcast "         &4&l✖ VAC DETECTION ✖"
+                    broadcast ""
+                    broadcast "   &e%arg 1% &chas been removed by &4VAC"
+                    broadcast "   &cReason: &4Unfair Advantage"
+                    broadcast ""
+                    broadcast "&c&m----------------------------------"
+                    make server execute command "/smite %arg 1%"
+                    add arg 1 to {vacbans::*}
+                    set {vacban.%arg 1%} to true
+                    set {tempban.time::%{_player}%} to arg 2
+                    set {tempban.%arg 1%} to true
+                    set {tempban.timestamp::%{_player}%} to now
+                    kick {_player} due to "&7[&4&lVAC&7] &cYou have been banned for &e%arg 2%&c. Reason: Unfair Advantage"
+                    stop
+
+command /vacbans:
+   permission: VAC.NOTIFY
+   trigger:
+      send "{@dc} &7Loading list..."
+      send "{@dc} &cVAC Banned players: &f%{vacbans::*}%"
+      send "{@dc} &cNumber of VAC Banned players : &f%{VAC.bans.total}%"
+      send ""
+      send "{@dc} &7Loading list..."
+      send "{@dc} &cVAC Kicked players : &f%{vac.kick::*}%"
+      send "{@dc} &cNumber of VAC Kicked players : &f%{VAC.kicks.total}%"
+
+command /vacann:
+   permission: OP 
+   trigger:
+      add {VAC.bans.total} to {_vac}
+      add {VAC.kicks.total} to {_vac}
+      broadcast "&c&m-------------------------------------------"
+      broadcast "      &4&l✖ VAC ANNOUNCEMENT ✖"
+      broadcast ""
+      broadcast "   &c&l%{_vac}% &7players were banned by VAC"
+      broadcast ""
+      broadcast "&c&m-------------------------------------------"
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            if player's name is "PeIvisbreaker":
+                stop
+            kick player due to "&7[&4&lVAC&7] &cYou have been banned for &e%{tempban.time::%player%}%&c. Reason: Unfair Advantage"
+
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+
+on first join:
+   set {firstjoin.%player%} to now
+
+command /vaclogs [<offline player>]:
+   permission: MODERATOR
+   trigger:
+      if {vvt.%arg 1%} is not set:
+         set {vvt.%arg 1%} to 0
+      if {vht.%arg 1%} is not set:
+         set {vht.%arg 1%} to 0
+      if {vl.%arg 1%} is not set:
+         set {vl.%arg 1%} to 0
+      if {bans.%arg 1%} is not set:
+         set {bans.%arg 1%} to 0
+      if {unbans.%arg 1%} is not set:
+         set {unbans.%arg 1%} to 0
+      if {vacbans.%arg 1%} is not set:
+         set {vacbans.%arg 1%} to 0
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      if {tvl.%arg 1%} is not set:
+         set {tvl.%arg 1%} to 0
+      send "&f&m---------------------------------------------"
+      if {banned.%arg 1%} is true:
+         send "{@dc} Currently : &4BANNED"
+         send "{@dc} By : &c%{banner.%arg 1%}%"
+         send "{@dc} Reason : &c%{banreason.%arg 1%}%"
+         send "{@dc} At : &c%{bantime.%arg 1%}%"
+      if {vacbanned.%arg 1%} is true:
+         send "{@dc} Currently : &4VAC BANNED"
+         if {banner.%arg 1%} is not set:
+            send "{@dc} By : &cNC&9P"
+         if {banner.%arg 1%} is set:
+            send "{@dc} By : &c%{banner.%arg 1%}%"
+         send "{@dc} At : &c%{bantime.%arg 1%}%"
+      if {online.%arg 1%} is false:
+         send "{@dc} Currently : &cOffline"
+      if {online.%arg 1%} is true:
+         send "{@dc} Currently : &aOnline"
+      if {online.%arg 1%} is not set:
+         send "{@dc} Currently : &6NEVER JOINED"
+      send "&f&m---------------------------------------------"
+      send "{@dc} Manual Bans: &f%{bans.%arg 1%}%"
+      send "{@dc} Total Unbans: &f%{unbans.%arg 1%}%"
+      send "{@dc} Anticheat Bans: &f%{vacbans.%arg 1%}%"
+      send "{@dc} Total Warns: &f%{warns.%arg 1%}%"
+      send "&f&m---------------------------------------------"
+      send "{@dc} All Alts: &f%{altip.%{ip.%arg 1%}%::*}%"
+      send "{@dc} First Account: &f%{firstalt.%{ip.%arg 1%}%}%"
+      send "&f&m----------------------------------------------"
+
+command /vacalt [<offline player>]:
+    permission: alt.see
+    trigger:
+        if arg 1 is not set:
+            send "&cUsage : /alt <player>"
+            stop
+        if {ip.%arg 1%} is not set:
+            send "{@dc} &cError: &4This player never joinned the server !"
+            stop
+        if {firstalt.%{ip.%arg 1%}%} is not set:
+            send "{@dc} &cError: &4This player never joinned the server !"
+            stop
+        else:
+            send "{@dc} &9Alts of %arg 1% : &c%{altip.%{ip.%arg 1%}%::*}%&9 First Account : &c%{firstalt.%{ip.%arg 1%}%}% &9Ip of player : &c%{ip.%arg 1%}%"
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            loop all players:
+                if loop-player has permission "alt.see":
+                    send "{@dc} &c%{_name}% is an alt of %{firstalt.%ip of player%}%" to loop-player
+            if {vacbans::*} contains {_name}:
+                make server execute command "/vacban %{_name}% 7 day"
+            if {_name} is banned:
+                make server execute command "/vacban %{_name}% 7 day"
+
+on join:
+   set {online.%player%} to true
+
+on quit:
+   set {online.%player%} to false
+
+command /vac:
+   trigger:
+      send "&4=-=-=-=-=-=-=-=-=-=-=-=-="
+      send "   &4&lVAC &cAnticheat"
+      send "   &cVersion: 1.0.2"
+      send "   &cAuthor: &4XIII___"
+      send "&4=-=-=-=-=-=-=-=-=-=-=-=-="

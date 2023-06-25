@@ -1,0 +1,13 @@
+on join:
+	wait 1 second
+	send "&e--------------------------------"
+	send "             &e&lCat&6&lRoyale"
+	send ""
+	send "&d✹ &7Welcome &6%player%"
+	send ""
+	send "&7/games&7- &aTo join game"
+	send "&7/help &7- &a HelpInfo" 
+   send "&7/buy &7- &aWebStore
+	send ""
+	send "&d✹ &9Discord &7» https://discord.gg/U65VhN3Bjt"
+	send "&e--------------------------------"

@@ -1,0 +1,1719 @@
+
+options:
+  #BASIC SETTINGS
+  NoPerm: &8⎣ &c&lAnayo &8⎤&c You thougth you could ? Ahahah... So funny... #Message sent if the player doesn't have the permission to execute certain commands.
+  ANAYO: &8⎣ &c&lAnayo &8⎤&c #Anticheat prefix
+  v: V2-B10 #Do not touch this !
+  KEY: None #!Do not touch this !#
+  MainCommandPermission: anayo.commands
+
+
+
+#Anticheat configuration modes
+#The "BanAfterKick" function is currently in dev and not here yet !
+#If some features arn't working properly please report the issue to the developers on discord by making a ticket :)
+
+
+
+#This will prevent Citizens/NPCs to get flagged by Anayo
+  DisableForNPC: true
+
+#Beta features , this isn't recommanded for your server. If you enable it you might get more alerts/detections but they might be more falsing.
+  Beta: false
+
+#LagBack does like it says , it lagbacks. It cancel suspicious hits/movements and can prevent the cheater from attacking for some seconds.
+  LagBack: true 
+
+#AutoTempBan is currently made to temp ban players using Anayo's built in temp ban, you can use essentials one.
+  AutoTempBan: false
+
+#This is the same as AutoTempBan but this is a permanant ban , i don't recommand using this.
+  AutoBan: false
+  BanMessage: &fhas killed &c%{_player}%&f for &cUnfair Advanatage #Message broadcasted when a player gets banned by Anayo
+
+#This will automaticly kick the player from the server after sending 3 alerts (Not verbose!)#
+  AutoKick: true
+  KickVL: 3 #How many times the player need to flag the anticheat to get punished.
+  KickMessage: &fhas killed &c%{_player}%&f for &cUnfair Advanatage #Message broadcasted when a player gets kicked by Anayo
+
+#This feature is meant to automaticly ban the player if he gets kicked X times , this is currently not made yet !
+  #BanAfterKick: false
+
+
+
+#Anticheat checks configuration !
+#I recommand you to take the time to configure everything and test it to fit your server needs !
+#If some settins are messing contact the devs on discord by making a ticket , thanks :)
+
+
+
+#AutoClicker (A | B | C | D) Settings:
+  MaxLeftCPS: 15 #CPS Limit on left click
+  MaxRightCPS: 15 #CPS Limit on right click
+  MaxCPS: 15 #CPS Limit for AutoBlock
+
+#Reach (A | B | C | D | E | F | G | H) Settings:
+  MaxReach: 5.2 #Major Reach Limit. Its VERYYY high to prevent falses !
+  ReachHits: 2 #How many hits allowed out to of the maximum reach before sending alerts (To prevent some falses!)#
+  MinReachH: 3.58 #Reach Distance For Reach (H) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+  MaxReachA: 3.85 #Reach Distance For Reach (A) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+  MaxReachB: 4 #Reach Distance For Reach (B) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+  MaxReachC: 4.25 #Reach Distance For Reach (C) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+  MaxReachD: 4.5 #Reach Distance For Reach (D) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+  MaxReachE: 4.85 #Reach Distance For Reach (E) , the distance is not 100% exact ! (Means don't put 3.0 :p)#
+
+#KillAura (A | B | C | D | E | F) Settings:
+  AuraDistance: 1.5 #Distance required before triggering some KillAura checks (The distance is not 100% exact !)#
+  MultiAura: 5 #How many entitys can the player hit per seconds. (Don't put it too low or jitterclicking/butterfly may false !)#
+  MaxInvalidHits: 2 #How many invalid hits out of the player hitbox are allowed. (Don't put it too low or it may false !)#
+  MaxAPS: 4 #How many damages can the player deal per seconds. (Don't put it too low or jitterclicking/butterfly may false !)#
+  NoSwingCount: 1 #How many hits can be dealt without swinging (Need to be 2 or higher to prevent some falses !)#
+  KeepSprintHits: 3 #How many hits can the player deal while sprinting.
+
+ #Aim (A | B | C | D | E | F | G | H | I | J) Settings:
+  AimTrigger: 0 #Range before triggering Aim checks
+  MoveDistanceAim: 0.15 #Distance required for the player to move to trigger Aim checks
+  NeededYaw: 0.2 #The Yaw of the player must have rotated under this value to trigger Aim checks
+  MinAimAYaw: 5 #The Yaw of the player must have rotated under this value to trigger Aim (A) checks
+  AimMinA: 12.00 #Sensivity of Aim (A)
+  AimMinC: 0 #Minimum angle of Aim (C)
+  AimMaxC: 0.05 #Maximum angle of Aim (C)
+  AimMinE: 0 #Minimum angle of Aim (E) check
+  AimMaxE: 0.15 #Maximum angle of Aim (E) check
+  AimMinJ: 0 #Angle for Aim (J) check
+  AimMinF: 0 #Minimum angel of Aim (F) check
+  AimMaxF: 0.5 #MaxInvalidHits angle of Aim (F) check
+  AimMinG: 1 #Minimum angle of Aim (G) check
+  AimMaxG: 1.25 #MaxInvalidHits angle of Aim (G) check
+  AimMinH: 1.5 #Minimum angle of Aim (H) check
+  AimMinI: 0.25 #Minimum angle of Aim (I) check
+  AimMinK: 0 #Minimum angle of Aim (K) check
+  AimMaxK: 0.13 #Maximum angle of Aim (K) check
+  AimCMaxK: 7 #Counter before sending an alert for Aim (K)
+  AimCMaxG: 5 #Counter before sending an alert for Aim (G)
+  AimCMaxE: 5 #Counter before sending an alert for Aim (E)
+  AimCMaxF: 5 #Counter before sending an alert for Aim (F)
+  AimCMaxD: 2 #Counter before sending an alert for Aim (D)
+  AimCMaxJ: 6 #Counter before sending an alert for Aim (J)
+  AimCMaxB: 2 #Counter before sending an alert for Aim (B)
+  AimCMaxC: 4 #Counter before sending an alert for Aim (C)
+  AimCMaxL: 4 #Counter before sending an alert for Aim (L)
+
+#FastBow (A) Settings:
+  BowDelay: 2 #FastBow Minimum delay (IN TICKS)
+
+#FastInvClick (A) Settings:
+  InvDelay: 1 #FastInvClick Minimum delay (IN TICKS)
+
+#NoSlow (A) Settings:
+  NoSlowDistance: 1.15 #Distance to move to trigger NoSlow (A)
+  DamageProtection: true #Disable NoSlow (A) check for some seconds if the player gets damaged by a player
+
+#----------------------------------------------------------
+# This copy is ONLY for "urmomeat@pasta.com"                                   
+# Sharing or leaking the code/script will result punishment           
+#---------------------------------------------------------- 
+
+function verbose(p: player, cheat: text, type: text, info: text):
+  if {_p} is a citizen:
+    stop
+  add 1 to {ANAYO.%{_p}%.VERBOSE.VLGLOBAL}
+  add 1 to {ANAYO.%{_p}%.VL.%{_cheat}%}
+  loop all players:
+    if {ANAYO.%loop-player%.VERBOSE} is true:
+      send "{@ANAYO} &c%{_p}% &7failed &c%{_cheat}% &7(%{_type}%&7) |  &7%{_info}% &7(vl=&c%{ANAYO.%{_p}%.VL.%{_cheat}%}%&7)" to loop-player
+
+function notify(p: player, cheat: text, info: text):
+  if {_p} is a citizen:
+    stop
+  add 1 to {ANAYO.%{_p}%.NOTIFY.VLGLOBAL}
+  loop all players:
+    if {ANAYO.%{_p}%.LASTVL.%{_cheat}%} is not set:
+      delete {ANAYO.%{_p}%.VL.%{_cheat}%}
+      if {ANAYO.%loop-player%.NOTIFY} is true:
+        send "{@ANAYO} &c%{_p}% &f%{_info}% &c%{_cheat}%&f" to loop-player
+      add 1 to {ANAYO.%{_p}%.LASTVL.%{_cheat}%}
+      stop
+    else:
+      delete {ANAYO.%{_p}%.VL.%{_cheat}%}
+      if {ANAYO.%loop-player%.NOTIFY} is true:
+        send "{@ANAYO} &c%{_p}% &f%{_info}% &c%{_cheat}%&f ##&c%{ANAYO.%{_p}%.LASTVL.%{_cheat}%}%" to loop-player
+      add 1 to {ANAYO.%{_p}%.LASTVL.%{_cheat}%}
+  execute command "/anayo npc %{_p}%"
+  if {ANAYO.%{_p}%.LASTVL.%{_cheat}%} > {@KickVL}:
+    if {@AutoKick} is true:
+      make server execute command "/anayo kick %{_p}%"
+      delete {ANAYO.%{_p}%.VL.%{_cheat}%}
+      delete {ANAYO.%{_p}%.LASTVL.%{_cheat}%}
+    if {@AutoTempBan} is true:
+      make server execute command "/anayo ban %{_p}% 365 day"
+    if {@AutoBan} is true:
+      make server execute command "/anayo ban %{_p}% 7 day"
+
+on join:
+   delete {ANAYO.%player%.BOTTEST}
+
+on any move:
+   if {ANAYO.%player%.FREEZED} is true:
+      cancel event
+on damage:
+   if {ANAYO.%victim%.FREEZED} is true:
+      cancel event
+
+command /anayo [<text>] [<text>] [<text>] [<timespan>]:
+   permission: {@MainCommandPermission}
+   trigger:
+      if arg 1 is not set:
+         send "           {@ANAYO}"
+         send "&7/anayo &8| &fShow this pop up"
+         send "&7/anayo version &8| &fShow anayo version"
+         send "&7/anayo notify &8| &fToggle anayo notifications"
+         send "&7/anayo verbose &8| &fToggle anayo verbose"
+         send "&7/anayo kick &8| &fKick someone"
+         send "&7/anayo ban &8| &fBan someone"
+         send "&7/anayo unban &8| &fUnban someone"
+         send "&7/anayo toggle &8| &fToggle a check"
+         send "&7/anayo npc &8| &fSpawn a NPC behind the choosed player"
+         send ""
+         stop
+      if arg 1 is "npc":
+         if arg 2 is set:
+            set {_p} to arg 2 parsed as player
+            if {ANAYO.%{_p}%.BOTTEST} is not set:
+               set {ANAYO.%{_p}%.BOTTEST} to true
+               set {_npc} to "%random integer between 11111 and 9999999999%"
+               create a citizen named {_npc} at {_p}
+               set {_id} to last created citizen id
+               loop all entities:
+                  uncoloured name of loop-entity is {_npc}
+                  hide loop-entity from all players
+                  wait 2 ticks
+                  reveal loop-entity to {_p}
+                  set loop-entity's helmet slot to leather helmet
+                  set loop-entity's chestplate slot to iron chestplate
+                  set loop-entity's legging slot to golden leggings
+                  set loop-entity's boot slot to diamond boots
+                  set loop-entity's slot 0 to fishing rods
+                  loop 200 times:
+                     wait 2 tick
+                     set health of loop-entity to 1
+                     teleport loop-entity 2.9 meters behind {_p}
+                     damage loop-entity by 1 heart
+                  delete {ANAYO.%{_p}%.BOTTEST}
+                  execute console command "/npc sel %{_id}%"
+                  wait 1 tick
+                  execute console command "/npc playerlist -r"
+                  execute console command "/npc remove"
+                  stop
+      if arg 1 is "toggle":
+         if arg 2 is set:
+            if arg 3 is set:
+               if {ANAYO.C.%arg 2%.%arg 3%} is true:
+                  set {ANAYO.C.%arg 2%.%arg 3%} to false
+                  send "{@ANAYO} Check &6%arg 2% &6%arg 3%&c has been &4disabled."
+                  stop
+               if {ANAYO.C.%arg 2%.%arg 3%} is false:
+                  set {ANAYO.C.%arg 2%.%arg 3%} to true
+                  send "{@ANAYO} Check &6%arg 2% &6%arg 3%&c has been &aenabled."
+                  stop
+      if arg 1 is "kick":
+         if arg 2 is set:
+            if {ANAYO.%arg 2%.FREEZED} is true:
+               stop
+            set {_player} to arg 2 parsed as player
+            set {ANAYO.%{_player}%.FREEZED} to true
+            send title "&4&l&kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" with subtitle "&7&oDon't hack on minecraft !" to {_player}
+            loop 30 times:
+               wait 1 ticks
+               send "&4&l&kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" to {_player}
+            wait 1 seconds
+            kick {_player} due to "{@ANAYO} &cYou thought you could get away with it ?! &7&o&n(ID-A%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@ANAYO} {@KickMessage}"
+            broadcast ""
+            delete {ANAYO.%{_player}%.FREEZED}
+            add 1 to {ANAYO.%{_player}%.KICKSTOTAL}
+      if arg 1 is "info":
+         if arg 2 is set:
+            if {ANAYO.%ARG 2%.KICKSTOTAL} is not set:
+               set {ANAYO.%ARG 2%.KICKSTOTAL} to 0
+            if {ANAYO.%ARG 2%.BANSTOTAL} is not set:
+               set {ANAYO.%ARG 2%.BANSTOTAL} to 0
+            if {ANAYO.%ARG 2%.UNBANSTOTAL} is not set:
+               set {ANAYO.%ARG 2%.UNBANSTOTAL} to 0
+            if {ANAYO.%ARG 2%.VLGLOBAL} is not set:
+               set {ANAYO.%ARG 2%.VLGLOBAL} to 0
+            if {ANAYO.%ARG 2%.VERBOSE.VLGLOBAL} is not set:
+               set {ANAYO.%ARG 2%.VERBOSE.VLGLOBAL} to 0
+            delete {ANAYO.%arg 2%.VLGLOBAL}
+            set {ANAYO.%arg 2%.VLGLOBAL} to {ANAYO.%arg 2%.NOTIFY.VLGLOBAL} + {ANAYO.%arg 2%.VERBOSE.VLGLOBAL}
+            send "         {@ANAYO}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "&cKicked &7%{ANAYO.%arg 2%.KICKSTOTAL}% &ctimes."
+            send "&cBanned &7%{ANAYO.%arg 2%.BANSTOTAL}% &ctimes."
+            send "&cUnbanned &7%{ANAYO.%ARG 2%.UNBANSTOTAL}% &ctimes."
+            send "&cGlobal VL &8&o(Verbose and Notify) &c: &7%{ANAYO.%arg 2%.VLGLOBAL}%"
+            send "&cVerbose VL: &7%{ANAYO.%ARG 2%.VERBOSE.VLGLOBAL}%"
+            send "&cNotify VL: &7%{ANAYO.%ARG 2%.NOTIFY.VLGLOBAL}%"
+            #send "Flagged For: &7%{ANAYO.%arg 2%.FLAG::*}%"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@ANAYO} Build: &8{@v}"
+         stop
+      if arg 1 is "reload":
+         ANAYOReload("console")
+         send "{@ANAYO} The AntiCheat has been reloaded."
+         stop
+      if arg 1 is "notify":
+         if {ANAYO.%player%.NOTIFY} is not set:
+            set {ANAYO.%player%.NOTIFY} to false
+         if {ANAYO.%player%.NOTIFY} is false:
+            set {ANAYO.%player%.NOTIFY} to true
+            send "{@ANAYO} Notifcations enabled"
+            stop
+         if {ANAYO.%player%.NOTIFY} is true:
+            set {ANAYO.%player%.NOTIFY} to false
+            send "{@ANAYO} Notifcations disabled"
+            stop
+      if arg 1 is "verbose":
+         if {ANAYO.%player%.VERBOSE} is not set:
+            set {ANAYO.%player%.VERBOSE} to false
+         if {ANAYO.%player%.VERBOSE} is false:
+            set {ANAYO.%player%.VERBOSE} to true
+            send "{@ANAYO} Verbose enabled"
+            stop
+         if {ANAYO.%player%.VERBOSE} is true:
+            set {ANAYO.%player%.VERBOSE} to false
+            send "{@ANAYO} Verbose disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            set {_player} to arg 2 parsed as player
+            if {tempban.time::%{_player}%} is not set:
+               broadcast ""
+               broadcast "{@ANAYO} {@BanMessage}"
+               broadcast ""
+               set {tempban.time::%{_player}%} to arg 3
+               set {tempban.%{_player}%} to true
+               set {tempban.timestamp::%{_player}%} to now
+               kick {_player} due to "{@ANAYO} &cYou have been banned for &e%{tempban.time::%{_player}%}% &cfrom this server !"
+               add 1 to {ANAYO.%{_player}%.BANSTOTAL}
+               stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            clear {tempban.time::%arg 2%}
+            clear {tempban.timestamp::%arg 2%}
+            clear {tempban.%arg 2%}
+            add 1 to {ANAYO.%arg 2%.UNBANSTOTAL}
+            send "{@ANAYO} %arg 2% has been unbanned."
+            stop
+
+function ANAYOReload(p: text):
+  set {ANAYO.C.AUTOCLICKER.A} to true
+  set {ANAYO.C.AUTOCLICKER.B} to true
+  set {ANAYO.C.AUTOCLICKER.C} to true
+  set {ANAYO.C.AUTOCLICKER.D} to true
+  set {ANAYO.C.AUTOBLOCK.A} to true
+  set {ANAYO.C.KILLAURA.A} to true
+  set {ANAYO.C.KILLAURA.B} to true
+  set {ANAYO.C.KILLAURA.C} to true
+  set {ANAYO.C.KILLAURA.D} to true
+  set {ANAYO.C.KILLAURA.E} to true
+  set {ANAYO.C.KILLAURA.F} to false
+  set {ANAYO.C.KILLAURA.G} to true
+  set {ANAYO.C.REACH.A} to true
+  set {ANAYO.C.REACH.B} to true
+  set {ANAYO.C.REACH.C} to true
+  set {ANAYO.C.REACH.D} to true
+  set {ANAYO.C.REACH.E} to true
+  set {ANAYO.C.REACH.F} to true
+  set {ANAYO.C.REACH.G} to true
+  set {ANAYO.C.REACH.H} to true
+  set {ANAYO.C.HITBOX.A} to true
+  set {ANAYO.C.HITBOX.B} to true
+  set {ANAYO.C.AIM.A} to true
+  set {ANAYO.C.AIM.B} to true
+  set {ANAYO.C.AIM.C} to true
+  set {ANAYO.C.AIM.D} to true
+  set {ANAYO.C.AIM.E} to true
+  set {ANAYO.C.AIM.F} to true
+  set {ANAYO.C.AIM.G} to true
+  set {ANAYO.C.AIM.H} to true
+  set {ANAYO.C.AIM.I} to true
+  set {ANAYO.C.AIM.J} to true
+  set {ANAYO.C.AIM.K} to true
+  set {ANAYO.C.AIM.L} to true
+  set {ANAYO.C.CRITICALS.A} to true
+  set {ANAYO.C.CRITICALS.B} to true
+  set {ANAYO.C.CRITICALS.C} to true
+  set {ANAYO.C.INVMOVE.A} to true
+  set {ANAYO.C.INVMOVE.B} to true
+  set {ANAYO.C.INVMOVE.C} to true
+  set {ANAYO.C.INVACTIONS.A} to true
+  set {ANAYO.C.INVACTIONS.B} to true
+  set {ANAYO.C.INVACTIONS.C} to true
+  set {ANAYO.C.FASTINVCLICK.A} to true
+  set {ANAYO.C.NOFALL.A} to true
+  set {ANAYO.C.NOFALL.B} to true
+  set {ANAYO.C.NOSLOW.A} to true
+  set {ANAYO.C.FASTBOW.A} to true
+  set {ANAYO.C.MOREPACKETS.A} to true
+  set {ANAYO.C.FLY.A} to true
+  set {ANAYO.C.BADPACKETS.A} to true
+  set {ANAYO.C.MOTION.A} to true
+  set {ANAYO.C.MOTION.B} to true
+  set {ANAYO.C.SPRINT.A} to true
+
+every 2 minute:
+   loop all players:
+      set {ANAYO.%loop-player%.VL.KillAura} to 0
+      set {ANAYO.%loop-player%.VL.Reach} to 0
+      set {ANAYO.%loop-player%.VL.Aim} to 0
+      set {ANAYO.%loop-player%.VL.Criticals} to 0
+      set {ANAYO.%loop-player%.VL.Autoclicker} to 0
+      set {ANAYO.%loop-player%.VL.HitBox} to 0
+      set {ANAYO.%loop-player%.VL.Velocity} to 0
+      set {ANAYO.%loop-player%.VL.MorePackets} to 0
+      set {ANAYO.%loop-player%.VL.FastInvClick} to 0
+      set {ANAYO.%loop-player%.VL.InvMove} to 0
+      set {ANAYO.%loop-player%.VL.InvActions} to 0
+      set {ANAYO.%loop-player%.VL.Nofall} to 0
+      set {ANAYO.%loop-player%.VL.NoSlow} to 0
+      set {ANAYO.%loop-player%.VL.FastUse} to 0
+      set {ANAYO.%loop-player%.VL.FastBow} to 0
+      set {ANAYO.%loop-player%.VL.Fly} to 0
+      set {ANAYO.%loop-player%.VL.BadPackets} to 0
+      set {ANAYO.%loop-player%.VL.Motion} to 0
+      delete {ANAYO.%loop-player%.LASTVL.KillAura}
+      delete {ANAYO.%loop-player%.LASTVL.Reach}
+      delete {ANAYO.%loop-player%.LASTVL.Aim}
+      delete {ANAYO.%loop-player%.LASTVL.Criticals}
+      delete {ANAYO.%loop-player%.LASTVL.Autoclicker}
+      delete {ANAYO.%loop-player%.LASTVL.HitBox}
+      delete {ANAYO.%loop-player%.LASTVL.Velocity}
+      delete {ANAYO.%loop-player%.LASTVL.MorePackets}
+      delete {ANAYO.%loop-player%.LASTVL.FastInvClick}
+      delete {ANAYO.%loop-player%.LASTVL.InvMove}
+      delete {ANAYO.%loop-player%.LASTVL.InvActions}
+      delete {ANAYO.%loop-player%.LASTVL.Nofall}
+      delete {ANAYO.%loop-player%.LASTVL.FastBow}
+      delete {ANAYO.%loop-player%.LASTVL.NoSlow}
+      delete {ANAYO.%loop-player%.LASTVL.FastUse}
+      delete {ANAYO.%loop-player%.LASTVL.Fly}
+      delete {ANAYO.%loop-player%.LASTVL.BadPackets}
+      delete {ANAYO.%loop-player%.LASTVL.Motion}
+      delete {ANAYO.%loop-player%.LASTVL.Sprint}
+
+#--------------------------------------------------------
+#
+#             A N T I  A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+every 1 second:
+   delete {cpsL::*}
+   delete {cpsR::*}
+   delete {cps::*}
+
+on leftclick:
+   if {ANAYO.C.AUTOCLICKER.A} is true:
+      add 1 to {cpsL::%player%}
+      if {cpsL::%player%} >= {@MaxLeftCPS}:
+         if {@LagBack} is true:
+            cancel event
+         notify(player, "AutoClicker", "failed")
+
+on rightclick:
+   if {ANAYO.C.AUTOCLICKER.B} is true:
+      add 1 to {cpsR::%player%}
+      if {cpsL::%player%} >= {@MaxRightCPS}:
+         if {@LagBack} is true:
+            cancel event
+         notify(player, "AutoClicker", "failed")
+
+on break:
+  delete {ANAYO::CPS::left::*}
+  set {ANAYO.%PLAYER%.BREAK} to true
+  wait 2 ticks
+  delete {ANAYO.%PLAYER%.BREAK}
+
+on left click:
+  {ANAYO.%PLAYER%.BREAK} is not set
+  autoclick(player, "Left")
+  
+on right click:
+  clicked block is not fence gate, daylight detector, redstone repeater, redstone comparator, lever, button, trapdoor or door
+  held item is not fishing rod
+  autoclick(player, "Right")
+
+function autoclick(player: player, click: text):
+  set {_uuid} to uuid of {_player}
+  {ANAYO.%{_player}%.BREAK} is not set
+  set {_dif} to difference between {ANAYO::%{_click}%::LASTCLICK::%{_uuid}%} and now
+  add 1 to {ANAYO::CPS::%{_click}%::%{_uuid}%}
+  if {ANAYO::CPS::%{_click}%::%{_uuid}%} is greater than {@MaxCPS}:
+    {ANAYO.%{_player}%.BREAK} is not set
+    if {_click} is "Right":
+      if difference between {ANAYO::LASTHIT::%{_uuid}%} and now is greater than 0.5 second:
+        if {ANAYO.C.AUTOCLICKER.C} is true:
+          notify({_player}, "AutoClicker", "failed")
+      else:
+        if {ANAYO.C.AUTOBLOCK.A} is true:
+          notify({_player}, "AutoBlock", "failed")
+    else:
+      if {ANAYO.C.AUTOCLICKER.D} is true:
+        notify({_player}, "AutoClicker", "failed")
+
+every 1.25 seconds:
+  delete {A?AYO::CPS::left::*}
+  delete {ANAYO::CPS::right::*}
+  delete {ANAYO::CPS::damage::*}
+#--------------------------------------------------------
+#
+#             A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  set {_y.a} to y coord of attacker
+  set {_y.v} to y coord of victim
+  set {_yans} to {_y.v} - {_y.a}
+  if {_yans} >= 0.01:
+    set {_ans} to distance between location of victim and location of attacker - ({_yans} / 2)
+  if {_yans} <= 0:
+    set {_ans} to distance between location of victim and location of attacker
+  if {_ans} > {@MaxReachA}:
+    if victim is a player:
+      if {ANAYO.C.REACH.A} is true:
+        if {@LagBack} is true:
+          cancel event
+        add 1 to {ANAYO.%attacker%.REACH.A}
+        if {ANAYO.%attacker%.REACH.A} > 1:
+          if {ANAYO.%attacker%.VL.Reach} < 2:
+            verbose(attacker, "Reach", "A", "range=%{_ans}%")
+            delete {ANAYO.%attacker%.REACH.A}
+          else:
+            notify(attacker, "Reach", "failed")
+            verbose(attacker, "Reach", "A", "range=%{_ans}%")
+            delete {ANAYO.%attacker%.REACH.A}
+    else:
+      delete {ANAYO.%attacker%.REACH.A}
+      if {_ans} > {@MaxReachB}:
+        if {ANAYO.C.REACH.B} is true:
+          if {@LagBack} is true:
+            cancel event
+        add 1 to {ANAYO.%ATTACKER%.REACH.B}
+        if {ANAYO.%ATTACKER%.REACH.B} > 1:
+          if {ANAYO.%ATTACKER%.VL.Reach} < 2:
+            verbose(attacker, "Reach", "B", "range=%{_ans}%")
+            delete {ANAYO.%ATTACKER%.REACH.B}
+          else:
+            notify(attacker, "Reach", "failed")
+            verbose(attacker, "Reach", "B", "range=%{_ans}%")
+            delete {ANAYO.%ATTACKER%.REACH.B}
+      else:
+        delete {ANAYO.%ATTACKER%.REACH.B}
+  if victim is a player:
+    if attacker's y coordinate = victim's y coordinate:
+      if {_ans} > {@MaxReachC}:
+        if {ANAYO.C.REACH.C} is true:
+          if {@LagBack} is true:
+            cancel event
+          add 1 to {ANAYO.%ATTACKER%.REACH.C}
+          if {ANAYO.%ATTACKER%.REACH.C} > 1:
+            if {ANAYO.%ATTACKER%.VL.Reach} < 2:
+              verbose(attacker, "Reach", "C", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.C}
+            else:
+              notify(attacker, "Reach", "failed")
+              verbose(attacker, "Reach", "C", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.C}
+      else:
+        delete {ANAYO.%ATTACKER%.REACH.C}
+
+    else if attacker's y coordinate = victim's y coordinate: 
+      if {_ans} > {@MaxReachD}:
+        if {ANAYO.C.REACH.D} is true:
+          if {@LagBack} is true:
+            cancel event
+          add 1 to {ANAYO.%ATTACKER%.REACH.D}
+          if {ANAYO.%ATTACKER%.REACH.D} > 1:
+            if {ANAYO.%ATTACKER%.VL.Reach} < 2:
+              verbose(attacker, "Reach", "D", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.D}
+            else:
+              notify(attacker, "Reach", "failed")
+              verbose(attacker, "Reach", "D", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.D}
+      else:
+        delete {ANAYO.%ATTACKER%.REACH.D}
+    else:
+      if {_ans} > {@MaxReachE}:
+        if {ANAYO.C.REACH.E} is true:
+          if {@LagBack} is true:
+            cancel event
+          add 1 to {ANAYO.%ATTACKER%.REACH.E}
+          if {ANAYO.%ATTACKER%.REACH.E} > 1:
+            if {ANAYO.%ATTACKER%.VL.Reach} < 2:
+              verbose(attacker, "Reach", "E", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.E}
+            else:
+              notify(attacker, "Reach", "failed")
+              verbose(attacker, "Reach", "E", "range=%{_ans}%")
+              delete {ANAYO.%ATTACKER%.REACH.E}
+      else:
+        delete {ANAYO.%ATTACKER%.REACH.E}
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attacker doesn't have speed
+  projectile doesn't exist
+  set {_l.a} to attacker's location
+  set {_l.v} to victim's location
+  set y coordinate of {_l.v} to y coordinate of {_l.a}
+  set {_dist.x} to difference between x coordinate of {_l.v} and x coordinate of {_l.a}
+  set {_dist.z} to difference between y coordinate of {_l.v} and y coordinate of {_l.a}
+  if {_dist.x} > 4.7:
+    if {@LagBack} is true:
+      cancel event
+    if {_dist.x} > {@MaxReach}:
+      if {ANAYO.C.REACH.F} is true:
+        if {ANAYO.%attacker%.VL.Reach} < 3:
+          verbose(attacker, "Reach", "F", "range=%{_dist.x}%")
+        else:
+          notify(attacker, "Reach", "failed")
+          verbose(attacker, "Reach", "F", "range=%{_dist.x}%")
+    else:
+      if {ANAYO.C.HITBOX.A} is true:
+        if {ANAYO.%attacker%.VL.HitBox} < 3:
+          verbose(attacker, "HitBox", "A", "range=%{_dist.x}%")
+        else:
+          notify(attacker, "HitBox", "failed")
+          verbose(attacker, "HitBox", "A", "range=%{_dist.x}%")
+  else if {_dist.z} > {@MaxReach}:
+    if {@LagBack} is true:
+      cancel event
+    if {_dist.z} > {@MaxReach}:
+      if {ANAYO.C.REACH.G} is true:
+        if {ANAYO.%attacker%.VL.Reach} < 2:
+          verbose(attacker, "Reach", "G", "range=%{_dist.x}%")
+        else:
+          notify(attacker, "Reach", "failed")
+          verbose(attacker, "Reach", "G", "range=%{_dist.x}%")
+    else:
+      if {ANAYO.C.HITBOX.B} is true: 
+        if {ANAYO.%attacker%.VL.HitBox} < 3:
+          verbose(attacker, "HitBox", "B", "range=%{_dist.x}%")
+        else:
+          notify(attacker, "HitBox", "failed")
+          verbose(attacker, "HitBox", "B", "range=%{_dist.x}%")
+
+on damage:
+  if {ANAYO.C.REACH.H} is false:
+    stop
+  attacker is a player:
+    gamemode of attacker is survival or adventure:
+      fly mode of attacker is false:
+        attacker is not riding a boat or pig or horse:
+          damage wasn't caused by projectile:
+            set {_y.a} to y coord of attacker
+            set {_y.v} to y coord of victim
+            set {_yans} to {_y.v} - {_y.a}
+            if {_yans} >= 0.01:
+              set {_ans} to distance between location of victim and location of attacker - ({_yans} / 2)
+            if {_yans} <= 0:
+              set {_ans} to distance between location of victim and location of attacker
+            {_ans} is bigger than {@MinReachH}:
+              add 1 to {ANAYO.%attacker%.HIT.DISTANCE}
+              if {ANAYO.%attacker%.HIT.DISTANCE} > 2:
+                if {ANAYO.%attacker%.VL.Reach} < 3:
+                  verbose(attacker, "Reach", "H", "range=%{_ans}%")
+                  clear {ANAYO.%attacker%.HIT.DISTANCE}
+                else:
+                  notify(attacker, "Reach", "failed")
+                  verbose(attacker, "Reach", "H", "range=%{_ans}%")
+                  clear {ANAYO.%attacker%.HIT.DISTANCE}
+            else:
+              clear {ANAYO.%attacker%.HIT.DISTANCE}
+
+
+#--------------------------------------------------------
+#
+#             A N T I   K I L L A U R A
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attack is not victim
+  projectile doesn't exist
+  if distance between attacker and victim > distance between attacker and attacker's targeted block:
+    attacker's targeted block is not a flower, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, chest, ender chest, trapped chest or brewing stand
+    attacker's targeted block is not block under victim
+    block at victim is not water
+    block above victim is not water
+    block above attacker is not water
+    block at attacker is not water
+    if distance between victim and attacker's targeted block is greater than {@AuraDistance}:
+      if {ANAYO.C.KILLAURA.A} is true:
+        if {@LagBack} is true:
+          cancel event
+        if {ANAYO.%ATTACKER%.VL.KillAura} < 3:
+          verbose(attacker, "KillAura", "A", "targetblock=%target block of attacker%")
+        else:
+          notify(attacker, "KillAura", "failed")
+          verbose(attacker, "KillAura", "A", "targetblock=%target block of attacker%")
+
+every 10 ticks:
+   delete {MultiAura::*}
+   delete {APS::*}
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  projectile is not set
+  attacker doesn't have speed
+  if attacker is a player:
+    add 1 to {APS::%attacker%}
+    if {APS::%attacker%} >= {@MaxAPS}:
+      if distance between victim and attacker is greater than {@AuraDistance}:
+        if {ANAYO.C.KILLAURA.B} is true:
+          if {@LagBack} is true:
+            cancel event
+          if {ANAYO.%ATTACKER%.VL.KillAura} < 3:
+            verbose(attacker, "KillAura", "B", "APS=%{APS::%attacker%}%")
+          else:
+            notify(attacker, "KillAura", "failed")
+            verbose(attacker, "KillAura", "B", "APS=%{APS::%attacker%}%")
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attacker's gamemode is survival or adventure
+  add 1 to {MultiAura::%attacker%}
+  if {MultiAura::%attacker%} >= {@MultiAura}:
+    if {ANAYO.C.KILLAURA.C} is true:
+      if {@LagBack} is true:
+        cancel event
+      if {ANAYO.%ATTACKER%.VL.KillAura} < 3:
+        verbose(attacker, "KillAura", "C", "Multi=%{MultiAura::%attacker%}%")
+      else:
+        notify(attacker, "KillAura", "failed")
+        verbose(attacker, "KillAura", "C", "Multi=%{MultiAura::%attacker%}%")
+
+every 5 second:
+   delete {InvalidEntity::*}
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  if attacker's targeted entity is not set:
+    if distance between attacker and victim > {@AuraDistance}:
+      add 1 to {InvalidEntity::%attacker%}
+      if {InvalidEntity::%attacker%} > {@MaxInvalidHits}:
+        if {ANAYO.C.KILLAURA.D} is true:
+          if {@LagBack} is true:
+            cancel event
+          if {ANAYO.%attacker%.VL.KillAura} < 3:
+            verbose(attacker, "KillAura", "D", "InvalidHits: %{InvalidEntity::%attacker%}%")
+          else:
+            notify(attacker, "KillAura", "failed")
+            verbose(attacker, "KillAura", "D", "InvalidHits: %{InvalidEntity::%attacker%}%")
+  else:
+    delete {InvalidEntity::%attacker%}
+
+on npc left click:
+   if {ANAYO.C.KILLAURA.E} is true:
+      if {ANAYO.%player%.BOTTEST} is true:
+         if {ANAYO.%player%.VL.KillAura} < 3:
+            verbose(player, "KillAura", "E", "bothit=true")
+         else:
+            notify(player, "KillAura", "failed")
+            verbose(player, "KillAura", "E", "bothit=true")
+            set {ANAYO.%player%.NODAMAGE} to true
+            wait 3 second
+            delete {ANAYO.%player%.NODAMAGE}
+
+on damage:
+   damage cause is not thorns
+   attacker is a player:
+      if attacker's targeted entity is set:
+         if attacker is sprinting:
+            add 1 to {ANAYO.%attacker%.KACOUNT}
+            if {ANAYO.%attacker%.KA.SPRINT} is not set:
+               set {ANAYO.%ATTACKER%.KA.SPRINT} to true
+               stop
+            else:
+               if {ANAYO.%ATTACKER%.KACOUNT} > 3:
+                  if {ANAYO.C.KILLAURA.F} is true:
+                     if {ANAYO.%ATTACKER%.VL.KillAura} < 3:
+                        verbose(attacker, "KillAura", "F", "KeepSprint=true")
+                     else:
+                        notify(attacker, "KillAura", "failed")
+                        verbose(attacker, "KillAura", "F", "KeepSprint=true")
+         else:
+            delete {ANAYO.%ATTACKER%.KA.SPRINT}
+            delete {ANAYO.%attacker%.KACOUNT}
+
+on left click:
+   set {ANAYO.%player%.LEFTCLICK} to true
+   delete {ANAYO.%player%.NOSWING}
+
+on damage:
+   if attacker is a player:
+      if distance between attacker and victim > {@AuraDistance}:
+         if {ANAYO.%attacker%.LEFTCLICK} is not set:
+            add 1 to {ANAYO.%attacker%.NOSWING}
+            if {ANAYO.%attacker%.NOSWING} > {@NoSwingCount}:
+               if {ANAYO.C.KILLAURA.G} is true:
+                  delete {ANAYO.%attacker%.NOSWING}
+                  if {ANAYO.%attacker%.VL.KillAura} < 3:
+                     verbose(attacker, "KillAura", "G", "Swing=false")
+                  else:
+                     notify(attacker, "KillAura", "failed")
+
+on damage:
+   if attacker is a player:
+      delete {ANAYO.%attacker%.LEFTCLICK}
+
+#--------------------------------------------------------
+#
+#             A N T I   A I M  B O T 
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  set {_p} to attacker's pitch
+  set {_y} to attacker's yaw
+  wait 2 tick
+  if attacker's targeted entity is victim:
+    if distance between attacker and victim is greater than {@AimTrigger}:
+      if difference between attacker's yaw and {_y} < {@MinAimAYaw}:
+        if difference between attacker's pitch and {_p} is bigger than {@AimMinA}:
+          if {ANAYO.C.AIM.A} is true:
+            if {ANAYO.%attacker%.VL.Aim} < 10:
+              verbose(attacker, "Aim", "A", "PitchDiff=%difference between attacker's pitch and {_p}%")
+            else:
+              notify(attacker, "Aim", "failed")
+              verbose(attacker, "Aim", "A", "PitchDiff=%difference between attacker's pitch and {_p}%")
+            if {@LagBack} is true:
+              set {ANAYO.%attacker%.NODAMAGE} to true
+              wait 0.5 second
+              delete {ANAYO.%attacker%.NODAMAGE}
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      if {_p} is between 0 and 0.08:
+         if {ANAYO.C.AIM.L} is true:
+            add 1 to {ANAYO.%attacker%.AIM.L}
+            if {ANAYO.%attacker%.AIM.L} >= {@AimCMaxL}:
+               if {ANAYO.%attacker%.VL.Aim} < 10:
+                  verbose(attacker, "Aim", "L", "PitchDiff=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "L", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.L}
+      else:
+         if {ANAYO.%attacker%.AIM.L} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.L}
+
+
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      set {_p} to difference between {_p1} and attacker's pitch
+      if {_p} is between 0 and 0.05:
+         if {ANAYO.C.AIM.B} is true:
+            add 1 to {ANAYO.%attacker%.AIM.B}
+            if {ANAYO.%attacker%.AIM.B} >= {@AimCMaxB}:
+               if {ANAYO.%attacker%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "B", "PitchDiff=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "B", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.B}
+      if {_p} is between 10 and 16:
+         if {ANAYO.C.AIM.J} is true:
+            add 1 to {ANAYO.%attacker%.AIM.J}
+            if {ANAYO.%attacker%.AIM.J} >= {@AimCMaxJ}:
+               if {ANAYO.%attacker%.VL.Aim} < 15:
+                  verbose(attacker, "Aim", "J", "Pitch=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "J", "Pitch=1.1564650535583496")
+      if {_p} = 0:
+         if {ANAYO.C.AIM.D} is true:
+            add 1 to {ANAYO.%attacker%.AIM.D}
+            if {ANAYO.%attacker%.AIM.D} >= {@AimCMaxD}:
+               if {ANAYO.%ATTACKER%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "D", "PitchDiff=0")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "D", "PitchDiff=0")
+                  delete {ANAYO.%attacker%.AIM.D}
+      else:
+         #if {ANAYO.%attacker%.VL.Aim} >= 2:
+            #remove 0.2 from {ANAYO.%attacker%.VL.Aim}
+         if {ANAYO.%attacker%.AIM.D} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.D}
+
+
+on damage:
+   {ANAYO.C.AIM.K} is true
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      if {_p} is between {@AimMinK} and {@AimMaxK}:
+         add 1 to {ANAYO.%attacker%.AIM.K}
+         if {ANAYO.%attacker%.AIM.K} >= {@AimCMaxK}:
+            if {ANAYO.%attacker%.VL.Aim} < 10:
+               verbose(attacker, "Aim", "K", "Pattern=%{_p}%")
+            else:
+               notify(attacker, "Aim", "failed")
+               verbose(attacker, "Aim", "K", "Pattern=%{_p}%")
+               delete {ANAYO.%attacker%.AIM.K}
+               if {@LagBack} is true:
+                  set {ANAYO.%attacker%.NODAMAGE} to true
+                  wait 0.5 second
+                  delete {ANAYO.%attacker%.NODAMAGE}
+      else:
+         if {ANAYO.%attacker%.AIM.K} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.K}
+
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      if {_p} is between {@AimMinE} and {@AimMaxE}:
+         add 1 to {ANAYO.%attacker%.AIM.E}
+         if {ANAYO.%attacker%.AIM.E} >= {@AimCMaxE}:
+            if {ANAYO.C.AIM.E} is true:
+               if {ANAYO.%attacker%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "E", "PitchDiff=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "E", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.E}
+                  if {@LagBack} is true:
+                     set {ANAYO.%attacker%.NODAMAGE} to true
+                     wait 0.5 second
+                     delete {ANAYO.%attacker%.NODAMAGE}
+      else:
+         #if {ANAYO.%attacker%.VL.Aim} >= 2:
+            #remove 0.2 from {ANAYO.%attacker%.VL.Aim}
+         if {ANAYO.%attacker%.AIM.E} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.E}
+
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      if {_p} is between {@AimMinF} and {@AimMaxF}:
+         add 1 to {ANAYO.%attacker%.AIM.F}
+         if {ANAYO.%attacker%.AIM.F} >= {@AimCMaxF}:
+            if {ANAYO.C.AIM.F} is true:
+               if {ANAYO.%attacker%.VL.Aim} < 15:
+                  verbose(attacker, "Aim", "F", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.F}
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "F", "PitchDiff=%{_p}%")
+                  if {@LagBack} is true:
+                     set {ANAYO.%attacker%.NODAMAGE} to true
+                     wait 0.5 second
+                     delete {ANAYO.%attacker%.NODAMAGE}
+      else:
+         #if {ANAYO.%attacker%.VL.Aim} >= 2:
+            #remove 0.2 from {ANAYO.%attacker%.VL.Aim}
+         if {ANAYO.%attacker%.AIM.F} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.F}
+
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      if {_p} is between {@AimMinC} and {@AimMaxC}:
+         if {ANAYO.C.AIM.C} is true:
+            add 1 to {ANAYO.%attacker%.AIM.C}
+            if {ANAYO.%attacker%.AIM.C} >= {@AimCMaxC}:
+               if {ANAYO.%attacker%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "C", "PitchDiff=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "C", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.C}
+                  if {@LagBack} is true:
+                     set {ANAYO.%attacker%.NODAMAGE} to true
+                     wait 0.5 second
+                     delete {ANAYO.%attacker%.NODAMAGE}
+      else:
+         #if {ANAYO.%attacker%.VL.Aim} >= 2:
+            #remove 0.2 from {ANAYO.%attacker%.VL.Aim}
+         if {ANAYO.%attacker%.AIM.C} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.C}
+
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   if distance between attacker and victim is greater than {@AimTrigger}:
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 1 tick
+      set {_p} to difference between {_p1} and attacker's pitch
+      set {_y1} to attacker's yaw
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw < {@NeededYaw}:
+         stop
+      set y location of {_loc} to attacker's y location
+      if distance between attacker's location and {_loc} < {@MoveDistanceAim}:
+         stop
+      if {_p} is between {@AimMinG} and {@AimMaxG}:
+         add 1 to {ANAYO.%attacker%.AIM.G}
+         if {ANAYO.%attacker%.AIM.G} >= {@AimCMaxG}:
+            if {ANAYO.C.AIM.G} is true:
+               if {ANAYO.%attacker%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "G", "PitchDiff=%{_p}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "G", "PitchDiff=%{_p}%")
+                  delete {ANAYO.%attacker%.AIM.G}
+                  if {@LagBack} is true:
+                     set {ANAYO.%attacker%.NODAMAGE} to true
+                     wait 0.5 second
+                     delete {ANAYO.%attacker%.NODAMAGE}
+      else:
+         #if {ANAYO.%attacker%.VL.Aim} >= 2:
+            #remove 0.2 from {ANAYO.%attacker%.VL.Aim}
+         if {ANAYO.%attacker%.AIM.G} >= 2:
+            remove 0.2 from {ANAYO.%attacker%.AIM.G}
+
+on damage:
+   if {ANAYO.%attacker%.NODAMAGE} is true:
+      cancel event
+
+on join:
+   delete {ANAYO.%player%.YAW1}
+   delete {ANAYO.%player%.YAW2}
+   delete {ANAYO.%player%.PITCH1}
+   delete {ANAYO.%player%.PITCH2}
+
+on damage:
+   {ANAYO.C.AIM.H} is true
+   attacker is a player
+   damage cause is not thorns
+   projectile doesn't exist
+   if distance between attacker and victim > {@AimTrigger}:
+      set {_y1} to attacker's yaw
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 2 ticks
+      if difference between {_p1} and attacker's pitch > 0:
+         if distance between attacker's location and {_loc} > {@MoveDistanceAim}:
+            set {_y} to difference between {_y1} and attacker's yaw
+            if {ANAYO.%attacker%.YAW1} is not set:
+               set {ANAYO.%attacker%.YAW1} to {_y}
+               stop
+            if {ANAYO.%attacker%.YAW2} is not set:
+               set {ANAYO.%attacker%.YAW2} to {_y}
+            set {_y} to difference between {ANAYO.%attacker%.YAW1} and {ANAYO.%attacker%.YAW2}
+            delete {ANAYO.%attacker%.YAW1}
+            delete {ANAYO.%attacker%.YAW2}
+            if {_y} = 0:
+               if {ANAYO.%attacker%.VL.Aim} < 5:
+                  verbose(attacker, "Aim", "H", "YawSame=%{_y}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "H", "YawSame=%{_y}%")
+
+on damage:
+   {ANAYO.C.AIM.I} is true
+   attacker is a player
+   damage cause is not thorns
+   projectile doesn't exist
+   if distance between attacker and victim > {@AimTrigger}:
+      set {_y1} to attacker's yaw
+      set {_p1} to attacker's pitch
+      set {_loc} to attacker's location
+      wait 2 ticks
+      if difference between {_y1} and attacker's yaw > 0:
+         if distance between attacker's location and {_loc} > {@MoveDistanceAim}:
+            set {_y} to difference between {_y1} and attacker's pitch
+            if {ANAYO.%attacker%.PITCH1} is not set:
+               set {ANAYO.%attacker%.PITCH1} to {_y}
+               stop
+            if {ANAYO.%attacker%.PITCH2} is not set:
+               set {ANAYO.%attacker%.PITCH2} to {_y}
+            set {_y} to difference between {ANAYO.%attacker%.PITCH1} and {ANAYO.%attacker%.PITCH2}
+            delete {ANAYO.%attacker%.PITCH1}
+            delete {ANAYO.%attacker%.PITCH2}
+            if {_y} is between 0 and 0.05:
+               if {ANAYO.%attacker%.VL.Aim} < 2:
+                  verbose(attacker, "Aim", "I", "PitchSame=%{_y}%")
+               else:
+                  notify(attacker, "Aim", "failed")
+                  verbose(attacker, "Aim", "I", "PitchSame=%{_y}%")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   C R I T I C A L S
+#
+#--------------------------------------------------------
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  block under attacker is not water
+  block at attacker is not water
+  block north of attacker is not water
+  block east of attacker is not water
+  block south of attacker is not water
+  block west of attacker is not water
+  set {hasAttack.%attacker%} to true
+  if block under attacker is not air:
+    if block 0.05 under attacker is not air:
+      if attacker is not on ground:
+        wait 1 tick
+        block under attacker is not air
+        block 0.05 under attacker is not air
+        attacker is not on ground
+        if block at attacker is pressure plate, sign, snow layer, torch, redstone torch, fence, fence gate, ladder or vines:
+          stop
+        if block under attacker is pressure plate, sign, snow layer, torch, redstone torch, fence, fence gate, ladder or vines:
+          stop
+        {hasDamage.%victim%} is not set
+        if {ANAYO.C.CRITICALS.A} is true:
+          if {ANAYO.%attacker%.DAMAGED} is not set:
+            if {ANAYO.%attacker%.VL.Criticals} < 1:
+              verbose(attacker, "Criticals", "A", "BlockUnder=%block under attacker%")
+            else:
+              notify(attacker, "Criticals", "failed")
+              verbose(attacker, "Criticals", "A", "BlockUnder=%block under attacker%")
+            if {@LagBack} is true:
+              set {ANAYO.%attacker%.NODAMAGE} to true
+              wait 3 second
+              delete {ANAYO.%attacker%.NODAMAGE}
+  wait 10 ticks
+  delete {hasAttack.%attacker%}
+  
+on damage:
+  if attacker is a player:
+    set {LastHit.%attacker%} to now
+  if victim is a player:
+    set {hasDamage.%victim%} to true
+    wait 5 ticks
+    delete {hasDamage.%victim%}
+  
+on jump:
+  block under player is not water
+  block at player is not water
+  block north of player is not water
+  block east of player is not water
+  block south of player is not water
+  block west of player is not water
+  set {_target} to targeted entity
+  set {_health} to {_target}'s health
+  set {AC::3Jump::%player%} to now
+  set {_loc} to player's y coordinate
+  set {_1} to difference between {_loc} and player's y coordinate
+  wait 1 tick
+  set {_2} to difference between {_loc} and player's y coordinate
+  wait 1 tick
+  set {_3} to difference between {_loc} and player's y coordinate
+  wait 1 tick
+  set {_4} to difference between {_loc} and player's y coordinate
+  {hasAttack.%player%} is true
+  set {_health} to difference between {_target}'s health and {_health}
+  if "%{_1}%" = "%{_2}%":
+    if "%{_2}%" = "%{_3}%":
+      if "%{_3}%" = "%{_4}%":
+        if "%{_1}%" = "0":
+          if {ANAYO.C.CRITICALS.B} is true:
+            heal {_target} by {_health} hearts
+            if {ANAYO.%player%.VL.Criticals} < 1:
+              verbose(player, "Criticals", "B", "BlockUnder=%block under player%")
+            else:
+              notify(player, "Criticals", "failed")
+              verbose(player, "Criticals", "B", "BlockUnder=%block under player%")
+            if {@LagBack} is true:
+              set {ANAYO.%player%.NODAMAGE} to true
+              wait 3 second
+              delete {ANAYO.%player%.NODAMAGE}
+  if "%{_1}%" = "0":
+    if "%{_2}%" = "0.1":
+      if "%{_3}%" = "0.06", "0.1" or "0.12":
+        if "%{_4}%" = "0.06", "0.1" or "0.12":
+          if {ANAYO.C.CRITICALS.C} is true:
+            if {ANAYO.%player%.VL.Criticals} < 1:
+              verbose(player, "Criticals", "C", "BlockUnder=%block under player%")
+            else:
+              notify(player, "Criticals", "failed")
+              verbose(player, "Criticals", "C", "BlockUnder=%block under player%")
+            if {@LagBack} is true:
+              set {ANAYO.%player%.NODAMAGE} to true
+              wait 3 second
+              delete {ANAYO.%player%.NODAMAGE}
+
+#--------------------------------------------------------
+#
+#             A N T I   V E L O C I T Y
+#
+#--------------------------------------------------------
+
+#Wayyy too buggy to be released :(
+
+#--------------------------------------------------------
+#
+#             A N T I   M O R E  P A C K E T S
+#
+#-------------------------------------------------------
+
+on any move:
+   add 1 to {ANAYO.MOVEPACKET::%player%}
+   if {ANAYO.MOVEPACKET::%player%} >= 23:
+      if {ANAYO.C.MOREPACKETS.A} is true:
+         verbose(player, "MorePackets", "A", "Packets=%{ANAYO.MOVEPACKET::%player%}%")
+         if {@LagBack} is true:
+            cancel event
+
+every 1 second:
+   delete {ANAYO.MOVEPACKET::*}
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T B O W
+#
+#--------------------------------------------------------
+
+on shoot:
+   if projectile is arrow:
+      set {_waited} to difference between {Shoot.%shooter%} and now
+      if {_waited} is less than {@BowDelay} ticks:
+         if {ANAYO.C.FASTBOW.A} is true:
+            notify(shooter, "FastBow", "failed")
+            if {@LagBack} is true:
+               cancel event
+         set {Shoot.%shooter%} to now
+         set {Shoot.amount.%shooter%} to {Shoot.amount.%shooter%} + 1
+      else:
+         set {Shoot.%shooter%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I    I N V M O V E
+#
+#--------------------------------------------------------
+
+on inventory click:
+   set {_loc2} to player's location
+   set y coordinate of {_loc2} to 0
+   wait 2 tick
+   set {_loc1} to player's location
+   set y coordinate of {_loc1} to 0
+   set {_loc} to distance between {_loc1} and {_loc2}
+   if {_loc} >= 1.25:
+      block under player is not water or packed ice:
+         if {ANAYO.C.INVMOVE.A} is true:
+            close player's inventory
+            notify(player, "InvMove", "failed")
+
+on inventory open:
+   wait 2 ticks
+   set {ANAYO.%player%.INVSTATE} to true
+
+on inventory close:
+   wait 2 ticks
+   delete {ANAYO.%Player%.INVSTATE}
+
+on damage:
+   if {ANAYO.%attacker%.INVSTATE} is true:
+      if {ANAYO.C.INVACTIONS.C} is true:
+         notify(attacker, "InvActions", "C")
+
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    if {ANAYO.C.INVMOVE.B} is true:
+      cancel event
+      notify(player, "InvMove", "failed")
+      close player's inventory
+  if player is sneaking:
+    if {ANAYO.C.INVACTIONS.A} is true:
+      cancel event
+      notify(player, "InvActions", "failed")
+      close player's inventory
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+on inventory open:
+  wait 4 ticks
+  if player is sprinting:
+    if {ANAYO.C.INVMOVE.C} is true:
+      notify(player, "InvMove", "failed")
+      close player's inventory
+on inventory open:
+  wait 4 ticks
+  if player is sneaking:
+    if {ANAYO.C.INVACTIONS.B} is true:
+      notify(player, "InvActions", "failed")
+      close player's inventory
+
+#--------------------------------------------------------
+#
+#             A N T I    F A S T I N V 
+#
+#--------------------------------------------------------
+
+on unstore:
+   set {_waited} to difference between {ChestStealer.%player%} and now
+   if {_waited} is less than {@InvDelay} ticks:
+      if {ANAYO.C.FASTINVCLICK.A} is true: 
+         if {ANAYO.%player%.VL.FastInvClick} < 5:
+            verbose(player, "FastInvClick", "A", "ClickSpeed=%{_waited}%")
+         else:
+            notify(player, "FastInvClick", "failed")
+            verbose(player, "FastInvClick", "A", "ClickSpeed=%{_waited}%")
+         if {@LagBack} is true:
+            cancel event
+      close player's inventory
+      set {ChestStealer.%player%} to now
+      set {ChestStealer.amount.%player%} to {ChestStealer.amount.%player%} + 1
+   else:
+      set {ChestStealer.%player%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I    N O F A L L 
+#
+#--------------------------------------------------------
+
+on damage:
+   if victim is not attacker:
+      if damage cause is not fall, poison, wither, drowning or burning:
+         set {ANAYO.%victim%.DAMAGED} to true
+         wait 2 tick
+         delete {ANAYO.%victim%.DAMAGED}
+
+on any movement:
+  if {ANAYO.C.NOFALL.B} is false:
+    stop
+  if fly mode of player is true:
+    stop
+  if gamemode of player is spectator or creative:
+    stop
+  if block at player is not water or lava or ladder or vines or lily pad or stairs or slabs:
+    if block under player is not water or lava or ladder or vines or lily pad or stairs or slabs:
+      if player is not on ground:
+        block under player is not air:
+          add 1 to {ANAYO.%player%.BADPACKETS.B}
+          if {ANAYO.%player%.BADPACKETS.B} >= 20:
+            delete {ANAYO.%player%.BADPACKETS.B}
+            if {ANAYO.%player%.TIMEPAUSE} is set:
+              stop
+            if {ANAYO.%player%.DAMAGED} is not set:
+              if {ANAYO.%player%.VL.Nofall} < 3:
+                verbose(player, "Nofall", "B", "BlockUnder=%block under player%")
+              else:
+                notify(player, "Nofall", "failed")
+                verbose(player, "Nofall", "B", "BlockUnder=%block under player%")
+                if {@LagBack} is true:
+                  damage player by 2 heart
+      else:
+        delete {ANAYO.%player%.BADPACKETS.B}
+
+on place:
+   set {ANAYO.%player%.TIMEPAUSE} to true
+   wait 5 ticks
+   delete {ANAYO.%player%.TIMEPAUSE}
+
+on any move:
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        if {ANAYO.C.NOFALL.A} is true:
+            if {ANAYO.%player%.VL.Nofall} < 2:
+                verbose(player, "Nofall", "A", "BlockUnder=%block under player%")
+            else:
+                notify(player, "Nofall", "failed")
+                verbose(player, "Nofall", "A", "BlockUnder=%block under player%")
+                if {@LagBack} is true:
+                    damage player by 2 heart
+    if {_nofallcount} > 0:
+        stop
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on ladder:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I    N O S L O W
+#
+#--------------------------------------------------------
+
+on consuming:
+  if player's gamemode is not creative or spectator:
+    if {ANAYO.C.NOSLOW.A} is true:
+      player's flight mode is false
+      if player has speed:
+        stop
+    set {_loc} to player's location
+    set y coordinate of {_loc} to 0
+    wait 5 tick
+    set {_loc1} to player's location
+    set y coordinate of {_loc1} to 0
+    set {_loc} to distance between {_loc1} and {_loc}
+    if {_loc} > {@NoSlowDistance}:
+      set {ANAYO.%player%.CANCEL.EAT} to true
+      if {ANAYO.%player%.NOSLOW.DAMAGE} is not set:
+        notify(player, "NoSlow", "failed")
+        wait 1 seconds
+        delete {ANAYO.%player%.CANCEL.EAT}
+
+on damage:
+   if damage cause is not fall, poison, wither, drowning or burning:
+      set {ANAYO.%victim%.NOSLOW.DAMAGE} to true
+      wait 2 second
+      delete {ANAYO.%victim%.NOSLOW.DAMAGE}
+
+
+#--------------------------------------------------------
+#
+#             A N T I    R E G E N
+#
+#--------------------------------------------------------
+
+on heal:
+  if {ANAYO.C.BADPACKETS.A} is true:
+    if player has regeneration:
+      stop
+    else:
+      set {_dif} to difference between {heal.%player%} and now
+      if {_dif} is less than 0.45 seconds:
+        cancel event
+        set {heal.%player%} to now
+        verbose(player, "BadPackets", "A", "Packets=?")
+      set {heal.%player%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I    F L Y 
+#
+#--------------------------------------------------------
+
+on any move:
+  if {ANAYO.C.FLY.A} is false:
+    stop
+  player is not riding
+  fly mode of player is false
+  gamemode of player is not spectator or creative
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      if player's chestplate is an elytra:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or stairs or ladder or slab or 165
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        notify(player, "Fly", "failed")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      #OLD VL COUNTER
+      notify(player, "Fly", "failed")
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        clear {vlsame.%player%}
+        stop
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+on teleport:
+  set {%player%.tp} to true
+  wait 1 second
+  set {%player%.tp} to false
+
+on jump:
+  set {%player%.jump} to true
+  wait 1 second
+  delete {%player%.jump}
+
+on join:
+   set {join.%player%} to true
+   delete {ANAYO.%player%.BOT.TEST}
+   wait 1 second
+   delete {join.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I    M O T I O N
+#
+#--------------------------------------------------------
+
+on jump:
+   if {ANAYO.C.MOTION.A} is true:
+      if player's gamemode is not spectator or creative:
+         if fly mode of player is false:
+            set {_y1} to y location of player
+            set {_loc} to player's location
+            wait 5 tick
+            set {_y2} to y location of player
+            if difference between {_y1} and {_y2} > 1.3:
+               if {ANAYO.%player%.DAMAGED} is not set:
+                  if {ANAYO.%player%.VL.Motion} < 5:
+                     verbose(player, "Motion", "A", "deltaY: %difference between {_y1} and {_y2}%")
+                     teleport player to {_loc}
+                  else:
+                     notify(player, "Motion", "failed")
+                     verbose(player, "Motion", "A", "deltaY: %difference between {_y1} and {_y2}%")
+                     teleport player to {_loc}
+
+on jump:
+   if {ANAYO.C.MOTION.B} is true:
+      if player's gamemode is not spectator or creative:
+         if fly mode of player is false:
+            if block under player is not any slabs or any stairs or slime block:
+               if block 2 above player is not iron trapdoor or any slabs or any stairs or ladder or vines or water or lava or cobblestone wall:
+                  if block 2 above player is air:
+                     if player is on ground:
+                        if block 2 above player is not air:
+                           stop
+                        set {_y1} to y location of player
+                        set {_loc} to player's location
+                        wait 5 tick
+                        set {_y2} to y location of player
+                        add 1 to y location of {_loc}
+                        if {ANAYO.%player%.DAMAGED} is not set:
+                           if difference between {_y1} and {_y2} is between 0.9 and 0.4:
+                              if {ANAYO.%player%.DAMAGED} is not set:
+                                 if {ANAYO.%player%.VL.Motion} < 5:
+                                    verbose(player, "Motion", "B*", "deltaY: %difference between {_y1} and {_y2}%")
+                                    teleport player to {_loc}
+                                 else:
+                                    notify(player, "Motion", "failed")
+                                    verbose(player, "Motion", "B*", "deltaY: %difference between {_y1} and {_y2}%")
+                                    teleport player to {_loc}
+
+#--------------------------------------------------------
+#
+#             A N T I    S P R I N T
+#
+#--------------------------------------------------------
+
+on any move:
+   if player is sprinting:
+      if player's food level < 3:
+         if {ANAYO.C.SPRINT.A} is true:
+            notify(player, "Sprint", "failed")
+
+#DEBUGER
+
+command /info:
+   trigger:
+      if {ANAYO.%player%.AINFO} is not set:
+         set {ANAYO.%player%.AINFO} to false
+      if {ANAYO.%player%.AINFO} is false:
+         set {ANAYO.%player%.AINFO} to true
+         send "{@ANAYO} You are now seeing debug in your action bar."
+         stop
+      if {ANAYO.%player%.AINFO} is true:
+         set {ANAYO.%player%.AINFO} to false
+         send "{@ANAYO} You are no longer seeing debug in your action bar."
+         stop
+
+on any move:
+   if {ANAYO.%player%.AINFO} is true:
+      set {_loc1} to player's location
+      set {_loc5} to player's location
+      set {_loc3} to y location of player
+      wait 1 tick
+      set {_loc4} to y location of player
+      set {_loc2} to player's location
+      set {_dif} to distance between {_loc1} and {_loc2}
+      set {_dif2} to difference between {_loc3} and {_loc4}
+      wait 1 second
+      set {_loc6} to player's location
+      set {_bps} to distance between {_loc5} and {_loc6}
+      if player is on ground:
+         send action bar "BPS: &e%{_bps}% | BPT: &e%{_dif}% | Jump: &e%{_dif2}% | Above: &e%block above player% | Above 2: &e%block 2 above player% | Ground: true" to player
+      else:
+         send action bar "BPS: &e%{_bps}% | BPT: &e%{_dif}% | Jump: &e%{_dif2}% | Above: &e%block above player% | Above 2: &e%block 2 above player% | Ground: false" to player

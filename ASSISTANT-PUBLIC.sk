@@ -1,0 +1,264 @@
+options:
+   ss: &8(&b&lAssistant&8)&f #Prefix of ASSISTANT | Default: &8(&b&lAssistant&8)&f 
+   MaxVL: 3 #Max VL before the player get punished | Default: 3
+   CancelChat: true #Prevent the player from sending the message | Default: TRUE
+   AutoWarn: false #Automaticly warn the player | Default: FALSE
+   AutoMute: true #Automaticly mute the player | Default: TRUE
+   AutoKick: false #Automaticly kick the player | Default: FALSE
+   AutoBan: false #Automaticly permently ban the player | Default: FALSE
+   AutoTempBan: false #Automaticly temporaly ban the player | Default: FALSE
+   DefaultList: true #Enable default words | Default: TRUE
+   CustomList: true #Enable custom list | Default: TRUE
+   HacksList: true #Enable hacks words | Default: TRUE
+   GoodList: true #Enable good words | Default: TRUE
+   Broadcast: true #Broadcast the punishement the player recives | Default: TRUE
+   SkRayfall: false #Enable SkRayFall options (enable if you have it) | Default: FALSE
+   MuteCmd: /mute %{_p}% 5min &8(&b&lAssistant&8)&c Non allowed words !
+   WarnCmd: /warn %{_p}% &8(&b&lAssistant&8)&c Non allowed words !
+   TempBanCmd: /tempban %{_p}% 12h &8(&b&lAssistant&8)&c Non allowed words !
+   BanCmd: /ban %{_p}% &8(&b&lAssistant&8)&c Non allowed words !
+   KickCmd: /kick %{_p}% &8(&b&lAssistant&8)&c Non allowed words !
+
+on script load:
+   set {update} to false
+   wait 1 second
+   if {@SkRayfall} is true:
+      if text from "https://pastebin.com/isRX5gta" does not contain "1.0.5":
+         set {update} to true
+
+on join:
+   wait 3 seconds
+   if player has permission "ASSISTANT.ADMIN":
+      if {update} is true:
+         if {@SkRayfall} is true:
+            send ""
+            send "{@ss} Update found ! Download it here:"
+            send "&3https://www.spigotmc.org/resources/skript-assistant-prevent-players-from-swearing.89007/"
+            send ""
+
+every 5 minutes:
+   loop all players:
+      clear {ASSISTANT.vl.%loop-player%}
+#END OF CONFIG
+
+#/// COMMAND ///
+
+command /assistant [<text>] [<text>]:
+   trigger:
+      if executor is player:
+         if player doesn't have permission "ASSISTANT.USE":
+            send "&b=-=-=-=-=-=-=-=-=-=-="
+            send "     {@ss}"
+            send "  Author: XIII___"
+            send "  Versions: 1.0.5"
+            send "&b=-=-=-=-=-=-=-=-=-=-="
+            stop
+      if arg 1 is set:
+         if arg 1 is not "add", "help", "list", "bypass", "notify", "remove" or "stats":
+            send "{@ss} &cCommand not found , try /assistant."
+            stop
+      if arg 1 is not set:
+         send "&b=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+         send "&7/assistant add [word] | &fAdd a blacklisted word"
+         send "&7/assistant remove [word] | &fRemove a blacklisted word"
+         send "&7/assistant stats | &fSend assistant stats of the server"
+         send "&7/assistant list [hacks,good,default,custom] | &fList of blacklisted words"
+         send "&7/assistant help | &fShow this message"
+         send "&7/assistant bypass [player] | &fBypass a player from Assistant"
+         send "&7/assistant notify [player] | &fToggle swearing alerts"
+         send "&b=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" 
+      if arg 1 is "add":
+         if arg 2 is set:
+            if {ASSISTANT.black::*} contains "%arg 2%":
+               send "{@ss} This word is alerdy blacklisted."
+               stop
+            wait 1 tick
+            add arg 2 to {ASSISTANT.black::*}
+            send "{@ss} Word &e%arg 2% &fadded to blacklisted words."
+      if arg 1 is "remove":
+         if arg 2 is set:
+            if arg 2 doesn't contain {ASSISTANT.black::*}:
+               send "{@ss} This word is not blacklisted."
+               stop
+            wait 1 tick
+            remove arg 2 from {ASSISTANT.blacklist::*}
+            send "{@ss} Word &e%arg 2%&f removed from blacklisted words."
+      if arg 1 is "stats":
+         if arg 2 is not set:
+            if {ASSISTANT.feedbacks} is not set:
+               send "{@ss} Assistant did not registered any feedbacks yet !"
+            send "{@ss} Number of posivite message: &f%{ASSISTANT.feedback}%"
+            if {ASSISTANT.hacking} is not set:
+               send "{@ss} Assistant did not detected any hackers yet !"
+            send "{@ss} Number of hacking message: &f%{ASSISANT.hacking}%"
+            if {ASSISTANT.blocked} is not set:
+               send "{@ss} Assistant did not detected any messages yet !"
+            send "{@ss} Number of blocked messages: &f%{ASSISTANT.blocked}%"
+            if {@AutoMute} is true:
+               if {ASSISTANT.mutes} is not set:
+                  send "{@ss} Assistant did not muted anyone yet !"
+               send "{@ss} Number of muted players: &f%{ASSISTANT.mutes}%"
+            if {@AutoWarn} is true:
+               if {ASSISTANT.warns} is not set:
+                  send "{@ss} Assistant did not warned anyone yet !"
+               send "{@ss} Number of warned players: &f%{ASSISTANT.warns}%"
+            if {@AutoKick} is true:
+               if {ASSISTANT.kicks} is not set:
+                  send "{@ss} Assistant did not kicked anyone yet !"
+               send "{@ss} Number of kicked players: &f%{ASSISTANT.kicks}%"
+            if {@AutoTempBan} is true:
+               if {ASSISTANT.tban} is not set:
+                  send "{@ss} Assistant did not banned anyone yet !"
+               send "{@ss} Number of tempbanned players: &f%{ASSISTANT.tban}%"
+            if {@AutoBan} is true:
+               if {ASSISTANT.pban} is not set:
+                  send "{@ss} Assistant did not banned anyone yet !"
+               send "{@ss} Number of permbanned players: &f%{ASSISTANT.pban}%"
+            stop
+      if arg 1 is "help":
+         make player execute command "/assistant"
+         stop
+      if arg 1 is "list":
+         if arg 2 is "hacks":
+            send "{@ss} Hacks list: cheat, cheating, cheater, hacking, hacker, haxor, hacks, hax, fly, killaura, reach, antikb and antiknockback"
+            stop
+         if arg 2 is "good":
+            send "{@ss} Good list: original server, good server, cool server, awsome server, great server and love server"
+            stop
+         if arg 2 is "default":
+            send "{@ss} Default list: %{ASSISTANT.default::*}%"
+            stop
+         if arg 2 is "custom":
+            if {ASSISTANT.black::* } is not set:
+               send "{@ss} No custom words blocked in list !"
+               stop
+            send "{@ss} Custom list: %{ASSISTANT.black::*}%"
+            stop
+      if arg 1 is "bypass":
+         if arg 2 is set:
+            if {ASSISTANT.bypass.%arg 2%} is not set:
+               set {ASSISTANT.bypass.%arg 2%} to false
+            if {ASSISTANT.bypass.%arg 2%} is false:
+               set {ASSISTANT.bypass.%arg 2%} to true
+               send "{@ss} Player &e%arg 2%&f is now bypassing Assistant."
+               stop
+            if {ASSISTANT.bypass.%arg 2%} is true:
+               set {ASSISTANT.bypass.%arg 2%} to false
+               send "{@ss} Player &e%arg 2%&f is no longer bypasing Assistant."
+               stop
+      if arg 1 is "notify":
+         if {ASSISTANT.alerts.%player%} is not set:
+            set {ASSISTANT.alerts.%player%} to false
+         if {ASSISTANT.alerts.%player%} is false:
+            set {ASSISTANT.alerts.%player%} to true
+            send "{@ss} You now see alerts" to player
+            stop
+         if {ASSISTANT.alerts.%player%} is true:
+            set {ASSISTANT.alerts.%player%} to false
+            send "{@ss} You no longer see alerts" to player
+            stop
+
+#/// CHAT FILTER ///
+
+on join:
+   wait 2.5 seconds
+   send "{@ss} &fWelcome back to the server %player% &f!"
+
+on chat:
+   if {ASSISTANT.bypass.%player%} is true:
+      stop
+   if {ASSISTANT.lastmsg.%player%} is set:
+      if {ASSISTANT.lastmsg.%player%} contains message:
+         cancel event
+         send "{@ss} &fHello ! Please don't send the same (or similar) message !" to player
+         add 1 to {ASSISTANT.blocked}
+         if {ASSISTANT.vl.%player%} >= {@MaxVL}:
+            ASSISTANT(player)
+   set {ASSISTANT.lastmsg.%player%} to message
+
+on chat:
+   if {@SkRayfall} is true:
+      if {ASSISTANT.bypass.%player%} is true:
+         stop
+      if length of regex replace "[^A-Z]" with "" in message >= 4:
+         if {@CancelChat} is true:
+            cancel event
+         send "{@ss} &fDon't use so much CAPS !" to player
+         add 1 to {ASSISTANT.blocked}
+         if {ASSISTANT.vl.%player%} >= {@MaxVL}:
+            ASSISTANT(player)
+
+on chat:
+   if message contains "ez", "pussay", "pu$$y", "shit", "fuck", "fucc", "shutup", "shut up", "nigger", "niger", "n1gger", "n1ger", "nigga", "niga", "n1gga", "n1ga", "bitch", "fucc", "fuc", "dick", "dic", "dicc", "dik", "suck", "succ", "suc", "suk", "gay", "gey", "cum", "stupid", "dumb", "dum", "shit", "sh1t", "cock", "coke", "drugs", "drug", "noob", "sperm", "e z", "fucked", "pussy", "pusy", "pussi", "pusi", "bullshit", "bad", "penis", "pen1s", "peni", "pepe", "nude", "naked", "nacked", "naced", "porn", "jerk", "jerc" or "%{ASSISTANT.black::*}%": 
+      if {ASSISTANT.bypass.%player%} is true:
+         stop
+      if {@DefaultList} is false:
+         stop
+      if {@CancelChat} is true:
+         cancel event
+      send "{@ss} &fHello ! Swearing is not allowed on our server !"
+      add 1 to {ASSISTANT.vl.%player%}
+      add 1 to {ASSISTANT.blocked}
+      loop all players:
+         if {ASSISTANT.alerts.%loop-player%} is true:
+            send "{@ss} &c%player% &ffilter &c%message% &7(VL: &c%{ASSISTANT.vl.%player%}%&7)" to loop-player
+      if {ASSISTANT.vl.%player%} >= {@MaxVL}:
+         ASSISTANT(player)
+
+on chat:
+   if message contains "good server", "great server", "awsome server", "original server", "love server", "best server" or "cool server":
+      if {ASSISTANT.bypass.%player%} is true:
+         stop
+      if {@GoodList} is true:
+         add 1 to {ASSISTANT.feedback}
+         send "{@ss} &fThanks ! Your feedback has been registered !"
+
+on chat:
+   if message contains "cheat", "hacker", "hacking", "cheats", "hacks", "hack", "hax", "haxor", "cheater", "fly", "killaura", "antikb", "velocity", "reach", "antiknockback" or "cheating":
+      if {ASSISTANT.bypass.%player%} is true:
+         stop
+      if {@HacksList} is true:
+         add 1 to {ASSISTANT.hacking}
+         send "{@ss} &fHello ! Think someone is hacking ? Then /report them thanks !"
+
+function ASSISTANT(p: player):
+   if {@AutoWarn} is true:
+      make server execute command "{@WarnCmd}"
+      if {@Broadcast} is true:
+         broadcast ""
+         broadcast "{@ss} &fPlayer &c%{_p}% &fhas been warned."
+         broadcast ""
+      add 1 to {ASSISTANT.warns}
+      stop
+   if {@AutoMute} is true:
+      make server execute command "{@MuteCmd}"
+      if {@Broadcast} is true:
+         broadcast ""
+         broadcast "{@ss} &fPlayer &c%{_p}% &fhas been muted for 5 minutes."
+         broadcast ""
+      add 1 to {ASSISTANT.mutes}
+      stop
+   if {@AutoKick} is true:
+      make server execute command "{@KickCmd}"
+      if {@Broadcast} is true:
+         broadcast ""
+         broadcast "{@ss} &fPlayer &c%{_p}% &fhas been kicked from the server."
+         broadcast ""
+      add 1 to {ASSISTANT.kicks}
+      stop
+   if {@AutoTempBan} is true:
+      make server execute command "{@TempBanCmd}"
+      if {@Broadcast} is true:
+         broadcast ""
+         broadcast "{@ss} &fPlayer &c%{_p}% &fhas been temporaly banned for 12 hours."
+         broadcast ""
+      add 1 to {ASSISTANT.tban}
+      stop
+   if {@AutoBan} is true:
+      make server execute command "{@BanCmd}"
+      if {@Broadcast} is true:
+         broadcast ""
+         broadcast "{@ss} &fPlayer &c%{_p}% &fhas been permently banned."
+         broadcast ""
+      add 1 to {ASSISTANT.pban}
+      stop

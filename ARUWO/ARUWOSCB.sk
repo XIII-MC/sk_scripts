@@ -1,0 +1,20 @@
+on join:
+   wait 5 seconds
+   while player is online:
+      wipe player's sidebar
+      set name of sidebar of player to "&6&lARUWO"
+      set score "" in sidebar of player to 14
+      set score "&6&n%player%" in sidebar of player to 13
+      set score "&r&r" in sidebar of player to 12
+      set score "* &7[%{ARUWO::%player%::LEVEL}%&7✪]" in sidebar of player to 11
+      set score "* &6[%{ARUWO::%player%::XPBAR}%&6/100%%]" in sidebar of player to 10
+      set score "" in sidebar of player to 9
+      set score " &6&nPit Statistics" in sidebar of player to 8
+      set score "&r" in sidebar of player to 7
+      set score "* Kills: &6%{ARUWO::%player%::KILLS}%" in sidebar of player to 6
+      set score "* Deaths: &6%{ARUWO::%player%::DEATHS}%" in sidebar of player to 5
+      set score "* Killstreak: &6%{ARUWO::%player%::KILLSTREAK}%" in sidebar of player to 4
+      set score "* Best Streak: &6%{ARUWO::%player%::BESTKILLSTREAK}%" in sidebar of player to 3
+      set score "&r&r&r" in sidebar of player to 2
+      set score "* Join our &6/discord!" in sidebar of player to 1
+      wait 5 seconds

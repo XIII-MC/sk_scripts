@@ -1,0 +1,79 @@
+      chance of 5%:
+         send "" to {_killer}
+         send "{@core} &9&lCOMMON EVENT ! &aYour coins are doubled for your next 5 kills ! " to {_killer}
+         send "" to {_killer}
+         delete {multiplier.maxkill.%{_killer}%}
+         set {multiplier.common.%{_killer}%} to true
+      if {multiplier.common.%{_killer}%} is true:
+         if {multiplier.maxkill.%{_killer}%} >= 5:
+            send "{@core} &9&lCOMMON EVENT ! &cYour double coins event has ended !" to {_killer}
+            delete {multiplier.maxkill.%{_killer}%}
+            set {multiplier.common.%{_killer}%} to false
+      chance of 3%:
+         send "" to {_killer}
+         send "{@core} &b&lRARE EVENT ! &aYour coins are tripled for your next 5 kills ! " to {_killer}
+         send "" to {_killer}
+         delete {multiplier.maxkill.%{_killer}%}
+         set {multiplier.rare.%{_killer}%} to true
+      if {multiplier.rare.%{_killer}%} is true:
+         if {multiplier.maxkill.%{_killer}%} >= 5:
+            send "" to {_killer}
+            send "{@core} &b&lRARE EVENT ! &cYour double coins event has ended !" to {_killer}
+            send "" to {_killer}
+            delete {multiplier.maxkill.%{_killer}%}
+            set {multiplier.rare.%{_killer}%} to false
+      chance of 1%:
+         send "" to {_killer}
+         send "{@core} &5&lEPIC EVENT ! &aYour coins are quintupled for your next 5 kills ! " to {_killer}
+         send "" to {_killer}
+         delete {multiplier.maxkill.%{_killer}%}
+         set {multiplier.epic.%{_killer}%} to true
+      if {multiplier.epic.%{_killer}%} is true:
+         if {multiplier.maxkill.%{_killer}%} >= 5:
+            send "{@core} &b&lRARE EVENT ! &cYour double coins event has ended !" to {_killer}
+            delete {multiplier.maxkill.%{_killer}%}
+            set {multiplier.epic.%{_killer}%} to false
+
+
+#lime wool
+every 30 seconds:
+   loop all players:
+      if {Upgrade7.%loop-player%} is true:
+         if {Upgrade8.%loop-player%} is false:
+            wait 1 tick
+            if "%region at loop-player%" contains "spawn":
+               wait 1 tick
+               stop
+            give 1 lime wool named "&fLime Wool" to loop-player
+every 20 seconds:
+   loop all players:
+      if {Upgrade8.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade9.%loop-player%} is false:
+               wait 1 tick
+               if "%region at loop-player%" contains "spawn":
+                  wait 1 tick
+                  stop
+               give 1 lime wool named "&fLime Wool" to loop-player
+every 3 seconds:
+   loop all players:
+      if {Upgrade9.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade8.%loop-player%} is true:
+               if {Upgrade10.%loop-player%} is false:
+                  wait 1 tick
+                  if "%region at loop-player%" contains "spawn":
+                     wait 1 tick
+                     stop
+                  give 1 lime wool named "&fLime Wool" to loop-player
+every 3 seconds:
+   loop all players:
+      if {Upgrade10.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade8.%loop-player%} is true:
+               if {Upgrade9.%loop-player%} is true:
+                  wait 1 tick
+                  if "%region at loop-player%" contains "spawn":
+                     wait 1 tick
+                     stop
+                  give 2 lime wool named "&fLime Wool" to loop-player

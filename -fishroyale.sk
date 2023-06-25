@@ -1,0 +1,2423 @@
+#FishRoyale V0.4
+#By LananasBleu
+#For FishRoyale 04/12/2020
+
+command /freebuild:
+   trigger:
+      if player's world is not "ul_world":
+         stop
+      wait 2 ticks
+      open chest with 6 rows named "          &e" to player
+      if {sfb1} is "&aOnline":
+         format slot 10 of player with green wool named "&eFB-1" with lore "&eFreeBuild 1" to run [make player execute command "/join fb1"]
+      else:
+         format slot 10 of player with red wool named "&eFB-1" with lore "&eFreeBuild 1" to run [make server execute command "/sudo %player% §zm"]
+      format slot 4 of player with red bed named "&6&lLobby" with lore "&7Players: &f%{lobby}%/150" to run [make server execute command "/mvpt %player% ul_world"]
+      format slot 0 of player with black stained glass pane named "" to be unstealable
+      format slot 1 of player with black stained glass pane named "" to be unstealable
+      format slot 2 of player with black stained glass pane named "" to be unstealable
+      format slot 3 of player with black stained glass pane named "" to be unstealable
+      format slot 5 of player with black stained glass pane named "" to be unstealable
+      format slot 6 of player with black stained glass pane named "" to be unstealable
+      format slot 7 of player with black stained glass pane named "" to be unstealable
+      format slot 8 of player with black stained glass pane named "" to be unstealable
+      format slot 9 of player with black stained glass pane named "" to be unstealable
+      format slot 17 of player with black stained glass pane named "" to be unstealable
+      format slot 18 of player with black stained glass pane named "" to be unstealable
+      format slot 53 of player with black stained glass pane named "" to be unstealable
+      format slot 26 of player with black stained glass pane named "" to be unstealable
+      format slot 27 of player with black stained glass pane named "" to be unstealable
+      format slot 36 of player with black stained glass pane named "" to be unstealable
+      format slot 35 of player with black stained glass pane named "" to be unstealable
+      format slot 44 of player with black stained glass pane named "" to be unstealable
+      format slot 45 of player with black stained glass pane named "" to be unstealable
+      format slot 46 of player with black stained glass pane named "" to be unstealable
+      format slot 47 of player with black stained glass pane named "" to be unstealable
+      format slot 48 of player with black stained glass pane named "" to be unstealable
+      format slot 50 of player with black stained glass pane named "" to be unstealable
+      format slot 51 of player with black stained glass pane named "" to be unstealable
+      format slot 52 of player with black stained glass pane named "" to be unstealable
+      format slot 49 of player with barrier named "&cClose Menu" to close 
+ 
+
+on join:
+   if player does not have permission "MODERATOR":
+      set {mod.%player%} to false
+
+on join:
+   add 1 to {onlineplayers}
+
+on quit:
+   remove 1 from {onlineplayers}
+
+every 3 second:
+   if {onlineplayers} is less than 5:
+      set {OP2} to false
+      set {OP3} to false
+      set {OP4} to false
+      set {OP5} to false
+      if {OP1} is true:
+         stop
+      make server execute command "/se load br1"
+      if {game.br2} is false:
+         make server execute command "/se unload br2"
+      if {game.br3} is false:
+         make server execute command "/se unload br3"
+      if {game.br4} is false:
+         make server execute command "/se unload br4"
+      if {game.br5} is false:
+         make server execute command "/se unload br5"
+      if {game.br6} is false:
+         make server execute command "/se unload br6"
+      send "&6&lSERVICES &7>> &cPlayer count is now less than 5 Servers Br1 was started!" to all players where [input has permission "HELPER"]
+      set {OP1} to true
+every 5 second:
+   if {onlineplayers} >= 5:
+      set {OP3} to false
+      if {OP2} is true:
+         stop
+      make server execute command "/se load br2"
+      make server execute command "/se load br3"
+      if {game.br4} is false:
+         make server execute command "/se unload br4"
+      send "&6&lSERVICES &7>> &cPlayer count is now 5! Servers Br2  were started!" to all players where [input has permission "HELPER"]
+      set {OP2} to true
+      set {OP1} to false
+every 10 second:
+   if {onlineplayers} >= 10:
+      set {OP4} to false
+      if {OP3} is true:
+         stop
+      make server execute command "/se load br4"
+      if {game.br5} is false:
+         make server execute command "/se unload br5"
+      send "&6&lSERVICES &7>> &cPlayer count is now 10! Servers Br3 were started!" to all players where [input has permission "HELPER"]
+      set {OP3} to true
+every 15 second:
+   if {onlineplayers} >= 15:
+      set {OP5} to false
+      if {OP4} is true:
+         stop
+      make server execute command "/se load br5"
+      if {game.br6} is false:
+         make server execute command "/se unload br6"
+      send "&6&lSERVICES &7>> &cPlayer count is now 15! Servers Br4 were started!" to all players where [input has permission "HELPER"]
+      set {OP4} to true
+every 25 second:
+   if {onlineplayers} >= 20:
+      if {OP5} is true:
+         stop
+      make server execute command "/se load br6"
+      send "&6&lSERVICES &7>> &cPlayer count is now 20! Servers Br6 and Br5 were started!" to all players where [input has permission "HELPER"]
+      set {OP5} to true
+
+
+
+options:
+   fishroyale: &b&lFish&e&lRoyale &7>>
+   
+#/// PARACHUTE ///
+on right click with leather:
+	if name of player's tool contains "&6&lParachute":
+		if {game.%player's world%} is false:
+			send "&cWait the game to start to use your parachute!"
+			stop
+		if the block below the player is air:
+			the player is not riding a chicken:
+				remove 1 of the tool from the player
+				spawn a chicken at the player's location
+				make server execute command "/effect give @e[type=chicken] invisibility 9999 2"
+				make the spawned chicken ride the player
+				set the spawned chicken's max health to 9999
+				set the spawned chicken's health to 9999
+					
+				spawn a chicken at the player's location
+				make server execute command "/effect give @e[type=chicken] invisibility 9999 2"
+				hide spawned chicken to all players
+				make the player ride the spawned chicken
+				set the spawned chicken's max health to 9999
+				set the spawned chicken's health to 9999
+
+every 5 tick:
+	loop all players:
+		if block 4 under loop-player is not air:
+			loop chickens in radius 3 around loop-player:
+				kill loop-chicken
+			
+on death of chicken:
+	delete drops
+
+on world change:
+   if {mod.%player%} is true:
+      stop
+   make server execute command "/minecraft:clear %player%"
+
+on drop:
+   if {game.%player's world%} is false:
+      cancel event
+      send "&cYou can't do this now!"
+
+on damage:
+   if {game.%victim's world%} is false:
+      cancel event
+      send "&cYou can't PvP now!" to attacker
+
+command /citem [<text>] [<number>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is "parachute":
+         if arg 2 is set:
+            give player 1 leather named "&6&lParachute" with lore "&6Right-Click With This In Mid-Air To Prevent Fall Damage."
+            send "&aSucess!" to player
+      if arg 1 is not set:
+         send "&cERROR: &6/citem (&eparachute,jumppad,smed,bmed,ssw,isw,gsw,dsw,esw,wsw,sandstone,stone,sponge,begg,epearl,abspot,shield,kbstick,flyf,lstick&6) NUMBER" to player
+      if arg 1 is "jumppad":
+         if arg 2 is set:
+            give player 1 slime block named "&a&lJump Pad" with lore "&6Place it and jump on it to get high in the air ! &cHaving a parachute is recommended !"
+            send "&aSucess!" to player
+      if arg 1 is "smed":
+         if arg 2 is set:
+            make server execute command "/give %player% healingpotion 1"
+            send "&aSucess!"
+      if arg 1 is "bmed":
+         if arg 2 is set:
+            make server execute command "/give %player% healingleveliipotion 1"
+            send "&aSucess!"
+      if arg 1 is "ssw":
+         if arg 2 is set:
+            give player 1 stone sword
+            send "&aSucess!"
+      if arg 1 is "isw":
+         if arg 2 is set:
+            give player 1 iron sword
+            send "&aSucess!"
+      if arg 1 is "wsw":
+         if arg 2 is set:
+            give player 1 wooden sword
+            send "&aSucess!"
+      if arg 1 is "gsw":
+         if arg 2 is set:
+            give player 1 golden sword
+            send "&aSucess!"
+      if arg 1 is "dsw":
+         if arg 2 is set:
+            give player 1 diamond sword
+            send "&aSucess!"
+      if arg 1 is "esw":
+         if arg 2 is set:
+            send "&cERROR!"
+      if arg 1 is "sandstone":
+         if arg 2 is set:
+            give player 64 sandstone with lore "&6Build, build , build and build more!"
+            send "&aSucess!"
+      if arg 1 is "stone":
+         if arg 2 is set:
+            give player 64 stone with lore "&6Build, build , build and buikd more!"
+            send "&aSucess!"
+      if arg 1 is "sponge":
+         if arg 2 is set:
+            give player 10 sponge with lore "&6Push all players around the sponge!"
+            send "&aSucess!"
+      if arg 1 is "abspot":
+         if arg 2 is set:
+            make server execute command "/effect give %player% absorption 999999 5"
+            send "&cNo respond..."
+      if arg 1 is "shield":
+         if arg 2 is set:
+            give player 1 shield with lore "&6Protect your self against other players!"
+            send "&aSucess!"
+      if arg 1 is "begg":
+         if arg 2 is set:
+            give player 16 egg named "&7Brige Egg" with lore "&6Throw it to make a bridge !"
+            send "&aSucess!"
+      if arg 1 is "epearl":
+         if arg 2 is set:
+            give player 16 ender pearl named "&5Ender Pearl" with lore "&6Throw it and get teleported!"
+            send "&aSucess!"
+      if arg 1 is "kbstick":
+         if arg 2 is set:
+            make server execute command "/give %player% 1 stick knockback:5 named:&c&lKnock_Knock lore:&6Who's_here_?"
+            send "&aSucess!"
+      if arg 1 is "flyf":
+         if arg 2 is set:
+            give player 1 feather named "&f&lWhoosh" with lore "&6Fly to pointed direction!"
+            send "&aSucess!"
+      if arg 1 is "lstick":
+         if arg 2 is set:
+            give player 1 stick named "&e&lLightning Stick" with lore "&cNeeds [ADMIN] or higher to use it!"
+            send "&aSucess!"
+
+on right click with stick:
+   if name of player's tool is "&e&lLightning Stick":
+      if player has permission "lstick":
+         make server execute command "/smite *"
+         push player upwards at speed 3
+         send "&aKABOOM !"
+
+on right click with feather:
+   if name of player's tool is "&f&lWhoosh":
+      remove 1 of player's tool from player's inventory
+      push player forwards at speed 5
+      send "&aWhooosh !"
+
+command /server:
+   permission: ADMIN
+   trigger:
+      send "&6&lServers Status:"
+      send ""
+      send "&ebr1: &a%{br1}%/100"
+      send "&ebr2: &a%{br2}%/100"
+      send "&ebr3: &a%{br3}%/100"
+      send "&ebr4: &a%{br4}%/100"
+      send ""
+      send "&eOnline Players: &a%{onlineplayers}%/20"
+command /serverob:
+   permission: op
+   trigger:
+      set {onlineplayers} to 1
+      send "Done"
+
+on shoot:
+   if projectile is not egg:
+      stop
+   loop 200 times:
+      wait 1 tick
+      set block under projectile to sandstone
+
+on block place:
+   if block is sponge:
+      remove 1 of player's tool from player's inventory
+      cancel event
+      loop all players in radius 10 around player:
+         push loop-player backwards at speed 2
+         set {flylegit.%loop-player%} to true
+
+every 1 second:
+   loop all players:
+      if loop-player is on ground:
+         set {flylegit.%loop-player%} to false
+
+on step on slime block:
+   push player forwards at speed 1 
+   push player upwards at speed 3
+   set {flylegit.%player%} to true
+
+#/// CORE ///
+
+options:
+   GiftItem1: 1 wooden sword named "&2Wooden Sword"
+   GiftItem2: 1 stone sword named "&aStone Sword"
+   GiftItem3: 1 golden sword of sharpness 2 named "&6Golden Sword"
+   GiftItem4: 1 diamond sword named "&cDiamond Sword"
+   GiftItem5: 2 ender pearl named "&5Ender Pearl"
+   GiftItem6: 1 slime block named "&aJump Pad"
+   GiftItem7: 2 egg named "&7Bridge Egg"
+   GiftItem8: 1 bow named "&eBow"
+   GiftItem9: 1 iron leggings of protection 1
+   GiftItem10: 1 iron chestplate of protection 2
+   GiftItem11: 8 arrow
+   GiftItem12: 1 health potion named "&dSmall Med Kit"
+   GiftItem39: 1 health potion named "&dSmall Med Kit"
+   GiftItem38: 1 health potion named "&dSmall Med Kit"
+   GiftItem13: 32 sandstone
+   GiftItem14: 32 stone
+   GiftItem15: 1 iron pickaxe of efficiency 5
+   GiftItem16: 1 leather helmet
+   GiftItem17: 1 leather chestplate
+   GiftItem18: 1 leather leggings
+   GiftItem19: 1 leather boots
+   GiftItem20: 1 iron helmet
+   GiftItem21: 1 iron boots
+   GiftItem22: 1 diamond helmet
+   GiftItem23: 1 diamond chestplate
+   GiftItem24: 1 diamond leggings
+   GiftItem25: 1 diamond boots
+   GiftItem26: 2 sponge named "&6Sponge Pusher"
+   GiftItem48: 2 sponge named "&6Sponge Pusher"
+   GiftItem27: 1 fishing rod
+   GiftItem28: 1 wooden sword named "&2Wooden Sword"
+   GiftItem29: 1 stone sword named "&aStone Sword"
+   GiftItem30: 1 iron sword named "&eIron Sword"
+   GiftItem47: 1 iron sword named "&eIron Sword"
+   GiftItem31: 1 leather helmet
+   GiftItem32: 1 leather chestplate
+   GiftItem33: 1 leather leggings
+   GiftItem34: 1 leather boots
+   GiftItem35: 1 iron helmet
+   GiftItem36: 1 iron boots
+   GiftItem37: 16 snowball named "&f&lLet It Snow, let it snow..." with lore "&fHit your enemies with snow !"
+   GiftItem38: 5 experience bottle
+   GiftItem39: 10 lapis lazuli
+   GiftItem40: 1 leather named "&6&lParachute"
+   GiftItem41: 2 ender pearl named "&5Ender Pearl"
+   GiftItem42: 1 slime block named "&aJump Pad"
+   GiftItem43: 2 egg named "&7Bridge Egg"
+   GiftItem44: 1 bow named "&eBow"
+   GiftItem45: 32 sandstone
+   GiftItem46: 32 stone
+   GiftItem47: 5 experience bottle
+   GiftItem48: 10 lapis lazuli
+   GiftItem49: 1 leather named "&6&lParachute"
+   GiftItem50: 2 ender pearl named "&5Ender Pearl"
+   GiftItem51: 1 slime block named "&aJump Pad"
+   GiftItem52: 2 egg named "&7Bridge Egg"
+   GiftItem53: 1 bow named "&eBow"
+   GiftItem54: 32 sandstone
+   GiftItem55: 32 stone
+
+on right click on chest:
+   cancel event
+   set clicked block to air
+   add {@GiftItem1} to {_recompense.list::*}
+   add {@GiftItem2} to {_recompense.list::*}
+   add {@GiftItem3} to {_recompense.list::*}
+   add {@GiftItem4} to {_recompense.list::*}
+   add {@GiftItem5} to {_recompense.list::*}
+   add {@GiftItem6} to {_recompense.list::*}
+   add {@GiftItem7} to {_recompense.list::*}
+   add {@GiftItem8} to {_recompense.list::*}
+   add {@GiftItem9} to {_recompense.list::*}
+   add {@GiftItem10} to {_recompense.list::*}
+   add {@GiftItem11} to {_recompense.list::*}
+   add {@GiftItem12} to {_recompense.list::*}
+   add {@GiftItem13} to {_recompense.list::*}
+   add {@GiftItem14} to {_recompense.list::*}
+   add {@GiftItem15} to {_recompense.list::*}
+   add {@GiftItem16} to {_recompense.list::*}
+   add {@GiftItem18} to {_recompense.list::*}
+   add {@GiftItem19} to {_recompense.list::*}
+   add {@GiftItem20} to {_recompense.list::*}
+   add {@GiftItem21} to {_recompense.list::*}
+   add {@GiftItem22} to {_recompense.list::*}
+   add {@GiftItem23} to {_recompense.list::*}
+   add {@GiftItem24} to {_recompense.list::*}
+   add {@GiftItem25} to {_recompense.list::*}
+   add {@GiftItem26} to {_recompense.list::*}
+   add {@GiftItem27} to {_recompense.list::*}
+   add {@GiftItem28} to {_recompense.list::*}
+   add {@GiftItem29} to {_recompense.list::*}
+   add {@GiftItem30} to {_recompense.list::*}
+   add {@GiftItem31} to {_recompense.list::*}
+   add {@GiftItem32} to {_recompense.list::*}
+   add {@GiftItem33} to {_recompense.list::*}
+   add {@GiftItem34} to {_recompense.list::*}
+   add {@GiftItem35} to {_recompense.list::*}
+   add {@GiftItem36} to {_recompense.list::*}
+   add {@GiftItem37} to {_recompense.list::*}
+   add {@GiftItem38} to {_recompense.list::*}
+   add {@GiftItem39} to {_recompense.list::*}
+   add {@GiftItem40} to {_recompense.list::*}
+   add {@GiftItem41} to {_recompense.list::*}
+   add {@GiftItem42} to {_recompense.list::*}
+   add {@GiftItem43} to {_recompense.list::*}
+   add {@GiftItem44} to {_recompense.list::*}
+   add {@GiftItem45} to {_recompense.list::*}
+   add {@GiftItem46} to {_recompense.list::*}
+   add {@GiftItem47} to {_recompense.list::*}
+   add {@GiftItem48} to {_recompense.list::*}
+   add {@GiftItem49} to {_recompense.list::*}
+   add {@GiftItem50} to {_recompense.list::*}
+   add {@GiftItem51} to {_recompense.list::*}
+   add {@GiftItem52} to {_recompense.list::*}
+   add {@GiftItem53} to {_recompense.list::*}
+   add {@GiftItem54} to {_recompense.list::*}
+   add {@GiftItem55} to {_recompense.list::*}
+   set {_recompense1} to a random element out of {_recompense.list::*}
+   give {_recompense1} to player
+   set {_recompense2} to a random element out of {_recompense.list::*}
+   give {_recompense2} to player
+   set {_recompense3} to a random element out of {_recompense.list::*}
+   give {_recompense3} to player
+   send "&eNice loot ! You got &6%{_recompense3}%&e, &6%{_recompense1}%&e, &6%{_recompense2}%"
+   play sound "entity.experience_orb.pickup" with volume 1 and pitch 2 at player for player
+
+
+on join:
+   if player's world is not "ul_world":
+      remove 1 from {%player's world%}
+   make server execute command "/mvtp %player% ul_world"
+   add 1 to {lobby}
+
+on quit:
+   remove 1 from {%player's world%}
+
+command /spawn:
+   trigger:
+      wait 2 ticks
+      set {_world} to player's world
+      if player's world is "ul_world":
+         make server execute command "/mvspawn %player% ul_world"
+         stop
+      if {game.%player's world%} is false:
+         remove 1 from {%{_world}%}
+         make server execute command "/mvtp %player% ul_world"
+         add 1 to {lobby}
+      if {death.%player%} is false:
+         send "&cYou can't use this command here!"
+         stop
+      if {death.%player%} is true:
+         make server execute command "/mvtp %player% ul_world"
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+#------------------------------------------------ADDITIONAL CORE --------------------------------------------------------
+
+on projectile hit:
+   if shooter's world is not "ul_world":
+      stop
+   push shooter backwards at speed 1
+
+on world change:
+   if player has permission "BUILDER":
+      stop
+   if player's world is "br":
+      kick player due to "&cYour not allowed to be here !"
+on world change:
+   if player's world is "ul_br":
+      kick player due to "&cYour not allowed to be here !"
+on world change:
+   if player's world is "backup":
+      kick player due to "&cYour not allowed to be here !"
+command /build:
+   permission: BUILDER
+   trigger:
+      send "&eTeleporting... This can take 3 seconds." to player
+      make server execute command "/mvload br"
+      wait 1 second
+      make server execute command "/mvtp %player% br"
+      wait 5 ticks
+      make server execute command "/gmc %player%"
+      send "&aSucess! Telported!" to player
+      set {br.down} to false
+
+command /plugins:
+   trigger:
+      send "Plugins (2): &aFishRoyale &8&o(Skript)&f, &aDragonChaser &8&o(Skript)"
+
+command /pl:
+   trigger:
+      send "Plugins (2): &aFishRoyale &8&o(Skript)&f, &aDragonChaser &8&o(Skript)"
+
+command /bukkit:pl:
+   trigger:
+      send "Plugins (2): &aFishRoyale &8&o(Skript)&f, &aDragonChaser &8&o(Skript)"
+
+command /bukkit:plugins:
+   trigger:
+      send "Plugins (2): &aFishRoyale &8&o(Skript)&f, &aDragonChaser &8&o(Skript)"
+
+command /minecraft:me:
+   trigger:
+      stop
+
+#/// PING / ANTIPINGSPOOF ///
+
+command /ping [<player>]:
+  aliases: /p
+  trigger:
+    if arg 1 is not set:
+      send "&ePing &6» &a%player's ping%"
+    else:
+      send "&ePing &6» &a%player-arg's ping%"
+
+#/// ANTISPAM ///
+
+command /cooldownchat [<time span>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is not set:
+         send "&cSyntaxe incorecte : /cooldownchat <TimeSpan>"
+         stop
+      set {cdchat} to arg 1
+      send "&a[CoolDown] Temps définis à %arg 1%"
+
+command /cooldownchatp [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is not set:
+         send "&cSyntaxe incorecte : /cooldownchatp <permission>"
+         stop
+      set {cdperm} to arg 1
+      send "&a[CoolDown] Permission définie à %arg 1%"
+
+on load:
+   if {cdperm} is not set:
+      set {cdperm} to op
+   if {cdchat} is not set:
+      set {cdchat} to 3 seconds
+on chat:
+   player doesn't have permission "%{cdperm}%"
+   set {_cd} to difference between {lastchat.%player%} and now
+   if {_cd} < {cdchat}:
+      send "{@fishroyale} &cWait a bit before talking again !"
+      cancel event
+      stop
+   set {lastchat.%player%} to now
+
+#/// STAFFCHAT ///
+
+command /sc:
+    trigger:
+        player has permission "HELPER":
+            {staffchat::%player's uuid%} = false:
+                set {staffchat::%player's uuid%} to true
+                send "&7Now talking in staff chat"
+            else:
+                set {staffchat::%player's uuid%} to false
+                send "&7No longer talking in staff chat"
+        else:
+            send "&7No permissions"
+
+chat:
+    {staffchat::%player's uuid%} = true:
+        cancel event
+        send "&6&lSTAFFCHAT &7>> &c%player%:&f %message%" to all players where [input has permission "HELPER"]
+
+on world change:
+   if {mod.%player%} is true:
+      set fly mode of player to true
+
+command /mod:
+   permission: MODERATOR
+   trigger:
+      set {mod.%player%} to true
+      clear player's inventory
+      send "&d&lModerator Mode: &aON" to player
+      give player 1 feather named "&fVelocity Vertical" 
+      make server execute command "/give %player% woodensword 1 name:&fKnockback_I knockback:1"
+      make server execute command "/give %player% woodensword 1 name:&fKnockback_II knockback:2"
+      give player 1 golden sword named "&fSword"
+      give player 1 barrier named "&4Close Moderator Mode"  
+      give player 1 iron hoe named "&fVanish 10 Ticks"
+      give player 1 golden hoe named "&fVanish Toggle"
+      give player 1 iron axe named "&cBan Hammer"
+      give player 1 feather named "&fVelocity Horizontal"
+      set {vanish.%player%} to true
+      hide player from all players
+      set fly mode of player to true
+
+on damage:
+   if {mod.%victim%} is true:
+      cancel event
+      send "&d[Damage] &6%attacker% &fdamage 1.0" to victim
+on right click with iron hoe:
+   if {mod.%player%} is true:
+      cancel event
+      if name of player's tool is "&fVanish 10 Ticks":
+         send "&dVisible: &aYes" to player
+         set {vanish.%player%} to false
+         reveal player from all players
+         wait 10 ticks
+         set {vanish.%player%} to true
+         send "&dVisible: &cNo" to player
+         hide player from all players
+on right click with golden hoe:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVanish Toggle":
+         if {vanish.%player%} is false:
+            set {vanish.%player%} to true
+            send "&dVisible: &cOFF"
+            hide player from all players
+            stop
+         if {vanish.%player%} is true:
+            set {vanish.%player%} to false
+            send "&dVisible: &aON"
+            reveal player to all players
+            stop
+      cancel event
+on right click with barrier:
+   if {mod.%player%} is true:
+      cancel event 
+      clear player's inventory
+      set fly mode of player to false
+      make player execute command "/vanish"
+      send "&d&lModerator Mode: &cOFF"
+      set {mod.%player%} to false
+on right click on player:
+   if {mod.%player%} is true:
+      if player has permission "MODERATOR":
+         if name of player's tool is "&cBan Hammer":
+            set {_name} to clicked player
+            wait 2 tick
+            open chest with 2 row named "&c&l&oBan Hammer &7> &c&l&oBan &7 > &6&l&o%{_name}%" to player
+            format slot 0 of player with golden sword named "&cCheating" with lore "&6Ban %{_name}% for: &cCheating" to close then run [make player execute command "/dcban %clicked player%  30 day"]
+            format slot 1 of player with player head named "&4Impersonating" with lore "&6Ban %{_name}% for: &cImpersonating" to close then run [make player execute command "/ban %clicked player%  Impersonating"]
+            format slot 3 of player with diamond axe named "&6Boosting" with lore "&6Ban %{_name}% for: &cBoosting" to close then run [make player execute command "/ban %clicked player%  Boosting"]
+            format slot 5 of player with iron bar named "&cAlts / VPN" with lore "&6Ban %{_name}% for: &cAlts / VPN" to close then run [make player execute command "/ban %clicked player%  Ban Evading / VPN"]
+            format slot 2 of player with nametag named "&6Inapropriate Skin / Name" with lore "&6Ban %{_name}% for: &cInapropriate Skin / Name" to close then run [make player execute command "/ban %{_name}% Inapropriate Skin or Minecraft Username"]
+            format slot 4 of player with barrier named "&4Threads" with lore "&6Ban %{_name}% for: &cThreads" to close then run [make player execute command "/ban %clicked player%  Threads"]
+            format slot 6 of player with iron pickaxe named "&eExploits" with lore "&6Ban %{_name}% for: &cExploits" to close then run [make player execute command "/ban %clicked player%  Exploits"]
+            format slot 7 of player with feather named "&eOther" with lore "&6Ban %{_name}% for: &cOther" to close then run [make player execute command "/ban %clicked player% Not Specified"]
+            format slot 12 of player with arrow named "&aCancel" with lore "&aClose Banning menu." to close
+on right click with feather:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVelocity Vertical":
+         if player has permission "MODERATOR":
+            set {_targetedplayer} to targeted entity
+            if {_targetedplayer} isn't set:
+               stop
+            make player execute command "/velocity %{_targetedplayer}%"
+on right click with feather:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVelocity Horizontal":
+         if player has permission "MODERATOR":
+            set {_targetedplayer} to targeted entity
+            if {_targetedplayer} isn't set:
+               stop
+            make player execute command "/velocityh %{_targetedplayer}%"
+#/// ///
+
+command /alert [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is set:
+         broadcast "{@fishroyale} &f%arg 1%"
+         stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage: /alert MESSAGE"
+         stop
+
+command /warn [<player>] [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            add 1 to {warn.%arg 1%}
+            send "&b&lFishFisher &e&l>> &cYou have been warned ! Reason: &e%arg 2% &cThis is your %{warn.%arg 1%}% &cwarn !" to arg 1
+            send "{@fishroyale} &a%arg 1% has been warned for &e%arg 2%" to player
+            if {warn.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warn.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warn.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 1d 5 Warns"
+            if {warn.%arg 1%} = 6:
+               make server execute command "/ban %arg 1% 6 Warns"
+               stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            add 1 to {warn.%arg 1%}
+            send "&b&lFishFisher &e&l>> &cYou have been warned !&cThis is your %{warn.%arg 1%}% &cwarn !" to arg 1
+            send "{@fishroyale} &a%arg 1% has been warned for &e%arg 2%" to player
+            if {warn.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warn.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warn.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 1d 5 Warns"
+            if {warn.%arg 1%} = 6:
+               make server execute command "/ban %arg 1% 6 Warns"
+               stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage /warn PLAYER REASON" to player
+         stop
+
+command /removewarn [<player>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         remove 1 from {warn.%arg 1%}
+         send "{@fishroyale} &a1 warn have been removed ! Be happy :D" to arg 1
+         send "{@fishroyale} &aRemoved 1 warn from &e%arg 1%" to player
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage /removedwarn PLAYER"
+
+every 2 second:
+   loop all players:
+      if loop-player's ping is greater than 1000:
+         send action bar "&e&lThe connection is unstable." to loop-player
+
+every 1 second:
+   loop all players:
+      add 1 to {sec.%loop-player%}
+      if {sec.%loop-player%} = 60:
+         remove 60 from {sec.%loop-player%}
+         add 1 to {min.%loop-player%}
+         if {min.%loop-player%} = 60:
+            remove 60 from {min.%loop-player%}
+            add 1 to {he.%loop-player%}
+            if {he.%loop-player%} = 24:
+               remove 24 from {he.%loop-player%}
+               add 1 to {day.%loop-player%}
+
+command /playtime [<offline player>]:
+   trigger:
+      if arg 1 is not set:
+         if {day.%player%} is not set:
+            set {day.%player%} to 0
+         if {he.%player%} is not set:
+            set {he.%player%} to 0
+         if {min.%player%} is not set:
+            set {min.%player%} to 0
+         send "{@fishroyale} &a%{day.%player%}% &aDays &a%{he.%player%}% &aHours &a%{min.%player%}% &aMinute&a %{sec.%player%}% &aSeconds"
+      if arg 1 is set:
+         send "{@fishroyale} &a%{day.%arg 1%}% &aDays &a%{he.%arg 1%}% &aHours &a%{min.%arg 1%}% &aMinute&a %{sec.%arg 1%}% &aSeconds"
+command /discord:
+   trigger:
+      make server execute command "/msg %player% https://discord.gg/4Z27HnU"
+
+#/// AUTOMESSAGES / SAVE ///
+
+every 2 second:
+   loop all players:
+      if {vanish.%loop-player%} is true:
+         send action bar "{@fishroyale} &aYou are currently vanished !" to loop-player
+
+every 1 minutes:
+   make server execute command "/save-all"
+   loop all players:
+      if loop-player has permission "op":
+         send "&6&lSERVICES &7>> &aServers saved" to loop-player
+
+every 10 minutes:
+   broadcast "{@fishroyale} &c&lHackers ? Bugs ? /report them ! Or report them pn the discord server !"
+   wait 2 minutes
+   broadcast "{@fishroyale} &aWant to support the server ? Do /buy or /vote !"
+   wait 2 minutes
+   broadcast "{@fishroyale} &cServer is in &eALPHA &cexept some bugs."
+   wait 2 minutes
+   broadcast "{@fishroyale} &cHacking is &4&l&oNOT &callowed on &b&lFish&e&LRoyale"
+   wait 2 minutes
+   broadcast "{@fishroyale} &aJoin us on discord with /discord !"
+   wait 2 minutes
+
+#/// USEFULL COMMANDS ///
+
+on join:
+   set join message to "&7[&2&l+&7] &e%player%"
+
+on join:
+   set join message to "&7[&2&l+&7] &e%player%"
+
+on quit:
+   set quit message  to "&7[&4&l-&7] &e%player%"
+
+on quit:
+   set quit message to "&7[&4&l-&7] &e%player%"
+
+command /debug:
+   permission: ADMIN
+   trigger:
+      if {debug.%player%} is not set:
+         set {debug.%player%} to false
+      if {debug.%player%} is false:
+         set {debug.%player%} to true
+         send "{@fishroyale} &aYour now in debug mode"
+         make server execute command "/se disable debug"
+         stop
+      if {debug.%player%} is true:
+         set {debug.%player%} to false
+         send "{@fishroyale} &cYou are no longer in debug mode"
+         make server execute command "/se enable debug"
+         stop
+
+command /ban [<offline player>] [<text>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {_banr::*} to "&cYou are permanently banned from &b&lFish&e&lRoyale&c.", "&7Reason: &cNot Specified", "&cBy: &2[Moderator] %player%" and "&6If you think this is a mistake then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+            ban arg 1 due to "%{_banr::*}%"
+            kick arg 1 due to "%{_banr::*}%"
+            send "{@fishroyale} &c%arg 1% &ahas been succecfuly banned!" to player
+            add arg 1 to {banlist::*}
+            stop
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {_banr::*} to "&cYou are permanently banned from &b&lFish&e&lRoyale&c.", "&7Reason: &c%arg 2%", "&cBy: &2[Moderator] %player%" and "&6If you think this is a mistake then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+            ban arg 1 due to "%{_banr::*}%"
+            kick arg 1 due to "%{_banr::*}%"
+            send "{@fishroyale} &c%arg 1% &ahas been succecfuly banned for &6%arg 2%" to player
+            add arg 1 to {banlist::*}
+            stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage /ban PLAYER REASON" to player
+         stop
+
+command /bans:
+   permission: HELPER
+   trigger:
+      send "&cBanned Players: &f%{banlist::*}%" to player
+
+command /unban [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         make server execute command "/pardon %arg 1%"
+         send "{@fishroyale} &aYou succecfuly unbanned &e%arg 1%"
+         remove arg 1 from {banlist::*}
+         add 1 to {unbans.%arg 1%}
+         stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage: /unban PLAYER"
+         stop
+
+
+command /alt [<offline player>]:
+    permission: MODERATOR
+    trigger:
+        if arg 1 is not set:
+            send "&cUsage : /alt <player>"
+            stop
+        if {ip.%arg 1%} is not set:
+            send "{@fishroyale} &cError: &4This player never joinned the server !"
+            stop
+        if {firstalt.%{ip.%arg 1%}%} is not set:
+            send "{@fishroyale} &cError: &4This player never joinned the server !"
+            stop
+        else:
+            send "{@fishroyale} &9Alts of %arg 1% : &c%{altip.%{ip.%arg 1%}%::*}%&9 First Account : &c%{firstalt.%{ip.%arg 1%}%}% &9Ip of the player : &c%{ip.%arg 1%}%"
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            loop all players:
+                if loop-player has permission "alt.see":
+                    send "{@fishroyale} &c%{_name}% is an alt of %{firstalt.%ip of player%}%" to loop-player
+            loop {altip.%ip of player%::*}:
+                if loop-value is banned:
+                    ban player due to "&cBan evading"
+                    kick player due to "&cAlt of %loop-value%"
+                    broadcast "{@fishroyale} &9The player &c%player% &9has been banned for &cBan Evading '&cAlt of %loop-value%'"
+
+command /suspend [<offline player>] [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            send "{@fishroyale} &a%arg 1% has been suspended!" to player
+            make server execute command "/banip %arg 1% &cYour IP has been suspended from {@fishroyale} &c Reason: %arg 2%! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            make server execute command "/ban %arg 1% &cYour IP has been suspended from {@fishroyale} &c Reason: %arg 2%! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            broadcast "{@fishroyale} &c%arg 1% IP got suspended from the server! Reason: &e%arg 2%"
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            send "{@fishroyale} &a%arg 1% has been suspended!" to player
+            make server execute command "/banip %arg 1% %arg 1% &cYour IP has been suspended from {@fishroyale} &c! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            make server execute command "/ban %arg 1% &cYour IP has been suspended from {@fishroyale} &c! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            broadcast "{@fishroyale} &c%arg 1% IP got suspended from the server!"
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage: /sespend NAME REASON" to player
+
+on chat:
+   if message contain "shutup":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "shut up":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "nigga":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "nigger":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "niga":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "niger":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "fuck":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "suck":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dick":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "sex":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dumb":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain ".com":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+on chat:
+   if message contain ".net":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain ".gg":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "gay":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "bitch":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "hacked":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "hacker":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "stupid":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dumb":
+      cancel event
+      send "{@fishroyale} &cYou message has been blocked!" to player
+      add 1 to {iv.%player%}
+      if {iv.%player%} >= 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+every 5 minutes:
+   loop all players:
+      clear {iv.%loop-player%}
+
+command /unsuspend [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         send "{@fishroyale} &a%arg 1% has been unsuspended!"
+         make server execute command "/pardonip %arg 1%"
+         make server execute command "/pardon %arg 1%"
+         remove arg 1 from {banlist}
+         stop
+      if arg 1 is not set:
+         send "{@fishroyale} &cUsage: /unsuspend NAME" to player
+         stop
+
+
+options:
+  permission: HELPER
+  permissionm: &4You do not have access to this command!
+  permissionalert: HELPER
+
+command /vanish [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: v
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is not set:
+        hide the player from all players
+        send "{@fishroyale} &7You are &cVanished&7."
+        set {vanish.%player%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the player from all players
+        send "{@fishroyale} &7You are &cUnvanished&7."
+        delete {vanish.%player%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&eunvanished&7&o]" to loop-player
+    if arg 1 is set:
+      if {vanish.%arg 1%} is not set:
+        hide the arg 1 from all players
+        send "{@fishroyale} &7You are &cVanish&7." to arg 1
+        set {vanish.%arg 1%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%arg 1%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the arg 1 from all players
+        send "&7&o[%arg 1%: &r&eunvanished&7&o]" to arg 1
+        delete {vanish.%arg 1%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "{@fishroyale} &7The player &c%arg 1% &7is no longer in vanish." to loop-player
+
+command /vanishinfo [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: vinfo
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is set:
+        send "{@fishroyale} &7You're &cVanish&7."
+      else:
+        send "{@fishroyale} &7You are not &cVanish&7."
+    if arg 1 is set:
+      if {vanish.%arg 1%} is set:
+        send "{@fishroyale} &7The player &c%arg 1% &7is vanish."
+      else:
+        send "{@fishroyale} &7The player &c%arg 1% &7is not vanish."
+
+on join:
+  loop all players:
+    if {vanish.%loop-player%} is true:
+      reveal the loop-player from all players
+      hide the loop-player from all players
+
+every 5 seconds:
+  loop all players:
+    if {vanish.%loop-player%} is true:
+      loop all players:
+        if loop-player-2 has permission "{@permissionalert}":
+          reveal the loop-player-1 from loop-player-2
+
+command /tp [<player>] [<player>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            teleport player to arg 1
+            send "&eYou've teleported to %arg 1%"
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport to %arg 1%&7&o]" to loop-player
+                  stop
+      if arg 1 is set:
+         if arg 2 is set:
+            teleport arg 1 to arg 2
+            send "&eYou've been teleported to %arg 2%" to arg 1
+            send "&eYou've been teleported to %arg 1%" to arg 2
+            send "&eYou've been teleported %arg 1% to %arg 2%" to player
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport %arg 1% to %arg 2%&7&o]" to loop-player
+      if arg 1 is not set:
+         send "&cUsage /tp [<player>] [<player>]"
+         stop
+
+command /chatclear:
+   permission: MODERATOR
+   trigger:
+      loop 200 times:
+         broadcast " "
+      broadcast "{@fishroyale} &c%player% &3cleared the chat !"
+
+command /mutechat:
+   permission: SMODERATOR
+   aliases: mc
+   trigger:
+      if {chat} is not set:
+         set {chat} to false
+      if {chat} is false:
+         set {chat} to true
+         broadcast "{@fishroyale} &c%player% &3muted the chat !"
+         stop
+      if {chat} is true:
+         set {chat} to false
+         broadcast "{@fishroyale} &c%player% &3unmuted the chat !"
+         stop
+
+on chat:
+   if {chat} is true:
+      if player has permission "talk":
+         uncancel event
+         stop
+   if {chat} is true:
+      cancel event
+      send "{@fishroyale} &cChat is currently muted !"
+
+
+command /blacklist [<offline player>] [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/banip %arg 1%"
+            send "{@fishroyale} &4%arg 1% &ahas been blacklisted" to player
+            add arg 1 to {banlist}
+            if {silent.%player%} is true:
+               loop all players:
+                  loop-player has permission "staff":
+                     send "&7(Silent) &4%player% &ahas permanently blacklisted &4%arg 1%" to loop-player
+                     stop
+            broadcast "&4%player% &ahas permanently blacklisted &4%arg 1%"
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "{@fishroyale} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/banip %arg 1% %arg 2%"
+            send "{@fishroyale} &4%arg 1% &ahas been permanently blacklisted for &c%arg 2%" to player
+            add arg 1 to {banlist}
+            if {silent.%player%} is true:
+               loop all players:
+                  loop-player has permission "staff":
+                     send "&7(Silent) &4%player% &ahas permanently blacklisted &4%arg 1% &afor &c%arg 2%" to loop-player
+                     stop
+            broadcast "&4%player% &ahas permanently blacklisted &4%arg 1% &afor &c%arg 2%"
+      if arg 1 is not set:
+         send "{@fishroyale} &cYou need to specify a player ! /blacklist [NAME] [REASON]" to player
+         stop
+
+command /unblacklist [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         make server execute command "/pardonip %arg 1%"
+         send "{@fishroyale} &aYou unblacklisted &4%arg 1%" to player
+         remove arg 1 from {banlist}
+         if {silent.%player%} is true:
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7(Silent) &4%player% &ahas unblacklisted &4%arg 1%" to loop-player
+                  stop
+         broadcast "&4%player% &ahas unblacklisted &4%arg 1%"
+         make server execute command "/mvtp %player% ul_world"
+         add 1 to {lobby}
+
+command /shop:
+   trigger:
+      if player's world is "ul_world":
+         wait 1 tick
+         open chest with 1 row named "&9&l&oUpgrades &7> &6&lSolo Mode" to player
+         format slot 1 of player with feather named "&f&lSpeed Upgrades" with lore "&7Click me !" to close then run [make player execute command "/§shopspeed"]
+
+every 1 second:
+   loop all players:
+      if {speed1g.%loop-player%} is true:
+         if {game.%loop-player's world%} is true:
+            make server execute command "/effect clear %loop-player%"
+
+command /§shopspeed:
+   trigger:
+      if player's world is "ul_world":
+         wait 10 tick
+         open chest with 1 row named "&9&l&oUpgrades &7> &6&l&oSolo Mode &7> &f&l&oSpeed" to player
+         format slot 1 of player with feather named "&f&lSpeed I" with lore "&fGet speed 2 before a game starts.&6Cost 150 &a&lGems" to run [make player execute command "/§speed1"]
+
+command /§speed1:
+   trigger:
+      if {speed1g.%player%} is true:
+         stop
+      if {gems.%player%} >= 150:
+         set {speed1g.%player%} to true
+         send "&aSucess! You bought &eSpeed I&a for 150 gems !"
+         stop
+      if {gems.%player%} < 150:
+         send "&cERROR ! You don't have enought gems !"
+         stop
+
+on world change:
+   if player's world is not "ul_world":
+      if {speed1g.%player%} is true:
+         make server execute command "/effect give %player% speed 999999 2"
+         send "&6Your speed bonus as been applied !" to player
+
+command /stats:
+   trigger:
+      if {deaths.%player%} is not set:
+         set {deaths.%player%} to 0
+      if {kill.%player%} is not set:
+         set {kill.%player%} to 0
+      if {wins.%player%} is not set:
+         set {wins.%player%} to 0
+      if {coins.%player%} is not set:
+         set {coins.%player%} to 0
+      if {gems.%player%} is not set:
+         set {coins.%player%} to 0
+      send "&5&lYour stats:"
+      send ""
+      send "&cDeath: &c%{deaths.%player%}%"
+      send "&aKills: &a%{kill.%player%}%"
+      send "&6Victory Royale: &6%{wins.%player%}%"
+      send "&ePlayTime: &e/playtime"
+      send ""
+      send ""
+      send "&d&lYour coins and gems:"
+      send ""
+      send "&aGems: &a%{gems.%player%}%"
+      send "&eCoins: &e%{coins.%player%}%"
+
+on hunger meter change:
+   cancel event
+
+on craft:
+   cancel event   
+
+on death:
+   if attacker is a player:
+      if victim is player:
+         set death message to ""
+         set {attacker.%victim%} to location of attacker
+         set {death.%victim%} to true
+         loop all players in world victim's world:
+            send "&c&lDEATH &7>> &c%victim% &7got killed by &c%attacker%" to loop-player
+            send "&c%{%loop-player's world%}% &eplayers left !" to loop-player
+            play sound "entity.wither.spawn" with volume 10 and pitch 1 at loop-player for loop-player
+
+on death:
+   remove 1 from {%victim's world%}
+
+on death:
+   if victim is player:
+      add 1 to {deaths.%victim%}
+on death:
+   if attacker is a player:
+      if victim is player:
+         add 1 to {kill.%attacker%}
+         add 10 to {coins.%attacker%}
+         send "&6+10 Coins (Kill)" to attacker
+
+on respawn:
+   clear player's inventory
+   set {_place} to player's world
+   wait 1 second
+   send "&7&m------------------------------------"
+   send "         &6Your &c%{%{_place}%}% &6place !" to player
+   send "             &d&lGood game !"
+   send "&aIf you wanna go back to the lobby type /spawn."
+   send "&7&m------------------------------------" to player
+   make player execute command "/spawn"
+
+on world change:
+   if {mod.%player%} is true:
+      stop
+   set {_world} to player's world
+   if player's world is not "ul_world":
+      add 1 to {%{_world}%}
+      remove 1 from {lobby}
+#--------------------------------- SERVER MANAGEMENT -------------------------------------
+ 
+every 3 second:
+   set {wbr1} to "br1"
+   if {%{wbr1}%} = 1:
+      if {game.br1} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr1}]
+         if {win.br1} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br1} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br1"
+         set {win.br1} to false
+         set {start.br1} to false
+         set {game.br1} to false
+      
+every 3 second:
+   set {wbr2} to "br2"
+   if {%{wbr2}%} = 1:
+      if {game.br2} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr2}]
+         if {win.br2} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br2} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br2"
+         set {win.br2} to false
+         set {start.br2} to false
+         set {game.br2} to false
+
+every 3 second:
+   set {wbr3} to "br3"
+   if {%{wbr3}%} = 1:
+      if {game.br3} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr3}]
+         if {win.br3} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br3} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br3"
+         set {win.br3} to false
+         set {start.br3} to false
+         set {game.br3} to false
+
+every 3 second:
+   set {wbr4} to "br4"
+   if {%{wbr4}%} = 1:
+      if {game.br4} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr4}]
+         if {win.br4} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br4} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br4"
+         set {win.br4} to false
+         set {start.br4} to false
+         set {game.br4} to false
+
+every 3 second:
+   set {wbr5} to "br5"
+   if {%{wbr5}%} = 1:
+      if {game.br5} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr5}]
+         if {win.br5} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br5} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br5"
+         set {win.br5} to false
+         set {start.br5} to false
+         set {game.br5} to false
+
+every 3 second:
+   set {wbr6} to "br6"
+   if {%{wbr6}%} = 1:
+      if {game.br6} is true:
+         set {_all.players::*} to all players where [world of player input is {wbr6}]
+         if {win.br6} is true:
+            stop
+         send "&7&m---------------------------" to {_all.players::*}
+         send "         &e&lVICTORY ROYALE" to {_all.players::*}
+         send "       &a+50 Gems &6+200 Coins" to {_all.players::*}
+         send "       &6Your 1st place !" to {_all.players::*}
+         send "       &d&lGood game !" to {_all.players::*}
+         send "&aTo go back to lobby, type /spawn" to {_all.players::*}
+         send "&7&m---------------------------" to {_all.players::*}
+         set {win.br6} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br6"
+         set {win.br6} to false
+         set {start.br6} to false
+         set {game.br6} to false
+
+every 2 second:
+   if {br1} >= 4:
+      if {start.br1} is true:
+         stop
+      make server execute command "/br1"
+
+command /br1:
+	permission: op
+	trigger:
+		clear {_all.players::*}
+
+		set {_all.players::*} to all players where [world of player input is {wbr1}]
+		if {start.br1} is true:
+			stop
+		set {start.br1} to true
+		
+		send "" to {_all.players::*}
+		send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+		send "&e&lTo join it type &b/join br1" to {_all.players::*}
+		send "" to {_all.players::*}
+			
+		loop 40 times:
+			if loop-number is 1 or 11 or 38:
+				send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+				loop {_all.players::*}:
+					play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+			wait 1 second
+			
+		if {br1} < 4:
+			send "&cNot enough players to start the game." to {_all.players::*}
+			set {start.br1} to false
+			stop
+			
+		send "&7&m-----------------------" to {_all.players::*}
+		send "          &6&lGame started !" to {_all.players::*}
+		send "          &d&lGood luck !" to {_all.players::*}
+		send "&7&m-----------------------" to {_all.players::*}
+		
+		loop {_all.players::*}:
+			loop blocks in radius 5 around loop-value:
+				if loop-block is barrier:
+					set loop-block to air
+			play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+			wait 2 tick
+			
+		set gamemode of {_all.players::*} to survival 
+		
+		heal {_all.players::*} by 20 heart 
+		make server execute command "/effect clear %{_all.players::*}%"
+
+		set {game.br1} to true
+		set {sbr1} to "&6Playing"
+		set {start.br1} to true
+		clear {_all.players::*}
+		
+		if {fss.br1} is true:
+			set {fss.br1} to false
+			remove 4 from {br1}
+
+every 2 second:
+   if {br2} >= 4:
+      if {start.br2} is true:
+         stop
+      make server execute command "/br2"
+
+command /br2:
+	permission: op
+	trigger:
+		clear {_all.players::*}
+	
+		set {_all.players::*} to all players where [world of player input is {wbr2}]
+		if {start.br2} is true:
+			stop
+		set {start.br2} to true
+		
+		send "" to {_all.players::*}
+		send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+		send "&e&lTo join it type &b/join br2" to {_all.players::*}
+		send "" to {_all.players::*}
+			
+		loop 40 times:
+			if loop-number is 1 or 11 or 38:
+				send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+				loop {_all.players::*}:
+					play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+			wait 1 second
+			
+		if {br2} < 4:
+			send "&cNot enough players to start the game." to {_all.players::*}
+			set {start.br2} to false
+			stop
+			
+		send "&7&m-----------------------" to {_all.players::*}
+		send "          &6&lGame started !" to {_all.players::*}
+		send "          &d&lGood luck !" to {_all.players::*}
+		send "&7&m-----------------------" to {_all.players::*}
+		
+		loop {_all.players::*}:
+			loop blocks in radius 5 around loop-value:
+				if loop-block is barrier:
+					set loop-block to air
+			play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+			wait 2 tick
+			
+		set gamemode of {_all.players::*} to survival
+
+		make server execute command "/effect clear %{_all.players::*}%"
+		make server execute command "/heal %{_all.players::*}%"
+		
+		set {game.br2} to true
+		set {sbr2} to "&6Playing"
+		set {start.br2} to true
+		
+		if {fss.br2} is true:
+			set {fss.br2} to false
+			remove 4 from {br2}
+every 2 second:
+   if {br3} >= 4:
+      if {start.br3} is true:
+         stop
+      make server execute command "/br3"
+
+command /br3:
+	permission: op
+	trigger:
+		clear {_all.players::*}
+	
+		set {_all.players::*} to all players where [world of player input is {wbr3}]
+		if {start.br3} is true:
+			stop
+		set {start.br3} to true
+		
+		send "" to {_all.players::*}
+		send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+		send "&e&lTo join it type &b/join br3" to {_all.players::*}
+		send "" to {_all.players::*}
+			
+		loop 40 times:
+			if loop-number is 1 or 11 or 38:
+				send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+				loop {_all.players::*}:
+					play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+			wait 1 second
+			
+		if {br3} < 4:
+			send "&cNot enough players to start the game." to {_all.players::*}
+			set {start.br3} to false
+			stop
+			
+		send "&7&m-----------------------" to {_all.players::*}
+		send "          &6&lGame started !" to {_all.players::*}
+		send "          &d&lGood luck !" to {_all.players::*}
+		send "&7&m-----------------------" to {_all.players::*}
+		
+		loop {_all.players::*}:
+			loop blocks in radius 5 around loop-value:
+				if loop-block is barrier:
+					set loop-block to air
+			play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+			wait 2 tick
+			
+		set gamemode of {_all.players::*} to survival
+
+		make server execute command "/effect clear %{_all.players::*}%"
+		make server execute command "/heal %{_all.players::*}%"
+
+		set {game.br3} to true
+		set {sbr3} to "&6Playing"
+		set {start.br3} to true
+		
+		if {fss.br3} is true:
+			set {fss.br3} to false
+			remove 4 from {br3}
+every 2 second:
+   if {br4} >= 4:
+      if {start.br4} is true:
+         stop
+      make server execute command "/br4"
+
+command /br4:
+	permission: op
+	trigger:
+		clear {_all.players::*}
+	
+		set {_all.players::*} to all players where [world of player input is {wbr4}]
+		if {start.br4} is true:
+			stop
+		set {start.br4} to true
+		
+		send "" to {_all.players::*}
+		send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+		send "&e&lTo join it type &b/join br4" to {_all.players::*}
+		send "" to {_all.players::*}
+			
+		loop 40 times:
+			if loop-number is 1 or 11 or 38:
+				send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+				loop {_all.players::*}:
+					play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+			wait 1 second
+			
+		if {br4} < 4:
+			send "&cNot enough players to start the game." to {_all.players::*}
+			set {start.br4} to false
+			stop
+			
+		send "&7&m-----------------------" to {_all.players::*}
+		send "          &6&lGame started !" to {_all.players::*}
+		send "          &d&lGood luck !" to {_all.players::*}
+		send "&7&m-----------------------" to {_all.players::*}
+		
+		loop {_all.players::*}:
+			loop blocks in radius 5 around loop-value:
+				if loop-block is barrier:
+					set loop-block to air
+			play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+			wait 2 tick
+			
+		set gamemode of {_all.players::*} to survival
+		
+		make server execute command "/heal %{_all.players::*}%"
+
+		make server execute command "/effect clear %{_all.players::*}%"
+		set {game.br4} to true
+		set {sbr4} to "&6Playing"
+		set {start.br4} to true
+		
+		if {fss.br4} is true:
+			set {fss.br4} to false
+			remove 4 from {br4}
+every 2 second:
+   if {br5} >= 4:
+      if {start.br5} is true:
+         stop
+      make server execute command "/br5"
+
+on step on slime block:
+   if player's world is "ul_world":
+      push player forwards at speed 10
+
+command /br5:
+	permission: op
+	trigger:
+		clear {_all.players::*}
+	
+		set {_all.players::*} to all players where [world of player input is {wbr5}]
+		if {start.br5} is true:
+			stop
+		set {start.br5} to true
+		
+		send "" to {_all.players::*}
+		send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+		send "&e&lTo join it type &b/join br5" to {_all.players::*}
+		send "" to {_all.players::*}
+			
+		loop 40 times:
+			if loop-number is 1 or 11 or 38:
+				send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+				loop {_all.players::*}:
+					play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+			wait 1 second
+			
+		if {br5} < 4:
+			send "&cNot enough players to start the game." to {_all.players::*}
+			set {start.br5} to false
+			stop
+			
+		send "&7&m-----------------------" to {_all.players::*}
+		send "          &6&lGame started !" to {_all.players::*}
+		send "          &d&lGood luck !" to {_all.players::*}
+		send "&7&m-----------------------" to {_all.players::*}
+		
+		loop {_all.players::*}:
+			loop blocks in radius 5 around loop-value:
+				if loop-block is barrier:
+					set loop-block to air
+			play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+			wait 2 tick
+			
+		set gamemode of {_all.players::*} to survival
+		
+		make server execute command "/heal %{_all.players::*}%"
+
+		make server execute command "/effect clear %{_all.players::*}%"
+		set {game.br5} to true
+		set {sbr5} to "&6Playing"
+		set {start.br5} to true
+		
+		if {fss.br5} is true:
+			set {fss.br5} to false
+			remove 4 from {br5}
+
+every 2 second:
+   if {br6} >= 4:
+      if {start.br6} is true:
+         stop
+      make server execute command "/br6"
+
+command /br6:
+   permission: op
+   trigger:
+      clear {_all.players::*}
+   
+      set {_all.players::*} to all players where [world of player input is {wbr6}]
+      if {start.br6} is true:
+         stop
+      set {start.br6} to true
+      
+      send "" to {_all.players::*}
+      send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+      send "&e&lTo join it type &b/join br6" to {_all.players::*}
+      send "" to {_all.players::*}
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+            loop {_all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br6} < 4:
+         send "&cNot enough players to start the game." to {_all.players::*}
+         set {start.br6} to false
+         stop
+         
+      send "&7&m-----------------------" to {_all.players::*}
+      send "          &6&lGame started !" to {_all.players::*}
+      send "          &d&lGood luck !" to {_all.players::*}
+      send "&7&m-----------------------" to {_all.players::*}
+      
+      loop {_all.players::*}:
+         loop blocks in radius 5 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {_all.players::*} to survival
+
+      make server execute command "/effect clear %{_all.players::*}%"
+      make server execute command "/heal %{_all.players::*}%"
+      
+      set {game.br6} to true
+      set {sbr6} to "&6Playing"
+      set {start.br6} to true
+      
+      if {fss.br6} is true:
+         set {fss.br6} to false
+         remove 4 from {br6}
+
+every 2 second:
+   if {br7} >= 4:
+      if {start.br7} is true:
+         stop
+      make server execute command "/br7"
+
+command /br7:
+   permission: op
+   trigger:
+      clear {_all.players::*}
+   
+      set {_all.players::*} to all players where [world of player input is {wbr7}]
+      if {start.br7} is true:
+         stop
+      set {start.br7} to true
+      
+      send "" to {_all.players::*}
+      send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+      send "&e&lTo join it type &b/join br7" to {_all.players::*}
+      send "" to {_all.players::*}
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+            loop {_all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br7} < 4:
+         send "&cNot enough players to start the game." to {_all.players::*}
+         set {start.br7} to false
+         stop
+         
+      send "&7&m-----------------------" to {_all.players::*}
+      send "          &6&lGame started !" to {_all.players::*}
+      send "          &d&lGood luck !" to {_all.players::*}
+      send "&7&m-----------------------" to {_all.players::*}
+      
+      loop {_all.players::*}:
+         loop blocks in radius 5 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {_all.players::*} to survival
+
+      make server execute command "/effect clear %{_all.players::*}%"
+      make server execute command "/heal %{_all.players::*}%"
+      
+      set {game.br7} to true
+      set {sbr7} to "&6Playing"
+      set {start.br7} to true
+      
+      if {fss.br7} is true:
+         set {fss.br7} to false
+         remove 4 from {br7}
+
+every 2 second:
+   if {br8} >= 4:
+      if {start.br8} is true:
+         stop
+      make server execute command "/br8"
+
+command /br8:
+   permission: op
+   trigger:
+      clear {_all.players::*}
+   
+      set {_all.players::*} to all players where [world of player input is {wbr8}]
+      if {start.br8} is true:
+         stop
+      set {start.br8} to true
+      
+      send "" to {_all.players::*}
+      send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+      send "&e&lTo join it type &b/join br8" to {_all.players::*}
+      send "" to {_all.players::*}
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+            loop {_all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br8} < 4:
+         send "&cNot enough players to start the game." to {_all.players::*}
+         set {start.br8} to false
+         stop
+         
+      send "&7&m-----------------------" to {_all.players::*}
+      send "          &6&lGame started !" to {_all.players::*}
+      send "          &d&lGood luck !" to {_all.players::*}
+      send "&7&m-----------------------" to {_all.players::*}
+      
+      loop {_all.players::*}:
+         loop blocks in radius 5 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {_all.players::*} to survival
+
+      make server execute command "/effect clear %{_all.players::*}%"
+      make server execute command "/heal %{_all.players::*}%"
+      
+      set {game.br8} to true
+      set {sbr8} to "&6Playing"
+      set {start.br8} to true
+      
+      if {fss.br8} is true:
+         set {fss.br8} to false
+         remove 4 from {br8}
+
+every 2 second:
+   if {br9} >= 4:
+      if {start.br9} is true:
+         stop
+      make server execute command "/br9"
+
+command /br9:
+   permission: op
+   trigger:
+      clear {_all.players::*}
+   
+      set {_all.players::*} to all players where [world of player input is {wbr9}]
+      if {start.br9} is true:
+         stop
+      set {start.br9} to true
+      
+      send "" to {_all.players::*}
+      send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+      send "&e&lTo join it type &b/join br9" to {_all.players::*}
+      send "" to {_all.players::*}
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+            loop {_all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br9} < 4:
+         send "&cNot enough players to start the game." to {_all.players::*}
+         set {start.br9} to false
+         stop
+         
+      send "&7&m-----------------------" to {_all.players::*}
+      send "          &6&lGame started !" to {_all.players::*}
+      send "          &d&lGood luck !" to {_all.players::*}
+      send "&7&m-----------------------" to {_all.players::*}
+      
+      loop {_all.players::*}:
+         loop blocks in radius 5 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {_all.players::*} to survival
+
+      make server execute command "/effect clear %{_all.players::*}%"
+      make server execute command "/heal %{_all.players::*}%"
+      
+      set {game.br9} to true
+      set {sbr9} to "&6Playing"
+      set {start.br9} to true
+      
+      if {fss.br9} is true:
+         set {fss.br9} to false
+         remove 4 from {br9}
+
+every 2 second:
+   if {br10} >= 4:
+      if {start.br10} is true:
+         stop
+      make server execute command "/br10"
+
+command /br10:
+   permission: op
+   trigger:
+      clear {_all.players::*}
+   
+      set {_all.players::*} to all players where [world of player input is {wbr10}]
+      if {start.br10} is true:
+         stop
+      set {start.br10} to true
+      
+      send "" to {_all.players::*}
+      send "&e&lA Battle Royale is starting soon." to {_all.players::*}
+      send "&e&lTo join it type &b/join br10" to {_all.players::*}
+      send "" to {_all.players::*}
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "&aGame is starting in %41-loop-number% &aseconds" to {_all.players::*}
+            loop {_all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br10} < 4:
+         send "&cNot enough players to start the game." to {_all.players::*}
+         set {start.br10} to false
+         stop
+         
+      send "&7&m-----------------------" to {_all.players::*}
+      send "          &6&lGame started !" to {_all.players::*}
+      send "          &d&lGood luck !" to {_all.players::*}
+      send "&7&m-----------------------" to {_all.players::*}
+      
+      loop {_all.players::*}:
+         loop blocks in radius 5 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {_all.players::*} to survival
+
+      make server execute command "/effect clear %{_all.players::*}%"
+      make server execute command "/heal %{_all.players::*}%"
+      
+      set {game.br10} to true
+      set {sbr10} to "&6Playing"
+      set {start.br10} to true
+      
+      if {fss.br10} is true:
+         set {fss.br10} to false
+         remove 4 from {br10}
+
+
+
+command /forcestart [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         set {fss.%arg 1%} to true
+         add 4 to {%arg 1%}
+         send "&aSucess! Server &e%arg 1% &ahas been FORCED_START" to player
+
+command /join [<text>]:
+   trigger:
+      if player has permission "bypass":
+         make server execute command "/mvtp %player% %arg 1%"
+         stop
+      if {bug} is true:
+         send "&b&lFish&e&lRoyale&6Services &cAre currently down! For help contact a staff member."
+         play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+         stop
+      if player's world is not "ul_world":
+         send "&cYou can't switch games!"
+         play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+         stop
+      if arg 1 is set:
+         if {game.%arg 1%} is true:
+            send "&cThis game alerdy started!"
+            play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+            stop
+         if {game.%arg 1%} is false:
+            send "&7Sending you to &e%arg 1%"
+            make server execute command "/mvtp %player% %arg 1%"
+      if arg 1 is not set:
+         send "&cPlease use: &f/join &6SERVER_ID"
+         play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+         stop
+
+command /games:
+   trigger:
+      if player's world is not "ul_world":
+         stop
+      if {br1} is not set:
+         set {br1} to 0
+      if {lobby} is not set:
+         set {lobby} to 1
+      if {br2} is not set:
+         set {br2} to 0
+      if {br3} is not set:
+         set {br3} to 0
+      if {br4} is not set:
+         set {br4} to 0
+      if {br5} is not set:
+         set {br5} to 0
+      if {br6} is not set:
+         set {br6} to 0
+      if {br7} is not set:
+         set {br7} to 0
+      if {br8} is not set:
+         set {br8} to 0
+      if {br9} is not set:
+         set {br9} to 0
+      if {br10} is not set:
+         set {br10} to 0
+      if {br11} is not set:
+         set {br11} to 0
+      set {_br1::*} to "&7Players: &f%{br1}%/100", "&7Status: %{sbr1}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br2::*} to "&7Players: &f%{br2}%/100", "&7Status: %{sbr2}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br3::*} to "&7Players: &f%{br3}%/100", "&7Status: %{sbr3}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br4::*} to "&7Players: &f%{br4}%/100", "&7Status: %{sbr4}% ", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br5::*} to "&7Players: &f%{br5}%/100", "&7Status: %{sbr5}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br6::*} to "&7Players: &f%{br6}%/100", "&7Status: %{sbr6}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br7::*} to "&7Players: &f%{br7}%/100", "&7Status: %{sbr7}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br8::*} to "&7Players: &f%{br8}%/100", "&7Status: %{sbr8}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br9::*} to "&7Players: &f%{br9}%/100", "&7Status: %{sbr9}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br10::*} to "&7Players: &f%{br10}%/100", "&7Status: %{sbr10}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br11::*} to "&7Players: &f%{br11}%/500", "&7Status: %{sbr11}%", "&7Type: &eEvent" and "&7Hoster: &c[OWNER] LananasBleu"
+      set {_br12::*} to "&7Players: &f%{br12}%/100", "&7Status: %{sbr12}%", "&7Type: &eServer_Test" and "&7Hoster: &c[OWNER] &cLananasBleu" 
+      wait 2 ticks
+      open chest with 6 rows named "          &e&lBATTLE ROYALE" to player
+      if {sbr1} is "&aOnline":
+         format slot 10 of player with green wool named "&eBR-1" with lore {_br1::*} to run [make player execute command "/join br1"]
+      else:
+         format slot 10 of player with red wool named "&eBR-1" with lore {_br1::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr2} is "&aOnline":
+         format slot 11 of player with green wool named "&eBR-2" with lore {_br2::*} to run [make player execute command "/join br2"]
+      else:
+         format slot 11 of player with red wool named "&eBR-2" with lore {_br2::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr3} is "&aOnline":
+         format slot 12 of player with green wool named "&eBR-3" with lore {_br3::*} to run [make player execute command "/join br3"]
+      else:
+         format slot 12 of player with red wool named "&eBR-3" with lore {_br3::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr4} is "&aOnline":
+         format slot 13 of player with green wool named "&eBR-4" with lore {_br4::*} to run [make player execute command "/join br4"]
+      else:
+         format slot 13 of player with red wool named "&eBR-4" with lore {_br4::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr5} is "&aOnline":
+         format slot 14 of player with green wool named "&eBR-5" with lore {_br5::*} to run [make player execute command "/join br5"]
+      else:
+         format slot 14 of player with red wool named "&eBR-5" with lore {_br5::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr6} is "&aOnline":
+         format slot 15 of player with green wool named "&eBR-6" with lore {_br6::*} to run [make player execute command "/join br6"]
+      else:
+         format slot 15 of player with red wool named "&eBR-6" with lore {_br6::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr7} is "&aOnline":
+         format slot 16 of player with green wool named "&eBR-7" with lore {_br7::*} to run [make player execute command "/join br7"]
+      else:
+         format slot 16 of player with red wool named "&eBR-7" with lore {_br7::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr8} is "&aOnline":
+         format slot 19 of player with green wool named "&eBR-8" with lore {_br8::*} to run [make player execute command "/join br8"]
+      else:
+         format slot 19 of player with red wool named "&eBR-8" with lore {_br8::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr9} is "&aOnline":
+         format slot 20 of player with green wool named "&eBR-9" with lore {_br9::*} to run [make player execute command "/join br9"]
+      else:
+         format slot 20 of player with red wool named "&eBR-9" with lore {_br9::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr10} is "&aOnline":
+         format slot 21 of player with green wool named "&eBR-10" with lore {_br10::*} to run [make player execute command "/join br10"]
+      else:
+         format slot 21 of player with red wool named "&eBR-10" with lore {_br10::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr11} is "&aOnline":
+         format slot 22 of player with green wool named "&eE-1" with lore {_br11::*} to run [make player execute command "/join br11"]
+      else:
+         format slot 22 of player with red wool named "&eE-1" with lore {_br11::*} to run [make server execute command "/sudo %player% §zm"]
+      format slot 23 of player with pink wool named "&eST-1" with lore {_br12::*} to run [make player execute command "/join b12"]
+      format slot 4 of player with red bed named "&6&lLobby" with lore "&7Players: &f%{lobby}%/150" to run [make server execute command "/mvpt %player% ul_world"]
+      format slot 0 of player with black stained glass pane named "" to be unstealable
+      format slot 1 of player with black stained glass pane named "" to be unstealable
+      format slot 2 of player with black stained glass pane named "" to be unstealable
+      format slot 3 of player with black stained glass pane named "" to be unstealable
+      format slot 5 of player with black stained glass pane named "" to be unstealable
+      format slot 6 of player with black stained glass pane named "" to be unstealable
+      format slot 7 of player with black stained glass pane named "" to be unstealable
+      format slot 8 of player with black stained glass pane named "" to be unstealable
+      format slot 9 of player with black stained glass pane named "" to be unstealable
+      format slot 17 of player with black stained glass pane named "" to be unstealable
+      format slot 18 of player with black stained glass pane named "" to be unstealable
+      format slot 53 of player with black stained glass pane named "" to be unstealable
+      format slot 26 of player with black stained glass pane named "" to be unstealable
+      format slot 27 of player with black stained glass pane named "" to be unstealable
+      format slot 36 of player with black stained glass pane named "" to be unstealable
+      format slot 35 of player with black stained glass pane named "" to be unstealable
+      format slot 44 of player with black stained glass pane named "" to be unstealable
+      format slot 45 of player with black stained glass pane named "" to be unstealable
+      format slot 46 of player with black stained glass pane named "" to be unstealable
+      format slot 47 of player with black stained glass pane named "" to be unstealable
+      format slot 48 of player with black stained glass pane named "" to be unstealable
+      format slot 50 of player with black stained glass pane named "" to be unstealable
+      format slot 51 of player with black stained glass pane named "" to be unstealable
+      format slot 52 of player with black stained glass pane named "" to be unstealable
+      format slot 49 of player with barrier named "&cClose Menu" to close 
+
+
+command /§zm:
+   trigger:
+      send "&cThe server you tried to join is offline or the game alerdy started!" to player
+      play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+
+
+command /se [<text>] [<text>]:
+    permission: op
+    trigger:
+        if arg 1 is set:
+            if arg 2 is set:
+                make server execute command "/mv %arg 1% %arg 2%"
+                send "&aSucess! Server &e%arg 2% &ahas been &e%arg 1%&a!"
+                if arg 1 is "unload":
+                    set {s%arg 2%} to "&cOffline"
+                    play sound "block.anvil.break" with volume 10 and pitch 1 at player for player
+                if arg 1 is "load":
+                    set {s%arg 2%} to "&aOnline"
+                    set {game.%arg 2%} to false
+
+command /set [<text>] [<number>]:
+   permission: op
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            set {%arg 1%} to arg 2
+            send "&aSucess! Setted &e%arg 1% &ato &e%arg 2%&a!" to player
+
+
+command /forcestop [<world>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is set:
+         set {game.%arg 1%} to false
+         send "&aSucess!"
+         loop all players in arg 1:
+            send "&cYour game has been ended by &d%player%&c! &cYou will get automaticly teleported back to lobby in a few seconds..." to loop-player
+            make server execute command "/mvtp %loop-player% ul_world"
+            make server execute command "/reset %arg 1%"
+
+on world change:
+   if player's world is "ul_world":
+      if {mod.%player%} is true:
+         stop
+      set player's gamemode to adventure
+
+every 2 second:
+   loop all players in "ul_world":
+      set {y.%loop-player%} to y location of loop-player
+      if {y.%loop-player%} < 10:
+         make server execute command "/mvspawn %loop-player%"
+
+on damage:
+   if victim's world is "ul_world":
+      cancel event
+
+on block place:
+   if player's world is "ul_world":
+      cancel event
+
+on drop:
+   if player's world is "ul_world":
+      cancel event
+
+on block break:
+   if player's world is "ul_world":
+      cancel event
+
+every 5 second:
+   if {br} = 0:
+      if {br.down} is true:
+         stop
+      make server execute command "/se unload br"
+      send "&6&lSERVICES &7>> &cServer &6BR &cwas shutted down ! No players were on." to all players where [input has permission "BUILDER"]
+      set {br.down} to true
+
+on script load:
+   make server execute command "/se load br1"
+   make server execute command "/se unload br2"
+   make server execute command "/se unload br3"
+   make server execute command "/se unload br4"
+   make server execute command "/se unload br5"
+   make server execute command "/se unload br6"
+   make server execute command "/se unload br7"
+   make server execute command "/se unload br8"
+   make server execute command "/se unload br9"
+   make server execute command "/se unload br10"
+   make server execute command "/se unload backup"
+   make server execute command "/se unload ul_br"
+   make server execute command "/se unload br"
+
+command /reset [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is set:
+         make server execute command "/mv delete %arg 1%"
+         make server execute command "/mvconfirm"
+         wait 5 seconds
+         make server execute command "/mv clone ul_br %arg 1%"
+         wait 5 seconds
+         make server execute command "/se load %arg 1%"
+         set {%arg 1%} to 0
+         set {game.%arg 1%} to false
+         set {start.%arg 1%} to false
+         set {win.%arg 1%} to false
+         set {start.%arg 1%} to false
+         send "&aSucess!"
+
+
+command /bug:
+   permission: ADMIN
+   trigger:
+      if {bug} is not set:
+         set {bug} to false
+      if {bug} is false:
+         set {bug} to true
+         broadcast "&b&lFish&e&lRoyale&6Services &cwhere shutted down ! This was activiated by &d%player%&c. It can be cause of lag!"
+         play sound "block.anvil.land" with volume 10 and pitch 1 at player for player
+         stop
+      if {bug} is true:
+         set {bug} to false
+         broadcast "&b&lFish&e&lRoyale&6Services &aare back on !"
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+
+#------------------------------------------------ADDITIONAL CORE --------------------------------------------------------
+
+on projectile hit:
+   if shooter's world is not "ul_world":
+      stop
+   push shooter backwards at speed 1
+
+on world change:
+   if player has permission "BUILDER":
+      stop
+   if player's world is "br":
+      kick player due to "&cYour not allowed to be here !"
+on world change:
+   if player's world is "ul_br":
+      kick player due to "&cYour not allowed to be here !"
+on world change:
+   if player's world is "backup":
+      kick player due to "&cYour not allowed to be here !"
+
+

@@ -1,0 +1,286 @@
+
+options:
+  #BASIC SETTINGS
+  v: v2b1
+  NoPerm: &d&lWatchCat &7» &cNo Permission!
+  KEY: dev1
+  watchcat: &d&lWatchCat &7»
+  LagBack: true
+  AutoTempBan: false
+  AutoBan: false
+  AutoKick: false
+  BanAfterKick: 3
+
+  #AntiCheat Checks settings !
+  MaxLeftCPS: 15 #CPS Limit on left click
+  MaxRightCPS: 15 #CPS Limit on right click
+  MaxReach: 3.8500 #Reach Limit , 3.8500 is recommanded !
+  
+#----------------------------------------------------------  
+#   _       _       _         _     ___         _   
+#( )  _  ( )     ( )_      ( )   (  _ \      ( )_ 
+#| | ( ) | |  _ _|  _)  ___| |__ | ( (_)  _ _|  _)
+#| | | | | |/ _  ) |  / ___)  _  \ |  _ / _  ) |  
+#| (_/ \_) | (_| | |_( (___| | | | (_( ) (_| | |_ 
+# \__/\___/ \__ _)\__)\____)_) (_)____/ \__ _)\__)
+#                                                
+# This Copy Is Only For %Gmail%   
+# Sharing or leaking will result punishment           
+#----------------------------------------------------------  
+
+function WCverbose(p: player, cheat: text, type: text):
+  add 1 to {WC.%{_p}%.VL.%{_cheat}%}
+  send "{@watchcat} &d%{_p}% &7is verbosing &d%{_cheat}% &7(%{_type}%&7) (VL: &d%{WC.%{_p}%.VL.%{_cheat}%}%&7)" to console
+  loop all players:
+    if {WC.%loop-player%.ALERTS} is true:
+      send "{@watchcat} &d%{_p}% &7is verbosing &d%{_cheat}% &7(%{_type}%&7) (VL: &d%{WC.%{_p}%.VL.%{_cheat}%}%&7)" to loop-player
+
+function WCnotify(p: player, cheat: text, type: text):
+  add 1 to {WC.%{_p}%.VL.%{_cheat}%}
+  send "{@watchcat} &d%{_p}% &7failed &d%{_cheat}% &7(%{_type}%&7) (VL: &d%{WC.%{_p}%.VL.%{_cheat}%}%&7)" to console
+  loop all players:
+    if {WC.%loop-player%.ALERTS} is true:
+      send "{@watchcat} &d%{_p}% &7failed &d%{_cheat}% &7(%{_type}%&7) (VL: &d%{WC.%{_p}%.VL.%{_cheat}%}%&7)" to loop-player
+
+command /watchcat [<text>] [<player>] [<timespan>]:
+   permission: WatchCat.commands
+   trigger:
+      if arg 1 is not set:
+         send "           {@watchcat}"
+         send "&7/watchcat &8| &fShow this pop up"
+         send "&7/watchcat version &8| &fShow WatchCat version"
+         send "&7/watchcat notify &8| &fToggle WatchCat alerts"
+         send "&7/watchcat kick &8| &fKick someone"
+         send "&7/watchcat ban &8| &fBan someone"
+         send "&7/watchcat unban &8| &fUnban someone"
+         send ""
+         stop
+      if arg 1 is "verbose":
+         if {WC.%player%.VERBOSE} is not set:
+            set {WC.%player%.VERBOSE} to false
+         if {WC.%player%.VERBOSE} is false:
+            set {WC.%player%.VERBOSE} to true
+            send "{@watchcat} Verbose enabled"
+            stop
+         if {WC.%player%.VERBOSE} is true:
+            set {WC.%player%.VERBOSE} to false
+            send "{@watchcat} Verbose disabled"
+            stop
+      if arg 1 is "kick":
+         if arg 2 is set:
+            if {banning.%arg 2%} is true:
+               stop
+            set {banning.%arg 2%} to true
+            set fly mode of arg-2 to true
+            wait 2 ticks
+            push arg-2 upwards at speed 1
+            wait 1 seconds
+            strike lightning effect at arg-2
+            delete {banning.%arg 2%}
+            kick arg 2 due to "{@watchcat} &fWatchCat caught you hacking (AntiCheat) ! &7&o&n(ID-G%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@watchcat} &c%arg 2%&f has been removed for &cUnfair Advantage"
+            broadcast ""
+      if arg 1 is "info":
+         if arg 2 is set:
+            send "         {@watchcat}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "Anticheat Kicks: &7%{watchcat.%arg 2%.kick}%"
+            send "Anticheat Ban: &7%{watchcat.%arg 2%.kick}%"
+            send "Anticheat logs: &7%{watchcat.%arg 2%.total.vl}%"
+            send "Anticheat detection: &7%{watchcat.%arg 2%.detection::*}%"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@watchcat} Build: b15"
+         stop
+      if arg 1 is "reload":
+         Reload("console")
+         send "{@watchcat} watchcat has been reloaded."
+         stop
+      if arg 1 is "notify":
+         if {WC.%player%.ALERTS} is not set:
+            set {WC.%player%.ALERTS} to false
+         if {WC.%player%.ALERTS} is false:
+            set {WC.%player%.ALERTS} to true
+            send "{@watchcat} Notifcations enabled"
+            stop
+         if {WC.%player%.ALERTS} is true:
+            set {WC.%player%.ALERTS} to false
+            send "{@watchcat} Notifcations disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            if {tempban.time::%{_player}%} is not set:
+               broadcast ""
+               broadcast "{@watchcat} &c%arg 2%&f has been removed for &cUnfair Advantage"
+               broadcast ""
+               set {tempban.time::%arg 2%} to arg 3
+               set {tempban.%arg 2%} to true
+               set {tempban.timestamp::%arg 2%} to now
+               kick arg 2 due to "{@watchcat} &cYou have been banned for &e%{tempban.time::%arg 2%}% &cfrom this server !"
+               stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            clear {tempban.time::%arg 2%}
+            clear {tempban.timestamp::%arg 2%}
+            clear {tempban.%arg 2%}
+            send "{@watchcat} %arg 2% has been unbanned."
+            stop
+
+#--------------------------------------------------------
+#
+#             A N T I  A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+every 1 second:
+   loop all players:
+      clear {cpsL.%loop-player%}
+      clear {cpsR.%loop-player%}
+
+on leftclick:
+   if {WC.C.AUTOCLICKER.A} is true:
+      add 1 to {cpsL.%player%}
+      if {cpsL.%player%} >= {@MaxLeftCPS}:
+         if {@LagBack} is true:
+            cancel event
+         WCverbose(player, "AutoClicker", "A")
+         if {WC.%player%.VL.AUTOCLICKER.A} >= 5:
+            WCnotify(player, "AutoClicker", "A")
+
+on rightclick:
+   if {WC.C.AUTOCLICKER.B} is true:
+      add 1 to {cpsR.%player%}
+      if {cpsL.%player%} >= {@MaxRightCPS}:
+         if {@LagBack} is true:
+            cancel event
+         WCverbose(player, "AutoClicker", "B")
+         if {WC.%player%.VL.AUTOCLICKER.B} >= 5:
+            WCnotify(player, "AutoClicker", "B")
+
+#--------------------------------------------------------
+#
+#             A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  set {_reach} to distance between attacker and victim
+  if {_reach} > {@MaxReach}:
+    if victim is a player:
+      if {@LagBack} is true:
+        cancel event
+      if {WC.%ATTACKER%.VL.REACH} < 30:
+        WCverbose(attacker, "Reach", "A")
+      else:
+        WCnotify(attacker, "Reach", "A")
+    else:
+      if {_reach} > 4.500:
+        if {@LagBack} is true:
+          cancel event
+      if {WC.%ATTACKER%.VL.REACH} < 20:
+        WCverbose(attacker, "Reach", "B")
+      else:
+        WCnotify(attacker, "Reach", "B")
+  if victim is a player:
+    if attacker's y coordinate = victim's y coordinate:
+      {_reach} > 4.600:
+        if {@LagBack} is true:
+          cancel event
+      if {WC.%ATTACKER%.VL.REACH} < 15:
+        WCverbose(attacker, "Reach", "C")
+      else:
+        WCnotify(attacker, "Reach", "C")
+    else if attacker's y coordinate = victim's y coordinate: 
+      {_reach} > 4.375:
+        if {@LagBack} is true:
+          cancel event
+      if {WC.%ATTACKER%.VL.REACH} < 20:
+        WCverbose(attacker, "Reach", "D")
+      else:
+        WCnotify(attacker, "Reach", "D")
+    else:
+      {_reach} > 4.550:
+        if {@LagBack} is true:
+          cancel event
+      if {WC.%ATTACKER%.VL.REACH} < 15:
+        WCverbose(attacker, "Reach", "E")
+      else:
+        WCnotify(attacker, "Reach", "E")
+
+#--------------------------------------------------------
+#
+#             A N T I   K I L L A U R A
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  attack is not victim
+  projectile doesn't exist
+  if distance between attacker and victim > distance between attacker and attacker's targeted block:
+    attacker's targeted block is not a flower, slab, short grass, carpet or brewing stand
+    attacker's targeted block is not block under victim
+    block at victim is not water
+    block above victim is not water
+    block above attacker is not water
+    block at attacker is not water
+    if distance between victim and attacker's targeted block is greater than 1.550:
+    if {@CancelHit} is true:
+      cancel event
+    if {WC.%ATTACKER%.VL.KILLAURA} < 3:
+      WCverbose(attacker, "KillAura", "A")
+    else:
+      WCnotify(attacker, "KillAura", "A")
+
+#--------------------------------------------------------
+#
+#             A N T I   A I M  B O T 
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  set {_y} to attacker's yaw
+  set {_p} to attacker's pitch
+  wait 1 tick
+  if attacker's targeted entity is victim:
+    if distance between attacker and victim is greater than 2.25:
+      if difference between attacker's yaw and {_y} is 0:
+        if difference between attacker's pitch and {_p} >= 11.81:
+          wait 1 tick
+          attacker's targeted entity is victim
+          add 1 to {AC::AimCheck::%attacker's uuid%}
+          if {AC::AimCheck::%attacker's uuid%} > 3:
+            WCnotify(attacker, "AimAssist", "A*")
+            delete {AC::AimCheck::%attacker's uuid%}
+      else:
+        delete {AC::AimCheck::%attacker's uuid%}
+  if {AC::AimCheck2::%attacker's uuid%} is not set:
+    set {AC::AimCheck2::%attacker's uuid%} to true
+    while attacker's targeted entity is victim:
+      add 1 to {_count}
+      if distance between victim and attacker is greater than 6:
+        stop loop
+        set {_count} to 0
+      if attacker is offline:
+        stop loop
+        set {_count} to 0
+      if {_count} > 20:
+        stop loop
+      wait 1 tick
+    delete {AC::AimCheck2::%attacker's uuid%}
+    if {_count} = 8, 9 or 10:
+      add 1 to {AC::AimCheckRepeat2::%attacker's uuid%}
+      if {AC::AimCheckRepeat2::%attacker's uuid%} > 5:
+        WCnotify(attacker, "AimAssist", "B*")
+    else:
+      delete {AC::AimCheckRepeat2::%attacker's uuid%}

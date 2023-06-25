@@ -1,0 +1,39 @@
+function Detect(p: player, r: text):
+	add 1 to {alertl::%{_p}%}
+	loop all players:
+		loop-player is op:
+			send "&8[&6&l!&8] &bAntiCheat &8» &6%{_p}% &7a été détecté pour: &c%{_r}% &6(%{alertl::%{_p}%}%)'" to loop-player
+			play sound "LEVEL_UP" to loop-player with volume 1 and pitch 2
+on inventory click:
+	player's gamemode is not creative
+	if player is sprinting:
+		Detect(player, "InventoryMove")
+		stop
+	if player is sneaking:
+		Detect(player, "AutoSneak/InventoryMove")
+		stop
+on sprint toggle:
+	wait 1 tick
+	if {invop.%player%} is set:
+		difference between {invop.%player%} and now > 0.5 second
+		Detect(player, "Inventory Hack")
+on inventory close:
+	clear {invop.%player%}
+on any move:
+	{invop.%player%} is set:
+		difference between {invop.%player%} and now > 1 second
+		block below player is not air or water
+		loop blocks in radius 3 around player:
+			loop-block is water or ice or packed ice:
+				stop
+		wait 1 tick
+		{invop.%player%} is set
+		Detect(player, "Inventory Move")
+on damage:
+	victim is a player
+	clear {invop.%victim%} 
+on packet:
+	event-string is "PacketPlayInClientCommand"
+	set {invop.%player%} to now	
+every 1 second:
+	clear {alertl::*}

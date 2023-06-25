@@ -1,0 +1,2143 @@
+#VAC DEV 0.2.3
+#Edition KNOCKIFFA
+#Last Update 27/01/2021
+
+options:
+   dc: &7[&4&lVAC&7] &f
+   version: 0.2.5
+   oldversion: 0.2.2
+   mcver: 1.16.4
+   locked: false
+   autoban: true
+   autokick: true
+   setback: true
+   enabled: true
+
+#/// COMMANDS ///
+
+command /vacupdate:
+   permission: ADMIN
+   trigger:
+      if {@enabled} is true:
+         broadcast ""
+         broadcast "{@dc} &cis updating from version &e{@oldversion} &cto &e{@version} &c, this can take a moment..."
+         broadcast ""
+         wait 2 second
+         make player execute command "/sk reload VAC"
+         broadcast "{@dc} &ahas been updated to version &e{@version} &a!"
+
+command /velocity [<player>]:
+   permission: VAC.NOTIFY
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@dc} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         if block above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 2 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 3 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 4 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 5 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 6 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 7 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 8 above arg 1 is not air:
+            send "{@dc} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         set {c.%arg 1%} to true
+         add 1 to {vvt.%arg 1%}
+         set {_sbv} to location of arg 1 
+         set {_vloc} to y location of arg 1
+         set fly mode of arg 1 to true
+         push arg 1 upward at speed 2
+         wait 0.7 second
+         set {_vloc1} to y location of arg 1
+         set {_diffv} to difference between {_vloc} and {_vloc1}
+         set gamemode of arg 1 to survival
+         set fly mode of arg 1 to false
+         send "%{_diffv}%" to player
+         set {c.%arg 1%} to false
+         if {_diffv} is less than 7:
+            send "{@dc} &4Velocity: &4DETECTED &f(VL: &4VERTICAL&f)" to player
+            make player execute command "/velocityh %arg 1%"
+            add 5 to {vl.%arg 1%}
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is less than 13:
+            send "{@dc} &4Velocity: &6MAYBE &f(VL: &4VERTICAL&f)" to player
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is bigger than 13:
+            send "{@dc} &4Velocity: &aNOTHING &f(VL: &4VERTICAL&f)" to player
+            teleport arg 1 to {_sbv}
+            stop
+command /velocityh [<player>]:
+   permission: VAC.NOTIFY
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@dc} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         set {c.%arg 1%} to true
+         add 1 to {vht.%arg 1%}
+         wait 1 second
+         set {_sbv} to location of arg 1 
+         set {_vloc2} to z location of arg 1 
+         set gamemode of arg 1 to spectator
+         set {_vector} to vector from location of arg 1
+         rotate {_vector} around z-axis by 90 degrees #Pitch combined with x-axis aswell
+         rotate {_vector} around z-axis by 25 degrees #Yaw
+         set velocity of arg 1 to {_vector}
+         wait 1 tick
+         push arg 1 backwards at speed 2
+         wait 1 second
+         set {_vloc3} to z location of arg 1
+         set {_diffh} to difference between {_vloc3} and {_vloc2}
+         set gamemode of arg 1 to survival
+         send "%{_diffh}%" to player
+         set {c.%ARG 1%} to false
+         if {_diffh} is less than 15:
+            send "{@dc} &4Velocity: &4DETECTED &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is less than 28:
+            send "{@dc} &4Velocity: &6MAYBE &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is bigger than 28:
+            send "{@dc} &4Velocity: &aNOTHING &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+
+command /vacban [<offline player>] [<timespan>]:
+    permission: VAC.NOTIFY
+    trigger:
+        if arg 1 is not set:
+            message "{@dc} &fUsage : /vacban <player> <time>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                if {tempban.time::%{_player}%} is not set:
+                    send "{@dc} &f%arg 1% has been banned"
+                    add 1 to {vacbans.%arg 1%}
+                    add 1 to {VAC.bans.total}
+                    set {banner.%arg 1%} to player
+                    set {vacbanned.%arg 1%} to true
+                    set {bantime.%arg 1%} to now
+                    broadcast "&c&m----------------------------------"
+                    broadcast "         &4&l✖ VAC DETECTION ✖"
+                    broadcast ""
+                    broadcast "   &e%arg 1% &chas been removed by &4VAC"
+                    broadcast "   &cReason: &4Unfair Advantage"
+                    broadcast ""
+                    broadcast "&c&m----------------------------------"
+                    make server execute command "/smite %arg 1%"
+                    add arg 1 to {vacbans::*}
+                    set {vacban.%arg 1%} to true
+                    set {tempban.time::%{_player}%} to arg 2
+                    set {tempban.%arg 1%} to true
+                    set {tempban.timestamp::%{_player}%} to now
+                    kick {_player} due to "        &4&l✖ VAC DETECTION ✖                                    &cYou are banned from this server!                                    Reason: Unfair Advantage"
+                    stop
+                if {tempban.time::%{_player}%} is set:
+                    message "{@dc} &fThis player is alerdy banned"
+                    stop
+            if arg 1 is offline player:
+                if {tempban.time::%{_player}%} is not set:
+                    set {vacban.%arg 1%} to true
+                    message "{@dc} &f%arg 1% has been banned"
+                    add 1 to {vacbans.%arg 1%}
+                    add 1 to {VAC.bans.total}
+                    set {vacbanned.%arg 1%} to true
+                    set {banner.%arg 1%} to player
+                    set {bantime.%arg 1%} to now
+                    broadcast "&c&m----------------------------------"
+                    broadcast "         &4&l✖ VAC DETECTION ✖"
+                    broadcast ""
+                    broadcast "   &e%arg 1% &chas been removed by &4&lVAC"
+                    broadcast "   &cReason: &4Unfair Advantage"
+                    broadcast ""
+                    broadcast "&c&m----------------------------------"
+                    set {tempban.time::%{_player}%} to 1
+                    add arg 1 to {vacbans::*}
+                    set {tempban.timestamp::%{_player}%} to now
+                    set {tempban.%arg 1%} to true
+                    stop
+                if {tempban.time::%{_player}%} is set:
+                    message "{@dc} &fThis player is alerdy banned"
+
+command /vacbans:
+   permission: VAC.NOTIFY
+   trigger:
+      send "{@dc} &7Loading list..."
+      send "{@dc} &cVAC Banned players: &f%{vacbans::*}%"
+      send "{@dc} &cNumber of VAC Banned players : &f%{VAC.bans.total}%"
+      send ""
+      send "{@dc} &7Loading list..."
+      send "{@dc} &cVAC Kicked players : &f%{vac.kick::*}%"
+      send "{@dc} &cNumber of VAC Kicked players : &f%{VAC.kicks.total}%"
+
+command /vackick [<offline player>]:
+    permission: VAC.NOTIFY
+    trigger:
+        if arg 1 is not set:
+            message "{@dc} &fUsage : /vackick <player>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                #if {kicks.%arg 1%} >= 3:
+                    #make server execute command "/vacban %arg 1% 14 day"
+                send "{@dc} &f%arg 1% has been kicked"
+                add 1 to {VAC.kicks.total}
+                add 1 to {kicks.%arg 1%}
+                add arg 1 to {VAC.kick::*}
+                make server execute command "/smite %arg 1%"
+                broadcast "&c&m----------------------------------"
+                broadcast "         &4&l✖ VAC DETECTION ✖"
+                broadcast ""
+                broadcast "   &e%arg 1% &chas been removed by &4VAC"
+                broadcast "   &cReason: &4Unfair Advantage"
+                broadcast ""
+                broadcast "&c&m----------------------------------"
+                strike lightning at player
+                kick {_player} due to "        &4&l✖ VAC DETECTION ✖                                    &cYou have been kicked from this server!                                    Reason: Unfair Advantage"
+                stop
+
+command /vacann:
+   permission: OP 
+   trigger:
+      add {VAC.bans.total} to {_vac}
+      add {VAC.kicks.total} to {_vac}
+      broadcast "&c&m-------------------------------------------"
+      broadcast "      &4&l✖ VAC ANNOUNCEMENT ✖"
+      broadcast ""
+      broadcast "   &c&l%{_vac}% &7players were banned by VAC"
+      broadcast ""
+      broadcast "&c&m-------------------------------------------"
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "        &4&l✖ VAC DETECTION ✖                                    &cYou are banned from this server!                                    Reason: Unfair Advantage"
+
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+command /tbc [<offline player>]:
+    permission: ADMIN
+    trigger:
+        add 1 to {unbans.%arg 1%}
+        clear {tempban.time::%arg 1%}
+        clear {tempban.timestamp::%arg 1%}
+        remove arg 1 from {vacbans::*}
+        message "&f %arg 1% unbanned"
+
+on first join:
+   set {firstjoin.%player%} to now
+
+command /vaccheck [<offline player>]:
+   permission: ADMIN
+   trigger:
+      send "{@dc} &7Checking player..."
+      wait 1 second
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         send "{@dc} &fERROR: &4Player not found"
+         stop
+      send "{@dc} &7NAME: &f%arg 1%"
+      send "{@dc} &7IP: &f%ip of arg 1%"
+      if {joina.%arg 1%} is true:
+         send "{@dc} &7PING: &f%arg 1's ping%"
+      send "{@dc} &7FIRST JOIN: &f%{firstjoin.%arg 1%}%"
+      if {joina.%arg 1%} is true:
+         send "{@dc} &7STATUS: &aONLINE"
+         send "{@dc} &7CONNECTION TIME: &f%{join.%arg 1%}%"
+      if {joina.%arg 1%} is false:
+         send "{@dc} &7STATUS: &fOFFLINE"
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         set {firstalt.%{ip.%arg 1%}%} to 0
+      send "{@dc} &7FIRST ACCOUNT: &f%{firstalt.%{ip.%arg 1%}%}%"
+      if {altip.%{ip.%arg 1%}%::*} is not set:
+         set {altip.%{ip.%arg 1%}%::*} to 0
+      send "{@dc} &7ALTS: &f%{altip.%{ip.%arg 1%}%::*}%"
+      if {ban.%arg 1%} is not set:
+         set {ban.%arg 1%} to 0
+      send "{@dc} &7BANS: &f%{ban.%arg 1%}%"
+      if {banre.%arg 1%} is not set:
+         set {banre.%arg 1%} to 0
+      send "{@dc} &7ID: &f%{id.%arg 1%}%"
+      send "{@dc} &7REASON: &f%{banre.%arg 1%}%"
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      send "{@dc} &7WARNS: &f%{warns.%arg 1%}%"
+      if {unban.%arg 1%} is not set:
+         set {unban.%arg 1%} to 0
+      send "{@dc} &7UNBANS: &f%{unban.%arg 1%}%"
+
+command /flagtoggle [<text>]:
+  permission: ADMIN
+  trigger:
+    if arg-1 is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "Fastbow", "Inventory", "Speed", "Spider" or "Step":
+      if {VAC.%arg-1%} is false:
+        send "{@dc} &e%sender% &7has &aenabled &4%arg-1%&7!" to all players where [player input has permission "VAC.NOTIFY"]
+        set {VAC.%arg-1%} to true
+      else:
+        if {VAC.%arg-1%} is true:
+          send "{@dc} &e%sender% &7has &fdisabled &4%arg-1%&7!" to all players where [player input has permission "VAC.NOTIFY"]
+          set {VAC.%arg-1%} to false
+          stop
+    else:
+      send "{@dc} &fInvalid Argument! &8(&4Autoclicker, Bhop, Blink, ClickTP, Criticals, Flight, Float, HighJump, Hover, Jesus, Killaura, NoFall, Fastbow, Reach, Inventory, Speed, Spider, Step, Velocity&8)"
+
+command /vac [<text>]:
+   permission: VAC.NOTIFY
+   trigger:
+      if arg 1 is not set:
+         make player execute command "/vac help"
+      if arg-1 is set:
+         if arg-1 is "help":
+            send " "
+            send "&7&m-----------&7[ {@dc} ]&m-----------"
+            send " "
+            send "&7Permissions:"
+            send "&7Main permission: &4VAC.NOTIFY/ADMIN"
+            send " "
+            send "&7Commands:"
+            send ""
+            send "&7/vac help &4View VAC informations"
+            send "&7/vacupdate &4Reload Anticheat"
+            send "&7/vacalt [player] &4Check player's alts"
+            send "&7/vac kick [player] &4Kick a player"
+            send "&7/vaclogs [player] &4Check player's anticheat logs"
+            send "&7/flagtogle &4Toggle a check"
+            send "&7/vacban [player] [timespan] &4Ban a player"
+            send "&7/vac notify &4Toggle notifications"
+            send "&7/vac verbose &4Toggle verbose/debug messages"
+            send "&7/vacann &4Announce how many players got banned by VAC"
+            send "&7/vac"
+            send ""
+            send "&7&m-----------&7[ {@dc} ]&m-----------"
+         if arg-1 is "update":
+            if player does not have permission "ADMIN":
+               stop
+            if {update} is true:
+               send "{@dc} &fUpdate found ! Download it here: &3"
+               stop
+            if {update} is false:
+               send "{@dc} &fNo update found !"
+               stop
+         if arg 1 is "disable":
+            if player does not have permission "ADMIN":
+               stop
+            make player execute command "/sk disable VAC"
+            send "{@dc} &fVAC unloaded"
+            send "{@dc} &fTo reenable the anticheat do /sk enable VAC"
+            stop
+         if arg 1 is "reload":
+            if player does not have permission "ADMIN":
+               stop
+            make player execute command "/sk reload VAC"
+            send "{@dc} &fVAC reloaded"
+            Reload("console")
+         if arg 1 is "notify":
+            if {VAC.notify.%player%} is not set:
+               set {VAC.notify.%player%} to true
+            if {VAC.notify.%player%} is true:
+               set {VAC.notify.%player%} to false
+               send "{@dc} &fNotifications disabled"
+               stop
+            if {VAC.notify.%player%} is false:
+               set {VAC.notify.%player%} to true
+               send "{@dc} &fNotifications enabled"
+         if arg 1 is "debug":
+            if player does not have permission "ADMIN":
+               stop
+            if {VAC.debug} is not set:
+               set {VAC.debug} to false
+            if {VAC.debug} is true:
+               set {VAC.debug} to false
+               send "{@dc} &fDebug disabled"
+               stop
+            if {VAC.debug} is false:
+               set {VAC.debug} to true
+               send "{@dc} &fDebug enabled"
+         if arg 1 is "verbose":
+            if {VAC.verbose.%player%} is not set:
+               set {VAC.verbose.%player%} to true
+            if {VAC.verbose.%player%} is true:
+               set {VAC.verbose.%player%} to false
+               send "{@dc} &fVerbose disabled"
+               stop
+            if {VAC.verbose.%player%} is false:
+               set {VAC.verbose.%player%} to true
+               send "{@dc} &fVerbose enabled"
+
+command /are [<player>]:
+   permission: ADMIN
+   trigger:
+      set {VAC.admit.%arg 1%} to false
+
+on join:
+   set {online.%player%} to true
+
+on quit:
+   set {online.%player%} to false
+
+command /vaclogs [<offline player>]:
+   permission: MODERATOR
+   trigger:
+      if {vvt.%arg 1%} is not set:
+         set {vvt.%arg 1%} to 0
+      if {vht.%arg 1%} is not set:
+         set {vht.%arg 1%} to 0
+      if {vl.%arg 1%} is not set:
+         set {vl.%arg 1%} to 0
+      if {bans.%arg 1%} is not set:
+         set {bans.%arg 1%} to 0
+      if {unbans.%arg 1%} is not set:
+         set {unbans.%arg 1%} to 0
+      if {vacbans.%arg 1%} is not set:
+         set {vacbans.%arg 1%} to 0
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      if {tvl.%arg 1%} is not set:
+         set {tvl.%arg 1%} to 0
+      send "&f&m---------------------------------------------"
+      send "{@dc} Velocity (VERTICAL) Tests: &f%{vvt.%arg 1%}%"
+      send "{@dc} Velocity (HORIZONTAL) Tests: &f%{vht.%arg 1%}%"
+      send "&f&m---------------------------------------------" 
+      if {banned.%arg 1%} is true:
+         send "{@dc} Currently : &4BANNED"
+      if {banner.%arg 1%} is not set:
+         send "{@dc} By : &cAntiCheat"
+      if {banner.%arg 1%} is set:
+         send "{@dc} By : &c%{banner.%arg 1%}%"
+         send "{@dc} Reason : &c%{banreason.%arg 1%}%"
+         send "{@dc} At : &c%{bantime.%arg 1%}%"
+      if {vacbanned.%arg 1%} is true:
+         send "{@dc} Currently : &4VAC BANNED"
+         send "{@dc} By : &c%{banner.%arg 1%}%"
+         send "{@dc} At : &c%{bantime.%arg 1%}%"
+      if {online.%arg 1%} is false:
+         send "{@dc} Currently : &cOffline"
+      if {online.%arg 1%} is true:
+         send "{@dcc} Currently : &aOnline"
+      if {online.%arg 1%} is not set:
+         send "{@dc} Currently : &6NEVER JOINED"
+      send "&f&m---------------------------------------------"
+      send "{@dc} Manual Bans: &f%{bans.%arg 1%}%"
+      send "{@dc} Total Unbans: &f%{unbans.%arg 1%}%"
+      send "{@dc} Anticheat Bans: &f%{vacbans.%arg 1%}%"
+      send "{@dc} Anticheat Kicks: &f%{kicks.%arg 1%}%"
+      send "{@dc} Total Warns: &f%{warns.%arg 1%}%"
+      send "&f&m---------------------------------------------"
+      send "{@dc} Current VL : &cReach: &4&l%{vl.REACH.%arg 1%}% &8| &cKillAura: &4&l%{vl.KILLAURA.%arg 1%}% &8| &cAutoclicker: &4&l%{vl.AUTOCLICKER.%arg 1%}% &8| &cFly: &4&l%{vl.FLY1.%arg 1%}%&7/&4&l%{vl.FLY2.%arg 1%}%  &8| &cNofall: &4&l%{vl.NOFALL.%arg 1%}% "
+      send "&f&m---------------------------------------------"
+      send "{@dc} All Alts: &f%{altip.%{ip.%arg 1%}%::*}%"
+      send "{@dc} First Account: &f%{firstalt.%{ip.%arg 1%}%}%"
+      send "&f&m----------------------------------------------"
+
+#/// KILLAURA ///
+
+on damage:
+   if attacker is player:
+      add 0.5 to {combo.%attacker%}
+      if {combo.%attacker%} >= 2:
+         add 1 to {vl.KILLAURA.%attacker%}
+         loop all players:
+            if loop-player has permission "VAC.NOTIFY":
+               if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} %attacker% &7failed &fKillAura &7(T: D) &f(VL: &4&l%{vl.KILLAURA.%attacker%}%&f)" to loop-player
+                  if {vl.KILLAURA.%attacker%} >= 3:
+                     if {@autoban} is true:
+                        make server execute command "/vackick %attacker%"
+         if {@setback} is true:
+            cancel event
+
+every 10 tick:
+   loop all players:
+      clear {combo.%loop-player%}
+
+on damage:
+   if victim is not player:
+      stop
+   if attacker is not player:
+      stop
+   if {ktarget.%attacker%} is not set:
+      add 1 to {vl.KILLAURA.%attacker%}
+      if {@setback} is true:
+         cancel event
+      loop all players:
+         if loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} &7%attacker% &7Killaura | r=not looking entity | ban=%{vacbans.%attacker%}%&7 | kick=%{kicks.%attacker%}%&7 | vl=%{vl.KILLAURA.%attacker%}%&7 | t=A | ping=%attacker's ping%" to loop-player
+            if {vl.KILLAURA.%attacker%} >= 3:
+               if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} %attacker% &7failed &fKillAura &7(T: A) &f(VL: &4&l%{vl.KILLAURA.%attacker%}%&f)" to loop-player
+
+on leftclick:
+   set {ktarget.%player%} to targeted entity
+
+on damage:
+  if attacker is a player:
+    loop all blocks in radius 3 around attacker:
+      if loop-block is snow layer:
+        stop
+      if loop-block is ladder:
+        stop
+      if loop-block is vines:
+        stop
+      if loop-block is iron bars:
+        stop
+      if loop-block is fence:
+        stop
+      if loop-block is large fern:
+        stop
+      if loop-block is tall grass:
+        stop
+      if loop-block is button:
+        stop
+      if loop-block is door:
+        stop
+      if loop-block is fence gate:
+        stop
+      if loop-block is cobblestone wall:
+        stop
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.VAC.bypass} is not set:
+        set {%victim's uuid%.VAC.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            if {@setback} is true:
+              cancel event
+            add 1 to {vl.KILLAURA.%attacker%}
+            loop all players:
+              if loop-player has permission "VAC.NOTIFY":
+                if {VAC.verbose.%loop-player%} is true:
+                  send "{@dc} &7%attacker%&7 killaura | r=suspicious hits | ban=%{vacbans.%attacker%}%&7 | kick=%{kicks.%attacker%}%&7 | vl=%{vl.KILLAURA.%attacker%}%&7 | t=B | ping=%attacker's ping%" to loop-player
+                if {vl.KILLAURA.%attacker%} >= 3:
+                  if {VAC.notify.%loop-player%} is true:
+                    send "{@dc} %attacker% &7failed &fKillAura &7(T: B) &(VL: &4&l%{vl.KILLAURA.%attacker%}%&f)" to loop-player
+            if {vl.KILLAURA.%attacker%} >= 5:
+              if {@autoban} is true:
+                make server execute command "/vackick %attacker%"
+        delete {%attacker's uuid%.VAC.killaura.check}
+  loop {VAC.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+
+
+#/// ANIT ALTS ///
+
+command /vacalt [<offline player>]:
+    permission: alt.see
+    trigger:
+        if arg 1 is not set:
+            send "&cUsage : /alt <player>"
+            stop
+        if {ip.%arg 1%} is not set:
+            send "{@dc} &cError: &4This player never joinned the server !"
+            stop
+        if {firstalt.%{ip.%arg 1%}%} is not set:
+            send "{@dc} &cError: &4This player never joinned the server !"
+            stop
+        else:
+            send "{@dc} &9Alts of %arg 1% : &c%{altip.%{ip.%arg 1%}%::*}%&9 First Account : &c%{firstalt.%{ip.%arg 1%}%}% &9Ip of player : &c%{ip.%arg 1%}%"
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            loop all players:
+                if loop-player has permission "alt.see":
+                    send "{@dc} &c%{_name}% is an alt of %{firstalt.%ip of player%}%" to loop-player
+            if {vacbans::*} contains {_name}:
+                make server execute command "/vacban %{_name}% 7 day"
+                stop
+            if {_name} is banned:
+                make server execute command "/vacban %{_name}% 7 day"
+
+#/// EVENTS ///
+
+on login:
+   while player is online:
+      wait 5 second
+      set {legitfly.%player%} to false
+
+on damage:
+   set {bypass.%victim%} to true
+
+on any move:
+   if player is on ground:
+      wait 1 second
+      if player is on ground:
+         set {bypass.%player%} to false 
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.bypass} is not set:
+      if difference between {%player's uuid%.VAC.last.jump} and now is less than or equal to 1 seconds:
+        set {%player's uuid%.VAC.jump.bhop} to true
+        wait 10 ticks
+        delete {%player's uuid%.VAC.jump.bhop}
+      set {%player's uuid%.VAC.last.jump} to now
+      set {%player's uuid%.VAC.jump} to true
+      wait 10 ticks
+      delete {%player's uuid%.VAC.jump}
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.bypass} is not set:
+      set {%player's uuid%.VAC.teleport} to true
+      wait 1 second
+      delete {%player's uuid%.VAC.teleport}
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player's uuid%.VAC.epteleport} to true
+
+on step on slime block:
+   loop 5 times:
+      set {legtifly.%player%} to true
+
+on step on ice:
+   set {legitfly.%player%} to true
+
+on step on packed ice:
+   set {legitfly.%player%} to true
+
+on any move:
+   if player is on ground:
+      set {float.%player%} to 0
+
+function Reload(p: text):
+  if {VAC.Autoclicker} is not set:
+    set {VAC.Autoclicker} to true
+  if {VAC.Criticals} is not set:
+    set {VAC.Criticals} to true
+  if {VAC.Reach} is not set:
+    set {VAC.Reach} to true
+  if {VAC.Velocity} is not set:
+    set {VAC.Velocity} to true
+  if {VAC.Bhop} is not set:
+    set {VAC.Bhop} to true
+  if {VAC.Blink} is not set:
+    set {VAC.Blink} to true
+  if {VAC.ClickTP} is not set:
+    set {VAC.ClickTP} to true
+  if {VAC.Flight} is not set:
+    set {VAC.Flight} to true
+  if {VAC.Float} is not set:
+    set {VAC.Float} to true
+  if {VAC.HighJump} is not set:
+    set {VAC.HighJump} to true
+  if {VAC.Hover} is not set:
+    set {VAC.Hover} to true
+  if {VAC.Jesus} is not set:
+    set {VAC.Jesus} to true
+  if {VAC.NoFall} is not set:
+    set {VAC.NoFall} to true
+  if {VAC.NoSlow} is not set:
+    set {VAC.NoSlow} to true
+  if {VAC.Scaffold} is not set:
+    set {VAC.Scaffold} to true
+  if {VAC.Speed} is not set:
+    set {VAC.Speed} to true
+  if {VAC.Spider} is not set:
+    set {VAC.Spider} to true
+  if {VAC.Step} is not set:
+    set {VAC.Step} to true
+
+on script load:
+   if {@locked} is true:
+      broadcast "&cSorry, but this &4VAC &cversion seems outdated or locked!"
+      wait 2 seconds
+      make server execute command "/sk disable VAC"
+on script load:
+   if {@enabled} is false:
+      broadcast "&cSorry, but this &4VAC &cversion seems outdated or locked!"
+      wait 2 seconds
+      make server execute command "/sk disable VAC"
+
+on any move:
+   if player is on ground:
+      wait 1 second
+      set {legitfly.%player%} to false
+
+on projectile hit:
+   if projectile is ender pearl:
+      if shooter is on ground:
+         delete {%shooter's uuid%.VAC.epteleport}
+
+on join:
+   if player has permission "VAC.NOTIFY":
+      if {VAC.notify.%player%} is not set:
+         set {VAC.notify.%player%} to false
+         wait 5 second
+         send "{@dc} &fNotifications turned off" to player
+
+every 1 second:
+   loop all players:
+      clear {cpsL.%loop-player%}
+      clear {cpsR.%loop-player%}
+
+
+every 30 second:
+   loop all players:
+      clear {vl.%loop-player%}
+      clear {vl.FLY1.%loop-player%}
+      clear {vl.FLY2.%loop-player%}
+      clear {vl.BLINK.%loop-player%}
+      clear {vl.AUTOCLICKERLEFT.%loop-player%}
+      clear {vl.HIGHJUMP.%loop-player%}
+      clear {vl.NOFALL.%loop-player%}
+      clear {vl.NOSLOW.%loop-player%}
+      clear {vl.CLICKTP.%loop-player%}
+      clear {vl.KILLAURA.%loop-player%}
+      clear {vl.REACH.%loop-player%}
+      clear {vl.FASTBREAK.%loop-player%}
+      clear {vl.FASTPLACE.%loop-player%}
+      clear {vl.FUCKER.%loop-player%}
+      clear {vl.CRITICALS.%loop-player%}
+      clear {vl.NOWEB.%loop-player%}
+      clear {vl.AUTOBLOCK.%loop-player%}
+      clear {vl.SPEED.%loop-player%}
+      clear {vl.CHESTSTEALER.%loop-player%}
+      clear {vl.CAKEEATER.%loop-player%}
+      clear {vl.FASTBOW.%loop-player%}
+      clear {vl.INVENTORY.%loop-player%}
+      clear {vl.ILLEGALMOVE.%loop-player%}
+      clear {vl.LONGJUMP.%loop-player%}
+      clear {vl.SPIDER.%loop-player%}
+      clear {vl.VELOCITY.%loop-player%}
+
+on death:
+   set {void.%player%} to true
+
+on respawn:
+   set {void.%player%} to false
+
+every 4 second:
+   set {sback} to true
+   wait 2 second
+   set {sback} to false
+
+on script load:
+   if {@setback} is false:
+      loop all players:
+         clear {setback.%loop-player%}
+
+every 1 second:
+   if {@setback} is false:
+      stop
+   loop all players:
+      loop-player is on ground:
+         set {setback.%loop-player%} to location of loop-player
+
+#/// REACH ///
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {VAC.Reach} is false:
+      stop
+   if attacker has speed:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} > 4.7:
+         if damage cause is not a projectile:
+            if {@setback} is true:
+               cancel event
+            add 1 to {vl.REACH.%attacker%}
+            loop all players:
+               loop-player has permission "VAC.NOTIFY":
+                  if {VAC.verbose.%loop-player%} is true:
+                     send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=A | ping=%attacker's ping%" to loop-player
+                        if {vl.REACH.%attacker%} >= 1:
+                           if {VAC.notify.%loop-player%} is true:
+                              send "{@dc} %attacker% &7failed &fReach &7(T: F) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {VAC.Reach} is false:
+      stop
+   if attacker has speed:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} > 4:
+         if damage cause is not a projectile:
+            if {@setback} is true:
+               cancel event
+            if attacker's ping < 500:
+               add 2 to {vl.REACH.%attacker%}
+               loop all players:
+                  loop-player has permission "VAC.NOTIFY":
+                     if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=A | ping=%attacker's ping%" to loop-player
+                     if {vl.REACH.%attacker%} >= 5:
+                        if {VAC.notify.%loop-player%} is true:
+                           send "{@dc} %attacker% &7failed &fReach &7(T: A) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+               if {vl.REACH.%attacker%} = 4:
+                  make server execute command "/watchdog %attacker%"
+               if {vl.REACH.%attacker%} >= 10:
+                  if {@autoban} is false:
+                     stop
+                  make server execute command "/vackick %attacker%"
+            if attacker's ping >= 500:
+               add 1 to {vl.REACH.%attacker%}
+               loop all players:
+                  loop-player has permission "VAC.NOTIFY":
+                     if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=A | ping=%attacker's ping%" to loop-player
+                     if {vl.REACH.%attacker%} >= 5:
+                        if {VAC.notify.%loop-player%} is true:
+                           send "{@dc} %attacker% &7failed &fReach &7(T: A) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+               if {vl.REACH.%attacker%} = 3:
+                  make server execute command "/watchdog %attacker%"
+               if {vl.REACH.%attacker%} >= 10:
+                  if {@autoban} is false:
+                     stop
+                  make server execute command "/vackick %attacker%"
+            if attacker's ping >= 1100:
+               add 0.5 to {vl.REACH.%attacker%}
+               loop all players:
+                  loop-player has permission "VAC.NOTIFY":
+                     if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=A | ping=%attacker's ping%" to loop-player
+                     if {vl.REACH.%attacker%} >= 5:
+                        if {VAC.notify.%loop-player%} is true:
+                           send "{@dc} %attacker% &7failed &fReach &7(T: A) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+               if {vl.REACH.%attacker%} = 3:
+                  make server execute command "/watchdog %attacker%"
+               if {vl.REACH.%attacker%} >= 10:
+                  if {@autoban} is false:
+                     stop
+                  make server execute command "/vackick %attacker%"
+
+on damage:
+  {VAC.Reach} is true
+  set {_distance.%attacKER%} to distance between attacker and victim
+  delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+  if distance between attacker and victim is greater than 4.25:
+    set {_r} to distance between attacker and victim
+    if attacker is a player:
+      if {%attacker's uuid%.VAC.bypass} is not set:
+        if {%attacker's uuid%.VAC.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.VAC.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              if {%attacker's uuid%.VAC.autoclicker.check} is not set:
+                if {_r} is less than 4.5:
+                  add 1 to {vl.REACH.%attacker%}
+                  loop all players:
+                    loop-player has permission "VAC.NOTIFY":
+                      if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=B | ping=%attacker's ping%" to loop-player
+                      if {vl.REACH.%attacker%} >= 5:
+                        if {VAC.notify.%loop-player%} is true:
+                          send "{@dc} %attacker% &7failed &fReach &7(T: B) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+                  if {@setback} is true:
+                    cancel event
+                  if {vl.REACH.%attacker%} >= 10:
+                    if {@autoban} is true:
+                      make server execute command "/vackick %attacker%"
+                else if {_r} is less than 5.5:
+                  add 1 to {vl.REACH.%attacker%}
+                  loop all players:
+                    loop-player has permission "VAC.NOTIFY":
+                      if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=C | ping=%attacker's ping%" to loop-player
+                      if {vl.REACH.%attacker%} >= 5:
+                        if {VAC.notify.%loop-player%} is true:
+                          send "{@dc} %attacker% &7failed &fReach &7(T: C) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+                  if {@setback} is true:
+                    cancel event
+                  if {vl.REACH.%attacker%} >= 10:
+                    if {@autoban} is true:
+                      make server execute command "/vackick %attacker%"
+              else:
+                if {%attacker's uuid%.VAC} > 5:
+                  add 1 to {vl.REACH.%attacker%}
+                  loop all players:
+                    loop-player has permission "VAC.NOTIFY":
+                      if {VAC.verbose.%loop-player%} is true:
+                        send "{@dc} &7%attacker% &7Reach | r=hit distance | ra=%{_distance.%attacker%}%&7 | ban=%{vacbans.%attacker%}% &7| kick=%{kicks.%attacker%}% &7| vl=%{vl.REACH.%attacker%}% &7| t=C | ping=%attacker's ping%" to loop-player
+                      if {vl.REACH.%attacker%} >= 1:
+                        if {VAC.notify.%loop-player%} is true:
+                          send "{@dc} %attacker% &7failed &fReach &7(T: D) &f(VL: &4&l%{vl.REACH.%attacker%}%&f)" to loop-player
+                  if {@setback} is true:
+                    cancel event
+                  if {vl.REACH.%attacker%} >= 1:
+                    make server execute command "/vackick %attacker%"
+          delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+
+#/// AUTOCLICKER ///
+
+on leftclick:
+   if {VAC.Autoclicker} is false:
+      stop
+   add 1 to {cpsL.%player%}
+   if {cpsL.%player%} >= 13:
+      cancel event
+      loop all players:
+         loop-player has permission "VAC.NOTIFY":
+            if {VAC.notify.%loop-player%} is true:
+               add 1 to {vl.AUTOCLICKERLEFT.%player%}
+               send "{@dc} &7&f%player% &7failed &f Autoclicker &7(T: A) &f(CPS: &4&l%{cpsL.%player%}%&f) (VL: &4&l%{vl.AUTOCLICKERLEFT.%player%}%&f)" to loop-player
+      if {vl;AUTOCLICKERLEFT.%player%} >= 3:
+         if {@autoban} is false:
+            stop
+         make server execute command "/vackick %player% "
+
+on rightclick:
+   if {VAC.Autoclicker} is false:
+      stop
+   add 1 to {cpsR.%player%}
+   if {cpsR.%player%} >= 18:
+      cancel event
+      loop all players:
+         loop-player has permission "VAC.NOTIFY":
+            if {VAC.notify.%loop-player%} is true:
+               add 1 to {vl.AUTOCLICKERRIGHT.%player%}
+               send "{@dc} &7&f%player% &7failed &f Autoclicker&7 (T: B) &f(CPS: &4&l%{cpsR.%player%}%&f) (VL: &4&l%{vl.AUTOCLICKERRIGHT.%player%}%&f)" to loop-player
+      if {vl.AUTOCLICKERRIGHT.%player%} >= 3:
+         if {@autoban} is false:
+            stop
+         make server execute command "/vackick %player% "
+
+#/// AIMBOT ///
+
+
+#/// NOFALL ///
+
+on any move:
+    if {VAC.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        add 1 to {vl.NOFALL.%player%}
+        loop all players:
+            loop-player has permission "VAC.NOTIFY":
+                if {VAC.verbose.%loop-player%} is true:
+                    send "{@dc} &7%player% &7Nofall | r=Bad Packets | dt=%{_nofallcount}% &7| ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | t=A | vl=%{vl.NOFALL.%player%}%&7 | ping=%player's ping% &7" to loop-player
+                if {vl.NOFALL.%player%} >= 3:
+                    if {VAC.notify.%loop-player%} is true:
+                        send "{@dc} &f%player% &7failed &fNofall &7(T: A) &f(VL: &4&l%{vl.NOFALL.%player%}%&f)" to loop-player
+        if {vl.NOFALL.%player%} >= 8:
+            if {@autoban} is false:
+                stop
+            make server execute command "/vackick %player% "
+    if {_nofallcount} > 0:
+        stop
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on ladder:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#/// FLY ///
+
+on any movement:
+  {VAC.Step} is true
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.VAC.nochecks} is not set
+    {%player's uuid%.VAC.epteleport} is not set
+    {%player's uuid%.VAC.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.VAC.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      if {%player's uuid%.VAC.step.player} is not set:
+        add 1 to {vl.FLY2.%player%}
+        loop all players:
+          loop-player has permission "anticheat.alerts":
+            if {VAC.verbose.%loop-player%} is true:
+              send "{@dc} &7%player%&7 Fly | r=Invalid movement packets | dt=%{_y}%&7 | vl=%{vl.FLY2.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=J | ping=%player's ping%" to loop-player
+            if {VAC.notify.%loop-player%} is true:
+              if {vl.FLY2.%player%} >= 3:
+                send "{@dc} &f%player% &7failed &fFly &7(T: J) &f(VL: &4&l%{vl.FLY2.%player%}%&f)" to loop-player
+        if {vl.FLY2.%player%} >= 5:
+          if {@autoban} is true:
+            make server execute command "/vackick %player%"
+    else:
+      {VAC.Flight} is true
+      if {legitfly.%player%} is true:
+        stop
+      add 1 to {vl.FLY2.%player%}
+      loop all players:
+        loop-player has permission "anticheat.alerts":
+          if {VAC.verbose.%loop-player%} is true:
+            send "{@dc} &7%player%&7 Fly | r=Invalid movement packets | dt=%{_y}%&7 | vl=%{vl.FLY2.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=K | ping=%player's ping%" to loop-player
+          if {VAC.notify.%loop-player%} is true:
+            if {vl.FLY2.%player%} >= 3:
+              send "{@dc} &f%player% &7failed &fFly &7(T: K) &f(VL: &4&l%{vl.FLY2.%player%}%&f)" to loop-player
+      if {@setback} is true:
+        teleport player to {setback.%player%}
+      if {vl.FLY2.%player%} >= 5:
+        if {@autoban} is true:
+          make server execute command "/vackick %player%"
+
+on any movement:
+  if player's chestplate is an elytra:
+    stop
+  if {legitfly.%player%} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 0.18:
+        set {%player's uuid%.VAC.walking} to true
+        set {%player's uuid%.VAC.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player's uuid%.VAC.walking}
+        delete {%player's uuid%.VAC.walk.speed}
+      if {%player's uuid%.VAC.nochecks} is true:
+        stop
+      if {%player's uuid%.VAC.epteleport} is true:
+        stop
+      if {%player's uuid%.VAC.teleport} is true:
+        stop
+      player is not riding
+      if {_dif} > 5:
+        if {%player's uuid%.VAC.teleport} is true:
+          stop
+        set {%player's uuid%.VAC.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {VAC.Blink} is true
+            add 1 to {vl.BLINK.%player%}
+            loop all players:
+              if loop-player has permission "VAC.NOTIFY":
+                if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} %player% &7failed &fBlink &7(T: A) &f(VL: &4&l%{vl.BLINK.%player%}%&f)" to loop-player
+                  if {@autoban} is true:
+                    if {vl.BLINK.%player%} >= 25:
+                      make server execute command "/vackick %player%"
+          else:
+            {VAC.Flight} is true
+            if {legitfly.%player%} is true:
+              stop
+            add 1 to {vl.FLY2.%player%}
+            loop all players:
+              if loop-player has permission "VAC.NOTIFY":
+                if {VAC.verbose.%loop-player%} is true:
+                  send "{@dc} &7%player%&7 Fly | r=Invalid movement packets | dt=%{_dif}%&7 | vl=%{vl.FLY2.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=L | ping=%player's ping%" to loop-player
+                if {VAC.notify.%loop-player%} is true:
+                  if {vl.FLY2.%player%} >= 5:
+                    send "{@dc} &f%player% &7failed &fFly &7(T: L) &f(VL: &4&l%{vl.FLY2.%player%}%&f)" to loop-player
+                  if {@setback} is true:
+                    teleport player to {setback.%player%}
+                  if {@autokick} is true:
+                    if {vl.FLY2.%player%} >= 10:
+                      make server execute command "/vackick %player%"
+        else:
+          {VAC.ClickTP} is true
+          add 1 to {vl.CLICKTP.%player%}
+          loop all players:
+            if loop-player has permission "VAC.NOTIFY":
+              if {VAC.notify.%loop-player%} is true:
+                send "{@dc} %player% &7failed &fClickTP &7(T: A) &f(VL: &4&l%{vl.CLICKTP.%player%}%&f)" to loop-player
+                if {@setback} is true:
+                  teleport player to {setback.%player%}
+                if {@autoban} is true:
+                  if {vl.CLICKTP.%player%} >= 3:
+                    make server execute command "/vackick %player%"
+
+function Detect(p: player, r: text):
+  if {legitfly.%{_p}%} is true:
+    stop
+  add 1 to {alertl::%{_p}%}
+  if fly mode of {_p} is true:
+    stop
+  loop all players:
+    loop-player have permission "VAC.NOTIFY":
+      send "{@dc} &f%{_p}% &7failed &f%{_r}% &f(VL: &4&l%{alertl::%{_p}%}%&f)" to loop-player
+      if {@setback} is true:
+        teleport {_p} to {setback.%{_p}%}
+      if {alertl::%{_p}%} >= 3:
+        if {@autoban} is true:
+          make server execute command "/vackick %{_p}%"
+on damage:
+  set {cooldown.%victim%} to now
+every 5 second:
+  clear {alertl::*}
+on any move:
+  player is not riding
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      if player's chestplate is an elytra:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or stairs or ladder or slab or 165
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        Detect(player, "Fly V1 &a %{_diffy}%")
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        Detect(player, "Fly v1 &d 0.12")
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        Detect(player, "Fly v1 &d 0.4")
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        Detect(player, "Fly V1 &1 %{_diffy}%")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      Detect(player, "Fly v1 &a%{_diffy}%")
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        clear {vlsame.%player%}
+        stop
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+#/// FAST PLACE ///
+
+on block place:
+   set {_waited} to difference between {fastplace.%player's uuid%} and now
+   if {_waited} is less than 1 ticks:
+      add 1 to {vl.FASTPLACE.%player%}
+      loop all players:
+         if loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} &7%player% FastPlace | r=fast placement | df=%{_waited}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{vackicks.%player%}%&7 | t=A | vl=%{vl.FASTPLACE.%player%}%&7 | ping=%player's ping%" to loop-player
+            if {VAC.notify.%loop-player%} is true:
+               if {vl.FASTPLACE.%player%} >= 10:
+                  send "{@dc} %player% &7failed &fFastPlace &7(T: A) &f(VL: &4&l%{vl.FASTPLACE.%player%}%&f)" to loop-player
+                  if {@setback} is true:
+                     cancel event
+      if {@autoban} is true:
+         if {vl.FASTPLACE.%player%} >= 15:
+            make server execute command "/vackick %player%"
+      set {fastplace.%player's uuid%} to now
+      set {fastplace.amount.%player's uuid%} to {fastplace.amount.%player's uuid%} + 1
+   else:
+      set {fastplace.%player's uuid%} to now
+
+#/// INVENTORY MOVE ///
+
+function Inventory(p: player, r: text):
+  if {VAC.Inventory} is false:
+    stop
+  add 1 to {alertl::%{_p}%}
+  teleport {_p} to {setback.%{_p}%}
+  loop all players:
+    loop-player has permission "VAC.NOTIFY":
+      if {VAC.notify.%loop-player%} is true:
+        send "{@dc} &f%{_p}%&7 failed &f InventoryMove &7(T: A) &f(VL: &4&l%{alertl::%{_p}%}%&f)" to loop-player
+  if {alertl::%{_p}%} >= 3:
+    if {@autoban} is false:
+      stop
+      make server execute command "/vacban %{_p}% 1 day"
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    cancel event
+    Inventory(player, "InventoryMove")
+    stop
+  if player is sneaking:
+    cancel event
+    Inventory(player, "AutoSneak/InventoryMove")
+    stop
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    Inventory(player, "Inventory Hack")
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    Inventory(player, "Inventory Move")
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+on inventory open:
+  wait 1 ticks
+  if player is sprinting:
+    Inventory(player, "InventoryMove")
+on inventory open:
+  wait 1 ticks
+  if player is sneaking:
+    Inventory(player, "AutoSneak/InventoryMove")
+
+#/// HIGHJUMP ///
+
+on jump:
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} > 1.1:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.VAC.nochecks} is not set
+    {%player's uuid%.VAC.epteleport} is not set
+    {%player's uuid%.VAC.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.VAC.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    if {_y} is between 1.1 and 2.6:
+      {VAC.HighJump} is true
+      add 1 to {vl.HIGHJUMP.%player%}
+      if {%player's uuid%.VAC.damage.other} is set:
+        loop all players:
+          loop-player has permission "VAC.NOTIFY":
+            if {VAC.notify.%loop-player%} is true:
+              send "{@dc} &f%player% &7failed &fHighJump &7(T: B) &f(VL: &4&l%{vl.HIGHJUMP.%player%}%&f)" to loop-player
+
+on jump:
+   if {VAC.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+   set {_pos1} to y location of player
+   wait 7 ticks
+   set {_pos2} to y location of player
+   if difference between {_pos1} and {_pos2} is bigger than 2:
+      add 2 to {vl.HIGHJUMP.%player%}
+      loop all players:
+         loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} &7%player% &7HighJump | r=jumped to high | dt=%{_pos1}%&7/%{_pos2}%&7 | t=A | vl=%{vl.HIGHJUMP.%player%}%&7 | bans=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | ping=%player's ping%" to loop-player
+            if {vl.HIGHJUMP.%player%} >= 2:
+               if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} &f%player% &7failed &f HighJump &7(T: A) &f(VL: &4&l%{vl.HIGHJUMP.%player%}%&f)" to loop-player
+                  if {@setback} is true:
+                     teleport player to {setback.%player%}
+            if {vl.HIGHJUMP.%player%} >= 10:
+               if {@autoban} is false:
+                  stop
+               make server execute command "/vackick %player% "
+         else:
+            stop
+
+#/// LONG JUMP ///
+
+on jump:
+   if {VAC.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   if block under player is ice:
+      stop
+   if block under player is packed ice:
+      stop
+   set {_pos1} to location of player
+   wait 10 ticks
+   if distance between player's location and {_pos1} is bigger than 5:
+      if {bypass.%player%} is true:
+         stop
+      add 1 to {vl.LONGJUMP.%player%}
+      loop all players:
+         loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} &7%player% &7LongJump | r=jumped to long | dt=%{_pos1}%&7/%player's location%&7 | t=A | vl=%{vl.LONGJUMP.%player%}%&7 | bans=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | ping=%player's ping%" to loop-player
+            if {vl.LONGJUMP.%player%} >= 3:
+               if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} &f%player% &7failed &f LongJump &7(T: A) &f(VL: &4&l%{vl.LONGJUMP.%player%}%&f)" to loop-player
+            if {vl.LONGJUMP.%player%} >= 10:
+               if {@autoban} is false:
+                  stop
+               make server execute command "/vackick %player%"
+         else:
+            stop
+
+#/// SPIDER FLY NOFALL CRITICALS ///
+
+on any movement:
+  if {legtifly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.VAC.epteleport} is true:
+    stop
+  if {%player's uuid%.VAC.teleport} is true:
+    stop
+  else if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.nochecks} is set:
+      wait 1 second
+      delete {%player's uuid%.VAC.nochecks}
+      stop
+    if {%player's uuid%.VAC.bypass} is not set:
+      if {%player's uuid%.VAC.cheat.cooldown} is not set:
+        set {%player's uuid%.VAC.cheat.cooldown} to true
+        if block under player is not air or water:
+          set {%player's uuid%.VAC.tp.loc} to {_loc}
+        #NoFall
+        {VAC.NoFall} is true:
+          if player's flight mode is false:
+            if {%player's uuid%.VAC.jump} is not set:
+              if block under player is air:
+                set {_yloc} to player's y coordinate
+                set {_health} to player's health
+                wait 0.5 seconds
+                set {_yloc1} to player's y coordinate
+                if player is on ground:
+                  block under player is not slime block
+                  set {_dis} to {_yloc} - {_yloc1}
+                  block under player is not air
+                  block under player is ladder:
+                    stop
+                  loop all blocks in radius 2 around player:
+                    if loop-block is cobweb:
+                      stop
+                    if loop-block is water:
+                      stop
+                    if loop-block is vine:
+                      stop
+                    if loop-block is ladder:
+                      stop
+                  {%player's uuid%.VAC.nofall} is not set
+                  if {_dis} is greater than or equal to 5.5:
+                    if player's health = {_health}-0.5:
+                      set {_dmg} to floor({_dis} / 1)
+                      loop all players:
+                        loop-player has permission "VAC.NOTIFY":
+                          add 1 to {vl.NOFALL.%player%}
+                          if {VAC.verbose.%loop-player%} is true:
+                            send "{@dc} &7%player%&7 Nofall | r=Bad Packets | ds=%{_dis}%&7 | vl=%{vl.NOFALL.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=C | ping=%player's ping%" to loop-player
+                          if {VAC.notify.%loop-player%} is true:
+                            if {vl.NOFALL.%player%} >= 2:
+                              send "{@dc} &f%player% &7failed &fNofall &7(T: C) &f(VL: &4&l%{vl.NOFALL.%player%}%&f)" to loop-player
+                          if {vl.NOFALL.%player%} >= 5:
+                            if {@autoban} is false:
+                              stop
+                            make server execute command "/vackick %player%"
+                      set {%player's uuid%.VAC.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.VAC.nofall}
+                      #damage the player by {_dmg} heart
+        #Spider
+        {VAC.Spider} is true
+        if block under player is air:
+          if block 2 under player is air:
+            if block 3 under player is air:
+              set {_y} to player's y coordinate
+              wait 1 tick
+              block under player is not ladder
+              block at player is not water
+              if {%player's uuid%.VAC.jump} is not set:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if difference between {_y} and player's y coordinate is less than 1:
+                    if distance between player and player's targeted block is less than 1.25:
+                      loop all players:
+                        loop-player has permission "VAC.NOTIFY":
+                          add 1 to {vl.SPIDER.%player%}
+                          if {VAC.verbose.%loop-player%} is true:
+                            send "{@dc} &7%player%&7 Spider | r=Move on wall | ds=%{_y}%&7 | vl=%{vl.SPIDER.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=A | ping=%player's ping%" to loop-player
+                          if {VAC.notify.%loop-player%} is true:
+                            if {vl.SPIDER.%player%} >= 5:
+                              send "{@dc} %player% &7failed&f Spider &7(T: A) &f(VL: &4&l%{vl.SPIDER.%player%}%&f)" to loop-player
+                          if {vl.SPIDER.%player%} >= 10:
+                            if {@autoban} is false:
+                              stop
+                            make server execute command "/vackick %player%"
+                  else:
+                    if distance between player and player's targeted block is less than 1.25:
+                      {VAC.Speed} is true
+                      loop all players:
+                        loop-player has permission "VAC.NOTIFY":
+                          add 1 to {vl.SPIDER.%player%}
+                          if {VAC.verbose.%loop-player%} is true:
+                            send "{@dc} &7%player%&7 Spider | r=Move on wall | ds=%{_y}%&7 | vl=%{vl.SPIDER.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=B | ping=%player's ping%" to loop-player
+                          if {VAC.notify.%loop-player%} is true:
+                            if {vl.SPIDER.%player%} >= 5:
+                              send "{@dc} %player% &7failed&f Spider &7(T: B) &f(VL: &4&l%{vl.SPIDER.%player%}%&f)" to loop-player
+                          if {vl.SPIDER.%player%} >= 10:
+                            if {@autoban} is false:
+                              stop
+                            make server execute command "/vackick %player%"
+              else:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if distance between player and player's targeted block is less than 1.25:
+                    loop all players:
+                      loop-player has permission "VAC.NOTIFY":
+                        add 1 to {vl.SPIDER.%player%}
+                        if {VAC.verbose.%loop-player%} is true:
+                          send "{@dc} &7%player%&7 Spider | r=Move on wall | ds=%{_y}%&7 | vl=%{vl.SPIDER.%player%}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| t=C | ping=%player's ping%" to loop-player
+                        if {VAC.notify.%loop-player%} is true:
+                          if {vl.SPIDER.%player%} >= 5:
+                            send "{@dc} %player% &7failed&f Spider &7(T: C) &f(VL: &4&l%{vl.SPIDER.%player%}%&f)" to loop-player
+                        if {vl.SPIDER.%player%} >= 10:
+                          if {@autoban} is false:
+                            stop
+                          make server execute command "/vackick %player%"
+        #Flight
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player's uuid%.VAC.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player's uuid%.VAC.slime} to true
+                          wait 10 second
+                          delete {%player's uuid%.VAC.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player's uuid%.VAC.slime} is not set:
+                        if block under player is air:
+                          if {%player's uuid%.VAC.slime} is not set:
+                            {VAC.Flight} is true
+                            block under player is not water or ladder
+                            if player's world is "ul_world":
+                              stop
+                            if {flylegit.%player%} is true:
+                              stop
+                            if {@setback} is true:
+                              teleport player to {setback.%player%}
+                            loop all players:
+                              loop-player has permission "VAC.NOTIFY":
+                                add 1 to {vl.FLY1.%player%}
+                                if {VAC.notify.%loop-player%} is true:
+                                  send "{@dc} %player% &7failed&f Fly &7(T: D) &f(VL: &4&l%{vl.FLY1.%player%}%&f)" to loop-player
+                                if {vl.FLY1.%player%} >= 3:
+                                  if {@autoban} is false:
+                                    stop
+                                  make server execute command "/vackick %player%"
+                            set {%player's uuid%::VAC.flight.status} to true
+                            wait 5 second
+                            delete {%player's uuid%::VAC.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player's uuid%.VAC.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {VAC.Float} is true
+                              if block under player is slab:
+                                stop
+                              remove 1 from y coordinate of {%player's uuid%.VAC.tp.loc}
+                              teleport player to {setback.%player%}
+                              loop all players:
+                                loop-player has permission "VAC.NOTIFY":
+                                  add 1 to {vl.FLY1.%player%}
+                                  if {VAC.notify.%loop-player%} is true:
+                                    send "{@dc} %player% &7failed&f Fly &7(T: E) &f(VL: &4&l%{vl.FLY1.%player%}%&f)" to loop-player
+                                  if {vl.FLY1.%player%} >= 3:
+                                    if {@autoban} is false:
+                                      stop
+                                    make server execute command "/vackick %player%"
+                              add 1 to y coordinate of {%player's uuid%.VAC.tp.loc}
+          else:
+            #HOVER | FLIGHT | SPEED | CRITICALS
+            if {%player's uuid%.VAC.nochecks} is true:
+              stop
+              wait 1 second
+              delete {%player's uuid%.VAC.nochecks}
+            if {%player's uuid%.VAC.teleport} is true:
+              stop
+            if {%player's uuid%.VAC.epteleport} is true:
+              stop
+            else if {%player's uuid%.VAC.jump} is true:
+              stop
+            if player is riding:
+              stop
+            else:
+              if {%player's uuid%.VAC.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player's uuid%.VAC.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 10 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          set {_loop} to 255 -  y coordinate of player
+                          set y coordinate of {_123.loc} to 255
+                          loop {_loop} times:
+                            if block at {_123.loc} is slime block:
+                              stop
+                              set {%player's uuid%.VAC.slime} to true
+                              wait 10 second
+                              delete {%player's uuid%.VAC.slime}
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is not on ground:
+                            wait 3 ticks
+                            if {%player's uuid%.VAC.slime} is not set:
+                              if {%player's uuid%.VAC.damage} is not set:
+                                if {%player's uuid%.VAC.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player's uuid%.VAC.fix.slime} is not set:
+                                    set {_find} to player's location
+                                    set {_count} to 255 - y coordinate of player
+                                    loop 255 times:
+                                      if block at {_find} is slime block:
+                                        stop
+                                        set {%player's uuid%.VAC.slime} to true
+                                        wait 5 second
+                                        delete {%player's uuid%.VAC.slime}
+                                      else:
+                                        remove 1 from y coordinate of {_find}
+                                    wait 1 tick
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        if {_b1} is air:
+                                          {VAC.Flight} is true
+                                          loop all players:
+                                            loop-player has permission "VAC.NOTIFY":
+                                              add 1 to {vl.FLY1.%player%}
+                                              if {VAC.notify.%loop-player%} is true:
+                                                send "{@dc} %player% &7failed&f Fly &7(T: F) &f(VL: &4&l%{vl.FLY1.%player%}%&f)" to loop-player
+                                              if {vl.FLY1.%player%} >= 3:
+                                                if {@autoban} is false:
+                                                  stop
+                                                make server execute command "/vackick %player%"
+                                          teleport player to {setback.%player%}
+                                      else:
+                                        if {%player's uuid%.VAC.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player's uuid%.VAC.damage} is not set:
+                                              block under player is not ladder:
+                                                {VAC.Hover} is true
+                                                loop all players:
+                                                  loop-player has permission "VAC.NOTIFY":
+                                                    add 1 to {vl.FLY1.%player%}
+                                                    if {VAC.notify.%loop-player%} is true:
+                                                      send "{@dc} %player% &7failed&f Fly &7(T: G) &f(VL: &4&l%{vl.FLY1.%player%}%&f)" to loop-player
+                                                    if {vl.FLY1.%player%} >= 3:
+                                                      if {@autoban} is true:
+                                                        make server execute command "/vackick %player%"
+                                                    if {@setback} is true:
+                                                      teleport player to {setback.%player%}
+                                          else:
+                                            add 1 to {vl.NOFALL.%player%}
+                                            loop all players:
+                                              loop-player has permission "VAC.NOTIFY":
+                                                if {VAC.notify.%loop-player%} is true:
+                                                  send "{@dc} %player% &7failed&f Nofall &7(T: D) &f(VL: &4&l%{vl.NOFALL.%player%}%&f)" to loop-player
+                                                  if {vl.NOFALL.%player%} >= 3:
+                                                    if {@autoban} is true:
+                                                      make server execute command "/vackick %player%"
+                                                  if {@setback} is true:
+                                                    teleport player to {setback.%player%}
+                                        else:
+                                          {VAC.Criticals} is true
+                                          loop all players:
+                                            loop-player has permission "VAC.NOTIFY":
+                                              add 1 to {vl.CRITICALS.%player%}
+                                              if {VAC.notify.%loop-player%} is true:
+                                                send "{@dc} %player% &7failed&f Citicals &7(T: A) &f(VL: &4&l%{vl.CRITICALS.%player%}%&f)" to loop-player
+                                                if {vl.CRITICALS.%player%} >= 3:
+                                                  if {@autoban} is false:
+                                                    stop
+                                                  make server execute command "/vackick %player%"
+                              else:
+                                {VAC.Criticals} is true
+                                loop all players:
+                                  loop-player has permission "VAC.NOTIFY":
+                                    add 1 to {vl.CRITICALS.%player%}
+                                    if {VAC.notify.%loop-player%} is true:
+                                      send "{@dc} %player% &7failed&f Criticals &7(T: B) &f(VL: &4&l%{vl.CRITICALS.%player%}%&f)" to loop-player
+        #Speed
+        if player's flight mode is false:
+          if player doesn't have speed or jump boost:
+            if {%player's uuid%.VAC.nochecks} is not set:
+              if {%player's uuid%.VAC.teleport} is true:
+                stop
+              else if {%player's uuid%.VAC.epteleport} is true:
+                stop
+              else:
+                set {_x} to player's x coordinate
+                set {_z} to player's z coordinate
+                set {_bap} to block above player's head
+                wait 5 ticks
+                set {_bap2} to block above player's head
+                set {_x1} to player's x coordinate
+                set {_z1} to player's z coordinate
+                set {_x} to difference between {_x1} and {_x}
+                set {_z} to difference between {_z1} and {_z}
+                replace all "-" with "" in {_x}
+                replace all "-" with "" in {_z}
+                if {_x} > {_z}:
+                  set {_speed} to {_x}
+                if {_z} > {_x}:
+                  set {_speed} to {_z}
+                if {_x} = {_z}:
+                  set {_speed} to {_x}
+                player's walking speed is between 0 and 0.3
+                if {_speed} is greater than 3:
+                  if {%player's uuid%.VAC.teleport} is true:
+                    stop
+                  else if {%player's uuid%.VAC.epteleport} is true:
+                    stop
+                  set {%player's uuid%.VAC.cheat.speed} to {_speed} * 4
+                  if player is not riding:
+                    if {%player's uuid%.VAC.jump.bhop} is not set:
+                      if player is not flying:
+                        if block under player is not air:
+                          if block 2 under player is not air:
+                            {VAC.Speed} is true
+                            loop all players:
+                              loop-player has permission "ADMIN":
+                                add 1 to {vl.SPEED.%player%}
+                                if {VAC.verbose.%loop-player%} is true:
+                                  send "{@dc} &7%player%&7 Speed | r=moved fastly | ra=%{_speed}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | t=A | vl=%{vl.SPEED.%player%}%&7 | ping=%player's ping%" to loop-player
+                                if {vl.SPEED.%player%} >= 3:
+                                  if {VAC.notify.%loop-player%} is true:
+                                    send "{@dc} %player% &7failed&f Speed &7(T: A) &f(VL: &4&l%{vl.SPEED.%player%}%&f)" to loop-player
+                                    if {@setback} is true:
+                                      teleport player to {setback.%player%}
+                          else:
+                            {VAC.Speed} is true
+                            if {@setback} is true:
+                              teleport player to {setback.%player%}
+                            loop all players:
+                              loop-player has permission "ADMIN":
+                                add 1 to {vl.SPEED.%player%}
+                                if {VAC.notify.%loop-player%} is true:
+                                  if {VAC.verbose.%loop-player%} is true:
+                                  send "{@dc} &7%player%&7 Speed | r=moved fastly | ra=%{_speed}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | t=B | vl=%{vl.SPEED.%player%}%&7 | ping=%player's ping%" to loop-player
+                                if {vl.SPEED.%player%} >= 5:
+                                  if {VAC.notify.%loop-player%} is true:
+                                    send "{@dc} %player% &7failed&f Speed &7(T: B) &f(VL: &4&l%{vl.SPEED.%player%}%&f)" to loop-player
+                                    if {@setback} is true:
+                                      teleport player to {setback.%player%}
+                      else:
+                        {VAC.Speed} is true
+                        if {@setback} is true:
+                          teleport player to {setback.%player%}
+                        loop all players:
+                          loop-player has permission "ADMIN":
+                            add 1 to {vl.SPEED.%player%}
+                            if {VAC.verbose.%loop-player%} is true:
+                              send "{@dc} &7%player%&7 Speed | r=moved fastly | ra=%{_speed}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | t=A | vl=%{vl.SPEED.%player%}%&7 | ping=%player's ping%" to loop-player
+                            if {vl.SPEED.%player%} >= 2:
+                              if {VAC.notify.%loop-player%} is true:
+                                send "{@dc} %player% &7failed&f Speed &7(T: C) &f(VL: &4&l%{vl.SPEED.%player%}%&f)" to loop-player
+                                if {@setback} is true:
+                                  teleport player to {setback.%player%}
+                    else:
+                      {VAC.Bhop} is true
+                      {_bap} is air
+                      {_bap2} is air
+                      block above player is air
+                      loop all players:
+                        loop-player has permission "ADMIN":
+                          add 1 to {vl.SPEED.%player%}
+                          if {VAC.verbose.%loop-player%} is true:
+                            send "{@dc} &7%player%&7 Bhop | r=moved fastly | ra=%{_speed}%&7 | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | t=A | vl=%{vl.SPEED.%player%}%&7 | ping=%player's ping%" to loop-player
+                          if {vl.SPEED.%player%} >= 8:
+                            if {VAC.notify.%loop-player%} is true:
+                              send "{@dc} %player% &7failed&f Bhop &7(T: A) &f(VL: &4&l%{vl.SPEED.%player%}%&f)" to loop-player
+        #Jesus
+        if player's flight mode is false:
+          if block under player is water:
+            if block at player is not water:
+              loop 3 times:
+                wait 4 ticks
+                if block under player is water:
+                  if block at player is not water:
+                    add 1 to {_check}
+              if {_check} is greater than or equal to 2:
+                set {_loc.check} to player's location
+                remove 0.5 from y coordinate of {_loc.check}
+                player is not on ground
+                set {_locj} to player's location
+                remove 1 from y coordinate of {_locj}
+                teleport player to {setback.%player%}
+                {VAC.Jesus} is true
+                if {_check} is 2:
+                  loop all players:
+                    loop-player has permission "VAC.NOTIFY":
+                      add 1 to {vl.JESUS.%player%}
+                      if {VAC.notify.%loop-player%} is true:
+                        send "{@dc} %player% &7failed&f WaterWalk &7(T: A) &f(VL: &4&l%{vl.JESUS.%player%}%&f)" to loop-player
+                      if {vl.JESUS.%player%} >= 10:
+                        if {@autoban} is false:
+                          stop
+                        make server execute command "/vackick %player%"
+                else:
+                  loop all players:
+                    loop-player has permission "VAC.NOTIFY":
+                      add 1 to {vl.JESUS.%player%}
+                      if {VAC.notify.%loop-player%} is true:
+                        send "{@dc} %player% &7failed&f Waterwalk &7(T: B) &f(VL: &4&l%{vl.JESUS.%player%}%&f)" to loop-player
+                      if {vl.JESUS.%player%} >= 10:
+                        if {@autoban} is false:
+                          stop
+                        make server execute command "/vackick %player%"
+      loop {VAC.Delay} times:
+        wait 0.21 second
+      delete {%player's uuid%.VAC.cheat.cooldown}
+
+#/// PLUGINS ///
+
+command /pl:
+   trigger:
+      send ""
+command /bukkit:pl:
+   trigger:
+      send ""
+command /plugins:
+   trigger:
+      send ""
+command /bukkit:plugins:
+   trigger:
+      send ""
+command /ver:
+   trigger:
+      send ""
+command /version:
+   trigger:
+      send ""
+command /bukkit:ver:
+   trigger:
+      send ""
+command /bukkit:version:
+   trigger:
+      send ""
+
+
+#/// VELOCITY ///
+
+on damage:
+  #Velocity or AntiKB
+  if victim is a player:
+    {VAC.Velocity} is true
+    victim's gamemode is survival or adventure
+    {%attacker's uuid%.VAC.bypass} is not set
+    set {_loc} to victim's location
+    if {%victim's uuid%.VAC.cheat.cooldown.damage} is not set:
+      set {%victim's uuid%.VAC.cheat.cooldown.damage} to true
+      if damage cause is not contact, fall, burning, hunger, drown or unknown:
+        "%damage cause%" is not "unknown"
+        wait 1 ticks
+        set {_d} to distance between victim's location and {_loc}
+        if {_d} is between -0 and 0.20:
+          if {%victim's uuid%.VAC.death} is not set:
+            loop all blocks in radius 2 around victim:
+              if loop-block is not air:
+                if loop-block is not block under victim or block above victim's head:
+                  add 1 to {_count}
+            set {_loc.player} to victim's location
+            add 1 to y coordinate of {_loc.player}
+            loop all blocks in radius 1 around {_loc.player}:
+              if loop-block is not air:
+                if loop-block is not block under victim or block above victim's head:
+                  add 1 to {_count}
+            if {_count} > 1:
+              stop
+            block at victim is air
+            add 1 to {vl.VELOCITY.%victim%}
+            loop all players:
+              if loop-player has permission "VAC.NOTIFY":
+                if {VAC.verbose.%loop-player%} is true:
+                  send "{@dc} %victim% &7Velocity | r=did not take knockback | t=A | ban=%{vacbans.%victim%}%&7 | kick=%{kicks.%victim%}%&7 | vl=%{vl.VELOCITY.%victim%}%&7 | ping=%victim's ping%" to loop-player
+                if {VAC.notify.%loop-player%} is true:
+                  if {vl.VELOCITY.%victim%} >= 5:
+                    send "{@dc} %victim% &7failed &fVelocity &7(T: A) &f(VL: &4&l%{vl.VELOCITY.%victim%}%&f)" to loop-player
+      wait 0.21 second
+    if victim is a player:
+      delete {%victim's uuid%.VAC.cheat.cooldown.damage}
+    if attacker is a player:
+      delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+
+#/// REGEN ///
+
+on heal:
+   if heal reason = satiated:
+      set {_waited} to difference between {Regen.%player's uuid%} and now
+      if {_waited} is less than 9 ticks:
+         add 1 to {vl.REGEN.%player%}
+         loop all players:
+            if loop-player has permission "anticheat.alerts":
+               if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} %player% &7failed &fRegen &7(T: A) &f(VL: &4&l%{vl.REGEN.%player%}%&f)" to loop-player
+         if {@setback} is true:
+            cancel event
+         if {@autoban} is true:
+            if {vl.REGEN.%player%} >= 5:
+               make server execute command "/vackick %player%"
+         set {Regen.%player's uuid%} to now
+         set {Regen.amount.%player's uuid%} to {Regen.amount.%player's uuid%} + 1
+      else:
+         set {Regen.%player's uuid%} to now
+
+#/// ILLEGALMOVE ///
+
+on any movement:
+  {VAC.Step} is true
+  if {legtifly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.VAC.nochecks} is not set
+    {%player's uuid%.VAC.epteleport} is not set
+    {%player's uuid%.VAC.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.VAC.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      add 1 to {vl.ILLEGALMOVE.%player%}
+      if {%player's uuid%.VAC.step.player} is not set:
+        loop all players:
+          if loop-player has permission "anticheat.alerts":
+            if {VAC.verbose.%loop-player%} is true:
+              if {legtifly.%player%} is true:
+                stop
+              send "{@dc} %player% &7Illegal Move | r=invalid moves | t=A | vl=%{vl.ILLEGALMOVE.%player%}% &7| ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| ping=%player's ping%" to loop-player
+              if {vl.ILLEGALMOVE.%player%} >= 3:
+                if {VAC.notify.%loop-player%} is true:
+                  send "{@dc} %player% &7failed &fIllegal Movements &7(T: A) &f(VL: &4&l%{vl.ILLEGALMOVE.%player%}%&f)" to loop-player
+                  if {@setback} is true:
+                    teleport player to {setback.%player%}
+        if {vl.ILLEGALMOVE.%player%} >= 5:
+          if {@autoban} is true:
+            make server execute command "/vackick %player%"
+    else:
+      {VAC.Flight} is true
+      add 1 to {vl.ILLEGALMOVE.%player%}
+      loop all players:
+        if loop-player has permission "anticheat.alerts":
+          if {VAC.notify.%loop-player%} is true:
+            send "{@dc} %player% &7Illegal Move | r=invalid moves | t=B | vl=%{vl.ILLEGALMOVE.%player%}% &7| ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}% &7| ping=%player's ping%" to loop-player
+            if {vl.ILLEGALMOVE.%player%} >= 5:
+              if {VAC.notify.%loop-player%} is true:
+                send "{@dc} %player% &7failed &fIllegal Movements &7(T: B) &f(VL: &4&l%{vl.ILLEGALMOVE.%player%}%&f)" to loop-player
+                if {@setback} is true:
+                  teleport player to {setback.%player%}
+      if {@setback} is true:
+        teleport player to {setback.%player%}
+      if {vl.ILLEGALMOVE.%player%} >= 10:
+        if {@autoban} is true:
+          make server execute command "/vackick %player%"
+
+#/// SCAFFOLD ///
+
+on block place:
+  #SCAFFOLD
+  if {%player's uuid%.VAC.teleport} is true:
+    stop
+  else:
+    set {_b} to block under player
+    set {_b} to block under {_b}
+    if {_b} is not air:
+      stop
+    else:
+      if block under event-block is not air:
+        stop
+      else:
+        if player's gamemode is not creative or spectator:
+          if {%player's uuid%.VAC.bypass} is not set:
+            if y coordinate of event-block < y coordinate of player:
+              if player's pitch is between 9 and -90:
+                if {VAC.delay.scaffold.%player%} is true:
+                  stop
+                set {VAC.delay.scaffold.%player%} to true
+                add 1 to {vl.SCAFFOLD.%player%}
+                loop all players:
+                  if loop-player has permission "VAC.NOTIFY":
+                    if {VAC.notify.%loop-player%} is true:
+                      send "{@dc} %player% &7failed &fScaffold &7(T: A) &f(VL: &4%{vl.SCAFFOLD.%player%}%&f)" to loop-player
+                cancel event
+              else:
+                set {%player's uuid%.VAC.old.pitch.time} to {%player's uuid%.VAC.new.pitch.time}
+                set {%player's uuid%.VAC.old.pitch} to {%player's uuid%.VAC.new.pitch}
+                set {%player's uuid%.VAC.new.pitch} to player's pitch
+                set {%player's uuid%.VAC.new.pitch.time} to now
+                set {_dif.time} to difference between {%player's uuid%.VAC.old.pitch.time} and {%player's uuid%.VAC.new.pitch.time}
+                set {_dif.pitch} to difference between {%player's uuid%.VAC.old.pitch} and {%player's uuid%.VAC.new.pitch}
+                if {_dif.time} <= 0.3 seconds:
+                  if {_dif.pitch} <= 2.5:
+                    add 1 to {vl.SCAFFOLD.%player%}
+                    loop all players:
+                      if loop-player has permission "VAC.NOTIFY":
+                        if {VAC.notify.%loop-player%} is true:
+                          send "{@dc} %player% &7failed &fScaffold &7(T: B) &f(VL: &4%{vl.SCAFFOLD.%player%}%&f)" to loop-player
+                    cancel event
+                if {_dif.time} = 0 seconds:
+                  add 0.5 to {vl.%player%}
+                  loop all players:
+                    if loop-player has permission "VAC.NOTIFY":
+                      if {VAC.notify.%loop-player%} is true:
+                        send "{@dc} %player% &7failed &fScaffold &7(T: C) &f(VL: &4%{vl.%player%}%&f)" to loop-player
+                  cancel event
+            delete {VAC.delay.scaffold.%player%}
+#/// ADMIT GUI ///
+
+command /admit [<player>]:
+   permission: VAC.NOTIFY
+   trigger:
+      wait 1 tick
+      open chest with 1 row named "&cAdmit to be cheating ?" to arg 1
+      format slot 2 of arg 1 with painting named "&aAdmit" with lore "&7Click to admit to be cheating." to close then run [make player execute command "/vacban %arg 1% 15 day"]
+      format slot 6 of arg 1 with red wool named "&cDeny Charge" with lore "&7Click to deny charges of cheating." to close then run [make player execute command "/vacban %arg 1% 30 day"]
+      set {VAC.admit.%arg 1%} to true
+
+on quit:
+   set {VAC.admit.%player%} to false
+
+on damage:
+   if {VAC.admit.%attacker%} is true:
+      cancel event 
+   if {VAC.admit.%victim%} is true:
+      cancel event 
+
+on any move:
+   if {VAC.admit.%player%} is true:
+      cancel event
+
+on inventory close:
+   if {VAC.admit.%player%} is true:
+      make server execute command "/admit %player%"
+
+#/// ANTI TOXICITY ///
+
+on chat:
+   #"ez", "L", "e z", "LLL", "fucked", "ezpz", "izi", "izipz", "noob", "bad" and "shit"
+   if message contains "ez": 
+      cancel event
+      add 1 to {vl.CHAT.%player%}
+      send "{@dc} &cToxicity actes like LLL or EZ are not allowed ! If you continue you will be muted." to player
+      loop all players:
+         if loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} %player% &7Chat Toxicity | r=%message%&7 | t=A | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | vl=%{vl.CHAT.%player%}%&7 | ping=%player's ping%" to loop-player
+               if {VAC.notify.%loop-player%} is true:
+                  if {vl.CHAT.%player%} >= 3:
+                     send "{@dc} %player% &7failed &fChat Toxicty &7(T: A) &f(VL: &4&l%{vl.CHAT.%player%}%&f)" to loop-player
+      if {vl.CHAT.%player%} >= 5:
+         make server execute command "/mute %player% 15min &7[&4&lVAC&7] &cToxicty"
+         send "{@dc} &cYou have been muted for 15min , you have been warned !" to player
+         broadcast ""
+         broadcast "{@dc} &c%player% &7has been muted for 15 minutes , reason : &cToxcicity"
+         broadcast ""
+         clear {vl.CHAT.%player%}
+         stop
+   if message contains "LLL": 
+      cancel event
+      add 1 to {vl.CHAT.%player%}
+      send "{@dc} &cToxicity actes like LLL or EZ are not allowed ! If you continue you will be muted." to player
+      loop all players:
+         if loop-player has permission "VAC.NOTIFY":
+            if {VAC.verbose.%loop-player%} is true:
+               send "{@dc} %player% &7Chat Toxicity | r=%message%&7 | t=A | ban=%{vacbans.%player%}%&7 | kick=%{kicks.%player%}%&7 | vl=%{vl.CHAT.%player%}%&7 | ping=%player's ping%" to loop-player
+               if {VAC.notify.%loop-player%} is true:
+                  if {vl.CHAT.%player%} >= 3:
+                     send "{@dc} %player% &7failed &fChat Toxicty &7(T: A) &f(VL: &4&l%{vl.CHAT.%player%}%&f)" to loop-player
+      if {vl.CHAT.%player%} >= 5:
+         make server execute command "/mute %player% 15min &7[&4&lVAC&7] &cToxicty"
+         send "{@dc} &cYou have been muted for 15min , you have been warned !" to player
+         broadcast ""
+         broadcast "{@dc} &c%player% &7has been muted for 15 minutes , reason : &cToxcicity"
+         broadcast ""
+         clear {vl.CHAT.%player%}
+
+

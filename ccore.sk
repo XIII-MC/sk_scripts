@@ -1,0 +1,532 @@
+#CatRoyale External CMDS
+#BY XIII___
+#The 13/03/2021
+options:
+   prefix: &b&lFish&e&lRoyale &7» 
+#Ping
+
+command /ping [<player>]:
+  aliases: /p
+  trigger:
+    if arg 1 is not set:
+      send "{@prefix} &7%player's ping%"
+    else:
+      send "{@prefix} &7%player-arg's ping%"
+
+#Playtime
+
+command /playtimeupdate [<player>]:
+   permission: op
+   trigger:
+      if arg 1 is set:
+         loop 2000 times:
+            add 1 to {sec.%arg 1%}
+            if {sec.%arg 1%} >= 60:
+               remove 60 from {sec.%arg 1%}
+               add 1 to {min.%arg 1%}
+               if {min.%arg 1%} >= 60:
+                  remove 60 from {min.%arg 1%}
+                  add 1 to {he.%arg 1%}
+                  if {he.%arg 1%} >= 24:
+                     remove 24 from {he.%arg 1%}
+                     add 1 to {day.%arg 1%}
+         send "{@prefix} &7Sucess ! &eUPDATED'PLAYTIME:PLAYER'" to player
+
+command /playtime [<offline player>]:
+   trigger:
+      if arg 1 is not set:
+         if {day.%player%} is not set:
+            set {day.%player%} to 0
+         if {he.%player%} is not set:
+            set {he.%player%} to 0
+         if {min.%player%} is not set:
+            set {min.%player%} to 0
+         send "{@prefix} &7%{day.%player%}% &7Days &7%{he.%player%}% &7Hours &7%{min.%player%}% &7Minute&7 %{sec.%player%}% &7Seconds"
+      if arg 1 is set:
+         send "{@prefix} &7%{day.%arg 1%}% &7Days &7%{he.%arg 1%}% &7Hours &7%{min.%arg 1%}% &7Minute&7 %{sec.%arg 1%}% &7Seconds"
+
+#AutoBC
+
+every 18 minutes:
+   broadcast "{@prefix} &7Cheating is not allowed on our server !"
+   wait 3 minutes
+   broadcast "{@prefix} &7Don't forget to join our discord server using /discord !"
+   wait 3 minutes
+   broadcast "{@prefix} &7Hackers ? Use /report to report them ! Thanks !"
+   wait 3 minutes
+   broadcast "{@prefix} &7Need help ? Use /help or ask players and staff members :)"
+   wait 3 minutes
+   broadcast "{@prefix} &7A bug ? Something broke ? Tell us on /discord !"
+   wait 3 minute
+   broadcast "{@prefix} &7Want to apply on our server ? Do /discord and go in apply !"
+   wait 3 minute
+
+#Antilag
+
+on rightclick:
+  increase {_clickcount} by 1
+  if {_clickcount} > 1000:
+    broadcast "{@prefix} &6%player% &cgot banned from this server!"
+    make console execute command "ban %player% (High CPS)"
+  wait 5 seconds
+  delete {_clickcount}
+  
+on leftclick:
+  increase {_clickcount} by 1
+  if {_clickcount} > 1000:
+    broadcast "{@prefix} &6%player% &cgot banned from this server!"
+    make console execute command "ban %player% (High CPS) "
+  wait 5 seconds
+  delete {_clickcount}
+
+#CoolDownChat
+
+command /cooldownchat [<time span>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is not set:
+         send "{@prefix} &cUsage : /cooldownchat <TimeSpan>"
+         stop
+      set {cdchat} to arg 1
+      send "{@prefix} &7Time defined to &e%arg 1%"
+      broadcast "{@prefix} &7Chat cooldown is now %arg 1%"
+
+command /cooldownchatp [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is not set:
+         send "{@prefix} &cUsage: /cooldownchatp <permission>"
+         stop
+      set {cdperm} to arg 1
+      send "{@prefix} &7Permission set to &e%arg 1%"
+
+on load:
+   if {cdperm} is not set:
+      set {cdperm} to op
+   if {cdchat} is not set:
+      set {cdchat} to 3 seconds
+on chat:
+   player doesn't have permission "%{cdperm}%"
+   set {_cd} to difference between {lastchat.%player%} and now
+   if {_cd} < {cdchat}:
+      send "{@prefix} &cWait a bit before talking again !"
+      cancel event
+      stop
+   set {lastchat.%player%} to now
+
+#StaffChat
+
+command /sc:
+    trigger:
+        player has permission "HELPER":
+            {staffchat::%player's uuid%} = false:
+                set {staffchat::%player's uuid%} to true
+                send "{@prefix} &7Now talking in staff chat"
+            else:
+                set {staffchat::%player's uuid%} to false
+                send "{@prefix} &7No longer talking in staff chat"
+        else:
+            send "&7No permissions"
+
+chat:
+    {staffchat::%player's uuid%} = true:
+        cancel event
+        send "&e&lStaff&6&lChat &7» &c%player%:&f %message%" to all players where [input has permission "HELPER"]
+
+#Mod Mode
+
+command /mod:
+   permission: HELPER
+   trigger:
+      if {mod.%player%} is not set:
+         set {mod.%player%} to false
+      if {mod.%player%} is false:
+         set {mod.%player%} to true
+         clear player's inventory
+         send "&d&lModerator Mode: &7ON" to player
+         give player 1 feather named "&fVelocity Vertical" 
+         make server execute command "/give %player% woodensword 1 name:&fKnockback_I knockback:1"
+         make server execute command "/give %player% woodensword 1 name:&fKnockback_II knockback:2"
+         give player 1 golden sword named "&fSword"
+         give player 1 barrier named "&4Close Moderator Mode"  
+         give player 1 iron hoe named "&fVanish 10 Ticks"
+         give player 1 golden hoe named "&fVanish Toggle"
+         give player 1 iron axe named "&cBan Hammer"
+         give player 1 feather named "&fVelocity Horizontal"
+         set {vanish.%player%} to true
+         hide player from all players
+         make server execute command "/gmc %player%"
+         stop
+         make server execute command "/minecraft:gamemode 1 %player%"
+      if {mod.%player%} is true:
+         clear inventory of player
+         make server execute command "/minecraft:gamemode 0 %player%"
+         teleport player to spawn
+         reveal player from all players
+         set {vanish.%player%} to false
+         set {mod.%player%} to false
+         send "&d&lModerator Mode: &cOFF"
+         make server execute command "/gms %player%"
+
+
+on damage:
+   if {mod.%victim%} is true:
+      cancel event
+      send "&d[Damage] &6%attacker% &fdamage 1.0" to victim
+on right click with iron hoe:
+   if {mod.%player%} is true:
+      cancel event
+      if name of player's tool is "&fVanish 10 Ticks":
+         send "&dVisible: &7ON" to player
+         set {vanish.%player%} to false
+         reveal player from all players
+         wait 10 ticks
+         set {vanish.%player%} to true
+         send "&dVisible: &cOFF" to player
+         hide player from all players
+on right click with golden hoe:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVanish Toggle":
+         if {vanish.%player%} is false:
+            set {vanish.%player%} to true
+            send "&dVisible: &cOFF"
+            hide player from all players
+            stop
+         if {vanish.%player%} is true:
+            set {vanish.%player%} to false
+            send "&dVisible: &7ON"
+            reveal player to all players
+            stop
+      cancel event
+on right click with barrier:
+   if {mod.%player%} is true:
+      cancel event 
+      clear player's inventory
+      set fly mode of player to false
+      make player execute command "/vanish"
+      send "&d&lModerator Mode: &cOFF"
+      set {mod.%player%} to false
+on right click on player:
+   if {mod.%player%} is true:
+      if player has permission "MODERATOR":
+         if name of player's tool is "&cBan Hammer":
+            set {_name} to clicked player
+            wait 2 tick
+            open chest with 2 row named "&c&l&oBan Hammer &7> &c&l&oBan &7 > &6&l&o%{_name}%" to player
+            format slot 0 of player with golden sword named "&cCheating" with lore "&6Ban %{_name}% for: &cCheating" to close then run [make player execute command "/vacban %clicked player%  30 day"]
+            format slot 1 of player with player head named "&4Impersonating" with lore "&6Ban %{_name}% for: &cImpersonating" to close then run [make player execute command "/ban %clicked player%  Impersonating"]
+            format slot 3 of player with diamond axe named "&6Boosting" with lore "&6Ban %{_name}% for: &cBoosting" to close then run [make player execute command "/ban %clicked player%  Boosting"]
+            format slot 5 of player with iron bar named "&cAlts / VPN" with lore "&6Ban %{_name}% for: &cAlts / VPN" to close then run [make player execute command "/ban %clicked player%  Ban Evading / VPN"]
+            format slot 2 of player with nametag named "&6Inapropriate Skin / Name" with lore "&6Ban %{_name}% for: &cInapropriate Skin / Name" to close then run [make player execute command "/ban %{_name}% Inapropriate Skin or Minecraft Username"]
+            format slot 4 of player with barrier named "&4Threads" with lore "&6Ban %{_name}% for: &cThreads" to close then run [make player execute command "/ban %clicked player%  Threads"]
+            format slot 6 of player with iron pickaxe named "&eExploits" with lore "&6Ban %{_name}% for: &cExploits" to close then run [make player execute command "/ban %clicked player%  Exploits"]
+            format slot 7 of player with feather named "&eOther" with lore "&6Ban %{_name}% for: &cOther" to close then run [make player execute command "/ban %clicked player% Not Specified"]
+            format slot 12 of player with arrow named "&7Cancel" with lore "&7Close Banning menu." to close
+on right click with feather:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVelocity Vertical":
+         if player has permission "MODERATOR":
+            set {_targetedplayer} to targeted entity
+            if {_targetedplayer} isn't set:
+               stop
+            make player execute command "/velocity %{_targetedplayer}%"
+on right click with feather:
+   if {mod.%player%} is true:
+      if name of player's tool is "&fVelocity Horizontal":
+         if player has permission "MODERATOR":
+            set {_targetedplayer} to targeted entity
+            if {_targetedplayer} isn't set:
+               stop
+            make player execute command "/velocityh %{_targetedplayer}%"
+
+#Warns
+command /warn [<player>] [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            add 1 to {warns.%arg 1%}
+            send "{@prefix} &7You have been warned ! Reason: &e%arg 2%&7. &7This is your &c%{warns.%arg 1%}% &7warn !" to arg 1
+            send "{@prefix} &7%arg 1% has been warned for &e%arg 2%" to player
+            broadcast "{@prefix} &c%player% &7warned &c%arg 1% &7reason &e%arg 2% &8[%{warns.%arg 1%}%&8/5]"
+            if {warns.%arg 1%} >= 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warns.%arg 1%} >= 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warns.%arg 1%} >= 5:
+               make server execute command "/tempban %arg 1% 7d 5 Warns"
+               stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            add 1 to {warns.%arg 1%}
+            send "{@prefix} &7You have been warned ! &7This is your &c%{warns.%arg 1%}% &7warn !" to arg 1
+            send "{@prefix} &7%arg 1% has been warned for &e%arg 2%" to player
+            broadcast "{@prefix} &c%player% &7warned &c%arg 1% &8[%{warns.%arg 1%}%&8/5]"
+            if {warns.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warns.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warns.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 7d 5 Warns"
+            stop
+      if arg 1 is not set:
+         send "{@prefix} &cUsage /warn PLAYER REASON" to player
+         stop
+
+command /removewarn [<player>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         remove 1 from {warns.%arg 1%}
+         send "{@prefix} &71 warn have been removed ! Be happy :D" to arg 1
+         send "{@prefix} &7Removed 1 warn from &e%arg 1%" to player
+      if arg 1 is not set:
+         send "{@prefix} &cUsage /removedwarn PLAYER"
+
+#Ban
+
+command /ban [<offline player>] [<text>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "{@prefix} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {banned.%arg 1%} to true
+            set {banner.%arg 1%} to player 
+            set {bantime.%arg 1%} to now
+            broadcast "{@prefix} &c%arg 1% &7has been permanently banned by &c%player%"
+            send "{@prefix} &c%arg 1% &7has been succecfuly banned!" to player
+            kick arg 1 due to "{@prefix} &7You were banned from this server."
+            add arg 1 to {banlist::*}
+            make server execute command "/lp user %arg 1% parent set banned"
+            stop
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "{@prefix} &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {banned.%arg 1%} to true
+            set {banner.%arg 1%} to player 
+            set {banreason.%arg 1%} to arg 2
+            set {bantime.%arg 1%} to now
+            broadcast "{@prefix} &c%arg 1% &7has been permanently banned by &c%player% &7reason &e%arg 2%"
+            send "{@prefix} &c%arg 1% &7has been succecfuly banned for &6%arg 2%" to player
+            kick arg 1 due to "{@prefix} &7You were banned from this server."
+            add arg 1 to {banlist::*}
+            make server execute command "/lp user %arg 1% parent set banned"
+            stop
+      if arg 1 is not set:
+         send "{@prefix} &cUsage /ban PLAYER REASON" to player
+         stop
+
+on chat:
+   if {banned.%player%} is true:
+      cancel event
+      send "{@prefix} &7You cannot talk as you are banned."
+
+command /bans:
+   permission: HELPER
+   trigger:
+      send "{@prefix} &cBanned Players: &f%{banlist::*}%" to player
+
+command /unban [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         unban arg 1
+         send "{@prefix} &7You succecfuly unbanned &e%arg 1%"
+         remove arg 1 from {banlist::*}
+         add 1 to {unbans.%arg 1%}
+         set {tempban.%arg 1%} to false
+         clear {tempban.timestamp::%arg 1%}
+         clear {tempban.time::%arg 1%}
+         set {vacban.%arg 1%} to false
+         set {banned.%arg 1%} to false
+         clear {banner.%arg 1%}
+         clear {banreason.%arg 1%}
+         clear {bantime.%arg 1%}
+         make server execute command "/lp user %arg 1% parent clear"
+         stop
+      if arg 1 is not set:
+         send "{@prefix} &cUsage: /unban PLAYER"
+         stop
+
+#vanish
+
+options:
+  permission: HELPER
+  permissionm: &4You do not have access to this command!
+  permissionalert: HELPER 
+
+command /vanish [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: v
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is not set:
+        hide the player from all players
+        send "{@prefix} &7You are &cVanished&7."
+        set {vanish.%player%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the player from all players
+        send "{@prefix} &7You are &cUnvanished&7."
+        delete {vanish.%player%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&eunvanished&7&o]" to loop-player
+    if arg 1 is set:
+      if {vanish.%arg 1%} is not set:
+        hide the arg 1 from all players
+        send "{@prefix} &7You are &cVanish&7." to arg 1
+        set {vanish.%arg 1%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%arg 1%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the arg 1 from all players
+        send "&7&o[%arg 1%: &r&eunvanished&7&o]" to arg 1
+        delete {vanish.%arg 1%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "{@prefix} &7The player &c%arg 1% &7is no longer in vanish." to loop-player
+
+command /vanishinfo [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: vinfo
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is set:
+        send "{@prefix} &7You're &cVanish&7."
+      else:
+        send "{@prefix} &7You are not &cVanish&7."
+    if arg 1 is set:
+      if {vanish.%arg 1%} is set:
+        send "{@prefix} &7The player &c%arg 1% &7is vanish."
+      else:
+        send "{@prefix} &7The player &c%arg 1% &7is not vanish."
+
+on join:
+  loop all players:
+    if {vanish.%loop-player%} is true:
+      reveal the loop-player from all players
+      hide the loop-player from all players
+
+#teleport
+
+command /tp [<player>] [<player>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            teleport player to arg 1
+            send "{@prefix} &eYou've teleported to %arg 1%"
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport to %arg 1%&7&o]" to loop-player
+                  stop
+      if arg 1 is set:
+         if arg 2 is set:
+            teleport arg 1 to arg 2
+            send "{@prefix} &eYou've been teleported to %arg 2%" to arg 1
+            send "{@prefix} &eYou've been teleported to %arg 1%" to arg 2
+            send "{@prefix} &eYou've been teleported %arg 1% to %arg 2%" to player
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport %arg 1% to %arg 2%&7&o]" to loop-player
+      if arg 1 is not set:
+         send "{@prefix} &cUsage /tp [<player>] [<player>]"
+         stop
+
+#chat
+
+command /chatclear:
+   permission: MODERATOR
+   trigger:
+      loop 200 times:
+         broadcast " "
+      broadcast "{@prefix} &c%player% &3cleared the chat !"
+
+command /mutechat:
+   permission: SMODERATOR
+   aliases: mc
+   trigger:
+      if {chat} is not set:
+         set {chat} to false
+      if {chat} is false:
+         set {chat} to true
+         broadcast "{@prefix} &c%player% &3muted the chat !"
+         stop
+      if {chat} is true:
+         set {chat} to false
+         broadcast "{@prefix} &c%player% &3unmuted the chat !"
+         stop
+
+on chat:
+   if {chat} is true:
+      if player has permission "talk":
+         uncancel event
+         stop
+   if {chat} is true:
+      cancel event
+      send "{@prefix} &cChat is currently muted !"
+
+command /alert [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is set:
+         broadcast ""
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast ""
+         stop
+      if arg 1 is not set:
+         send "{@prefix} &cUsage: /alert MESSAGE"
+         stop
+
+#freeze
+
+command /freeze [<player>]:
+   permission: freeze.use
+   trigger:
+      if {freeze.%arg 1%} is not set:
+         set {freeze.%arg 1%} to false
+      if arg 1 is set:
+         if {freeze.%arg 1%} is false:
+            set {freeze.%arg 1%} to true
+            send "{@prefix} &e%arg 1% &7is now frozen !" to player
+            send "{@prefix} &4&lYou have been frozen ! Please send us your F3 on /discord in chat , by pressing F3 and then F2 on your keyboard. Or admit to be hacking by saying yes i'm hacking in the chat." to arg 1
+            stop
+         if {freeze.%arg 1%} is true:
+            set {freeze.%arg 1%} to false
+            send "{@prefix} &e%arg 1% &7has been unfreeze" to player
+            send "{@prefix} &2You were unfroze !" to arg 1
+            stop
+
+on quit:
+   if {freeze.%player%} is true:
+      make server execute command "/ban %player% Logging Off While Begin Frozen"
+
+on any move:
+	if {freeze.%player%} is true:
+		cancel event
+
+on damage:
+   if {freeze.%attacker%} is true:
+      cancel event
+   if {freeze.%victim%} is true:
+      send "{@prefix} &c%victim% &cis currently froze you may not attack" to attacker
+      cancel event

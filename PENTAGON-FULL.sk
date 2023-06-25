@@ -1,0 +1,2039 @@
+#-------------------------------------------
+#             P E N T A G O N
+#            A N T I C H E A T
+#             V E R S I O N : B1
+#             A U T H O R : XIII___
+#-------------------------------------------
+
+options:
+   Pentagon: &c&lP&4&le&c&ln&4&lt&c&la&4&lg&c&lo&4&ln &7»&c 
+   Version: B1
+   Ban: false #IF KICK IS TRUE MAKE BAN FALSE !
+   Kick: false #IF BAN IS TRUE MAKE KICK FALSE !
+   setback: true
+   AntiAlt: false
+   AntiBot: false 
+
+every 30 second:
+   loop all players:
+      clear {Pentagon.%loop-player%.vl}
+
+command /velocity [<player>]:
+   permission: VAC.NOTIFY
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@Pentagon} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         if block above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 2 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 3 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 4 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 5 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 6 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 7 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         if block 8 above arg 1 is not air:
+            send "{@Pentagon} &fBlock above &e%arg 1% &fis not air, check canceled." to player
+            stop
+         set {c.%arg 1%} to true
+         add 1 to {vvt.%arg 1%}
+         set {_sbv} to location of arg 1 
+         set {_vloc} to y location of arg 1
+         set fly mode of arg 1 to true
+         push arg 1 upward at speed 2
+         wait 0.7 second
+         set {_vloc1} to y location of arg 1
+         set {_diffv} to difference between {_vloc} and {_vloc1}
+         set gamemode of arg 1 to survival
+         set fly mode of arg 1 to false
+         send "%{_diffv}%" to player
+         set {c.%arg 1%} to false
+         if {_diffv} is less than 7:
+            send "{@Pentagon} &cVelocity: &4DETECTED &f(VL: &4VERTICAL&f)" to player
+            make player execute command "/velocityh %arg 1%"
+            add 5 to {vl.%arg 1%}
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is less than 13:
+            send "{@Pentagon} &cVelocity: &6MAYBE &f(VL: &4VERTICAL&f)" to player
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is bigger than 13:
+            send "{@Pentagon} &cVelocity: &aNOTHING &f(VL: &4VERTICAL&f)" to player
+            teleport arg 1 to {_sbv}
+            stop
+command /velocityh [<player>]:
+   permission: VAC.NOTIFY
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@Pentagon} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         set {c.%arg 1%} to true
+         add 1 to {vht.%arg 1%}
+         wait 1 second
+         set {_sbv} to location of arg 1 
+         set {_vloc2} to z location of arg 1 
+         set gamemode of arg 1 to spectator
+         set {_vector} to vector from location of arg 1
+         rotate {_vector} around z-axis by 90 degrees #Pitch combined with x-axis aswell
+         rotate {_vector} around z-axis by 25 degrees #Yaw
+         set velocity of arg 1 to {_vector}
+         wait 1 tick
+         push arg 1 backwards at speed 2
+         wait 1 second
+         set {_vloc3} to z location of arg 1
+         set {_diffh} to difference between {_vloc3} and {_vloc2}
+         set gamemode of arg 1 to survival
+         send "%{_diffh}%" to player
+         set {c.%ARG 1%} to false
+         if {_diffh} is less than 15:
+            send "{@Pentagon} &cVelocity: &4DETECTED &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is less than 28:
+            send "{@Pentagon} &cVelocity: &6MAYBE &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is bigger than 28:
+            send "{@Pentagon} &cVelocity: &aNOTHING &f(VL: &4HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+
+on any move:
+   if {@AntiBot} is false:
+      stop
+   if {Pentagon.%player%.hell} is true:
+      if {Pentagon.antibot} is true:
+         stop
+      if {Pentagon.%player%.hs} is true:
+         stop
+      set {Pentagon.antibot} to true
+      set {Pentagon.%player%.hs} to true
+      set {_r} to "Pentagon"
+      wait 1 tick
+      create a citizen named {_r} at location of player
+      wait 1 tick 
+      hide citizen {_r} to all players
+      wait 1 tick
+      reveal citizen {_r} to player
+      set {_lnc} to last created citizen id
+      loop all entities:
+         uncoloured name of loop-entity is "Pentagon"
+         loop 50 times:
+            teleport loop-entity 3.5 meters behind player
+            wait 1 tick
+            teleport loop-entity 3.5 meters behind player
+            wait 1 tick
+            teleport loop-entity 3.8 meters above player
+            wait 1 tick
+            teleport loop-entity 3.8 meters above player
+            wait 1 tick
+      make server execute command "/npc rem %{_lnc}%"
+      set {Pentagon.%player%.hs} to false
+      set {Pentagon.%player%.hell} to false
+      delete {Pentagon.%player%.loc}
+      delete {Pentagon.%player%.save}
+      delete {Pentagon.antibot}
+
+on any move:
+   if player is on ground:
+      set {Pentagon.%player%.setback} to player's location
+
+function detect(p: player, cheat: text, type: text):
+  if fly mode of {_p} is true:
+    stop
+  if {legitfly.%{_p}%} is set:
+    stop
+  set {_uuid} to uuid of {_p}
+  if {@setback} is true:
+    if {Pentagon.%{_p}%.vl} >= 3:
+      if block under {_p} is air:
+        teleport {_p} to block 1 under block at location of {_p}
+      teleport {_p} to {Pentagon.%{_p}%.setback}
+  add 1 to {Pentagon.%{_p}%.vl}
+  if {Pentagon.%{_p}%.vl} < 3:
+    send "{@Pentagon} %{_p}%&f failed &c%{_cheat}%&c %{_type}%&7 VL[&c%{Pentagon.%{_p}%.vl}%&7] &7[&a&l✓&7]" to console
+    loop all players:
+      if {Pentagon.%loop-player%.verbose} is true:
+        send "{@Pentagon} %{_p}%&f failed &c%{_cheat}%&c %{_type}%&7 VL[&c%{Pentagon.%{_p}%.vl}%&7] &7[&a&l✓&7]" to loop-player
+  loop all players:
+    if {Pentagon.%loop-player%.alerts} is true:
+      if {Pentagon.%{_p}%.vl} >= 4:
+        send "{@Pentagon} %{_p}%&f failed &c%{_cheat}%&c %{_type}%&7 VL[&c%{Pentagon.%{_p}%.vl}%&7]" to console
+        send "{@Pentagon} %{_p}%&f failed &c%{_cheat}%&c %{_type}%&7 VL[&c%{Pentagon.%{_p}%.vl}%&7]" to loop-player
+  if {Pentagon.%{_p}%.vl} >= 5:
+    if {Pentagon.%{_p}%.hell} is true:
+      stop
+    if {Pentagon.antibot} is true:
+      stop
+    set {Pentagon.%{_p}%.hell} to true
+    set {Pentagon.antibot} to true
+  if {Pentagon.%{_p}%.vl} >= 15:
+    if {@Kick} is true:
+      make server execute command "/Pentagon kick %{_p}%"
+      stop
+    if {@Ban} is true:
+      make server execute command "/Pentagon ban %{_p}% 7 day"
+
+on damage:
+   set {legitfly.%victim%} to true
+   wait 1 second
+   delete {legitfly.%victim%}
+
+command /flagtoggle [<text>]:
+   permission: ADMIN
+   trigger:
+      if {Pentagon.check.%arg 1%} is not set:
+         set {Pentagon.check.%arg 1%} to false
+      if {Pentagon.check.%arg-1%} is false:
+         send "{@Pentagon} &e%sender% &7has &aenabled &4%arg-1%&7!" to all players where [player input has permission "Pentagon.NOTIFY"]
+         set {Pentagon.check.%arg-1%} to true
+      else:
+         if {Pentagon.check.%arg-1%} is true:
+            send "{@Pentagon} &e%sender% &7has &fdisabled &4%arg-1%&7!" to all players where [player input has permission "Pentagon.NOTIFY"]
+            set {Pentagon.check.%arg-1%} to false
+            stop
+
+command /Pentagon [<text>] [<player>] [<timespan>]:
+   permission: op
+   trigger:
+      if arg 1 is not set:
+         send "           {@Pentagon}"
+         send "&7/Pentagon &8| &fShow this pop up"
+         send "&7/Pentagon kick [player] &8| &fKick a player"
+         send "&7/Pentagon info [player] &8| &fShow informations about a selected player"
+         send "&7/Pentagon version &8| &fShow Pentagon version"
+         send "&7/Pentagon reload &8| &fReload Pentagon"
+         send "&7/Pentagon notify &8| &fToggle Pentagon alerts"
+         send "&7/Pentagon verbose &8| &fToggle Pentagon verbose"
+         send "&7/Pentagon ban [player] [timespan] &8| &fBan a player for a certain amout of time"
+         send "&7/Pentagon unban [player] &8| &fUnban a player"
+         send ""
+         stop
+      if arg 1 is "verbose":
+         if {Pentagon.%player%.verbose} is not set:
+            set {Pentagon.%player%.verbose} to false
+         if {Pentagon.%player%.verbose} is false:
+            set {Pentagon.%player%.verbose} to true
+            send "{@Pentagon} Verbose enabled"
+            stop
+         if {Pentagon.%player%.verbose} is true:
+            set {Pentagon.%player%.verbose} to false
+            send "{@Pentagon} Verbose disabled"
+            stop
+      if arg 1 is "kick":
+         if arg 2 is set:
+            kick arg 2 due to "{@Pentagon} CHEAT DETECTION &7(ID-P%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@Pentagon} &c%arg 2%&f has been removed for &cUnfair Advantage"
+            broadcast ""
+      if arg 1 is "info":
+         if arg 2 is set:
+            send "         {@Pentagon}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "Anticheat Kicks: &7%{Pentagon.%arg 2%.kick}%"
+            send "Anticheat Ban: &7%{Pentagon.%arg 2%.kick}%"
+            send "Anticheat logs: &7%{Pentagon.%arg 2%.total.vl}%"
+            send "Anticheat detection: &7%{Pentagon.%arg 2%.detection::*}%"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@Pentagon} Build: b1"
+         stop
+      if arg 1 is "reload":
+         Reload("console")
+         send "{@Pentagon} Pentagon has been reloaded."
+         stop
+      if arg 1 is "notify":
+         if {Pentagon.%player%.alerts} is not set:
+            set {Pentagon.%player%.alerts} to false
+         if {Pentagon.%player%.alerts} is false:
+            set {Pentagon.%player%.alerts} to true
+            send "{@Pentagon} Notifcations enabled"
+            stop
+         if {Pentagon.%player%.alerts} is true:
+            set {Pentagon.%player%.alerts} to false
+            send "{@Pentagon} Notifcations disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            if {tempban.time::%{_player}%} is not set:
+               broadcast ""
+               broadcast "{@Pentagon} &c%arg 2%&f has been removed for &cUnfair Advantage"
+               broadcast ""
+               set {tempban.time::%arg 2%} to arg 3
+               set {tempban.%arg 2%} to true
+               set {tempban.timestamp::%arg 2%} to now
+               kick arg 2 due to "{@Pentagon} &cYou have been banned for &e%{tempban.time::%arg 2%}% &cfrom this server !"
+               stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            clear {tempban.time::%arg 2%}
+            clear {tempban.timestamp::%arg 2%}
+            clear {tempban.%arg 2%}
+            send "{@Pentagon} %arg 2% has been unbanned."
+            stop
+ 
+function Reload(p: text):
+  if {Pentagon.check.Autoclicker} is not set:
+    set {Pentagon.check.Autoclicker} to true
+  if {Pentagon.check.Criticals} is not set:
+    set {Pentagon.check.Criticals} to true
+  if {Pentagon.check.Reach} is not set:
+    set {Pentagon.check.Reach} to true
+  if {Pentagon.check.Velocity} is not set:
+    set {Pentagon.check.Velocity} to true
+  if {Pentagon.check.Bhop} is not set:
+    set {Pentagon.check.Bhop} to true
+  if {Pentagon.check.Blink} is not set:
+    set {Pentagon.check.Blink} to true
+  if {Pentagon.check.ClickTP} is not set:
+    set {Pentagon.check.ClickTP} to true
+  if {Pentagon.check.Flight} is not set:
+    set {Pentagon.check.Flight} to true
+  if {Pentagon.check.Float} is not set:
+    set {Pentagon.check.Float} to true
+  if {Pentagon.check.HighJump} is not set:
+    set {Pentagon.check.HighJump} to true
+  if {Pentagon.check.Hover} is not set:
+    set {Pentagon.check.Hover} to true
+  if {Pentagon.check.Jesus} is not set:
+    set {Pentagon.check.Jesus} to true
+  if {Pentagon.check.NoFall} is not set:
+    set {Pentagon.check.NoFall} to true
+  if {Pentagon.check.NoSlow} is not set:
+    set {Pentagon.check.NoSlow} to true
+  if {Pentagon.check.Scaffold} is not set:
+    set {Pentagon.check.Scaffold} to true
+  if {Pentagon.check.Speed} is not set:
+    set {Pentagon.check.Speed} to true
+  if {Pentagon.check.Spider} is not set:
+    set {Pentagon.check.Spider} to true
+  if {Pentagon.check.Step} is not set:
+    set {Pentagon.check.Step} to true
+
+#--------------------------------------------------------
+#
+#             A N T I  A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+on leftclick:
+   if {Pentagon.check.AUTOCLICKER} is true:
+      add 1 to {cpsL.%player%}
+      if {cpsL.%player%} >= 13:
+         cancel event
+         #OLD VL COUNTER
+         add 1 to {Pentagon.%player%.total.vl}
+         detect(player, "AutoClicker", "1A")
+         if {Pentagon.%player%.vl} >= 5:
+            if {@Kick} is true:
+               make server execute command "/Pentagon kick %player%"
+               stop
+            if {@Ban} is true:
+               make server execute command "/Pentagon ban %player% 7 day"
+
+every 1 second:
+   loop all players:
+      clear {cpsL.%loop-player%}
+      clear {cpsR.%loop-player%}
+
+on rightclick:
+   if {Pentagon.check.AUTOCLICKER} is true:
+      add 1 to {cpsR.%player%}
+      if {cpsL.%player%} >= 18:
+         cancel event
+         detect(player, "AutoClicker", "2A")
+         #OLD VL COUNTER
+         add 1 to {Pentagon.%player%.total.vl}
+         if {Pentagon.%player%.vl} >= 5:
+            if {@Kick} is true:
+               make server execute command "/Pentagon kick %player%"
+               stop
+            if {@Ban} is true:
+               make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   K I L L A U R A
+#
+#--------------------------------------------------------
+
+every 1 tick:
+   loop all players:
+      clear {combo.%loop-player%}
+
+on damage:
+   if {Pentagon.check.KILLAURA} is true:
+      if attacker is player:
+         add 0.5 to {combo.%attacker%}
+         if {combo.%attacker%} >= 2:
+            add 1 to {Pentagon.%attacker%.total.vl}
+            cancel event
+            detect(attacker, "KillAura", "2A")
+         if {@setback} is true:
+            cancel event
+
+on damage:
+   if victim is not player:
+      stop
+   if attacker is not player:
+      stop
+   if {Pentagon.check.KILLAURA} is false:
+      stop
+   if {ktarget.%attacker%} is not set:
+      add 1 to {Pentagon.%attacker%.vl}
+      add 1 to {Pentagon.%attacker%.total.vl}
+      if {@setback} is true:
+         cancel event
+      detect(attacker, "KillAura", "3A")
+
+on leftclick:
+   set {ktarget.%player%} to targeted entity
+
+on damage:
+  if {Pentagon.check.KILLAURA} is false:
+    stop
+  if attacker is a player:
+    loop all blocks in radius 3 around attacker:
+      if loop-block is snow layer:
+        stop
+      if loop-block is ladder:
+        stop
+      if loop-block is vines:
+        stop
+      if loop-block is iron bars:
+        stop
+      if loop-block is fence:
+        stop
+      if loop-block is large fern:
+        stop
+      if loop-block is tall grass:
+        stop
+      if loop-block is button:
+        stop
+      if loop-block is door:
+        stop
+      if loop-block is fence gate:
+        stop
+      if loop-block is cobblestone wall:
+        stop
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.Pentagon.check.bypass} is not set:
+        set {%victim's uuid%.Pentagon.check.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            if {@setback} is true:
+              cancel event
+            add 1 to {Pentagon.%attacker%.vl}
+            add 1 to {Pentagon.%attacker%.total.vl}
+            detect(attacker, "KillAura", "2A")
+            if {Pentagon.%attacker%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/Pentagon kick %attacker%"
+                stop
+              if {@Ban} is true:
+                make server execute command "/Pentagon ban %attacker% 7 day"
+        delete {%attacker's uuid%.Pentagon.check.killaura.check}
+  loop {Pentagon.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.Pentagon.check.cheat.cooldown.damage}
+
+#--------------------------------------------------------
+#
+#             A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {Pentagon.check.Reach} is false:
+      stop
+   if attacker has speed:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} > 4.7:
+         if damage cause is not a projectile:
+            if {@setback} is true:
+               cancel event
+            add 1 to {Pentagon.%attacker%.vl}
+            add 1 to {Pentagon.%attacker%.total.vl}
+            detect(attacker, "Reach", "1A")
+
+on damage:
+  {Pentagon.check.Reach} is true
+  set {_distance.%attacKER%} to distance between attacker and victim
+  delete {%attacker's uuid%.Pentagon.check.cheat.cooldown.damage}
+  if distance between attacker and victim is greater than 4.25:
+    set {_r} to distance between attacker and victim
+    if attacker is a player:
+      if {%attacker's uuid%.Pentagon.check.bypass} is not set:
+        if {%attacker's uuid%.Pentagon.check.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.Pentagon.check.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              if {%attacker's uuid%.Pentagon.check.autoclicker.check} is not set:
+                if {_r} is less than 4.5:
+                  add 1 to {Pentagon.%attacker%.vl}
+                  add 1 to {Pentagon.%attacker%.total.vl}
+                  detect(attacker, "Reach", "2A")
+                  if {@setback} is true:
+                    cancel event
+                  if {Pentagon.%attacker%.vl} >= 10:
+                    if {@Kick} is true:
+                      make server execute command "/Pentagon kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/Pentagon ban %attacker% 7 day"
+                else if {_r} is less than 5.5:
+                  add 1 to {Pentagon.%attacker%.vl}
+                  add 1 to {Pentagon.%attacker%.total.vl}
+                  detect(attacker, "Reach", "2B")
+                  if {@setback} is true:
+                    cancel event
+                  if {Pentagon.%attacker%.vl} >= 10:
+                    if {@Kick} is true:
+                      make server execute command "/Pentagon kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/Pentagon ban %attacker% 7 day"
+              else:
+                if {%attacker's uuid%.Pentagon.check} > 5:
+                  add 1 to {Pentagon.%attacker%.vl}
+                  add 1 to {Pentagon.%attacker%.total.vl}
+                  detect(attacker, "Reach", "3B")
+                  if {@setback} is true:
+                    cancel event
+                  if {Pentagon.%attacker%.vl} >= 5:
+                    if {@Kick} is true:
+                      make server execute command "/Pentagon kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/Pentagon ban %attacker% 7 day"
+          delete {%attacker's uuid%.Pentagon.check.cheat.cooldown.damage}
+
+#--------------------------------------------------------
+#
+#             A N T I   N O F A L L
+#
+#--------------------------------------------------------
+
+on any move:
+    if {Pentagon.check.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        #OLD VL COUNTER
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "Nofall", "1A")
+        if {Pentagon.%player%.vl} >= 8:
+            if {@Kick} is true:
+                make server execute command "/Pentagon kick %player%"
+                stop
+            if {@Ban} is true:
+                make server execute command "/Pentagon ban %player% 7 day"
+
+    if {_nofallcount} > 0:
+        stop
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on ladder:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I  F L I G H T
+#
+#--------------------------------------------------------
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.bypass} is not set:
+      player's flight mode is false
+      if block under player is not air or water:
+        set {%player's uuid%.Pentagon.tp.loc} to {_loc}
+      if {%player's uuid%.Pentagon.flight.delay} is not set:
+        set {%player's uuid%.Pentagon.flight.delay} to true
+        set {_y} to player's y coordinate
+        wait 10 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player's uuid%.Pentagon.slime} is not set:
+          if {_y} > 5:
+            {Pentagon.Flight} is true
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fly", "3D")
+          if {_y} = 0:
+            {Pentagon.Float} is true
+            {%player's uuid%.Pentagon.jump} is not set
+            block under player is air
+            player is not on ground
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fly", "2D")
+          if player's y coordinate is y coordinate of {_loc}:
+            {Pentagon.Float} is true
+            {%player's uuid%.Pentagon.jump} is not set
+            block under player is air
+            player is not on ground
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fly", "1D")
+        loop {Pentagon.Delay} times:
+          wait 0.21 second
+        delete {%player's uuid%.Pentagon.flight.delay}
+
+on any movement:
+  {Pentagon.check.Step} is true
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.Pentagon.check.nochecks} is not set
+    {%player's uuid%.Pentagon.check.epteleport} is not set
+    {%player's uuid%.Pentagon.check.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.Pentagon.check.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      if {%player's uuid%.Pentagon.check.step.player} is not set:
+        #OLD VL COUNTER
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "Fly", "1A")
+    else:
+      {Pentagon.check.FLY} is true
+      if {legitfly.%player%} is true:
+        stop
+      #OLD VL COUNTER
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "Fly", "2A")
+      if {@setback} is true:
+        #teleport player to {Pentagon.%player%.setback}
+      if {Pentagon.%player%.vl} >= 5:
+        if {@Kick} is true:
+          make server execute command "/Pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/Pentagon ban %player% 7 day"
+
+on any movement:
+  if player's chestplate is an elytra:
+    stop
+  if {legitfly.%player%} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.check.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 0.18:
+        set {%player's uuid%.Pentagon.check.walking} to true
+        set {%player's uuid%.Pentagon.check.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player's uuid%.Pentagon.check.walking}
+        delete {%player's uuid%.Pentagon.check.walk.speed}
+      if {%player's uuid%.Pentagon.check.nochecks} is true:
+        stop
+      if {%player's uuid%.Pentagon.check.epteleport} is true:
+        stop
+      if {%player's uuid%.Pentagon.check.teleport} is true:
+        stop
+      player is not riding
+      if {_dif} > 5:
+        if {%player's uuid%.Pentagon.check.teleport} is true:
+          stop
+        set {%player's uuid%.Pentagon.check.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {Pentagon.check.Blink} is true
+            #OLD VL COUNTER
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Blink", "1A")
+          else:
+            {Pentagon.check.FLY} is true
+            if {legitfly.%player%} is true:
+              stop
+            #OLD VL COUNTER
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fly", "3A")
+            if {@setback} is true:
+              #teleport player to {Pentagon.%player%.setback}
+            if {Pentagon.%player%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/Pentagon kick %player%"
+                stop
+              if {@Ban} is true:
+                make server execute command "/Pentagon ban %player% 7 day"
+        else:
+          {Pentagon.check.ClickTP} is true
+          #OLD VL COUNTER
+          add 1 to {Pentagon.%player%.total.vl}
+          detect(player, "Fly", "4A")
+          if {@setback} is true:
+            #teleport player to {Pentagon.%player%.setback}
+          if {Pentagon.%player%.vl} >= 5:
+            if {@Kick} is true:
+              make server execute command "/Pentagon kick %player%"
+              stop
+            if {@Ban} is true:
+              make server execute command "/Pentagon ban %player% 7 day"
+
+on damage:
+  set {cooldown.%victim%} to now
+every 5 second:
+  clear {alertl::*}
+on any move:
+  player is not riding
+  fly mode of player is false
+  gamemode of player is not spectator or creative
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      if player's chestplate is an elytra:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or stairs or ladder or slab or 165
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+        #OLD VL COUNTER
+        detect(player, "Fly", "1B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "2B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "3B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "4B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "5B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "6B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        #OLD VL COUNTER
+        detect(player, "Fly", "7B")
+        if {@Kick} is true:
+          make server execute command "/pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/pentagon ban %player% 7 day"
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      #OLD VL COUNTER
+      detect(player, "Fly", "8B")
+      if {@Kick} is true:
+        make server execute command "/pentagon kick %player%"
+        stop
+      if {@Ban} is true:
+        make server execute command "/pentagon ban %player% 7 day"
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        clear {vlsame.%player%}
+        stop
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I   H I G H J U M P
+#
+#--------------------------------------------------------
+
+on jump:
+   if {Pentagon.check.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+   set {_pos1} to y location of player
+   wait 7 ticks
+   set {_pos2} to y location of player
+   if difference between {_pos1} and {_pos2} is bigger than 2:
+      add 1 to {Pentagon.%player%.total.vl}
+      teleport player to {Pentagon.%player%.setback}
+      detect(player, "HighJump", "1A")
+      if {vl.HIGHJUMP.%player%} >= 5:
+         if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+         if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+
+on jump:
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} > 1.1:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.Pentagon.nochecks} is not set
+    {%player's uuid%.Pentagon.epteleport} is not set
+    {%player's uuid%.Pentagon.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.Pentagon.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    if {_y} is between 1.1 and 2.6:
+      {Pentagon.check.HIGHJUMP} is true
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "HighJump", "1B")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   L O N G J U M P
+#
+#--------------------------------------------------------
+
+on jump:
+   if {Pentagon.check.LONGJUMP} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   if block under player is ice:
+      stop
+   if block under player is packed ice:
+      stop
+   set {_pos1} to location of player
+   wait 7 ticks
+   if distance between player's location and {_pos1} is bigger than 4.5:
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "LongJump", "1A")
+      if {Pentagon.%player%.vl} >= 12:
+         if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+         if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   V C L I P
+#
+#--------------------------------------------------------
+
+on any movement:
+  {Pentagon.check.ILLEGAL} is true
+  if {legtifly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.Pentagon.nochecks} is not set
+    {%player's uuid%.Pentagon.epteleport} is not set
+    {%player's uuid%.Pentagon.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.Pentagon.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "VClip", "1A")
+      if {Pentagon.%player%.vl} >= 5:
+        if {@Kick} is true:
+          make server execute command "/Pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/Pentagon ban %player% 7 day"
+    else:
+      {Pentagon.check.FLY} is true
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "VClip", "2A")
+      if {Pentagon.%player%.vl} >= 5:
+        if {@Kick} is true:
+          make server execute command "/Pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   S C A F F O L D
+#
+#--------------------------------------------------------
+
+on block place:
+  if {Pentagon.check.SCAFFOLD} is false:
+    stop
+  if {%player's uuid%.Pentagon.teleport} is true:
+    stop
+  else:
+    set {_b} to block under player
+    set {_b} to block under {_b}
+    if {_b} is not air:
+      stop
+    else:
+      if block under event-block is not air:
+        stop
+      else:
+        if player's gamemode is not creative or spectator:
+          if {%player's uuid%.Pentagon.bypass} is not set:
+            if y coordinate of event-block < y coordinate of player:
+              if player's pitch is between 9 and -90:
+                if {Pentagon.delay.scaffold.%player%} is true:
+                  stop
+                set {Pentagon.delay.scaffold.%player%} to true
+                if {@setback} is true:
+                  cancel event
+                detect(player, "Scaffold", "1A")
+                if {@Kick} is true:
+                  make server execute command "/Pentagon kick %PLAYER%"
+                  stop
+                if {@Ban} is true:
+                  make server execute command "/Pentagon ban %PLAYER% 7 day"
+              else:
+                set {%player's uuid%.Pentagon.old.pitch.time} to {%player's uuid%.Pentagon.new.pitch.time}
+                set {%player's uuid%.Pentagon.old.pitch} to {%player's uuid%.Pentagon.new.pitch}
+                set {%player's uuid%.Pentagon.new.pitch} to player's pitch
+                set {%player's uuid%.Pentagon.new.pitch.time} to now
+                set {_dif.time} to difference between {%player's uuid%.Pentagon.old.pitch.time} and {%player's uuid%.Pentagon.new.pitch.time}
+                set {_dif.pitch} to difference between {%player's uuid%.Pentagon.old.pitch} and {%player's uuid%.Pentagon.new.pitch}
+                if {_dif.time} <= 0.3 seconds:
+                  if {_dif.pitch} <= 2.5:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    if {@setback} is true:
+                      cancel event
+                    detect(player, "Scaffold", "2A")
+                if {_dif.time} = 0 seconds:
+                  add 0.5 to {vl.%player%}
+                  add 1 to {Pentagon.%player%.total.vl}
+                  if {@setback} is true:
+                    cancel event
+                  detect(player, "Scaffold", "3A")
+                  if {@Kick} is true:
+                    make server execute command "/Pentagon kick %player%"
+                    stop
+                  if {@Ban} is true:
+                    make server execute command "/Pentagon ban %player% 7 day"
+            delete {Pentagon.delay.scaffold.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I   R E G E N
+#
+#--------------------------------------------------------
+
+on heal:
+   if heal reason = satiated:
+      set {_waited} to difference between {Regen.%player's uuid%} and now
+      if {_waited} is less than 9 ticks:
+         add 1 to {Pentagon.%player%.total.vl}
+         detect(player, "Regen", "1A")
+         if {@setback} is true:
+            cancel event
+         set {Regen.%player's uuid%} to now
+         set {Regen.amount.%player's uuid%} to {Regen.amount.%player's uuid%} + 1
+      else:
+         set {Regen.%player's uuid%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I   P L U G I N S
+#
+#--------------------------------------------------------
+
+command /pl:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /bukkit:pl:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /plugins:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /bukkit:plugins:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /ver:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /version:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /bukkit:ver:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+command /bukkit:version:
+   trigger:
+      send "{@Pentagon} Sorry but you can't do that!"
+      detect(player, "Plugins", "1A")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   W A T E R  W A L K / J E S U S
+#
+#--------------------------------------------------------
+
+on walk on water:
+  if {Pentagon.check.JESUS} is false:
+    stop
+  player's gamemode is not creative
+  player is not riding
+  player is not sneaking
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 2 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "3D")
+                    if {@Kick} is true:
+                      make server execute command "/Pentagon kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/Pentagon ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "2D")
+                  if {Alerte.Jesus.%player%} > 14:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "1D")
+      
+
+command /clearjesus:
+  trigger:
+    clear {Alerte.Jesus.%player%}
+    set {jesus.%player%} to false
+on any move:
+  if {Pentagon.check.JESUS} is false:
+    stop
+  if player's gamemode is not creative:
+    if player is sneaking:
+      stop
+    else:
+      if block below player is water:
+        if block south below player is water:
+          if block north below player is water:
+            if block west below player is water:
+              if block east below player is water:
+                if block south player is air:
+                  if block north player is air:
+                    if block west player is air:
+                      block east player is air
+                      add 1 to {Alerte.Jesus.%player%}
+                      if {Alerte.Jesus.%player%} > 25:
+                        add 1 to {Pentagon.%player%.total.vl}
+                        detect(player, "Jesus", "3C")
+                        if {@Kick} is true:
+                          make server execute command "/Pentagon kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/Pentagon ban %player% 7 day"
+                      if {Alerte.Jesus.%player%} > 19:
+                        add 1 to {Pentagon.%player%.total.vl}
+                        detect(player, "Jesus", "2C")
+                      if {Alerte.Jesus.%player%} > 14:
+                        add 1 to {Pentagon.%player%.total.vl}
+                        detect(player, "Jesus", "1C")
+every 8 second:
+  loop all players:
+    clear {Alerte.Jesus.%loop-player%}
+on jump:
+  if {Pentagon.check.JESUS} is false:
+    stop
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 3 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "3B")
+                    if {@Kick} is true:
+                      make server execute command "/Pentagon kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/Pentagon ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "2B")
+                  if {Alerte.Jesus.%player%} > 14:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Jesus", "1B")
+
+#--------------------------------------------------------
+#
+#             A N T I   F L Y | N O F A L L | S P I D E R
+#
+#--------------------------------------------------------
+
+on any movement:
+  if {legtifly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.Pentagon.check.epteleport} is true:
+    stop
+  if {%player's uuid%.Pentagon.check.teleport} is true:
+    stop
+  else if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.check.nochecks} is set:
+      wait 1 second
+      delete {%player's uuid%.Pentagon.check.nochecks}
+      stop
+    if {%player's uuid%.Pentagon.check.bypass} is not set:
+      if {%player's uuid%.Pentagon.check.cheat.cooldown} is not set:
+        set {%player's uuid%.Pentagon.check.cheat.cooldown} to true
+        if block under player is not air or water:
+          set {%player's uuid%.Pentagon.check.tp.loc} to {_loc}
+        #NoFall
+        {Pentagon.check.NoFall} is true:
+          if player's flight mode is false:
+            if {%player's uuid%.Pentagon.check.jump} is not set:
+              if block under player is air:
+                set {_yloc} to player's y coordinate
+                set {_health} to player's health
+                wait 0.5 seconds
+                set {_yloc1} to player's y coordinate
+                if player is on ground:
+                  block under player is not slime block
+                  set {_dis} to {_yloc} - {_yloc1}
+                  block under player is not air
+                  block under player is ladder:
+                    stop
+                  loop all blocks in radius 2 around player:
+                    if loop-block is cobweb:
+                      stop
+                    if loop-block is water:
+                      stop
+                    if loop-block is vine:
+                      stop
+                    if loop-block is ladder:
+                      stop
+                  {%player's uuid%.Pentagon.check.nofall} is not set
+                  if {_dis} is greater than or equal to 5.5:
+                    if player's health = {_health}-0.5:
+                      set {_dmg} to floor({_dis} / 1)
+                      add 1 to {Pentagon.%player%.total.vl}
+                      detect(player, "Nofall", "2C")
+                      if {@Kick} is true:
+                        make server execute command "/Pentagon kick %player%"
+                        stop
+                      if {@Ban} is true:
+                        make server execute command "/Pentagon ban %player% 7 day"
+                      set {%player's uuid%.Pentagon.check.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.Pentagon.check.nofall}
+                      #damage the player by {_dmg} heart
+        #Spider
+        {Pentagon.check.Spider} is true
+        if block under player is air:
+          if block 2 under player is air:
+            if block 3 under player is air:
+              set {_y} to player's y coordinate
+              wait 1 tick
+              block under player is not ladder
+              block at player is not water
+              if {%player's uuid%.Pentagon.check.jump} is not set:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if difference between {_y} and player's y coordinate is less than 1:
+                    if distance between player and player's targeted block is less than 1.25:
+                      add 1 to {Pentagon.%player%.total.vl}
+                      detect(player, "Spider", "1A")
+                      if {Pentagon.%player%.vl} >= 10:
+                        if {@Kick} is true:
+                          make server execute command "/Pentagon kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/Pentagon ban %player% 7 day"
+                  else:
+                    if distance between player and player's targeted block is less than 1.25:
+                      {Pentagon.check.Speed} is true
+                      add 1 to {Pentagon.%player%.total.vl}
+                      detect(player, "Spider", "2A")
+                      if {Pentagon.%player%.vl} >= 5:
+                        if {@Kick} is true:
+                          make server execute command "/Pentagon kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/Pentagon ban %player% 7 day"
+              else:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if distance between player and player's targeted block is less than 1.25:
+                    add 1 to {Pentagon.%player%.total.vl}
+                    detect(player, "Spider", "3A")
+                    if {Pentagon.%player%.vl} >= 5:
+                      if {@Kick} is true:
+                        make server execute command "/Pentagon kick %player%"
+                        stop
+                      if {@Ban} is true:
+                        make server execute command "/Pentagon ban %player% 7 day"
+        #Flight
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player's uuid%.Pentagon.check.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player's uuid%.Pentagon.check.slime} to true
+                          wait 10 second
+                          delete {%player's uuid%.Pentagon.check.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player's uuid%.Pentagon.check.slime} is not set:
+                        if block under player is air:
+                          if {%player's uuid%.Pentagon.check.slime} is not set:
+                            {Pentagon.check.Flight} is true
+                            block under player is not water or ladder
+                            add 1 to {Pentagon.%player%.total.vl}
+                            detect(player, "Fly", "3C")
+                            if {Pentagon.%player%.vl} >= 3:
+                              if {@Kick} is true:
+                                make server execute command "/Pentagon kick %player%"
+                                stop
+                              if {@Ban} is true:
+                                make server execute command "/Pentagon ban %player% 7 day"
+                            set {%player's uuid%::Pentagon.check.flight.status} to true
+                            wait 5 second
+                            delete {%player's uuid%::Pentagon.check.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player's uuid%.Pentagon.check.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {Pentagon.check.Float} is true
+                              if block under player is slab:
+                                stop
+                              remove 1 from y coordinate of {%player's uuid%.Pentagon.check.tp.loc}
+                              add 1 to {Pentagon.%player%.total.vl}
+                              detect(player, "Fly", "2C")
+          else:
+            #HOVER | FLIGHT | SPEED | CRITICALS
+            if {%player's uuid%.Pentagon.check.nochecks} is true:
+              stop
+              wait 1 second
+              delete {%player's uuid%.Pentagon.check.nochecks}
+            if {%player's uuid%.Pentagon.check.teleport} is true:
+              stop
+            if {%player's uuid%.Pentagon.check.epteleport} is true:
+              stop
+            else if {%player's uuid%.Pentagon.check.jump} is true:
+              stop
+            if player is riding:
+              stop
+            else:
+              if {%player's uuid%.Pentagon.check.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player's uuid%.Pentagon.check.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 10 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          set {_loop} to 255 -  y coordinate of player
+                          set y coordinate of {_123.loc} to 255
+                          loop {_loop} times:
+                            if block at {_123.loc} is slime block:
+                              stop
+                              set {%player's uuid%.Pentagon.check.slime} to true
+                              wait 10 second
+                              delete {%player's uuid%.Pentagon.check.slime}
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is not on ground:
+                            wait 3 ticks
+                            if {%player's uuid%.Pentagon.check.slime} is not set:
+                              if {%player's uuid%.Pentagon.check.damage} is not set:
+                                if {%player's uuid%.Pentagon.check.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player's uuid%.Pentagon.check.fix.slime} is not set:
+                                    set {_find} to player's location
+                                    set {_count} to 255 - y coordinate of player
+                                    loop 255 times:
+                                      if block at {_find} is slime block:
+                                        stop
+                                        set {%player's uuid%.Pentagon.check.slime} to true
+                                        wait 5 second
+                                        delete {%player's uuid%.Pentagon.check.slime}
+                                      else:
+                                        remove 1 from y coordinate of {_find}
+                                    wait 1 tick
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        if {_b1} is air:
+                                          {Pentagon.check.Flight} is true
+                                          add 1 to {Pentagon.%player%.total.vl}
+                                          detect(player, "Fly", "1C")
+                                      else:
+                                        if {%player's uuid%.Pentagon.check.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player's uuid%.Pentagon.check.damage} is not set:
+                                              block under player is not ladder:
+                                                {Pentagon.check.Hover} is true
+                                                add 1 to {Pentagon.%player%.total.vl}
+                                                detect(player, "Hover", "1A")
+                                          else:
+                                            {Pentagon.check.NOFALL} is true
+                                            add 1 to {Pentagon.%player%.total.vl}
+                                            detect(player, "Nofall", "1B")
+                                        else:
+                                          {Pentagon.check.Criticals} is true
+                                          add 1 to {Pentagon.%player%.total.vl}
+                                          detect(player, "Criticals", "1A")
+                              else:
+                                {Pentagon.check.Criticals} is true
+                                add 1 to {Pentagon.%player%.total.vl}
+                                detect(player, "Criticals", "2A")
+        #Speed
+        if player's flight mode is false:
+          if player doesn't have speed or jump boost:
+            if {%player's uuid%.Pentagon.check.nochecks} is not set:
+              if {%player's uuid%.Pentagon.check.teleport} is true:
+                stop
+              else if {%player's uuid%.Pentagon.check.epteleport} is true:
+                stop
+              else:
+                set {_x} to player's x coordinate
+                set {_z} to player's z coordinate
+                set {_bap} to block above player's head
+                wait 5 ticks
+                set {_bap2} to block above player's head
+                set {_x1} to player's x coordinate
+                set {_z1} to player's z coordinate
+                set {_x} to difference between {_x1} and {_x}
+                set {_z} to difference between {_z1} and {_z}
+                replace all "-" with "" in {_x}
+                replace all "-" with "" in {_z}
+                if {_x} > {_z}:
+                  set {_speed} to {_x}
+                if {_z} > {_x}:
+                  set {_speed} to {_z}
+                if {_x} = {_z}:
+                  set {_speed} to {_x}
+                player's walking speed is between 0 and 0.3
+                if {_speed} is greater than 3:
+                  if {%player's uuid%.Pentagon.check.teleport} is true:
+                    stop
+                  else if {%player's uuid%.Pentagon.check.epteleport} is true:
+                    stop
+                  set {%player's uuid%.Pentagon.check.cheat.speed} to {_speed} * 4
+                  if player is not riding:
+                    if {%player's uuid%.Pentagon.check.jump.bhop} is not set:
+                      if player is not flying:
+                        if block under player is not air:
+                          if block 2 under player is not air:
+                            {Pentagon.check.Speed} is true
+                            add 1 to {Pentagon.%player%.total.vl}
+                            detect(player, "Speed", "1A")
+                            if {Pentagon.%player%.vl} >= 20:
+                              if {@Kick} is true:
+                                make server execute command "/Pentagon kick %player%"
+                                stop
+                              if {@Ban} is true:
+                                make server execute command "/Pentagon ban %player% 7 day" 
+                          else:
+                            {Pentagon.check.Speed} is true
+                            add 1 to {Pentagon.%player%.total.vl}
+                            detect(player, "Speed", "2A")
+                            if {Pentagon.%player%.vl} >= 20:
+                              if {@Kick} is true:
+                                make server execute command "/Pentagon kick %player%"
+                                stop
+                              if {@Ban} is true:
+                                make server execute command "/Pentagon ban %player% 7 day"      
+                      else:
+                        {Pentagon.check.Speed} is true
+                        add 1 to {Pentagon.%player%.total.vl}
+                        detect(player, "Speed", "3A")
+                        if {Pentagon.%player%.vl} >= 20:
+                          if {@Kick} is true:
+                            make server execute command "/Pentagon kick %player%"
+                            stop
+                          if {@Ban} is true:
+                            make server execute command "/Pentagon ban %player% 7 day"                       
+                    else:
+                      {Pentagon.check.Bhop} is true
+                      add 1 to {Pentagon.%player%.total.vl}
+                      detect(player, "Bhop", "1A")
+                      if {Pentagon.%player%.vl} >= 25:
+                        if {@Kick} is true:
+                          make server execute command "/Pentagon kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/Pentagon ban %player% 7 day"      
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.bypass} is not set:
+      if difference between {%player's uuid%.Pentagon.last.jump} and now is less than or equal to 1 seconds:
+        set {%player's uuid%.Pentagon.jump.bhop} to true
+        wait 10 ticks
+        delete {%player's uuid%.Pentagon.jump.bhop}
+      set {%player's uuid%.Pentagon.last.jump} to now
+      set {%player's uuid%.Pentagon.jump} to true
+      wait 10 ticks
+      delete {%player's uuid%.Pentagon.jump}
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.bypass} is not set:
+      set {%player's uuid%.Pentagon.teleport} to true
+      wait 1 second
+      delete {%player's uuid%.Pentagon.teleport}
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player's uuid%.Pentagon.epteleport} to true
+        set {%player's uuid%.Pentagon.teleport} to true
+
+on projectile hit:
+   if projectile is enderpearl:
+      delete {%shooter's uuid%.Pentagon.eteleport}
+      delete {%shooter's uuid%.Pentagon.teleport}
+
+#--------------------------------------------------------
+#
+#             A N T I   I N V M O V E
+#
+#--------------------------------------------------------
+
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    cancel event
+    detect(player, "Inventory Move", "1A")
+    close player's inventory
+  if player is sneaking:
+    cancel event
+    detect(player, "Inventory Move", "2A")
+    close player's inventory
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    detect(player, "Inventory Move", "3A")
+    close player's inventory
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    detect(player, "AutoSneak", "4A")
+    close player's inventory
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+on inventory open:
+  wait 2 ticks
+  if player is sprinting:
+    detect(player, "Inventory Move", "5A")
+    close player's inventory
+on inventory open:
+  wait 1 ticks
+  if player is sneaking:
+    detect(player, "AutoSneak", "6A")
+    close player's inventory
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T P L A C E
+#
+#--------------------------------------------------------
+
+on block place:
+   set {_waited} to difference between {fastplace.%player's uuid%} and now
+   if {_waited} is less than 1 ticks:
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastPlace", "1A")
+      cancel event
+      set {fastplace.%player's uuid%} to now
+      set {fastplace.amount.%player's uuid%} to {fastplace.amount.%player's uuid%} + 1
+   else:
+      set {fastplace.%player's uuid%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I   A L T
+#
+#--------------------------------------------------------
+
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            if {@AntiAlt} is true:
+                if {_name} contains "XIII___":
+                    stop
+                make server execute command "/pentagon kick %{_name}%"
+
+#--------------------------------------------------------
+#
+#             T E M P B A N C O D E 
+#
+#--------------------------------------------------------
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "{@Pentagon} &cYour are banned for &e%{tempban.time::%player%}%&c from this server !"
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+
+#--------------------------------------------------------
+#
+#             A N T I   N O S L O W
+#
+#--------------------------------------------------------
+
+on eating:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.Pentagon.bypass} is not set:
+      {Pentagon.check.NoSlow} is true
+      player's flight mode is false
+      if player has speed:
+        stop
+    set {_loc} to player's location
+    set y coordinate of {_loc} to 0
+    wait 1 tick
+    set {_loc1} to player's location
+    set y coordinate of {_loc1} to 0
+    set {_loc} to distance between {_loc1} and {_loc}
+    if {_loc} > 0.20:
+      set {%player's uuid%.Pentagon.cancel.eat} to true
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "NoSlow", "2A")
+      if {Pentagon.%player%.vl} >= 5:
+        if {@Kick} is true:
+          make server execute command "/Pentagon kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/Pentagon ban %player% 7 day"
+      wait 5 seconds
+      delete {%player's uuid%.Pentagon.cancel.eat}
+
+#--------------------------------------------------------
+#
+#             A N T I   S N E A K
+#
+#--------------------------------------------------------
+
+on any move:
+   if player is sneaking:
+      if block under player is air:
+         stop
+      if block 2 under player is air:
+         stop
+      if player's fly mode is true:
+         stop
+      if {%player's uuid%.Pentagon.teleport} is set:
+         stop
+      set {_loc} to player's location
+      wait 7 ticks
+      set {_d} to distance between player's location and {_loc}
+      if player doesn't have speed or jump boost:
+         if {_d} >= 1.5:
+            if {legitfly.%player%} is true:
+               stop
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Sneak", "1A")
+            if {Pentagon.%player%.vl} >= 10:
+               if {@Kick} is true:
+                  make server execute command "/Pentagon kick %player%"
+                  stop
+               if {@Ban} is true:
+                  make server execute command "/Pentagon ban %player% 7 day"
+      if player have speed or jump boost:
+         if {_d} >= 4.5:
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Sneak", "2A")
+            if {Pentagon.%player%.vl} >= 10:
+               if {@Kick} is true:
+                  make server execute command "/Pentagon kick %player%"
+                  stop
+               if {@Ban} is true:
+                  make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   F U C K E R
+#
+#--------------------------------------------------------
+
+on break:
+  if event-block is not player's targeted block:
+    if "%event-block%" contains "bed" or "dragon egg":
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player's uuid%.Pentagon.nochecks} is not set
+        {%player's uuid%.Pentagon.epteleport} is not set
+        {%player's uuid%.Pentagon.teleport} is not set
+        player's gamemode is not creative or spectator
+        {%player's uuid%.Pentagon.bypass} is not set
+        cancel event
+        if "%event-block%" contains "bed" or "dragon egg":
+          if "%event-block%" contains "bed":
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fucker", "1A")
+            if {Pentagon.%player%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/Pentagon kick %player%"
+                stop
+              if {@Ban} is true:
+                make server execute command "/Pentagon ban %player% 7 day"
+          else:
+            add 1 to {Pentagon.%player%.total.vl}
+            detect(player, "Fucker", "2A")
+            if {Pentagon.%player%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/Pentagon kick %player%"
+                stop
+              if {@Ban} is true:
+                make server execute command "/Pentagon ban %player% 7 day"
+    else:
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player's uuid%.Pentagon.nochecks} is not set
+        {%player's uuid%.Pentagon.epteleport} is not set
+        {%player's uuid%.Pentagon.teleport} is not set
+        player's gamemode is not creative or spectator
+        {%player's uuid%.Pentagon.bypass} is not set
+        cancel event
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "Fucker", "3A")
+        if {Pentagon.%player%.vl} >= 5:
+          if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+          if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+
+on left click:
+  if clicked block is not targeted block:
+    {%player's uuid%.Pentagon.nochecks} is not set
+    {%player's uuid%.Pentagon.epteleport} is not set
+    {%player's uuid%.Pentagon.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.Pentagon.bypass} is not set
+    if event-block is cake:
+      cancel event
+      if event-block is cake:
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "CakeEater", "1A")
+        if {Pentagon.%player%.vl} >= 5:
+          if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+          if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+
+on right click:
+  if clicked block is not targeted block:
+    {%player's uuid%.Pentagon.nochecks} is not set
+    {%player's uuid%.Pentagon.epteleport} is not set
+    {%player's uuid%.Pentagon.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.Pentagon.bypass} is not set
+    if event-block is dragon egg or cake:
+      cancel event
+      if event-block is cake:
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "CakeEater", "2A")
+        if {Pentagon.%player%.vl} >= 5:
+          if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+          if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+      else:
+        add 1 to {Pentagon.%player%.total.vl}
+        detect(player, "BreakAura", "1A")
+        if {Pentagon.%player%.vl} >= 5:
+          if {@Kick} is true:
+            make server execute command "/Pentagon kick %player%"
+            stop
+          if {@Ban} is true:
+            make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   N O W E B
+#
+#--------------------------------------------------------
+
+on any move:
+   block at player is cobweb:
+      set {_web1} to player's location
+      if {%player's uuid%.Pentagon.teleport} is set:
+         stop
+      wait 7 ticks
+      if distance between {_web1} and player's location is higher than 1.6:
+         add 1 to {Pentagon.%player%.total.vl}
+         detect(player, "NoWeb", "1A")
+         if {Pentagon.%player%.vl} >= 10:
+            if {@Kick} is true:
+               make server execute command "/Pentagon kick %player%"
+               stop
+            if {@Ban} is true:
+               make server execute command "/Pentagon ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T  B R E A K
+#
+#--------------------------------------------------------
+
+on mine of stone or any ore:
+  if player have haste:
+    stop
+  player has wood pickaxe in hand:
+    tool is not enchanted
+    add 1 to {%player%.breaks}
+    wait 40 ticks
+    {%player%.breaks} is bigger than 1:
+      clear {%player%.breaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.breaks}
+  player has stone pickaxe in hand:
+    tool is not enchanted
+    add 1 to {%player%.breaks}
+    wait 40 ticks
+    {%player%.breaks} is bigger than 1+1:
+      clear {%player%.breaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.breaks}
+  player has iron pickaxe in hand:
+    tool is not enchanted
+    add 1 to {%player%.breaks}
+    wait 40 ticks
+    {%player%.breaks} is bigger than 1+2:
+      clear {%player%.breaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.breaks}
+  player has gold pickaxe in hand:
+    tool is not enchanted
+    add 1 to {%player%.breaks}
+    wait 40 ticks
+    {%player%.breaks} is bigger than 1+4:
+      clear {%player%.breaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.breaks}
+  player has diamond pickaxe in hand:
+    tool is not enchanted
+    add 1 to {%player%.breaks}
+    wait 40 ticks
+    {%player%.breaks} is bigger than 1+3:
+      clear {%player%.breaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.breaks}
+
+on mine of dirt, gravel, sand or netherrack:
+  player has any shovel in hand:
+    tool is not enchanted
+    if player have haste:
+      stop
+    add 1 to {%player%.dirtbreaks}
+    wait 40 ticks
+    {%player%.dirtbreaks} is bigger than 2:
+      clear {%player%.dirtbreaks}
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "FastBreak", "1A")
+    else:
+      clear {%player%.dirtbreaks}
+
+#--------------------------------------------------------
+#
+#             A N T I   C H E S T S T E A L E R
+#
+#--------------------------------------------------------
+
+on unstore:
+   set {_waited} to difference between {ChestStealer.%player's uuid%} and now
+   if {_waited} is less than 1 ticks:
+      add 1 to {Pentagon.%player%.total.vl}
+      detect(player, "ChestStealer", "1A")
+      cancel event
+      close player's inventory
+      set {ChestStealer.%player's uuid%} to now
+      set {ChestStealer.amount.%player's uuid%} to {ChestStealer.amount.%player's uuid%} + 1
+   else:
+      set {ChestStealer.%player's uuid%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T B O W
+#
+#--------------------------------------------------------
+
+on shoot:
+   set {_waited} to difference between {Shoot.%shooter's uuid%} and now
+   if {_waited} is less than 2 ticks:
+      add 1 to {Pentagon.%shooter%.total.vl}
+      detect(shooter, "FastBow", "1A")
+      cancel event
+      set {Shoot.%shooter's uuid%} to now
+      set {Shoot.amount.%shooter's uuid%} to {Shoot.amount.%shooter's uuid%} + 1
+   else:
+      set {Shoot.%shooter's uuid%} to now

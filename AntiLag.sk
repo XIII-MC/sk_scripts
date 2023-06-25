@@ -1,0 +1,104 @@
+#				Clear Lag	
+#				by: RodriPlays555
+#				version: 1.0
+
+#	permissions:
+#	- lag.cmd - permission to use /lag <disable / enable / clear / clear mobs / clear drops>
+
+
+
+options:
+	noperm: &cNo Permission
+	clearmsg: &e&lCat&6&lRoyale &7» &eWarning Dropped Items Will Be Removed In 60 Seconds
+	
+	
+every 180 second:
+	if {clear.lag} is true:
+		broadcast "{@clearmsg}"
+	
+every 200 second:
+	if {clear.lag} is true:
+		execute console command "killall mobs"
+		wait 2 ticks
+		execute console command "killall monsters"
+		wait 2 ticks
+		execute console command "killall drops"
+		wait 2 ticks
+		execute console command "killall entities"
+		wait 2 ticks
+		execute console command "killall boats"
+		wait 2 ticks
+		execute console command "killall arrows"
+		wait 2 ticks
+		execute console command "killall ambient"
+		wait 2 ticks
+		execute console command "killall itemframes"
+		wait 2 ticks
+		execute console command "killall xp"
+		wait 2 ticks
+		execute console command "killall hostile"
+		broadcast "&e&lCat&6&lRoyale &7» &aEntities Removed"
+			
+			
+command /lag [<text>] [<text>]:
+	permission: lag.cmd
+	permission message: {@noperm}
+	trigger:
+		if arg 1 is not set:
+			if arg 2 is not set:
+				message "&e/lag clear &a- clears all entities"
+				message "&e/lag clear mobs &a- clears all mobs"
+				message "&e/lag clear drops &a- clears all drops"
+				message "&e/lag enable &a- enable automatic clearning"
+				message "&e/lag disable &a- disable automatic clearning"
+				stop
+		if arg 1 is set:
+			if arg 1 is "clear":
+				if arg 2 is not set:
+					loop all entities:
+						if loop-entity is not a player:
+							delete loop-entity
+					loop all dropped items:
+						delete loop-value
+				if arg 2 is set:
+					if arg 2 is "mobs":
+						loop all entities:
+							if loop-entity is not a player or dropped items:
+								delete loop-entity
+					if arg 2 is "drops":
+						loop all dropped items:
+							delete loop-value
+			if arg 1 is "enable":
+				if arg 2 is set:
+					make player execute "/lag"
+					stop
+				if arg 2 is not set:
+					if {clear.lag} is not set:
+						set {clear.lag} to true
+						message "&aAutomatic clearning enabled"
+						stop
+					if {clear.lag} is false:
+						set {clear.lag} to true
+						message "&aAutomatic clearning enabled"
+						stop
+					if {clear.lag} is true:
+						message "&eAutomatic clearning is already enabled"
+						stop
+			if arg 1 is "disable":
+				if arg 2 is set:
+					make player execute "/lag"
+					stop
+				if arg 2 is not set:
+					if {clear.lag} is not set:
+						message "&eAutomatic clearning is already disabled"
+						stop
+					if {clear.lag} is false:
+						message "&eAutomatic clearning is already disabled"
+						stop
+					if {clear.lag} is true:
+						set {clear.lag} to false
+						message "&cAutomatic clearning disabled"
+						stop
+			if arg 1 is not "clear" or "enable" or "disable":
+				make player execute "/lag"
+				stop

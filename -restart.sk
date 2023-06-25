@@ -1,0 +1,33 @@
+on load:
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &32 hours"
+   wait 1 hour
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &31 hours"
+   wait 30 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &330 minutes"
+   wait 20 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &310 minutes"
+   wait 5 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &35 minutes"
+   wait 1 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &34 minutes"
+   wait 1 minutes 
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &33 minutes"
+   wait 1 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &32 minutes"
+   wait 1 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &31 minutes"
+   wait 30 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &330 seconds"
+   wait 20 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &310 seconds"
+   wait 5 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &35 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &34 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &33 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer will reboot in &32 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> &cServer is rebooting..."
+   make server execute command "/restart"

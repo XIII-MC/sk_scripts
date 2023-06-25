@@ -1,0 +1,1175 @@
+options:
+	
+	# Version
+	Version: 1.4
+		
+	# Prefix
+	Prefix: &c[&7!&c]
+
+	# VL
+	MaxVL: 20
+	ReportVL: 1
+	ReportMessage: {Prefix} &c{Player} &7failed &c{Cheat} &c[&7{Type}&c] {Chance}
+	ReportKickMessage: {Prefix} &c{Player} &7failed &c{Cheat} &c[&7{Type}&c] {Chance} &7(Kicked)
+	AutoKick: true
+	KickDelay: true
+	KickDelayTime: 1 tick
+	KickClearVL: true
+	KickMessage: &c[CHEAT DETECTION] &7You were caught cheating!
+	KickBroadcast: true
+	KickBroadMessage: &c[CHEAT DETECTION] &7A player in your lobby was caught cheating!
+	KickVL: 20
+	BlockHack: true
+	BlockHackFallDamage: false
+	BlockHackMinFallDamage: 0.5
+	BlockHackMaxFallDamage: 5
+	BlockVL: 1
+	VLClearInterval: 30 seconds
+	
+	# Config
+		# Checks
+	Check: true
+	TimeInterval: 4 ticks
+	ShortCheck: true
+	ShortTimeInterval: 2 ticks
+		# ClicKTP
+	VLClickTPA: 2
+	ClickTPMinDistance: 2
+		#FastLadder
+	FastLadderUp: 0.13
+	FastLadderDown: -0.16
+	VLFastLadderA: 2
+	VLFastLadderB: 2
+		# Fly
+	FlyAVLClearInterval: 1 second
+	FlyDMinY: 0.015
+	FlyFMinY: -0.3
+	FlyFMaxY: 0
+	FlyGSpeed: 0.85
+	FlyIHeight: 0.75
+	VLFLyA: 2
+	VLFlyD: 3
+	VLFlyF: 8
+	VLFlyH: 3
+	VLFlyI: 2
+		# NoFall
+	NoFall: true
+	NoFallYCheckTime: 2 ticks
+		# NoSlow (Eat)
+	NoSlowEatASpeed: 0.23
+	NoSlowEatBSpeed: 0.1
+	VLNoSlowEatB: 3
+		# NoSlow (Web)
+	NoSlowWebASpeed: 0.23
+	NoSlowWebBSpeed: 0.1
+	VLNoSlowWebB: 2
+		# Sneak
+	SneakASpeed: 0.41
+	SneakBSpeed: 0.33
+	VLSneakB: 4
+		# Speed
+	SpeedAExtraSpeed: 0.2
+	SpeedBMinSpeed: 0.295
+	SpeedCWalkSpeed: 0.75
+	SpeedCSprintSpeed: 0.75
+	VLSpeedA: 5
+	VLSpeedB: 3
+	VLSpeedC: 3
+
+	# Permission
+	OPBypass: false
+	PermBypass: false
+	BypassPermission: anticheat.bypass
+	ReportPermission: anticheat.report
+	
+	# Check Cooldown
+	CheckEnderPearlCooldown: 3 seconds
+	CheckJoinCooldown: 3 seconds
+	CheckLoadCooldown: 3 seconds
+	CheckSlimeCooldown: 15 seconds
+	CheckTeleportCooldown: 3 seconds
+	CheckWorldCooldown: 3 seconds
+
+# --- ( Example )	---
+
+on eating:
+	NoSlowEatACheck(player)
+	NoSlowEatBCheck(player)
+
+on join:
+	{@Check} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 5 seconds
+	while player is online:
+		AllCheck(player)
+		wait {@TimeInterval}
+
+on right click:
+	ClickTPACheck(player,clicked block)
+
+# ShortCheck
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		SpeedCCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FastLadderA({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FastLadderB({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyACheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyBCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyCCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyECheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyFCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		FlyICheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		JesusACheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		JesusBCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		NoSlowWebACheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		NoSlowWebBCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		SneakACheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		SneakBCheck({_player})
+		wait {@ShortTimeInterval}
+
+on join:
+	{@ShortCheck} is true
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			stop
+	wait 1 second
+	while player is online:
+		NoFallACheck({_player})
+		wait {@ShortTimeInterval}
+
+# --- ( Checks ) ---
+
+function AllCheck(player:player):
+	SetHome({_player})
+	SpeedACheck({_player})
+	SpeedBCheck({_player})
+	SpeedCCheck({_player})
+	FastLadderA({_player})
+	FastLadderB({_player})
+	FlyACheck({_player})
+	FlyBCheck({_player})
+	FlyCCheck({_player})
+	FlyDCheck({_player})
+	FlyECheck({_player})
+	FlyFCheck({_player})
+	FlyGCheck({_player})
+	FlyHCheck({_player})
+	FlyICheck({_player})
+	JesusACheck({_player})
+	JesusBCheck({_player})
+	NoSlowWebACheck({_player})
+	NoSlowWebBCheck({_player})
+	SneakACheck({_player})
+	SneakBCheck({_player})
+	NoFallACheck({_player})
+
+function FastLadderA(player:player):
+	block at {_player} is ladder
+	{_player} doesn't have jump boost
+	distance between {_player} and block at {_player} <= 0.5
+	set {_loc} to y coordinate of {_player}
+	wait 1 tick
+	set {_loc} to y coordinate of {_player} - {_loc}
+	set {_uuid} to uuid of {_player}
+	if {_loc} > {@FastLadderUp}:
+		add 1 to {MAC::FastLadderA::%{_uuid}%}
+		if {MAC::FastLadderA::%{_uuid}%} >= {@VLFastLadderA}:
+			MoveReport({_player}, "FastLadder", "A")
+	else:
+		delete {MAC::FastLadderA::%{_uuid}%}
+
+function FastLadderB(player:player):
+	block at {_player} is ladder
+	{_player} doesn't have jump boost
+	set {_uuid} to uuid of {_player}
+	distance between {_player} and block at {_player} <= 0.5
+	set {_loc} to y coordinate of {_player}
+	wait 1 tick
+	set {_uuid} to uuid of {_player}
+	set {_loc} to y coordinate of {_player} - {_loc}
+	if {_loc} < {@FastLadderDown}:
+		if {MAC::FastLadderB::%{_uuid}%} >= {@VLFastLadderB}:
+			MoveReport({_player}, "FastLadder", "B")
+	else:
+		delete {MAC::FastLadderB::%{_uuid}%}
+
+function NoFallACheck(player:player):
+	{@NoFall} is true
+	{_player} is on ground
+	"%block under {_player}%" does not contain "Shulker Box"
+	block 0.25 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	set {_y} to {_player}'s y coordinate
+	wait {@NoFallYCheckTime}
+	{_y} > {_player}'s y coordinate
+	{_player} is on ground
+	block 0.25 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	MoveReport({_player}, "NoFall", "A")
+
+function SneakACheck(player:player):
+	{_player} is sneaking
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	{_player} is sneaking
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	if {_loc} > {@SneakASpeed}:
+		MoveReport({_player}, "Sneak", "A")
+
+function SneakBCheck(player:player):
+	{_player} is sneaking
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	{_player} is sneaking
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	set {_uuid} to uuid of {_player}
+	if {_loc} > {@SneakBSpeed}:
+		add 1 to {MAC::SneakB::%{_uuid}%}
+		if {MAC::SneakB::%{_uuid}%} >= {@VLSneakB}:
+			MoveReport({_player}, "Sneak", "B")
+	else:
+		delete {MAC::SneakB::%{_uuid}%}
+
+function NoSlowWebACheck(player:player):
+	block at {_player} is cobweb
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	block at {_player} is cobweb
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	if {_loc} > {@NoSlowWebASpeed}:
+		MoveReport({_player}, "NoSlow&7[&cWeb&7]", "A")
+
+function NoSlowWebBCheck(player:player):
+	block at {_player} is cobweb
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	block at {_player} is cobweb
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	set {_uuid} to uuid of {_player}
+	if {_loc} > {@NoSlowWebBSpeed}:
+		add 1 to {MAC::NoSlowWebB::%{_uuid}%}
+		if {MAC::NoSlowWebB::%{_uuid}%} >= {@VLNoSlowWebB}:
+			MoveReport({_player}, "NoSlow&7(&cWeb&7)", "B")
+	else:
+		delete {MAC::NoSlowWebB::%{_uuid}%}
+
+function NoSlowEatACheck(player:player):
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	if {_loc} > {@NoSlowEatASpeed}:
+		MoveReport({_player}, "NoSlow&7(&cEat&7)", "A")
+
+function NoSlowEatBCheck(player:player):
+	set {_loc} to {_player}'s location
+	wait 1 tick
+	set y coordinate of {_loc} to {_player}'s y coordinate
+	set {_loc} to distance between {_loc} and {_player}'s location
+	set {_uuid} to uuid of {_player}
+	if {_loc} > {@NoSlowEatBSpeed}:
+		add 1 to {MAC::NoSlowEatB::%{_uuid}%}
+		if {MAC::NoSlowEatB::%{_uuid}%} >= {@VLNoSlowEatB}:
+			MoveReport({_player}, "NoSlow&7(&cEat&7)", "B")
+	else:
+		delete {MAC::NoSlowEatB::%{_uuid}%}
+
+function SpeedACheck(player:player):
+	{_player}'s walking speed > 0
+	block above {_player} is air
+	block north of block above {_player} is air
+	block east of block above {_player} is air
+	block west of block above {_player} is air
+	block south of block above {_player} is air
+	block north east of block above {_player} is air
+	block south east of block above {_player} is air
+	block north west of block above {_player} is air
+	block south west of block above {_player} is air
+	block under {_player} is not ice or packed ice
+	block north of block under {_player} is not ice or packed ice
+	block east of block under {_player} is not ice or packed ice
+	block west of block under {_player} is not ice or packed ice
+	block south of block under {_player} is not ice or packed ice
+	block north east of block under {_player} is not ice or packed ice
+	block south east of block under {_player} is not ice or packed ice
+	block north west of block under {_player} is not ice or packed ice
+	block south west of block under {_player} is not ice or packed ice
+	set {_speed} to {_player}'s location
+	wait 1 tick
+	set y coordinate of {_speed} to {_player}'s y coordinate
+	set {_speed} to distance between {_speed} and {_player}'s location
+	{_speed} > 0.2
+	set {_uuid} to uuid of {_player}
+	set {_p.w.speed} to PlayerMaximumWalkSpeed({_player})
+	set {_p.s.speed} to PlayerMaximumSprintSpeed({_player})
+	if {_player} is sprinting:
+		if {_speed} > {_p.s.speed}+{@SpeedAExtraSpeed}:
+			add 1 to {MAC::SpeedA::Sprint::%{_uuid}%}
+			{MAC::SpeedA::Sprint::%{_uuid}%} >= {@VLSpeedA}:
+				MoveReport({_player}, "Speed", "A")
+		else:
+			delete {MAC::SpeedA::Sprint::%{_uuid}%}
+	else:
+		if {_speed} > {_p.w.speed}+{@SpeedAExtraSpeed}:
+			add 1 to {MAC::SpeedA::NoSprint::%{_uuid}%}
+			{MAC::SpeedA::NoSprint::%{_uuid}%} >= {@VLSpeedA}:
+				MoveReport({_player}, "Speed", "A")
+		else:
+			delete {MAC::SpeedA::NoSprint::%{_uuid}%}
+
+function SpeedBCheck(player:player):
+	{_player}'s walking speed > 0
+	set {_speed} to {_player}'s location
+	wait 1 tick
+	set y coordinate of {_speed} to {_player}'s y coordinate
+	set {_speed} to distance between {_speed} and {_player}'s location
+	{_speed} > {@SpeedBMinSpeed}
+	{_speed} is not 0.31 or 0.28
+	if "%{_speed}%" is "%PlayerMaximumWalkSpeed({_player})%" or "%PlayerMaximumSprintSpeed({_player})%":
+		delete {MAC::SpeedB::%{_uuid}%}
+	else if "%{_speed}%" is "%PlayerMaximumWalkSpeed({_player})+0.01%" or "%PlayerMaximumSprintSpeed({_player})+0.01%":
+		delete {MAC::SpeedB::%{_uuid}%}
+	else if "%{_speed}%" is "%PlayerMaximumWalkSpeed({_player})-0.01%" or "%PlayerMaximumSprintSpeed({_player})-0.01%":
+		delete {MAC::SpeedB::%{_uuid}%}
+	else if "%{_speed}%" is "%PlayerMaximumWalkSpeed({_player})*2%" or "%PlayerMaximumSprintSpeed({_player})*2%":
+		delete {MAC::SpeedB::%{_uuid}%}
+	else:
+		set {_uuid} to uuid of {_player}
+		if {MAC::SpeedB::LastSpeed::%{_uuid}%} = {_speed}:
+			add 1 to {MAC::SpeedB::%{_uuid}%}
+			{MAC::SpeedB::%{_uuid}%} >= {@VLSpeedB}:
+				MoveReport({_player}, "Speed", "B")
+		else:
+			set {MAC::SpeedB::LastSpeed::%{_uuid}%} to {_speed}
+			delete {MAC::SpeedB::%{_uuid}%}
+
+function SpeedCCheck(player:player):
+	{_player}'s walking speed > 0
+	PlayerWalkSpeed({_player}) = 2
+	block above {_player} is air
+	block north of block above {_player} is air
+	block east of block above {_player} is air
+	block west of block above {_player} is air
+	block south of block above {_player} is air
+	block north east of block above {_player} is air
+	block south east of block above {_player} is air
+	block north west of block above {_player} is air
+	block south west of block above {_player} is air
+	block under {_player} is not ice or packed ice
+	block north of block under {_player} is not ice or packed ice
+	block east of block under {_player} is not ice or packed ice
+	block west of block under {_player} is not ice or packed ice
+	block south of block under {_player} is not ice or packed ice
+	block north east of block under {_player} is not ice or packed ice
+	block south east of block under {_player} is not ice or packed ice
+	block north west of block under {_player} is not ice or packed ice
+	block south west of block under {_player} is not ice or packed ice
+	set {_speed} to {_player}'s location
+	wait 1 tick
+	set y coordinate of {_speed} to {_player}'s y coordinate
+	set {_speed} to distance between {_speed} and {_player}'s location
+	{_speed} > 0
+	if {_player} is sprinting:
+		if {_speed} >= {@SpeedCSprintSpeed}:
+			add 1 to {MAC::SpeedC::S::%{_uuid}%}
+			{MAC::SpeedC::S::%{_uuid}%} > {@VLSpeedC}:
+				MoveReport({_player}, "Speed", "C")
+		else:
+			delete {MAC::SpeedC::S::%{_uuid}%}
+	else:
+		if {_speed} >= {@SpeedCWalkSpeed}:
+			add 1 to {MAC::SpeedC::W::%{_uuid}%}
+			{MAC::SpeedC::W::%{_uuid}%} > {@VLSpeedC}:
+				MoveReport({_player}, "Speed", "C")
+		else:
+			delete {MAC::SpeedC::W::%{_uuid}%}
+
+function FlyACheck(player:player):
+	{_player} is on ground
+	block under {_player} is not fence, fence gate or cobblestone wall
+	"%block under {_player}%" does not contain "Shulker Box"
+	block 0.25 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	set {_y} to {_player}'s y coordinate
+	wait 2 ticks
+	{_player} is on ground
+	block under {_player} is not fence, fence gate or cobblestone wall
+	block 0.25 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	set {_uuid} to uuid of {_player}
+	add 1 to {MAC::FlyA::%{_uuid}%}
+	if {MAC::FlyA::%{_uuid}%} >= {@VLFLyA}:
+		MoveReport({_player}, "Fly", "A")
+
+every {@FlyAVLClearInterval}:
+	delete {MAC::FlyA::*}
+
+function FlyBCheck(player:player):
+	{_player} is not on ground
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block 0.5 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	set {_y.1} to {_player}'s y coordinate
+	wait 2.5 ticks
+	block 0.25 under {_player} is air
+	{_player} is not on ground
+	wait 2 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block 0.5 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	wait 2.5 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	{_player} is not on ground
+	block 0.5 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	block 0.75 under {_player} is air
+	{_player} is not on ground
+	set {_y.2} to {_player}'s y coordinate
+	set {_y} to {_y.2}-{_y.1}
+	if {_y.1} = {_y.2}:
+		MoveReport({_player}, "Fly", "B")
+	else if {_y} = 0:
+		MoveReport({_player}, "Fly", "B")
+		
+function FlyCCheck(player:player):
+	set {_uuid} to uuid of {_player}
+	{_player} is not on ground
+	{_player} does not have jump boost
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block 0.5 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	block under {_player} is air
+	set {_y.1} to {_player}'s y coordinate
+	wait 2 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block 0.5 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set {_y.2} to {_player}'s y coordinate
+	set {_y} to {_y.2}-{_y.1}
+	"%{_y}%" is not "0.58"
+	if {_y} > 0.425:
+		MoveReport({_player}, "Fly", "C")
+
+function FlyDCheck(player:player):
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block 0.25 under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	block 0.25 north of block at {_player} is air
+	block 0.25 east of block at {_player} is air
+	block 0.25 west of block at {_player} is air
+	block 0.25 south of block at {_player} is air
+	block 0.25 north east of block at {_player} is air
+	block 0.25 south east of block at {_player} is air
+	block 0.25 north west of block at {_player} is air
+	block 0.25 south west of block at {_player} is air
+	set {_y.1} to {_player}'s y coordinate
+	wait 2 ticks
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	block 0.25 north of block at {_player} is air
+	block 0.25 east of block at {_player} is air
+	block 0.25 west of block at {_player} is air
+	block 0.25 south of block at {_player} is air
+	block 0.25 north east of block at {_player} is air
+	block 0.25 south east of block at {_player} is air
+	block 0.25 north west of block at {_player} is air
+	block 0.25 south west of block at {_player} is air
+	{_player} is not on ground
+	{_player} does not have jump boost
+	set {_y.2} to {_player}'s y coordinate
+	set {_y} to {_y.2}-{_y.1}
+	set {_uuid} to uuid of {_player}
+	((ceil({_y}*1000))/1000) is not 0.084, 0.087, 0.248, 0.413 or 0.582
+	if {_y} >= {@FlyDMinY}:
+		if {MAC::FlyD::LastY::%{_uuid}%} = ((ceil({_y}*1000))/1000):
+			add 1 to {MAC::FlyD::%{_uuid}%}
+			if {MAC::FlyD::%{_uuid}%} >= {@VLFlyD}:
+				MoveReport({_player}, "Fly", "D")
+		else:
+			set {MAC::FlyD::LastY::%{_uuid}%} to ((ceil({_y}*1000))/1000)
+			delete {MAC::FlyD::%{_uuid}%}
+	else:
+		delete {MAC::FlyD::%{_uuid}%}
+
+function FlyECheck(player:player):
+	{_player} is not on ground
+	{_player} does not have jump boost
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block under {_player} is air
+	set {_y} to {_player}'s y coordinate
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.25 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	wait 2.5 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	{_player}'s y coordinate >= {_y}+0.25
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	wait 2.5 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	block under {_player} is air
+	block north of block 0.25 under {_player} is air
+	block east of block 0.25 under {_player} is air
+	block west of block 0.25 under {_player} is air
+	block south of block 0.02 under {_player} is air
+	block north east of block 0.25 under {_player} is air
+	block south east of block 0.25 under {_player} is air
+	block north west of block 0.25 under {_player} is air
+	block south west of block 0.25 under {_player} is air
+	{_player}'s y coordinate >= {_y}+0.25
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	wait 2.5 ticks
+	difference between {MAC::Cooldown::Slime::%{_uuid}%} and now > {@CheckSlimeCooldown}
+	{_player}'s y coordinate >= {_y}+0.25
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	MoveReport({_player}, "Fly", "E")
+
+function FlyFCheck(player:player):
+	set {_uuid} to uuid of {_player}
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	block 2.5 under {_player} is air
+	set {_y.1} to {_player}'s y coordinate
+	wait 2 ticks
+	block north of block under {_player} is air
+	block east of block under {_player} is air
+	block west of block under {_player} is air
+	block south of block under {_player} is air
+	block north east of block under {_player} is air
+	block south east of block under {_player} is air
+	block north west of block under {_player} is air
+	block south west of block under {_player} is air
+	block under {_player} is air
+	block 2.5 under {_player} is air
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set {_y.2} to {_player}'s y coordinate
+	set {_y} to {_y.2}-{_y.1}
+	if {_y} <= {@FlyFMaxY}:
+		if ((ceil({_y}*1000))/1000) is -0.072, -0.38, -0.224, -0.227 or 0.827:
+			delete {MAC::FlyF::%{_uuid}%}
+		else:
+			if {_y} >= {@FlyFMinY}:
+				add 1 to {MAC::FlyF::%{_uuid}%}
+				{MAC::FlyF::%{_uuid}%} >= {@VLFlyF}:
+					MoveReport({_player}, "Fly", "F")
+			else:
+				delete {MAC::FlyF::%{_uuid}%}
+	else:
+		delete {MAC::FlyF::%{_uuid}%}
+
+function FlyGCheck(player:player):
+	set {_uuid} to uuid of {_player}
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set {_speed} to {_player}'s location
+	wait 1 tick
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set y coordinate of {_speed} to {_player}'s y coordinate
+	set {_speed} to distance between {_speed} and {_player}'s location
+	if {_speed} >= {@FlyGSpeed}:
+		MoveReport({_player}, "Fly", "G")
+
+function FlyHCheck(player:player):
+	set {_uuid} to uuid of {_player}
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set {_speed} to {_player}'s location
+	wait 1 tick
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	set y coordinate of {_speed} to {_player}'s y coordinate
+	set {_speed} to distance between {_speed} and {_player}'s location
+	{_speed} >= 0.25
+	if {MAC::FlyHRepeat::%{_uuid}%} is not set:
+		set {MAC::FlyHRepeat::%{_uuid}%} to {_speed}
+	if {MAC::FlyHRepeat::%{_uuid}%} = {_speed}:
+		add 1 to {MAC::VLFlyH::%{_uuid}%}
+	else:
+		set {MAC::FlyHRepeat::%{_uuid}%} to {_speed}
+		delete {MAC::VLFlyH::%{_uuid}%}
+	if {MAC::VLFlyH::%{_uuid}%} >= {@VLFlyH}:
+		MoveReport({_player}, "Fly", "H")
+		delete {MAC::VLFlyH::%{_uuid}%}
+
+function FlyICheck(player:player):
+	set {_uuid} to uuid of {_player}
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	block 1.5 under {_player} is air
+	set {_y.1} to {_player}'s y coordinate
+	wait 1.5 ticks
+	{_player} is not on ground
+	{_player} does not have jump boost
+	block under {_player} is air
+	block 1.5 under {_player} is air
+	set {_y.2} to {_player}'s y coordinate
+	set {_y} to {_y.2}-{_y.1}
+	if ((ceil({_y}*1000))/1000) >= {@FlyIHeight}:
+		{_player} is not on ground
+		{_player} does not have jump boost
+		block under {_player} is air
+		block 1.5 under {_player} is air
+		set {_y.1} to {_player}'s y coordinate
+		wait 1.5 ticks
+		{_player} is not on ground
+		{_player} does not have jump boost
+		block under {_player} is air
+		block 1.5 under {_player} is air
+		set {_y.2} to {_player}'s y coordinate
+		set {_y} to {_y.2}-{_y.1}
+		if ((ceil({_y}*1000))/1000) >= {@FlyIHeight}:
+			add 1 to {MAC::VLFlyI::%{_uuid}%}
+			if {MAC::VLFlyI::%{_uuid}%} > {@VLFlyI}:
+				MoveReport({_player}, "Fly", "I")
+		else:
+			delete {MAC::VLFlyI::%{_uuid}%}
+	else:
+		delete {MAC::VLFlyI::%{_uuid}%}
+
+function JesusACheck(player:player):
+	{_player} is not swimming
+	block under {_player} is water
+	block north of block 0.05 under {_player} is water
+	block east of block 0.05 under {_player} is water
+	block west of block 0.05 under {_player} is water
+	block south of block 0.05 under {_player} is water
+	block north east of block 0.05 under {_player} is water
+	block south east of block 0.05 under {_player} is water
+	block north west of block 0.05 under {_player} is water
+	block south west of block 0.05 under {_player} is water
+	set {_y} to {_player}'s y coordinate
+	wait 1.5 ticks
+	{_y} = {_player}'s y coordinate
+	{_player} is not swimming
+	block under {_player} is water
+	block north of block 0.05 under {_player} is water
+	block east of block 0.05 under {_player} is water
+	block west of block 0.05 under {_player} is water
+	block south of block 0.05 under {_player} is water
+	block north east of block 0.05 under {_player} is water
+	block south east of block 0.05 under {_player} is water
+	block north west of block 0.05 under {_player} is water
+	block south west of block 0.05 under {_player} is water
+	wait 1.5 ticks
+	{_y} = {_player}'s y coordinate
+	{_player} is not swimming
+	block under {_player} is water
+	block north of block 0.05 under {_player} is water
+	block east of block 0.05 under {_player} is water
+	block west of block 0.05 under {_player} is water
+	block south of block 0.05 under {_player} is water
+	block north east of block 0.05 under {_player} is water
+	block south east of block 0.05 under {_player} is water
+	block north west of block 0.05 under {_player} is water
+	block south west of block 0.05 under {_player} is water
+	MoveReport({_player}, "Jesus", "A")
+
+function JesusBCheck(player:player):
+	block under {_player} is water
+	block 2 under {_player} is water
+	block 3 under {_player} is water
+	block at {_player} is air
+	block north of block at {_player} is air
+	block east of block at {_player} is air
+	block west of block at {_player} is air
+	block south of block at {_player} is air
+	block north east of block at {_player} is air
+	block south east of block at {_player} is air
+	block north west of block at {_player} is air
+	block south west of block at {_player} is air
+	{_player} is not on ground
+	wait 3 ticks
+	block at {_player} is air
+	block north of block at {_player} is air
+	block east of block at {_player} is air
+	block west of block at {_player} is air
+	block south of block at {_player} is air
+	block north east of block at {_player} is air
+	block south east of block at {_player} is air
+	block north west of block at {_player} is air
+	block south west of block at {_player} is air
+	block under {_player} is water
+	block 2 under {_player} is water
+	block 3 under {_player} is water
+	{_player} is not on ground
+	block under {_player} is water
+	MoveReport({_player}, "Jesus", "B")
+
+function ClickTPACheck(player:player,block:block):
+	set {_uuid} to uuid of {_player}
+	set {_loc} to {_block}
+	distance between {_player} and {_loc} >= {@ClickTPMinDistance}
+	wait 1 tick
+	distance between {_player} and {_loc} >= 0.5
+	block under {_player} is block at {_loc}
+	add 1 to {MAC::VLClickTPA::%{_uuid}%}
+	if {MAC::VLClickTPA::%{_uuid}%} >= {@VLClickTPA}:
+		MoveReport({_player}, "ClickTP", "A")
+		delete {MAC::VLClickTPA::%{_uuid}%}
+
+# --- ( Tools & Utilities )	---
+
+on any move:
+	if block under player is slime block:
+		set {MAC::Cooldown::Slime::%player's uuid%} to now
+	else if block 0.5 under player is slime block:
+		set {MAC::Cooldown::Slime::%player's uuid%} to now
+	else if block 1.5 under player is slime block:
+		set {MAC::Cooldown::Slime::%player's uuid%} to now
+	else if block 2 under player is slime block:
+		set {MAC::Cooldown::Slime::%player's uuid%} to now
+
+on join:
+	set {MAC::Cooldown::Join::%player's uuid%} to now
+	if {MAC::Cooldown::World::%player's uuid%} is not set:
+		set {MAC::Cooldown::World::%player's uuid%} to now
+	if {MAC::Cooldown::Teleport::%player's uuid%} is not set:
+		set {MAC::Cooldown::Teleport::%player's uuid%} to now
+	if {MAC::Cooldown::EnderPearl::%player's uuid%} is not set:
+		set {MAC::Cooldown::EnderPearl::%player's uuid%} to now
+on world change:
+	set {MAC::Cooldown::World::%player's uuid%} to now
+on teleport:
+	"%teleport cause%" is not "Plugin" or "Unknown"
+	set {MAC::Cooldown::Teleport::%player's uuid%} to now
+on right click:
+	player's held item is enderpearl
+	set {MAC::Cooldown::EnderPearl::%player's uuid%} to now
+on load:
+	if {MAC::Setting::Prefix} is not set:
+		set {MAC::Setting::Prefix} to "{@Prefix}"
+	set {MAC::Cooldown::Load} to now
+
+function SetHome(player:player):
+	if {_player} is on ground:
+		if block 0.5 under {_player} is not air:
+			set {_loc} to {_player}'s location
+			wait 5 ticks
+			set {_uuid} to uuid of {_player}
+			set {MAC::Home::%{_uuid}%} to {_loc}
+
+every {@VLClearInterval}:
+	delete {MAC::VL::*}
+
+function MoveReport(player:player,cheat:text,type:text):
+	{_player} is online
+	set {_uuid} to uuid of {_player}
+	if {_cheat} is "Fly":
+		if {_type} is "F", "E" or "C":
+			difference between {MAC::Cooldown::Slime::%{_uuid}%} and now <= {@CheckSlimeCooldown}
+			stop
+	if {_player} is riding:
+		add 1 to {_i}
+	if {@OPBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			add 1 to {_i}
+	if {@PermBypass} is true:
+		{_player} has permission "{@BypassPermission}":
+			add 1 to {_i}
+	if "%{_player}'s chestplate%" contains "elytra":
+		add 1 to {_i}
+	if {_player}'s flight mode is true:
+		add 1 to {_i}
+	if {_player}'s game mode is creative or spectator:
+		add 1 to {_i}
+	if difference between {MAC::Cooldown::EnderPearl::%{_uuid}%} and now <= {@CheckEnderPearlCooldown}:
+		add 1 to {_i}
+	if difference between {MAC::Cooldown::Join::%{_uuid}%} and now <= {@CheckJoinCooldown}:
+		add 1 to {_i}
+	if difference between {MAC::Cooldown::Load} and now <= {@CheckLoadCooldown}:
+		add 1 to {_i}
+	if difference between {MAC::Cooldown::Teleport::%{_uuid}%} and now <= {@CheckTeleportCooldown}:
+		add 1 to {_i}
+	if difference between {MAC::Cooldown::World::%{_uuid}%} and now <= {@CheckWorldCooldown}:
+		add 1 to {_i}
+	{_i} is not set
+	set {_uuid} to uuid of {_player}
+	set {_ping} to {_player}'s ping
+	add 1 to {MAC::VL::%{_uuid}%}
+	set {_chance} to ({MAC::VL::%{_uuid}%}/{@MaxVL})*100
+	if {@AutoKick} is true:
+		if {_chance} >= (({@KickVL}/{@MaxVL})*100):
+			set {_autokick} to true
+	if {@BlockHack} is true:
+		if {MAC::VL::%{_uuid}%} > {@BlockVL}:	
+			set {_pre.loc} to {_player}'s location
+			teleport {_player} to {MAC::Home::%{_uuid}%}
+			if {@BlockHackFallDamage} is true:
+				set {_falldmg} to difference between y coordinate of {MAC::Home::%{_uuid}%} and y coordinate of {_pre.loc}
+				{_falldmg} > 0
+				set {_falldmg} to (({_falldmg}*0.5)-1.5)
+				if {_falldmg} < 1:
+					set {_falldmg} to {@BlockHackMinFallDamage}
+				if {_falldmg} > 9:
+					set {_falldmg} to {@BlockHackMaxFallDamage}
+				damage {_player} by {_falldmg}
+	set {_chance} to ((ceil({_chance}*100))/100)
+	if {_chance} >= 100:
+		set {_chance} to "&4[%{_chance}%%%&4]"
+	else if {_chance} >= 80:
+		set {_chance} to "&c[%{_chance}%%%&c]"
+	else if {_chance} >= 60:
+		set {_chance} to "&6[%{_chance}%%%&6]"
+	else if {_chance} >= 40:
+		set {_chance} to "&e[%{_chance}%%%&e]"
+	else if {_chance} >= 20:
+		set {_chance} to "&2[%{_chance}%%%&2]"
+	else:
+		set {_chance} to "&a[%{_chance}%%%&a]"
+	if {MAC::Settings::Prefix} is not set:
+		set {MAC::Settings::Prefix} to "{@Prefix}"
+	if {_autokick} is true:
+		set {_reportkickmsg} to "{@ReportKickMessage}"
+		replace all "{prefix}" with "%{MAC::Settings::Prefix}%" in {_reportkickmsg}
+		replace all "{player}" with "%{_player}%" in {_reportkickmsg}
+		replace all "{ping}" with {_ping} in {_reportkickmsg}
+		replace all "{uuid}" with {_uuid} in {_reportkickmsg}
+		replace all "{cheat}" with colored {_cheat} in {_reportkickmsg}
+		replace all "{type}" with {_type} in {_reportkickmsg}
+		replace all "{chance}" with colored {_chance} in {_reportkickmsg}
+	else if {MAC::VL::%{_uuid}%} > {@ReportVL}:
+		set {_reportmsg} to "{@ReportMessage}"
+		replace all "{prefix}" with "%{MAC::Settings::Prefix}%" in {_reportmsg}
+		replace all "{player}" with "%{_player}%" in {_reportmsg}
+		replace all "{ping}" with {_ping} in {_reportmsg}
+		replace all "{uuid}" with {_uuid} in {_reportmsg}
+		replace all "{cheat}" with colored {_cheat} in {_reportmsg}
+		replace all "{type}" with {_type} in {_reportmsg}
+		replace all "{chance}" with colored {_chance} in {_reportmsg}
+	if {_autokick} is not set:
+		if {MAC::VL::%{_uuid}%} > {@ReportVL}:
+			send "%{_reportmsg}%" to all players where [player input has permission "{@ReportPermission}"]
+			send "%{_reportmsg}%" to console
+	else:
+		if {MAC::VL::%{_uuid}%} > {@ReportVL}:
+			send "%{_reportkickmsg}%" to all players where [player input has permission "{@ReportPermission}"]
+			send "%{_reportkickmsg}%" to console
+			if {@KickBroadcast} is true:
+				broadcast "{@KickBroadMessage}"
+		if {@KickClearVL} is true:
+			delete {MAC::VL::*}
+		if {@KickDelay} is true:
+			wait {@KickDelayTime}
+		kick {_player} due to "{@KickMessage}"
+
+function PlayerWalkSpeed(player:player) :: number:
+	set {_w.speed} to (floor(({_player}'s walking speed-0.01)*10))
+	return {_w.speed}
+
+function PlayerMaximumWalkSpeed(player:player) :: number:
+	set {_w.speed} to (floor(({_player}'s walking speed-0.01)*10))
+	set {_p.w.speed} to ((14+(({_w.speed}/10)*100))/100)
+	set {_p.s.speed} to (((4+(3*({_w.speed}-1)))/100)+{_p.w.speed})
+	if {_player}'s walking speed is 1:
+		add 0.06 to {_p.w.speed}
+	else if {_w.speed} is 2:
+		add 0.01 to {_p.w.speed}
+	else if {_w.speed} is 9:
+		remove 0.04 from {_p.w.speed}
+	else:
+		remove 0.03 from {_p.w.speed}
+	return {_p.w.speed}
+
+function PlayerMaximumSprintSpeed(player:player) :: number:
+	set {_w.speed} to (floor(({_player}'s walking speed-0.01)*10))
+	set {_p.w.speed} to ((14+(({_w.speed}/10)*100))/100)
+	set {_p.s.speed} to (((4+(3*({_w.speed}-1)))/100)+{_p.w.speed})
+	if {_player}'s walking speed is 1:
+		add 0.11 to {_p.s.speed}
+	else if {_w.speed} is 1:
+		add 0.01 to {_p.s.speed}
+	else if {_w.speed} is 4:
+		remove 0.02 from {_p.s.speed}
+	else if {_w.speed} is 8:
+		remove 0.01 from {_p.s.speed}
+	else if {_w.speed} is 9:
+		remove 0.02 from {_p.s.speed}
+	return {_p.s.speed}

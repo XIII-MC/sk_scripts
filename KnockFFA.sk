@@ -1,0 +1,979 @@
+#Plugins: *
+#Skript 1 *
+#SkQuerry 2 *
+#TAB 3 *
+#Essentials 4 *
+#EssentialsChat 5 *
+#LuckPerms 6 *
+#WorldGuard 7 *
+#WorldEdit 8 *
+#HologramDisplay 9 *
+#Vault 10 *
+#ProtocolSupport 11 *
+#Multiverse 12?
+
+#RUSHFFA V0.0.2
+#By LananasBleu
+#For KnockFFA
+
+options:
+   core: &e&l&oKnocki&c&lFFA &7>>
+   version: 0.0.2
+
+command /debug:
+   permission: OP
+   trigger:
+      clear {DeathMsg::*}
+      clear {DeathMsgA::*}
+      set {Death1} to "&c%player% &7got oofed by the void !"
+      set {Death2} to "&c%player% &7forgot to use his enderpearl !"
+      set {Death3} to "&c%player% &7got smacked by the void !"
+      set {Death4} to "&c%player% &7got ezpz by the void !"
+      set {Death5} to "&c%player%&c's &7right click is broke !"
+      set {Death6} to "&c%player% &7don't know how to clutch !"
+      set {DeathP1} to "&c%player% &7got destroyed by &c%{_Attacker}%&7 !"
+      set {DeathP2} to "&c%player% &7got eated by &c%{_Attacker}% &7!"
+      set {DeathP3} to "&7oOH OH OMG OH &c%player% &7got 360° no scope head shot by &c%{_Attacker}% &7!"
+      set {DeathP4} to "&c%{_Attacker}% &7is not hacking, he just have long harms !"
+      set {DeathP5} to "&c%{_Attacker}% &7killed &c%player% &7white he was afk ! Not cool :("
+      set {DeathP6} to "&c%{_Attacker}% &7killed &c%player%"
+      add {Death2} to {DeathMsg::*}
+      add {Death3} to {DeathMsg::*}
+      add {Death4} to {DeathMsg::*}
+      add {Death5} to {DeathMsg::*}
+      add {Death6} to {DeathMsg::*}
+      add {DeathP1} to {DeathMsgA::*}
+      add {DeathP2} to {DeathMsgA::*}
+      add {DeathP3} to {DeathMsgA::*}
+      add {DeathP4} to {DeathMsgA::*}
+      add {DeathP5} to {DeathMsgA::*}
+      add {DeathP6} to {DeathMsgA::*}
+      send "%{_DeathMsg::*}%" to player
+      send "&aImported. &e'DEATH_VOID'" to player
+      send "%{_DeathMsgA::*}%" to player
+      send "&aImported. &e'DEATH_PLAYER'" to player
+
+on hunger meter change:
+   cancel event
+
+every 5 minutes:
+   loop all players:
+      add 1 to {points.%loop-player%}
+      send "&a+1 point &7(%{points.%loop-player%}%&7) &b(Time Played)" to loop-player
+
+command /setspawn:
+   permission: OP
+   trigger:
+      set {Spawn} to player's location 
+      teleport player to {Spawn}
+      send "&aImported. &e'SPAWN_SET'" to player
+
+command /setkit:
+   permission: OP
+   trigger:
+      loop all items in player's inventory:
+         add loop-value to {KitDefault::*}
+         send "&aImported. &e'KIT_DEFAULT'"
+
+command /join:
+   permission: MODERATOR
+   trigger:
+      broadcast "&4[Owner] &cLananasBleu joined the server !"
+
+command /quit:
+   permission: MODERATOR
+   trigger:
+      broadcast "&4[Owner] &cLananasBleu left the server !"
+
+every 1 second:
+   loop all players:
+      add 1 to {sec.%loop-player%}
+      if {sec.%loop-player%} = 60:
+         remove 60 from {sec.%loop-player%}
+         add 1 to {min.%loop-player%}
+         if {min.%loop-player%} = 60:
+            remove 60 from {min.%loop-player%}
+            add 1 to {he.%loop-player%}
+            if {he.%loop-player%} = 24:
+               remove 24 from {he.%loop-player%}
+               add 1 to {day.%loop-player%}
+
+command /playtime [<offline player>]:
+   trigger:
+      if arg 1 is not set:
+         if {day.%player%} is not set:
+            set {day.%player%} to 0
+         if {he.%player%} is not set:
+            set {he.%player%} to 0
+         if {min.%player%} is not set:
+            set {min.%player%} to 0
+         send "{@core} &a%{day.%player%}% &aDays &a%{he.%player%}% &aHours &a%{min.%player%}% &aMinute&a %{sec.%player%}% &aSeconds"
+      if arg 1 is set:
+         send "{@core} &a%{day.%arg 1%}% &aDays &a%{he.%arg 1%}% &aHours &a%{min.%arg 1%}% &aMinute&a %{sec.%arg 1%}% &aSeconds"
+
+every 5 minutes:
+   broadcast "{@core} &cCheating is &4&l&oNOT &callowed on &e&lKnock&c&lFFA &c!"
+   wait 1 minutes
+   broadcast "{@core} &aDon't forget to join our discord server using /discord !"
+   wait 1 minutes
+   broadcast "{@core} &cHakcers ? Use /report to report them ! Thanks !"
+   wait 1 minutes
+   broadcast "{@core} &aNeed help ? Use /help or ask players and staff members :)"
+   wait 1 minutes
+   broadcast "{@core} &cAn upgrade too expensive or too op ? Make us know on /discord !"
+   wait 1 minute
+
+on drop:
+   cancel event 
+on block break:
+   if player's gamemode is creative:
+      stop
+   cancel event
+
+command /set [<text>] [<text>]:
+   permission: OP
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            set {%arg 1%} to arg 2
+            stop
+      if arg 1 is not set:
+         send "&c/set points 1" to player
+
+command /clear [<text>] [<offline player>]:
+   permission: OP
+   trigger:
+      clear {%arg 1%.%arg 2%}
+      send "&aImported. &e'CLEAR_%ARG 1%_%ARG 2%'"
+
+On place:
+   if player's gamemode is not creative:
+      add 1 to {blockplaced.%player%}
+      wait 9 seconds
+      set block at event-block to orange wool
+      wait 3 second
+      set block at event-block to red wool
+      wait 1 second
+      set block at event-block to air
+      if amount of lime wool in player's inventory is less than 48:
+         give player 1 lime wool
+
+on right click with feather:
+   if name of player's tool contains "Speed":
+      add 1 to {speedfeather.%player%}
+      remove 1 of player's tool from player's inventory
+      make server execute command "/effect give %player% speed 5 5"
+
+
+
+command /kitclear:
+   permission: OP
+   trigger:
+      clear {KitDefault::*}
+      send "&eCleared."
+
+command /mystats:
+   trigger:
+      send "{@core} &7Loading request..."
+      send "{@core} &7Loading variables..."
+      if {playerkill.%player%} is not set:
+         set {playerkill.%player%} to 0
+      if {voidkill.%player%} is not set:
+         set {voidkill.%player%} to 0
+      if {playerdeath.%player%} is not set:
+         set {playerdeath.%player%} to 0
+      if {voiddeath.%player%} is not set:
+         set {voiddeath.%player%} to 0
+      if {points.%player%} is not set:
+         set {points.%player%} to 0
+      if {blockplaced.%player%} is not set:
+         set {blockplaced.%player%} to 0
+      if {enderpearlshoot.%player%} is not set:
+         set {enderpearlshoot.%player%} to 0
+      if {arrowshoot.%player%} is not set:
+         set {arrowshoot.%player%} to 0
+      if {speedfeather.%player%} is not set:
+         set {speedfeather.%player%} to 0
+      if {leftclick.%player%} is not set:
+         set {leftclick.%player%} to 0
+      if {rightclick.%player%} is not set:
+         set {rightclick.%player%} to 0
+      wait 0.5 second
+      send ""
+      send "&6My &e&l&oKnocki&c&lStats&6:"
+      send ""
+      send "&aKills by damages: &6%{playerkill.%player%}%"
+      send "&aKills by void: &6%{voidkill.%player%}%"
+      send ""
+      send "&cDeath by damages: &6%{playerdeath.%player%}%"
+      send "&cDeath by void: &6%{voiddeath.%player%}%"
+      send ""
+      send "&ePoints: &7%{points.%player%}%"
+      send ""
+      send "&2Blocks placed: &6%{blockplaced.%player%}%"
+      send "&5Ender pearls shooted: &6%{enderpearlshoot.%player%}%"
+      send "&eSpeed feather uses: &6%{speedfeather.%player%}%"
+      send "&fArrows shooted: &6%{arrowshoot.%player%}%"
+      send "&9You left clicked: &6%{leftclick.%player%}% &6Times"
+      send "&9You right clicked: &6%{rightclick.%player%}% &6Times"
+      send "&3First join: &6%{firstjoin.%player%}%"
+      send ""
+
+
+
+#------------------------------------ CORE ----------------------------------
+
+on join:
+   clear player's inventory
+   teleport player to {Spawn}
+
+on first join:
+   if {firstjoin.%player%} is set:
+      stop
+   set {firstjoin.%player%} to now
+   broadcast "&6Welcome &e%player% &eto &e&l&oKnock&c&l&oFFA &e!"
+   set {NewPlayer.%player%} to true
+   wait 5 seconds
+   send "{@core} &aYou have a new player protection , you will not lose points for the moment !"
+   send "{@core} &aIf you don't know what to do use /help !"
+   send "{@core} &aGood day on our server :)"
+
+every 1 minutes:
+   loop all players:
+      if {he.%loop-player%} >= 1:
+         if {NewPlayer.%loop-player%} is false:
+            stop
+         send "{@core} &4&l&oWARNING ! &cYour New Player protection is gone ! You will now lose points when you die !" to loop-player
+         set {NewPlayer.%loop-player%} to false
+
+on region leave:
+   wait 2 tick
+   if "%region at player%" contains "pvp":
+      wait 2 ticks
+      clear player's inventory
+      give player {KitDefault::*}
+      play sound "entity.ender_dragon.growl" with volume 10 and pitch 1 at player for player
+      make server execute command "/effect give %player% regeneration 1 120"
+      send "" to player
+      send "                   &c&lF I G H T !" to player
+      send "&cTeaming with more than 1 person is not allowed !" to player
+      send "&cIf someone is hacking please use /report PLAYER Cheating !" to player
+      send "" to player
+      set {_y} to y location of player
+      if {_y} < 90:
+         clear {%{Attacker}%}
+on join:
+   if player has permission "MODERATOR":
+      set join message to ""
+      send "{@core} &aWant to broadcast your join ? Then do /join" to player
+      stop
+   set join message to "&7[&2&l+&7] &7%player%"
+
+on quit:
+   if player has permission "MODERATOR":
+      set quit message to ""
+      stop
+   set quit message to "&7[&c&l-&7] &7%player%"
+
+command /§ideathvoid:
+   trigger:
+      play sound "block.anvil.destroy" with volume 10 and pitch 1 at player for player
+      clear player's inventory
+      clear {_killer} 
+      set {legitfly.%player%} to true
+      teleport player to {Spawn}
+      set {Player.%player%} to player's name
+      #set {_Death} to a random element out of {DeathMsg::*}
+      broadcast "&c%player% &7got oofed by the void !"
+      set {legtifly.%player%} to false
+      make server execute command "/effect clear %player%"
+      add 1 to {voiddeath.%player%}
+      add 1 to {all.VoidDeath}
+      if {NewPlayer.%player%} is true:
+         send "{@core} &aBecause you are new to the server and your playtime is under 1 hour , you don't lose points for the moment !"
+         stop
+      remove 0.1 from {points.%player%}
+      send "{@core} &cNoooooo ! You lost a point !" to player
+      send "{@core} &a-0.1 point &7(%{points.%player%}%&7)" to player
+
+command /§ideathplayer:
+   trigger:
+      play sound "block.anvil.destroy" with volume 10 and pitch 1 at player for player
+      set {legitfly.%player%} to true
+      clear {_killer} 
+      teleport player to {Spawn}
+      clear player's inventory
+      set {Player.%player%} to player's name
+      #set {_Death} to a random element out of {DeathMsgA::*}
+      set {legitfly.%player%} to false
+      broadcast "&c%player% &7got pushed into the void with the help of &c%{_killer}%"
+      add 1 to {playerdeath.%player%}
+      make server execute command "/effect clear %player%"
+      add 1 to {all.PlayerDeath}
+      if {NewPlayer.%player%} is true:
+         send "{@core} &aBecause you are new to the server and your playtime is under 1 hour , you don't lose points for the moment !"
+         stop
+      remove 0.1 from {points.%player%}
+      send "{@core} &cNoooooo ! You lost a point !" to player
+      send "{@core} &a-0.1 point &7(%{points.%player%}%&7)" to player
+
+command /§ikillplayer:
+   trigger:
+      play sound "entity.ghast.scream" with volume 10 and pitch 1 at player for player
+      add 1 to {points.%player%}
+      add 1 to {playerkill.%player%}
+      add 1 to {all.PlayerKill}
+      send "{@core} &aGood fight ! You got a point !" to player
+      send "{@core} &a+1 point &7(%{points.%player%}%&7)" to player
+
+on death:
+   if attacker is player:
+      if victim is player:
+         set {_killer} to metadata value "LAST-HIT" of victim
+         make attacker execute command "/§ikillplayer"
+         make victim execute command "/§ideathplayer"
+
+on damage:
+   if damage cause is void:
+      cancel event
+
+on any move:
+   set {_y} to y location of player
+   if {_y} < 50:
+      if metadata value "LAST-HIT" of player is set:
+         set {_killer} to metadata value "LAST-HIT" of player
+         make {_killer} execute command "/§ikillplayer"
+         make player execute command "/§ideathplayer"
+         clear metadata "LAST-HIT" of player
+         stop
+      if metadata value "LAST-HIT" of player is not set:
+         make player execute command "/§ideathvoid"
+
+on damage:
+	if attacker is player:
+		set metadata value "LAST-HIT" of victim to attacker
+	if damage cause is fall:
+		cancel event	
+	if damage cause is void:
+		cancel event	
+
+
+on damage:
+   if victim is player:
+      if attacker is player:
+         set {_Attacker} to attacker
+         send "{@core} &cOuch ! &4%attacker% &cdamaged you with &4%damage% &4damages !" to victim
+         play sound "enchant.thorns.hit" with volume 10 and pitch 1 at attacker for victim
+         send "{@core} &aYES ! &aYou hitted &c%victim% &aand dealt &4%damage%&4 damages !" to attacker
+         play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at attacker for attacker
+
+on respawn:
+   teleport player to {Spawn}
+
+command /leave:
+   trigger:
+      set {_loc1} to player's location
+      send "{@core} &aPlease wait 5 seconds...." to player
+      wait 1 second
+      set {_loc2} to player's location
+      if {_loc} = {_loc2}:
+         send "{@core} &aPlease wait 4 seconds..." to player
+         wait 1 second
+         set {_loc2} to player's location
+         if {_loc} = {_loc2}:
+            send "{@core} &aPlease wait 3 seconds..." to player
+            wait 1 second
+            set {_loc2} to player's location
+            if {_loc} = {_loc2}:
+               send "{@core} &aPlease wait 2 seconds...." to player
+               set {_loc2} to player's location
+               wait 1 second
+               if {_loc} = {_loc2}:
+                  send "{@core} &aPlease wait 1 second..." to player
+                  set {_loc2} to player's location 
+                  wait 1 second
+                  if {_loc} = {_loc2}:
+                     clear player's inventory 
+                     teleport player to {Spawn}
+                     send "{@core} &aYou were safly teleported to spawn." to player
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade21.%victim%} is true:
+            set {_random} to "%random integer between 1 and 100%"
+            if {_random} is between 1 and 20:
+               set {_reducer} to victim's location
+               wait 1 tick
+               teleport victim to {_reducer}
+               send "{@core} &aYour &2Reducer &aabiltiy canceled your knockback !" to victim
+               send "{@core} &4%victim% &ccanceled his knockback with his &2Reducer &cabiltiy !" to attacker
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade21.%attacker%} is true:
+            set {_random} to "%random integer between 1 and 100%"
+            if {_random} is between 1 and 20:
+               push victim backwards at speed 1
+               send "{@core} &aYour &cKnocker &aabiltiy has been used ! " to attacker
+               send "{@core} &cYou got pushed backwards ! &4%attacker% &cused his Knocker abiltiy !" to victim
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade22.%attacker%} is true:
+            set {_random} to "%random integer between 1 and 100%"
+            if {_random} is between 1 and 20:
+               make server execute command "/effect give %victim% weekness 5 1"
+               send "{@core} &aYour &8Weaker &aabiltiy has been used ! " to attacker
+               send "{@core} &cYou got &8Weakness &c, &4%attacker% &cused his &8Weaker &cability !" to victim
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {Upgrade11.%attacker%} is true:
+            set {_random} to "%random integer between 1 and 100%"
+            if {_random} is between 1 and 20:
+               if {Upgrade11.%attacker%} is true:
+                  make server execute command "/effect give %victim% slowness 5 1"
+               if {Upgrade12.%attacker%} is true:
+                  make server execute command "/effect give %victim% slowness 5 2"
+               if {Upgrade13.%attacker%} is true:
+                  make server execute command "/effect give %victim% slowness 5 3"
+               send "{@core} &aYour &7Slowness &aabiltiy has been used ! " to attacker
+               send "{@core} &cYou got &7Slowness &c, &4%attacker% &cused his &8Weaker &cability !" to victim
+
+#SPEED
+every 10 seconds:
+   loop all players:
+      if {Upgrade1.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 1"
+every 10 seconds:
+   loop all players:
+      if {Upgrade2.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 2"
+every 10 seconds:
+   loop all players:
+      if {Upgrade3.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% speed 12 3"
+
+#JUMPBOOST
+every 10 seconds:
+   loop all players:
+      if {Upgrade4.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 1"
+every 10 seconds:
+   loop all players:
+      if {Upgrade5.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 2"
+every 10 seconds:
+   loop all players:
+      if {Upgrade6.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% jump_boost 12 3"
+
+#SANDSTONE
+every 30 seconds:
+   loop all players:
+      if {Upgrade7.%loop-player%} is true:
+         if {Upgrade8.%loop-player%} is false:
+            give 1 sandstone named "&6SandStone" to loop-player
+every 20 seconds:
+   loop all players:
+      if {Upgrade8.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade9.%loop-player%} is false:
+               give 1 sandstone named "&6SandStone" to loop-player
+every 10 seconds:
+   loop all players:
+      if {Upgrade9.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade8.%loop-player%} is true:
+               if {Upgrade10.%loop-player%} is false:
+                  give 1 sandstone named "&6SandStone" to loop-player
+every 10 seconds:
+   loop all players:
+      if {Upgrade10.%loop-player%} is true:
+         if {Upgrade7.%loop-player%} is true:
+            if {Upgrade8.%loop-player%} is true:
+               if {Upgrade9.%loop-player%} is true:
+                  give 2 sandstone named "&6SandStone" to loop-player
+
+#HASTE
+every 10 seconds:
+   loop all players:
+      if {Upgrade11.%loop-player%} is true:
+         if {Upgrade12.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% haste 12 1"
+every 10 seconds:
+   loop all players:
+      if {Upgrade12.%loop-player%} is true:
+         if {Upgrade13.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% haste 12 2"
+every 10 seconds:
+   loop all players:
+      if {Upgrade13.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% haste 12 3"
+
+#STRENGTH
+every 10 seconds:
+   loop all players:
+      if {Upgrade18.%loop-player%} is true:
+         if {Upgrade19.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% strength 12 1"
+every 10 seconds:
+   loop all players:
+      if {Upgrade19.%loop-player%} is true:
+         if {Upgrade20.%loop-player%} is false:
+            make server execute command "/effect give %loop-player% strength 12 2"
+every 10 seconds:
+   loop all players:
+      if {Upgrade20.%loop-player%} is true:
+         make server execute command "/effect give %loop-player% strength 12 3"
+
+command /shop:
+   trigger:
+      if "%region at player%" contains "spawn":
+         wait 5 tick
+         open chest with 6 rows named "                 &2&l&oShop Upgrades" to player
+         format slot 0 of player with feather named "&fSpeed I" with lore "&aCost 15 Points" to close then run [make player execute command "/§speed1"]
+         format slot 9 of player with feather named "&fSpeed II" with lore "&aCost 30 Points &cNeed Speed I Upgrade !" to close then run [make player execute command "/§speed2"]
+         format slot 18 of player with feather named "&fSpeed III" with lore "&aCost 60 Points &cNeed Speed II Upgrade !" to close then run [make player execute command "/§speed3"]
+
+         format slot 1 of player with rabbit foot named "&aJump Boost I" with lore "&aCost 60 Points" to close then run [make player execute command "/§jump1"]
+         format slot 10 of player with rabbit foot named "&aJump Boost II" with lore "&aCost 75 Points &cNeed Jump Boost I Upgrade !" to close then run [make player execute command "/§jump2"]
+         format slot 19 of player with rabbit foot named "&aJump Boost III" with lore "&aCost 90 Points &cNeed Jump Boost II Upgrade !" to close then run [make player execute command "/§jump3"]
+
+         format slot 2 of player with sandstone named "&6SandStone I" with lore "&aCost 90 Points" to close then run [make player execute command "/§sand1"]
+         format slot 11 of player with sandstone named "&6SandStone II" with lore "&aCost 125 Points &cNeed SandStone I Upgrade" to close then run [make player execute command "/§sand2"]
+         format slot 20 of player with sandstone named "&6SandStone III " with lore "&aCost 150 Points &cNeed SandStone II Upgrade" to close then run [make player execute command "/§sand3"]
+         format slot 29 of player with sandstone named "&6SandStone IV" with lore "&aCost 200 Points &cNeed SandStone III Upgrade" to close then run [make player execute command "/§sand4"]
+
+         format slot 3 of player with iron block named "&7Slowness I" with lore "&aCost 200 Points" to close then run [make player execute command "/§slow1"]
+         format slot 12 of player with iron block named "&7Slowness II" with lore "&aCost 230 Points &cNeed Slowness I Upgrade ! " to close then run [make player execute command "/§slow2"]
+         format slot 21 of player with iron block named "&7Slowness III" with lore "&aCost 255 Points &cNeed Slowness II Upgrade !" to close then run [make player execute command "/§slow3"]
+
+         format slot 4 of player with stone pickaxe named "&eHaste I" with lore "&aCost 255 Points" to close then run [make player execute command "/§haste1"]
+         format slot 13 of player with iron pickaxe named "&eHaste II" with lore "&aCost 270 Points &cNeed Haste I Upgrade !" to close then run [make player execute command "/§haste2"]
+         format slot 22 of player with diamond pickaxe named "&eHaste III" with lore "&aCost 300 Points &cNeed Haste II Upgrade !" to close then run [make player execute command "/§haste3"]
+
+         format slot 6 of player with anvil named "&2Reducer I" with lore "&aCost 300 Points" to close then run [make player execute command "/§ikbr1"]
+
+         format slot 5 of player with stone sword named "&4Strength I" with lore "&aCost 300 Points" to close then run [make player execute command "/§strength1"]
+         format slot 14 of player with iron sword named "&4Strengh II" with lore "&aCost 340 Points &cNeed Strength I Upgrade !" to close then run [make player execute command "/§strength2"]
+         format slot 23 of player with diamond sword named "&4Strength III" with lore "&aCost 370 Points &cNeed Strength II Upgrade !" to close then run [make player execute command "/§strength3"]
+
+         format slot 7 of player with stick named "&cKnocker I" with lore "&aCost 370 Points" to close then run [make player execute command "/§ikb1"]
+
+         format slot 8 of player with wooden sword named "&8Weaker I" with lore "&aCost 400 Points" to close then run [make player execute command "/§week1"]
+
+
+#SPEED
+command /§speed1:
+   trigger:
+      if {Upgrade1.%player%} is false:
+         if {points.%player%} >= 15:
+            set {Upgrade1.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Speed I Upgrade." to player
+            remove 15 from {points.%player%}
+         if {points.%player%} < 15:
+            send "&cSorry but , you don't have enought points !"
+            stop
+      if {Upgrade1.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§speed2:
+   trigger:
+      if {Upgrade2.%player%} is false:
+         if {Upgrade1.%player%} is true:
+            if {points.%player%} >= 30:
+               set {Upgrade2.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased Speed II Upgrade." to player
+               remove 30 from {points.%player%}
+         if {points.%player%} < 30:
+            send "&cSorry but , you don't have enought points !"
+            stop
+      if {Upgrade2.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§speed3:
+   trigger:
+      if {Upgrade3.%player%} is false:
+         if {Upgrade1.%player%} is true:
+            if {Upgrade2.%player%} is true:
+               if {points.%player%} >= 60:
+                  set {Upgrade3.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased Speed III Upgrade." to player
+                  remove 60 from {points.%player%}
+      if {points.%player%} < 30:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade3.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+
+#JUMP BOOST
+command /§jump1:
+   trigger:
+      if {Upgrade4.%player%} is false:
+         if {points.%player%} >= 60:
+            set {Upgrade4.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Jump Boost I Upgrade." to player
+            remove 60 from {points.%player%}
+      if {points.%player%} < 60:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade4.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§jump2:
+   trigger:
+      if {Upgrade5.%player%} is false:
+         if {Upgrade4.%player%} is true:
+            if {points.%player%} >= 75:
+               set {Upgrade5.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased Jump Boost II Upgrade." to player
+               remove 75 from {points.%player%}
+      if {points.%player%} < 75:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade5.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§jump3:
+   trigger:
+      if {Upgrade6.%player%} is false:
+         if {Upgrade4.%player%} is true:
+            if {Upgrade5.%player%} is true:
+               if {points.%player%} >= 90:
+                  set {Upgrade6.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased Jump Boost III Upgrade." to player
+                  remove 90 from {points.%player%}
+      if {points.%player%} < 90:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade6.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#SANDSTONE
+command /§sand1:
+   trigger:
+      if {Upgrade7.%player%} is false:
+         if {points.%player%} >= 90:
+            set {Upgrade7.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased SandStone I Upgrade." to player
+            remove 90 from {points.%player%}
+      if {points.%player%} < 90:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade7.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand2:
+   trigger:
+      if {Upgrade8.%player%} is false:
+         if {Upgrade7.%player%} is true:
+            if {points.%player%} >= 125:
+               set {Upgrade8.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased SandStone II Upgrade." to player
+               remove 125 from {points.%player%}
+      if {points.%player%} < 125:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade8.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand3:
+   trigger:
+      if {Upgrade9.%player%} is false:
+         if {Upgrade8.%player%} is true:
+            if {Upgrade7.%player%} is true:
+               if {points.%player%} >= 150:
+                  set {Upgrade6.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased SandStone III Upgrade." to player
+                  remove 150 from {points.%player%}
+      if {points.%player%} < 150:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade9.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§sand4:
+   trigger:
+      if {Upgrade10.%player%} is false:
+         if {Upgrade8.%player%} is true:
+            if {Upgrade7.%player%} is true:
+               if {Upgrade9.%player%} is true:
+                  if {points.%player%} >= 200:
+                     set {Upgrade6.%player%} to true
+                     send "&aThanks for your purchase ! &eYou purchased SandStone IV Upgrade." to player
+                     remove 200 from {points.%player%}
+         if {points.%player%} < 200:
+            send "&cSorry but , you don't have enought points !"
+            stop
+         if {Upgrade10.%player%} is true:
+            send "&cSorry but , you alerdy bought this upgrade !"
+            stop
+
+#SLOWNESS
+command /§slow1:
+   trigger:
+      if {Upgrade11.%player%} is false:
+         if {points.%player%} >= 200:
+            set {Upgrade11.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Slowness I Upgrade." to player
+            remove 200 from {points.%player%}
+      if {points.%player%} < 200:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade11.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§slow2:
+   trigger:
+      if {Upgrade12.%player%} is false:
+         if {Upgrade11.%player%} is true:
+            if {points.%player%} >= 230:
+               set {Upgrade12.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased Slowness II Upgrade." to player
+               remove 230 from {points.%player%}
+      if {points.%player%} < 230:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade12.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§slow3:
+   trigger:
+      if {Upgrade13.%player%} is false:
+         if {Upgrade11.%player%} is true:
+            if {Upgrade12.%player%} is true:
+               if {points.%player%} >= 255:
+                  set {Upgrade13.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased Slowness III Upgrade." to player
+                  remove 255 from {points.%player%}
+      if {points.%player%} < 255:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade13.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#HASTE
+command /§haste1:
+   trigger:
+      if {Upgrade14.%player%} is false:
+         if {points.%player%} >= 255:
+            set {Upgrade14.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Haste I Upgrade." to player
+            remove 255 from {points.%player%}
+      if {points.%player%} < 255:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade14.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§haste2:
+   trigger:
+      if {Upgrade15.%player%} is false:
+         if {Upgrade14.%player%} is true:
+            if {points.%player%} >= 270:
+               set {Upgrade15.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased Haste II Upgrade." to player
+               remove 270 from {points.%player%}
+      if {points.%player%} < 270:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade15.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§haste3:
+   trigger:
+      if {Upgrade16.%player%} is false:
+         if {Upgrade14.%player%} is true:
+            if {Upgrade15.%player%} is true:
+               if {points.%player%} >= 300:
+                  set {Upgrade16.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased Haste III Upgrade." to player
+                  remove 300 from {points.%player%}
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade16.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#REDUCER
+command /§ikbr1:
+   trigger:
+      if {Upgrade17.%player%} is false:
+         if {points.%player%} >= 300:
+            set {Upgrade17.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Reducer I Upgrade." to player
+            remove 300 from {points.%player%}
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade17.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#STRENGTH
+command /§strength1:
+   trigger:
+      if {Upgrade18.%player%} is false:
+         if {points.%player%} >= 300:
+            set {Upgrade18.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Strength I Upgrade." to player
+            remove 300 from {points.%player%}
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade18.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§strength2:
+   trigger:
+      if {Upgrade19.%player%} is false:
+         if {Upgrade18.%player%} is true:
+            if {points.%player%} >= 340:
+               set {Upgrade19.%player%} to true
+               send "&aThanks for your purchase ! &eYou purchased Strength II Upgrade." to player
+               remove 300 from {points.%player%}
+      if {points.%player%} < 300:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade19.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /§strength3:
+   trigger:
+      if {Upgrade20.%player%} is false:
+         if {Upgrade19.%player%} is true:
+            if {Upgrade18.%player%} is true:
+               if {points.%player%} >= 370:
+                  set {Upgrade20.%player%} to true
+                  send "&aThanks for your purchase ! &eYou purchased Strength III Upgrade." to player
+                  remove 370 from {points.%player%}
+      if {points.%player%} < 370:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade20.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#KNOCKER
+command /§ikb1:
+   trigger:
+      if {Upgrade21.%player%} is false:
+         if {points.%player%} >= 370:
+            set {Upgrade21.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Knocker I Upgrade." to player
+            remove 370 from {points.%player%}
+      if {points.%player%} < 370:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade21.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+#WEAKER
+command /§iweek1:
+   trigger:
+      if {Upgrade22.%player%} is false:
+         if {points.%player%} >= 400:
+            set {Upgrade22.%player%} to true
+            send "&aThanks for your purchase ! &eYou purchased Weaker I Upgrade." to player
+            remove 400 from {points.%player%}
+      if {points.%player%} < 400:
+         send "&cSorry but , you don't have enought points !"
+         stop
+      if {Upgrade22.%player%} is true:
+         send "&cSorry but , you alerdy bought this upgrade !"
+         stop
+
+command /help [<text>]:
+   trigger:
+      if arg 1 is not set:
+         send "       &c/Help Center" to player
+         send ""
+         send "&cPlease select a chapter !"
+         send ""
+         send "&c/help &agameplay"
+         send "&c/help &2shop"
+         send "&c/help &3upgrades"
+         send "&c/help &eother"
+         stop
+      if arg 1 is "gameplay":
+         send "       &c/Help Center" to player
+         send ""
+         send "&a&l&oGamePlay:"
+         send ""
+         send "&aHow to play ? Just off the platfrom ! You will automaticly get a premade kit "
+         send "&athen , you can go PvP other players , train for bridging , clutching ect !"
+         send "&aYou get 1 point every kill and lose 1 every death ! "
+         send "&aYou have a new player protection  for 1 hour after your first join ! It means you don't lose points for 1 hour after your first join !"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+         stop
+      if arg 1 is "shop":
+         send "       &c/Help Center" to player
+         send ""
+         send "&2&l&oShop:"
+         send ""
+         send "&2How does the shop works and how to access it ?"
+         send "&2You can use /shop at spawn and click on the upgrades you want to buy !"
+         send "&2Just make just you have the requirements ! Read upgrade's lore to know more !"
+         send "&2There is also no way to buy points with real money"
+         send "&2To get points you can ...."
+         send "&2- Kill other players"
+         send "&2- Afk , you get 1 point every 10 minutes on the server"
+         send "&2- Help Staff , by sending feedbacks , helping other players"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+      if arg 1 is "upgrades":
+         send "       &c/Help Center" to player
+         send ""
+         send "&3&l&oUpgrades:"
+         send ""
+         send "&3How does upgrades works , how to get them , what impact they have and why you SHOULD buy them."
+         send "&3Upgrades are like little boosters that give some cool advantages , but they are not too op !"
+         send "&3There prices are different by upgrades , some of them are easier to get and some harder !"
+         send "&3Why are prices so high ? Because if everyone could have everything under a day , this would not be funny :("
+         send "&3You should buy it because they give you a pretty good advantage !"
+         send ""
+         send "&3&l&oUpgrade Wiki:"
+         send ""
+         send "&fSpeed (I,II,III): Requirements (15,30,60) points (Previous upgrade) Gives you speed (I,II,III) !"
+         send "&aJump Boost (I,II,III): Requirements (60,75,90) points (Previous upgrade) Give you jumpst boost (I,II,III) !"
+         send "&6SandStone (I,II,III,IV): Requirements (90,125,150,200) points (Previous upgrade) Give you (1,2) sandstone blocks every (30,20,10) seconds !"
+         send "&0Slowness (I,II,III): Requirements (200,230,255) points (Previous upgrade) Get 20percents chance to give your enemy slowness (I,II,III) for 5 seconds !"
+         send "&eHaste (I,II,III): Requirements (255,270,300) poits (Previous upgrade) Give you haste (I,II,III) !"
+         send "&2Reducer (I): Requirements (300) points Get a 20percents chance to cancel your knockback !"
+         send "&4Strength (I,II,III): Requirements (300,340,370) points (Previous upgrade) Give you strength (I,II,III)"
+         send "&cKnocker (I): Requirements (370) points Get a 20percents chance to push your enemy backwards !"
+         send "&8Weaker (I): Requirements (400) points Get 20percents chance to give your enemy weakness I !"
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"
+      if arg 1 is "other":
+         send "       &c/Help Center" to player
+         send ""
+         send "&eWe are not affilated with Minehut or Mojang"
+         send "&eWe are not selling or recolting any of your informations"
+         send "&eThis server was made for fun and not money" 
+         send ""
+         send "&aIf this wasn't helpful enough please ask a staff memeber or other players :)"

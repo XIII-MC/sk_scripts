@@ -1,0 +1,624 @@
+#CatRoyale V1.0
+#Version: 1.0
+#Started: 13/03/2021
+options:
+   prefix: &b&lFish&e&lRoyale &7» 
+
+#--------------------------------- SERVER MANAGEMENT -------------------------------------
+
+on quit:
+   make server execute command "/minecraft:clear %player%"
+   make server execute command "/mvtp %player% ul_world"
+
+on world change:
+   wait 1.5 second
+   if {br1.players} <= 1:
+      if {game.br1} is true:
+         set {_all.players::*} to all players where [world of player input is "br1"]
+         if {win.br1} is true:
+            stop
+         send "" to {_all.players::*}
+         send "{@prefix} &6You were the last survivor !" to {_all.players::*}
+         send "{@prefix} &eYou got &6200 Coins &eand &250 Gems &e!" to {_all.players::*}
+         send "{@prefix} &7&oGood game !" to {_all.players::*}
+         send "" to {_all.players::*}
+         send title "&e&lCongratulations" with subtitle "&6You were the last survivor !" to {_all.players::*}
+         set {win.br1} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br1"
+         set {win.br1} to false
+         set {start.br1} to false
+         set {game.br1} to false
+         delete {br1.all.players::*}
+
+on world change:
+   wait 1.5 second
+   if {br2.players} <= 1:
+      if {game.br2} is true:
+         set {_all.players::*} to all players where [world of player input is "br2"]
+         if {win.br2} is true:
+            stop
+         send "" to {_all.players::*}
+         send "{@prefix} &6You were the last survivor !" to {_all.players::*}
+         send "{@prefix} &eYou got &6200 Coins &eand &250 Gems &e!" to {_all.players::*}
+         send "{@prefix} &7&oGood game !" to {_all.players::*}
+         send "" to {_all.players::*}
+         send title "&e&lCongratulations" with subtitle "&6You were the last survivor !" to {_all.players::*}
+         set {win.br2} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br2"
+         set {win.br2} to false
+         set {start.br2} to false
+         set {game.br2} to false
+         delete {br2.all.players::*}
+
+on world change:
+   wait 1.5 second
+   if {br3.players} <= 1:
+      if {game.br3} is true:
+         set {_all.players::*} to all players where [world of player input is "br3"]
+         if {win.br3} is true:
+            stop
+         send "" to {_all.players::*}
+         send "{@prefix} &6You were the last survivor !" to {_all.players::*}
+         send "{@prefix} &eYou got &6200 Coins &eand &250 Gems &e!" to {_all.players::*}
+         send "{@prefix} &7&oGood game !" to {_all.players::*}
+         send "" to {_all.players::*}
+         send title "&e&lCongratulations" with subtitle "&6You were the last survivor !" to {_all.players::*}
+         set {win.br3} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br3"
+         set {win.br3} to false
+         set {start.br3} to false
+         set {game.br3} to false
+         delete {br3.all.players::*}
+
+on world change:
+   wait 1.5 second
+   if {br4.players} <= 1:
+      if {game.br4} is true:
+         set {_all.players::*} to all players where [world of player input is "br4"]
+         if {win.br4} is true:
+            stop
+         send "" to {_all.players::*}
+         send "{@prefix} &6You were the last survivor !" to {_all.players::*}
+         send "{@prefix} &eYou got &6200 Coins &eand &250 Gems &e!" to {_all.players::*}
+         send "{@prefix} &7&oGood game !" to {_all.players::*}
+         send "" to {_all.players::*}
+         send title "&e&lCongratulations" with subtitle "&6You were the last survivor !" to {_all.players::*}
+         set {win.br4} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br4"
+         set {win.br4} to false
+         set {start.br4} to false
+         set {game.br4} to false
+         delete {br4.all.players::*}
+
+on world change:
+   wait 1.5 second
+   if {br5.players} <= 1:
+      if {game.br5} is true:
+         set {_all.players::*} to all players where [world of player input is "br5"]
+         if {win.br5} is true:
+            stop
+         send "" to {_all.players::*}
+         send "{@prefix} &6You were the last survivor !" to {_all.players::*}
+         send "{@prefix} &eYou got &6200 Coins &eand &250 Gems &e!" to {_all.players::*}
+         send "{@prefix} &7&oGood game !" to {_all.players::*}
+         send "" to {_all.players::*}
+         send title "&e&lCongratulations" with subtitle "&6You were the last survivor !" to {_all.players::*}
+         set {win.br5} to true
+         add 50 to {gems.%{_all.players::*}%}
+         add 200 to {coins.%{_all.players::*}%}
+         add 1 to {wins.%{_all.players::*}%}
+         play sound "minecraft:item.totem.use" with volume 10 and pitch 2 at {_all.players::*} for {_all.players::*}
+         wait 10 seconds
+         make {_all.players::*} execute command "/spawn"
+         make server execute command "/reset br5"
+         set {win.br5} to false
+         set {start.br5} to false
+         set {game.br5} to false
+         delete {br5.all.players::*}
+
+every 1 second:
+   if {br5.players} >= 2:
+      delete {br5.all.players::*}
+      set {br5.all.players::*} to all players where [world of player input is "br5"]
+      if {start.br5} is true:
+         stop
+      make server execute command "/br5"
+   if {br4.players} >= 2:
+      delete {br4.all.players::*}
+      set {br4.all.players::*} to all players where [world of player input is "br4"]
+      if {start.br4} is true:
+         stop
+      make server execute command "/br4"
+   if {br3.players} >= 2:
+      delete {br3.all.players::*}
+      set {br3.all.players::*} to all players where [world of player input is "br3"]
+      if {start.br3} is true:
+         stop
+      make server execute command "/br3"
+   if {br2.players} >= 2:
+      delete {br2.all.players::*}
+      set {br2.all.players::*} to all players where [world of player input is "br2"]
+      if {start.br2} is true:
+         stop
+      make server execute command "/br2"
+   if {br1.players} >= 2:
+      delete {br1.all.players::*}
+      set {br1.all.players::*} to all players where [world of player input is "br1"]
+      if {start.br1} is true:
+         stop
+      make server execute command "/br1"
+
+command /br1:
+   permission: op
+   trigger:
+      if {start.br1} is true:
+         stop
+      set {start.br1} to true
+      
+      broadcast ""
+      broadcast "{@prefix} &7A battle-royale is about to start !"
+      broadcast "{@prefix} &7To join the game , do &e/join br1"
+      broadcast ""
+      set {gameborder.br1} to "&cDesactivated"
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "{@prefix} &7Starting in %41-loop-number% seconds..." to {br1.all.players::*}
+            loop {br1.all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br1.players} < 2:
+         send "{@prefix} &7Not enough player to start the game." to {br1.all.players::*}
+         set {start.br1} to false
+         stop
+         
+      send "" to {br1.all.players::*}
+      send "{@prefix} &6Game started !" to {br1.all.players::*}
+      send "{@prefix} &eWish you luck !" to {br1.all.players::*}
+      send "" to {br1.all.players::*}
+      
+      loop {br1.all.players::*}:
+         G_DPL({br1.all.players::*})
+         loop blocks in radius 6 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {br1.all.players::*} to survival 
+      
+      heal {br1.all.players::*}
+      make server execute command "/effect clear %{br1.all.players::*}%"
+      send title "&c⚠ &4Cross teaming is bannable ! &c⚠" with subtitle "&cYou have been warned !" to {br1.all.players::*}
+
+      set {game.br1} to true
+      set {sbr1} to "&6Playing"
+      set {start.br1} to true
+      if {fss.br1} is true:
+         set {fss.br1} to false
+         remove 4 from {br1.players}
+      wait 1 minute
+      if {game.br1} is true:
+         delete {br1.all.players::*}
+         wait 2 ticks
+         set {br1.all.players::*} to all players where [world of player input is "br1"]
+         set {_r} to random element out of {br1.all.players::*}
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder true"
+         wait 1 tick
+         make {_r} execute command "/worldborder set 30 120"
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder false"
+         send "{@prefix} &7Border is starting to shrink...." to {br1.all.players::*}
+         set {gameborder.br1} to "&aActive"
+
+command /br2:
+   permission: op
+   trigger:
+      if {start.br2} is true:
+         stop
+      set {start.br2} to true
+      
+      broadcast ""
+      broadcast "{@prefix} &7A battle-royale is about to start !"
+      broadcast "{@prefix} &7To join the game , do &e/join br2"
+      broadcast ""
+      set {gameborder.br2} to "&cDesactivated"
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "{@prefix} &7Starting in %41-loop-number% seconds..." to {br2.all.players::*}
+            loop {br2.all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br2.players} < 2:
+         send "{@prefix} &7Not enough player to start the game." to {br2.all.players::*}
+         set {start.br2} to false
+         stop
+         
+      send "" to {br2.all.players::*}
+      send "{@prefix} &6Game started !" to {br2.all.players::*}
+      send "{@prefix} &eWish you luck !" to {br2.all.players::*}
+      send "" to {br2.all.players::*}
+      
+      loop {br2.all.players::*}:
+         G_DPL({br2.all.players::*})
+         loop blocks in radius 6 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {br2.all.players::*} to survival 
+      
+      heal {br2.all.players::*}
+      make server execute command "/effect clear %{br2.all.players::*}%"
+      send title "&c⚠ &4Cross teaming is bannable ! &c⚠" with subtitle "&cYou have been warned !" to {br2.all.players::*}
+
+      set {game.br2} to true
+      set {sbr2} to "&6Playing"
+      set {start.br2} to true
+      if {fss.br2} is true:
+         set {fss.br2} to false
+         remove 4 from {br2.players}
+      wait 1 minute
+      if {game.br2} is true:
+         delete {br2.all.players::*}
+         wait 2 ticks
+         set {br2.all.players::*} to all players where [world of player input is "br2"]
+         set {_r} to random element out of {br2.all.players::*}
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder true"
+         wait 1 tick
+         make {_r} execute command "/worldborder set 30 120"
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder false"
+         send "{@prefix} &7Border is starting to shrink...." to {br2.all.players::*}
+         set {gameborder.br2} to "&aActive"
+
+command /br3:
+   permission: op
+   trigger:
+      if {start.br3} is true:
+         stop
+      set {start.br3} to true
+      
+      broadcast ""
+      broadcast "{@prefix} &7A battle-royale is about to start !"
+      broadcast "{@prefix} &7To join the game , do &e/join br3"
+      broadcast ""
+      set {gameborder.br3} to "&cDesactivated"
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "{@prefix} &7Starting in %41-loop-number% seconds..." to {br3.all.players::*}
+            loop {br3.all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br3.players} < 2:
+         send "{@prefix} &7Not enough player to start the game." to {br3.all.players::*}
+         set {start.br3} to false
+         stop
+         
+      send "" to {br3.all.players::*}
+      send "{@prefix} &6Game started !" to {br3.all.players::*}
+      send "{@prefix} &eWish you luck !" to {br3.all.players::*}
+      send "" to {br3.all.players::*}
+      
+      loop {br3.all.players::*}:
+         G_DPL({br3.all.players::*})
+         loop blocks in radius 6 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {br3.all.players::*} to survival 
+      
+      heal {br3.all.players::*}
+      make server execute command "/effect clear %{br3.all.players::*}%"
+      send title "&c⚠ &4Cross teaming is bannable ! &c⚠" with subtitle "&cYou have been warned !" to {br3.all.players::*}
+
+      set {game.br3} to true
+      set {sbr3} to "&6Playing"
+      set {start.br3} to true
+      if {fss.br3} is true:
+         set {fss.br3} to false
+         remove 4 from {br3.players}
+      wait 1 minute
+      if {game.br3} is true:
+         delete {br3.all.players::*}
+         wait 2 ticks
+         set {br3.all.players::*} to all players where [world of player input is "br3"]
+         set {_r} to random element out of {br3.all.players::*}
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder true"
+         wait 1 tick
+         make {_r} execute command "/worldborder set 30 120"
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder false"
+         send "{@prefix} &7Border is starting to shrink...." to {br3.all.players::*}
+         set {gameborder.br3} to "&aActive"
+
+command /br4:
+   permission: op
+   trigger:
+      if {start.br4} is true:
+         stop
+      set {start.br4} to true
+      
+      broadcast ""
+      broadcast "{@prefix} &7A battle-royale is about to start !"
+      broadcast "{@prefix} &7To join the game , do &e/join br4"
+      broadcast ""
+      set {gameborder.br4} to "&cDesactivated"
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "{@prefix} &7Starting in %41-loop-number% seconds..." to {br4.all.players::*}
+            loop {br4.all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br4.players} < 2:
+         send "{@prefix} &7Not enough player to start the game." to {br4.all.players::*}
+         set {start.br4} to false
+         stop
+         
+      send "" to {br4.all.players::*}
+      send "{@prefix} &6Game started !" to {br4.all.players::*}
+      send "{@prefix} &eWish you luck !" to {br4.all.players::*}
+      send "" to {br4.all.players::*}
+      
+      loop {br4.all.players::*}:
+         G_DPL({br4.all.players::*})
+         loop blocks in radius 6 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {br4.all.players::*} to survival 
+      
+      heal {br4.all.players::*}
+      make server execute command "/effect clear %{br4.all.players::*}%"
+      send title "&c⚠ &4Cross teaming is bannable ! &c⚠" with subtitle "&cYou have been warned !" to {br4.all.players::*}
+
+      set {game.br4} to true
+      set {sbr4} to "&6Playing"
+      set {start.br4} to true
+      if {fss.br4} is true:
+         set {fss.br4} to false
+         remove 4 from {br4.players}
+      wait 1 minute
+      if {game.br4} is true:
+         delete {br4.all.players::*}
+         wait 2 ticks
+         set {br4.all.players::*} to all players where [world of player input is "br4"]
+         set {_r} to random element out of {br4.all.players::*}
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder true"
+         wait 1 tick
+         make {_r} execute command "/worldborder set 30 120"
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder false"
+         send "{@prefix} &7Border is starting to shrink...." to {br4.all.players::*}
+         set {gameborder.br4} to "&aActive"
+
+command /br5:
+   permission: op
+   trigger:
+      if {start.br5} is true:
+         stop
+      set {start.br5} to true
+      
+      broadcast ""
+      broadcast "{@prefix} &7A battle-royale is about to start !"
+      broadcast "{@prefix} &7To join the game , do &e/join br5"
+      broadcast ""
+      set {gameborder.br5} to "&cDesactivated"
+         
+      loop 40 times:
+         if loop-number is 1 or 11 or 38:
+            send "{@prefix} &7Starting in %41-loop-number% seconds..." to {br5.all.players::*}
+            loop {br5.all.players::*}:
+               play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at loop-value-2 for loop-value-2
+         wait 1 second
+         
+      if {br5.players} < 2:
+         send "{@prefix} &7Not enough player to start the game." to {br5.all.players::*}
+         set {start.br5} to false
+         stop
+         
+      send "" to {br5.all.players::*}
+      send "{@prefix} &6Game started !" to {br5.all.players::*}
+      send "{@prefix} &eWish you luck !" to {br5.all.players::*}
+      send "" to {br5.all.players::*}
+      
+      loop {br5.all.players::*}:
+         G_DPL({br5.all.players::*})
+         loop blocks in radius 6 around loop-value:
+            if loop-block is barrier:
+               set loop-block to air
+         play sound "entity.enderdragon.ambient" with volume 10 and pitch 1 at loop-value for loop-value
+         wait 2 tick
+         
+      set gamemode of {br5.all.players::*} to survival 
+      
+      heal {br5.all.players::*}
+      make server execute command "/effect clear %{br5.all.players::*}%"
+      send title "&c⚠ &4Cross teaming is bannable ! &c⚠" with subtitle "&cYou have been warned !" to {br5.all.players::*}
+
+      set {game.br5} to true
+      set {sbr5} to "&6Playing"
+      set {start.br5} to true
+      if {fss.br5} is true:
+         set {fss.br5} to false
+         remove 4 from {br5.players}
+      wait 1 minute
+      if {game.br5} is true:
+         delete {br5.all.players::*}
+         wait 2 ticks
+         set {br5.all.players::*} to all players where [world of player input is "br5"]
+         set {_r} to random element out of {br5.all.players::*}
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder true"
+         wait 1 tick
+         make {_r} execute command "/worldborder set 30 120"
+         make server execute command "/lp user %{_r}% permission set minecraft.command.worldborder false"
+         send "{@prefix} &7Border is starting to shrink...." to {br5.all.players::*}
+         set {gameborder.br5} to "&aActive"
+
+
+#---------------------------------------------------------------
+
+
+command /games:
+   trigger:
+      if player's world is not "ul_world":
+         stop
+      if {br1.players} is not set:
+         set {br1.players} to 0
+      if {lobby} is not set:
+         set {lobby} to 1
+      if {br2.players} is not set:
+         set {br2.players} to 0
+      if {br3.players} is not set:
+         set {br3.players} to 0
+      if {br4.players} is not set:
+         set {br4.players} to 0
+      if {br5.players} is not set:
+         set {br5.players} to 0
+      if {br6.players} is not set:
+         set {br6.players} to 0
+      if {br7.players} is not set:
+         set {br7.players} to 0
+      if {br8.players} is not set:
+         set {br8.players} to 0
+      if {br9.players} is not set:
+         set {br9.players} to 0
+      if {br1.players0} is not set:
+         set {br1.players0} to 0
+      if {br1.players1} is not set:
+         set {br1.players1} to 0
+      set {_br1::*} to "&7Players: &f%{br1.players}%/12", "&7Status: %{sbr1}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br2::*} to "&7Players: &f%{br2.players}%/12", "&7Status: %{sbr2}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br3::*} to "&7Players: &f%{br3.players}%/12", "&7Status: %{sbr3}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br4::*} to "&7Players: &f%{br4.players}%/12", "&7Status: %{sbr4}% ", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br5::*} to "&7Players: &f%{br5.players}%/12", "&7Status: %{sbr5}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br6::*} to "&7Players: &f%{br6.players}%/12", "&7Status: %{sbr6}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br7::*} to "&7Players: &f%{br7.players}%/12", "&7Status: %{sbr7}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br8::*} to "&7Players: &f%{br8.players}%/12", "&7Status: %{sbr8}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br9::*} to "&7Players: &f%{br9.players}%/12", "&7Status: %{sbr9}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br10::*} to "&7Players: &f%{br1.players0}%/12", "&7Status: %{sbr10}%", "&7Type: &eBattle_Royale" and "&7Hoster: &cCONSOLE"
+      set {_br11::*} to "&7Players: &f%{br1.players1}%/0", "&7Status: %{sbr11}%", "&7Type: &eEvent" and "&7Hoster: &c[OWNER] LananasBleu"
+      set {_br12::*} to "&7Players: &f%{br1.players2}%/12", "&7Status: %{sbr12}%", "&7Type: &eServer_Test" and "&7Hoster: &c[OWNER] &cLananasBleu" 
+      wait 5 ticks
+      open chest with 6 rows named "          &e&lBATTLE ROYALE" to player
+      if {sbr1} is "&aOnline":
+         format slot 10 of player with green wool named "&eBR-1" with lore {_br1::*} to run [make player execute command "/join br1"]
+      if {game.br1} is true:
+         format slot 10 of player with orange wool named "&eBR-1" with lore {_br1::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr1} is "&cOffline":
+         format slot 10 of player with red wool named "&eBR-1" with lore {_br1::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr2} is "&aOnline":
+         format slot 11 of player with green wool named "&eBR-2" with lore {_br2::*} to run [make player execute command "/join br2"]
+      if {game.br2} is true:
+         format slot 11 of player with orange wool named "&eBR-2" with lore {_br2::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr2} is "&cOffline":
+         format slot 11 of player with red wool named "&eBR-2" with lore {_br2::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr3} is "&aOnline":
+         format slot 12 of player with green wool named "&eBR-3" with lore {_br3::*} to run [make player execute command "/join br3"]
+      if {game.br3} is true:
+         format slot 12 of player with orange wool named "&eBR-3" with lore {_br3::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr3} is "&cOffline":
+         format slot 12 of player with red wool named "&eBR-3" with lore {_br3::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr4} is "&aOnline":
+         format slot 13 of player with green wool named "&eBR-4" with lore {_br4::*} to run [make player execute command "/join br4"]
+      if {game.br4} is true:
+         format slot 13 of player with orange wool named "&eBR-4" with lore {_br4::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr4} is "&cOffline":
+         format slot 13 of player with red wool named "&eBR-4" with lore {_br4::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr5} is "&aOnline":
+         format slot 14 of player with green wool named "&eBR-5" with lore {_br5::*} to run [make player execute command "/join br5"]
+      if {game.br5} is true:
+         format slot 14 of player with orange wool named "&eBR-5" with lore {_br5::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr5} is "&cOffline":
+         format slot 14 of player with red wool named "&eBR-5" with lore {_br5::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr6} is "&aOnline":
+         format slot 15 of player with green wool named "&eBR-6" with lore {_br6::*} to run [make player execute command "/join br6"]
+      if {game.br6} is true:
+         format slot 15 of player with orange wool named "&eBR-6" with lore {_br6::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr6} is "&cOffline":
+         format slot 15 of player with red wool named "&eBR-6" with lore {_br6::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr7} is "&aOnline":
+         format slot 16 of player with green wool named "&eBR-7" with lore {_br7::*} to run [make player execute command "/join br7"]
+      else:
+         format slot 16 of player with red wool named "&eBR-7" with lore {_br7::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr8} is "&aOnline":
+         format slot 19 of player with green wool named "&eBR-8" with lore {_br8::*} to run [make player execute command "/join br8"]
+      else:
+         format slot 19 of player with red wool named "&eBR-8" with lore {_br8::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr9} is "&aOnline":
+         format slot 20 of player with green wool named "&eBR-9" with lore {_br9::*} to run [make player execute command "/join br9"]
+      else:
+         format slot 20 of player with red wool named "&eBR-9" with lore {_br9::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr10} is "&aOnline":
+         format slot 21 of player with green wool named "&eBR-10" with lore {_br10::*} to run [make player execute command "/join br10"]
+      else:
+         format slot 21 of player with red wool named "&eBR-10" with lore {_br10::*} to run [make server execute command "/sudo %player% §zm"]
+      if {sbr11} is "&aOnline":
+         format slot 22 of player with green wool named "&eE-1" with lore {_br11::*} to run [make player execute command "/join br11"]
+      else:
+         format slot 22 of player with red wool named "&eE-1" with lore {_br11::*} to run [make server execute command "/sudo %player% §zm"]
+      format slot 23 of player with pink wool named "&eST-1" with lore {_br12::*} to run [make player execute command "/join b12"]
+      format slot 4 of player with red bed named "&6&lLobby" with lore "&7Players: &f%{lobby}%/150" to run [make server execute command "/mvpt %player% ul_world"]
+      format slot 0 of player with black stained glass pane named "" to be unstealable
+      format slot 1 of player with black stained glass pane named "" to be unstealable
+      format slot 2 of player with black stained glass pane named "" to be unstealable
+      format slot 3 of player with black stained glass pane named "" to be unstealable
+      format slot 5 of player with black stained glass pane named "" to be unstealable
+      format slot 6 of player with black stained glass pane named "" to be unstealable
+      format slot 7 of player with black stained glass pane named "" to be unstealable
+      format slot 8 of player with black stained glass pane named "" to be unstealable
+      format slot 9 of player with black stained glass pane named "" to be unstealable
+      format slot 17 of player with black stained glass pane named "" to be unstealable
+      format slot 18 of player with black stained glass pane named "" to be unstealable
+      format slot 53 of player with black stained glass pane named "" to be unstealable
+      format slot 26 of player with black stained glass pane named "" to be unstealable
+      format slot 27 of player with black stained glass pane named "" to be unstealable
+      format slot 36 of player with black stained glass pane named "" to be unstealable
+      format slot 35 of player with black stained glass pane named "" to be unstealable
+      format slot 44 of player with black stained glass pane named "" to be unstealable
+      format slot 45 of player with black stained glass pane named "" to be unstealable
+      format slot 46 of player with black stained glass pane named "" to be unstealable
+      format slot 47 of player with black stained glass pane named "" to be unstealable
+      format slot 48 of player with black stained glass pane named "" to be unstealable
+      format slot 50 of player with black stained glass pane named "" to be unstealable
+      format slot 51 of player with black stained glass pane named "" to be unstealable
+      format slot 52 of player with black stained glass pane named "" to be unstealable
+      format slot 49 of player with barrier named "&cClose Menu" to close 
+
+on any move:
+   if player's y location < 100:
+      player's world is not "ul_world"
+      if {game.%player's world%} is not true:
+         make server execute command "/mvtp %player% ul_world"

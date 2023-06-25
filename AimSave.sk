@@ -1,0 +1,83 @@
+on damage:
+   attacker is a player
+   damage cause isn't thorns
+   projectile doesn't exist
+   set {_p} to attacker's pitch
+   set {_l} to attacker's location
+   wait 1 tick 
+   distance between {_l} and attacker's location > 0.2
+   set {_p} to ({_p} * attacker's pitch)
+   set {_pdevide} to ({_p} / attacker's pitch)
+   set {_p1000} to ({_p} * 1000)
+   set {_gcd} to ({_p} * 80000 / 5)
+   set {_pcalc} to ({_p} - attacker's pitch)
+   if {_p} < 30:
+      add 1 to {GUARD::%attacker%::AIM.A1}
+      {GUARD::%attacker%::AIM.A1} > 4
+      delete {GUARD::%attacker%::AIM.A1}
+      clearly(attacker, "Aim", "A-1 &8| &7%{_p}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.A1}
+   if {_p} <= 0:
+      add 1 to {GUARD::%attacker%::AIM.A2}
+      {GUARD::%attacker%::AIM.A2} > 2
+      delete {GUARD::%attacker%::AIM.A2}
+      clearly(attacker, "Aim", "A-2 &8| &7%{_p}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.A2}
+   if {_p} < 100:
+      add 1 to {GUARD::%attacker%::AIM.A3}
+      {GUARD::%attacker%::AIM.A3} > 12
+      delete {GUARD::%attacker%::AIM.A3}
+      clearly(attacker, "Aim", "A-3 &8| &7%{_p}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.A3}
+   if {_p} > 300:
+      add 1 to {GUARD::%attacker%::AIM.A4}
+      {GUARD::%attacker%::AIM.A4} > 4
+      distance between attacker and victim > {@AuraDistance}
+      delete {GUARD::%attacker%::AIM.A4}
+      clearly(attacker, "Aim", "A-4 &8| &7%{_p}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.A4}
+   if {_pdevide} < 3:
+      add 1 to {GUARD::%attacker%::AIM.B}
+      {GUARD::%attacker%::AIM.B} > 4
+      delete {GUARD::%attacker%::AIM.B}
+      clearly(attacker, "Aim", "B &8| &7%{_pdevide}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.B}
+   if {_p1000} < 35000:
+      add 1 to {GUARD::%attacker%::AIM.C}
+      {GUARD::%attacker%::AIM.C} > 8
+      delete {GUARD::%attacker%::AIM.C}
+      clearly(attacker, "Aim", "C &8| &7%{_p1000}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.C}
+   if {_gcd} < 650000:
+      add 1 to {GUARD::%attacker%::AIM.D}
+      {GUARD::%attacker%::AIM.D} > 8
+      delete {GUARD::%attacker%::AIM.D}
+      clearly(attacker, "Aim", "D &8| &7%{_gcd}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.D}
+   if {_pcalc} < 50:
+      add 1 to {GUARD::%attacker%::AIM.E1}
+      {GUARD::%attacker%::AIM.E1} > 8
+      delete {GUARD::%attacker%::AIM.E1}
+      clearly(attacker, "Aim", "E-1 &8| &7%{_pcalc}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.E1}
+   if {_pcalc} < 30:
+      add 1 to {GUARD::%attacker%::AIM.E2}
+      {GUARD::%attacker%::AIM.E2} > 6
+      delete {GUARD::%attacker%::AIM.E2}
+      clearly(attacker, "Aim", "E-2 &8| &7%{_pcalc}%&7", "false", "5", "1")
+   else: 
+      delete {GUARD::%attacker%::AIM.E2}
+   if {_pcalc} < 0:
+      add 1 to {GUARD::%attacker%::AIM.E3}
+      {GUARD::%attacker%::AIM.E3} > 1
+      clearly(attacker, "Aim", "E-3 &8| &7%{_pcalc}%&7", "false", "5", "1")
+   else:
+      delete {GUARD::%attacker%::AIM.E3}

@@ -1,0 +1,97 @@
+#  ____  _           _     _     _____ _   _ _____
+# |  _ \(_)___  __ _| |__ | | __|_   _| \ | |_   _|
+# | | | | / __|/ _` | '_ \| |/ _ \| | |  \| | | |
+# | |_| | \__ | (_| | |_) | |  __/| | | |\  | | |
+# |____/|_|___/\__,_|_.__/|_|\___||_| |_| \_| |_|
+#DisableTNT (https://www.spigotmc.org/resources/disabletnt.57404/)
+#======================================================================================
+#        Description: Prevent TNT from being used and remove it from players' inventory
+#             Author: Sitieno14
+#            License: http://creativecommons.org/licenses/by-nc-sa/4.0/
+#            Version: Final
+#
+#   Spigot - Profile: https://tinyurl.com/spigotmc-sitieno14
+# Spigot - Resources: https://tinyurl.com/spigotmc-bysitieno14
+#   Spigot - Support: https://tinyurl.com/spigotmc-tositieno14
+#
+# Telegram - Channel: https://telegram.me/Sitieno14
+# Telegram - Contact: https://telegram.me/Sitieno14_bot
+#======================================================================================
+
+options:
+	disable-explosion: true
+
+	remove: true
+
+	remove-from-containers: false
+
+	send-message: true
+	message: &4[&cTNT&4] &f<event> &7TNT is disabled from this server
+
+on explosion prime:
+	if {@disable-explosion} is true:
+		if event-entity is tnt:
+			cancel event
+			if {@send-message} is true:
+				loop all players in radius 10 of event-location:
+					set {_message} to "{@message}"
+					replace all "<event>" in {_message} with "Explosion of"
+					send {_message} to loop-player
+
+on click:
+	player's tool is tnt
+	cancel event
+	if {@remove} is true:
+		remove all tnt from player's inventory
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Clicking while holding"
+		send {_message} to player
+
+on drop of tnt:
+	cancel event
+	wait 0.1 seconds
+	if {@remove} is true:
+		remove all tnt from player's inventory
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Drop of"
+		send {_message} to player
+
+on pickup of tnt:
+	cancel event
+	if {@remove} is true:
+		delete event-entity
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Pickup of"
+		send {_message} to player
+
+on inventory click:
+	event-item is tnt
+	cancel event
+	if {@remove} is true:
+		remove all tnt from player's inventory
+		if {@remove-from-containers} is true:
+			set event-slot to air
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Inventory clicking on"
+		send {_message} to player
+
+on damage:
+	attacker's tool is tnt
+	cancel event
+	if {@remove} is true:
+		remove all tnt from attacker's inventory
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Damaging a player while holding"
+		send {_message} to attacker
+
+on craft of tnt:
+	cancel event
+	if {@send-message} is true:
+		set {_message} to "{@message}"
+		replace all "<event>" in {_message} with "Crafting of"
+		send {_message} to player

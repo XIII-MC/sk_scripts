@@ -1,0 +1,46 @@
+command /kits:
+   trigger:
+      if "%region at player%" contains "spawn":
+         wait 2 ticks
+         send title "&8[&c!&8]" with subtitles "&cChoose a Kit first !" to player
+         open chest with 5 rows named "       &cChoose your Kit to fight !" to player
+         wait 2 ticks
+
+
+         format slot 10 of player with iron sword named "&aKit PvP ! &7[&a✓&7]" to close then run [make player execute command "/kit kit"]
+
+
+         format slot 11 of player with bow named "&aKit Archer ! &7[&a✓&7]" to close then run [make player execute command "/kit archer"]
+
+
+         format slot 12 of player with diamond chestplate named "&aKit Daily ! &7[&a✓&7]" to close then run [make player execute command "/kit daily"]
+
+
+         if player has permission "essentials.kits.vip":
+            format slot 13 of player with stone sword named "&aKit VIP ! &7[&a✓&7]" to close then run [make player execute command "/kit vip"]
+         else:
+            format slot 13 of player with stone sword named "&cKit VIP ! &7[&c✗&7]" to run [send "&8[&c!&8] &cSorry , but you don't have access to this kit !"]
+
+
+         if player has permission "essentials.kits.seed":
+            format slot 14 of player with wheat seed named "&aKit Seed ! &7[&a✓&7]" to close then run [make player execute command "/kit seed"]
+         else:
+            format slot 14 of player with wheat seed named "&cKit Seed ! &7[&c✗&7]" to run [send "&8[&c!&8] &cSorry , but you don't have access to this kit ! Buy rank &aSeed &cat /ranks to get access to it !"]
+
+
+         if player has permission "essentials.kits.wheat":
+            format slot 15 of player with wheat named "&aKit Wheat ! &7[&a✓&7]" to close then run [make player execute command "/kit wheat"]
+         else:
+            format slot 15 of player with wheat named "&cKit Wheat ! &7[&c✗&7]" to run [send "&8[&c!&8] &cSorry , but you don't have access to this kit ! Buy rank &eWheat &cat /ranks to get access to it !"]
+
+
+         if player has permission "essentials.kits.sapling":
+            format slot 16 of player with sapling named "&aKit Sapling ! &7[&a✓&7]" to close then run [make player execute command "/kit sapling"]
+         else:
+            format slot 16 of player with sapling named "&cKit Sapling ! &7[&c✗&7]" to run [send "&8[&c!&8] &cSorry , but you don't have access to this kit ! Buy rank &2Sapling &cat /ranks to get access to it !"]
+
+
+         if player has permission "essentials.kits.tree":
+            format slot 19 of player with oak log named "&aKit Tree ! &7[&a✓&7]" to close then run [make player execute command "/kit tree"]
+         else:
+            format slot 19 of player with oak log named "&cKit Sapling ! &7[&c✗&7]" to run [send "&8[&c!&8] &cSorry , but you don't have access to this kit ! Buy rank &2Tree &cat /ranks to get access to it !"]

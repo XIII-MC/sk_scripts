@@ -1,0 +1,1963 @@
+#/// DRAGON CHASER V0.2 ///
+options:
+   dc: &c&lDragon&6&lChaser &7>>
+   version: 0.2
+
+#/// COMMANDS ///
+
+on right click with snowball:
+   set {legitfly.%player%} to true
+
+on any move:
+   if player is on ground:
+      set {legitfly.%player%} to false
+
+command /velocity [<player>]:
+   permission: HELPER
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@dc} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         if block above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 2 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 3 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 4 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 5 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 6 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 7 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         if block 8 above arg 1 is not air:
+            send "{@dc} &cBlock above &e%arg 1% &cis not air, check canceled." to player
+            stop
+         set {c.%arg 1%} to true
+         add 1 to {vvt.%arg 1%}
+         set {_sbv} to location of arg 1 
+         set {_vloc} to y location of arg 1
+         set fly mode of arg 1 to true
+         push arg 1 upward at speed 2
+         wait 0.7 second
+         set {_vloc1} to y location of arg 1
+         set {_diffv} to difference between {_vloc} and {_vloc1}
+         set gamemode of arg 1 to survival
+         set fly mode of arg 1 to false
+         send "%{_diffv}%" to player
+         set {c.%arg 1%} to false
+         if {_diffv} is less than 7:
+            send "{@dc} &6Velocity: &4DETECTED &f(VL: &6VERTICAL&f)" to player
+            make player execute command "/velocityh %arg 1%"
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is less than 13:
+            send "{@dc} &6Velocity: &6MAYBE &f(VL: &6VERTICAL&f)" to player
+            clear {_diffv}
+            teleport arg 1 to {_sbv}
+            stop
+         if {_diffv} is bigger than 13:
+            send "{@dc} &6Velocity: &aNOTHING &f(VL: &6VERTICAL&f)" to player
+            teleport arg 1 to {_sbv}
+            stop
+command /velocityh [<player>]:
+   permission: HELPER
+   trigger:
+      if {c.%arg 1%} is true:
+         send "{@dc} Player is alerdy getting velocity tested."
+         stop
+      if arg 1 is set:
+         set {c.%arg 1%} to true
+         add 1 to {vht.%arg 1%}
+         wait 1 second
+         set {_sbv} to location of arg 1 
+         set {_vloc2} to z location of arg 1 
+         set gamemode of arg 1 to spectator
+         set {_vector} to vector from location of arg 1
+         rotate {_vector} around z-axis by 90 degrees #Pitch combined with x-axis aswell
+         rotate {_vector} around z-axis by 25 degrees #Yaw
+         set velocity of arg 1 to {_vector}
+         wait 1 tick
+         push arg 1 backwards at speed 2
+         wait 1 second
+         set {_vloc3} to z location of arg 1
+         set {_diffh} to difference between {_vloc3} and {_vloc2}
+         set gamemode of arg 1 to survival
+         send "%{_diffh}%" to player
+         set {c.%ARG 1%} to false
+         if {_diffh} is less than 15:
+            send "{@dc} &6Velocity: &4DETECTED &f(VL: &6HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is less than 28:
+            send "{@dc} &6Velocity: &6MAYBE &f(VL: &6HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+         if {_diffh} is bigger than 28:
+            send "{@dc} &6Velocity: &aNOTHING &f(VL: &6HORIZONTAL&f)" to player
+            teleport arg 1 to {_sbv}
+            set {_vcheck} to false
+            stop
+
+every 1 second:
+   loop all players:
+      if loop-player's world is "ul_world":
+         stop
+      if loop-player's world is "br":
+         stop
+      if {game.%loop-player's world%} is false:
+         set {dragon.vclip.%loop-player%} to y location of loop-player
+         if {dragon.vclip.%loop-player%} < 140:
+            make loop-player execute command "/spawn"
+
+command /dcban [<offline player>] [<timespan>]:
+    permission: anticheat.alert
+    trigger:
+        if arg 1 is not set:
+            message "{@dc} &cUsage : /dcban <player> <time>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                if {tempban.time::%{_player}%} is not set:
+                    send "{@dc} &c%arg 1% has been banned"
+                    add 1 to {dcbans.%arg 1%}
+                    set {dcban::*} to "&cYou have been banned by &c&lDragon&6&lChaser", "&7Reason: &cBlacklisted Modifications", "&7Duration: &e1 day" and "&6Think it's a bug or a mistake ? Then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+                    broadcast "&7&m----------------------------------------------------"
+                    broadcast "&d%arg 1% &ehas been removed from the server by &c&lDragon&6&lChaser &efor: &cUnfair Advantage."
+                    broadcast "&7&m----------------------------------------------------"
+                    make server execute command "/smite %arg 1%"
+                    set {dcban.%arg 1%} to true
+                    set {tempban.time::%{_player}%} to arg 2
+                    set {tempban.timestamp::%{_player}%} to now
+                    kick {_player} due to "%{dcban::*}%"
+                    stop
+                if {tempban.time::%{_player}%} is set:
+                    message "{@dc} &cThis player is alerdy banned"
+                    stop
+            if "%{_player}%" is offline player:
+                if {tempban.time::%{_player}%} is not set:
+                    set {dcban.%arg 1%} to true
+                    message "{@dc} &c%arg 1% has been banned"
+                    add 1 to {dcbans.%arg 1%}
+                    set {dcban::*} to "&cYou have been banned by &c&lDragon&6&lChaser", "&7Reason: &cBlacklisted Modifications", "&7Duration: &e1 day" and "&6Think it's a bug or a mistake ? Then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+                    broadcast "&7&m----------------------------------------------------"
+                    broadcast "&d%arg 1% &ehas been removed from the server by &c&lDragon&6&lChaser &efor: &cUnfair Advantage."
+                    broadcast "&7&m----------------------------------------------------"
+                    set {tempban.time::%{_player}%} to 1
+                    set {tempban.timestamp::%{_player}%} to now
+                    stop
+                if {tempban.time::%{_player}%} is set:
+                    message "{@dc} &cThis player is alerdy banned"
+
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "%{dcban::*}%"
+
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+command /tbc [<offline player>]:
+    permission: tbc.use
+    trigger:
+        add 1 to {unbans.%arg 1%}
+        clear {tempban.time::%arg 1%}
+        clear {tempban.timestamp::%arg 1%}
+        message "&c %arg 1% unbanned"
+
+on first join:
+   set {firstjoin.%player%} to now
+
+command /check [<offline player>]:
+   permission: check.use
+   trigger:
+      send "{@dc} &7Checking player..."
+      wait 1 second
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         send "{@dc} &cERROR: &4Player not found"
+         stop
+      send "{@dc} &7NAME: &c%arg 1%"
+      send "{@dc} &7IP: &c%ip of arg 1%"
+      if {joina.%arg 1%} is true:
+         send "{@dc} &7PING: &c%arg 1's ping%"
+      send "{@dc} &7FIRST JOIN: &c%{firstjoin.%arg 1%}%"
+      if {joina.%arg 1%} is true:
+         send "{@dc} &7STATUS: &aONLINE"
+         send "{@dc} &7CONNECTION TIME: &c%{join.%arg 1%}%"
+      if {joina.%arg 1%} is false:
+         send "{@dc} &7STATUS: &cOFFLINE"
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         set {firstalt.%{ip.%arg 1%}%} to 0
+      send "{@dc} &7FIRST ACCOUNT: &c%{firstalt.%{ip.%arg 1%}%}%"
+      if {altip.%{ip.%arg 1%}%::*} is not set:
+         set {altip.%{ip.%arg 1%}%::*} to 0
+      send "{@dc} &7ALTS: &c%{altip.%{ip.%arg 1%}%::*}%"
+      if {ban.%arg 1%} is not set:
+         set {ban.%arg 1%} to 0
+      send "{@dc} &7BANS: &c%{ban.%arg 1%}%"
+      if {banre.%arg 1%} is not set:
+         set {banre.%arg 1%} to 0
+      send "{@dc} &7ID: &c%{id.%arg 1%}%"
+      send "{@dc} &7REASON: &c%{banre.%arg 1%}%"
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      send "{@dc} &7WARNS: &c%{warns.%arg 1%}%"
+      if {unban.%arg 1%} is not set:
+         set {unban.%arg 1%} to 0
+      send "{@dc} &7UNBANS: &c%{unban.%arg 1%}%"
+
+command /flagtoggle [<text>]:
+  permission: ADMIN
+  trigger:
+    if arg-1 is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "Fastbow", "Inventory", "Speed", "Spider" or "Step":
+      if {dragon.%arg-1%} is false:
+        send "&7[&b&lAnti&5&lFisher&7] &e%sender% &7has &aenabled &6%arg-1%&7!" to all players where [player input has permission "HELPER"]
+        set {dragon.%arg-1%} to true
+      else:
+        if {dragon.%arg-1%} is true:
+          send "&7[&b&lAnti&5&lFisher&7] &e%sender% &7has &cdisabled &6%arg-1%&7!" to all players where [player input has permission "HELPER"]
+          set {dragon.%arg-1%} to false
+          stop
+    else:
+      send "&7[&b&lAnti&5&lFisher&7] &cInvalid Argument! &8(&6Autoclicker, Bhop, Blink, ClickTP, Criticals, Flight, Float, HighJump, Hover, Jesus, Killaura, NoFall, Fastbow, Reach, Inventory, Speed, Spider, Step, Velocity&8)"
+
+command /dc [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is not set:
+         make player execute command "/dc help"
+      if arg-1 is set:
+         if arg-1 is "help":
+            send " "
+            send "&7&m-----------&7[ {@dc} ]&m-----------"
+            send " "
+            send "&7Permission"
+            send "&7Main permission: &6&lHELPER"
+            send " "
+            send "&7Commands"
+            send "&7/dc help &6&lView dragon informations"
+            send "&7/dc update &6&lSee if there is a new version"
+            send "&7/dc reload &6&lReload the entire anticheat"
+            send "&7/dc disable &6&lDisable the entire anticheat"
+            send "&7/dc gui &6&lOpen the anticheat gui"
+            send "&7/flagtogle &6&lToggle a check"
+            send "&7/dcban &6&lBan a player"
+            send "&7/idset &6&lSet an ID for a player"
+            send "&7/dc notify &6&lToggle notifications"
+            send "&7/dc setback &6&lToggle setback"
+            send "&7/dc autoban &6&lToggle auto ban"
+            send ""
+            send "&7&m-----------&7[ {@dc} ]&m-----------"
+         if arg-1 is "update":
+            if player does not have permission "ADMIN":
+               stop
+            if {update} is true:
+               send "{@dc} &fUpdate found ! Download it here: &3"
+               stop
+            if {update} is false:
+               send "{@dc} &cNo update found !"
+               stop
+         if arg 1 is "disable":
+            if player does not have permission "ADMIN":
+               stop
+            make server execute command "/sk disable dragon"
+            send "{@dc} &fdragon unloaded"
+            send "{@dc} &fTo reenable the anticheat do /sk enable dragon"
+            stop
+         if arg 1 is "reload":
+            if player does not have permission "ADMIN":
+               stop
+            make server execute command "/sk reload dragon"
+            send "{@dc} &fdragon reloaded"
+         if arg 1 is "notify":
+            if {dragon.notify.%player%} is not set:
+               set {dragon.notify.%player%} to true
+            if {dragon.notify.%player%} is true:
+               set {dragon.notify.%player%} to false
+               send "{@dc} &fNotifications disabled" to player
+               stop
+            if {dragon.notify.%player%} is false:
+               set {dragon.notify.%player%} to true
+               send "{@dc} &fNotifications enabled" to player
+         if arg 1 is "setback":
+            if player does not have permission "ADMIN":
+               stop
+            if {dragon.setback} is true:
+               set {dragon.setback} to false
+               send "{@dc} &fSetback disabled" to player
+               stop
+            if {dragon.setback} is false:
+               set {dragon.setback} to true
+               send "{@dc} &fSetback enabled" to player
+         if arg 1 is "autoban":
+            if player does not have permission "ADMIN":
+               stop
+            if {dragon.autoban} is true:
+               set {dragon.autoban} to false
+               send "{@dc} &fAutoban disabled" to player
+               stop
+            if {dragon.autoban} is false:
+               set {dragon.autoban} to true
+               send "{@dc} &fAutoban enabled" to player
+         if arg 1 is "debug":
+            if player does not have permission "ADMIN":
+               stop
+            if {dragon.debug} is not set:
+               set {dragon.debug} to false
+            if {dragon.debug} is true:
+               set {dragon.debug} to false
+               send "{@dc} &fDebug disabled" to player
+               stop
+            if {dragon.debug} is false:
+               set {dragon.debug} to true
+               send "{@dc} &fDebug enabled" to player
+
+command /dclogs [<offline player>]:
+   permission: MODERATOR
+   trigger:
+      if {vvt.%arg 1%} is not set:
+         set {vvt.%arg 1%} to 0
+      if {vht.%arg 1%} is not set:
+         set {vht.%arg 1%} to 0
+      if {vl.%arg 1%} is not set:
+         set {vl.%arg 1%} to 0
+      if {bans.%arg 1%} is not set:
+         set {bans.%arg 1%} to 0
+      if {unbans.%arg 1%} is not set:
+         set {unbans.%arg 1%} to 0
+      if {dcbans.%arg 1%} is not set:
+         set {dcbans.%arg 1%} to 0
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      if {tvl.%arg 1%} is not set:
+         set {tvl.%arg 1%} to 0
+      send "&c&m---------------------------------------------------------"
+      send "{@dc} Velocity (VERTICAL) Tests: &c%{vvt.%arg 1%}%"
+      send "{@dc} Velocity (HORIZONTAL) Tests: &c%{vht.%arg 1%}%"
+      send "&c&m---------------------------------------------------------"
+      send "{@dc} Current VL: &c%{vL.%arg 1%}%"
+      send "&c&m---------------------------------------------------------"
+      send "{@dc} Manual Bans: &c%{bans.%arg 1%}%"
+      send "{@dc} Total Unbans: &c%{unbans.%arg 1%}%"
+      send "{@dc} Anticheat Bans: &c%{dcbans.%arg 1%}%"
+      send "{@dc} Total Warns: &c%{warns.%arg 1%}%"
+      send "&c&m---------------------------------------------------------"
+      send "{@dc} All time VL: &c%{tvl.%arg 1%}%"
+      send "&c&m---------------------------------------------------------"
+      send "{@dc} All Alts: &c%{altip.%{ip.%arg 1%}%::*}%"
+      send "{@dc} First Account: &c%{firstalt.%{ip.%arg 1%}%}%"
+      send "{@dc} Total Warns: &c%{warns.%arg 1%}%"
+      send "&c&m---------------------------------------------------------"
+
+#/// KILLAURA ///
+
+command /hh [<text>] [<player>]:
+   description: Forcefield check
+   permission : Ffcheck.use
+   executable by: players
+   trigger:
+      if arg 1 is not set :
+         send "&c/hh invoque"
+         send "&c/hh check [<player>]"
+      if arg 1 is "invoque" :
+         create a citizen named "AntiCheat" at location of player
+         set citizen 0 nametag invisible
+         set {Anticheat.loc} to the player's location
+         send "&cAntiCheat invoqué !"
+      if arg 1 is "check" :
+         if arg 2 is not set :
+            send "&cEt la cible ?"
+            send "Usage: /hh check [<player>]"
+            stop trigger
+         if arg 2 is set:
+            loop all entities :
+               "%uncoloured name of loop-entity%" is "AntiCheat"
+               teleport loop-entity 4.5 meters in front of arg 2
+               wait 0.4 second
+               teleport loop-entity 5 meters above arg 2
+               wait 0.4 second
+               teleport loop-entity 3 meter behind arg 2
+               wait 0.4 second
+               teleport loop-entity 3 meters under arg 2
+               wait 0.4 second
+               teleport loop-entity to {anticheat.loc}
+
+command /aac [<player>]:
+   permission: ADMIN
+   trigger:
+      if {draban} is true:
+         if arg 1 is set:
+            loop all entities :
+               "%uncoloured name of loop-entity%" is "%{r.%arg 1%}%"
+               teleport loop-entity 3.3 meter behind arg 1
+
+
+every 1 ticks:
+   loop all players:
+      make server execute command "/aac %loop-player%"
+
+on join:
+   set {zzzz} to false
+   if {zzzz} is false:
+      stop
+   wait 5 seconds
+   set {_aloc} to the player's location
+   set {r.%player%} to "%random integer between 0 and 999%"
+   create a citizen named "%{r.%player%}%" at location of player
+   set {lcc.%player%} to last created citizen id
+ 
+on quit:
+   make server execute command "/npc rem %{lcc.%player%}%"
+
+command /ff [<player>]:
+   trigger:
+      if arg 1 is set:
+         set {attacker} to arg 1 
+         set {loc} to location behind arg 1
+         spawn a skeleton at {loc}
+         set {bot} to last spawned entity
+         wait 5 ticks
+         delete last spawned entity
+
+on damage:
+  if attacker is a player:
+    loop all blocks in radius 3 around attacker:
+      if loop-block is snow layer:
+        stop
+      if loop-block is ladder:
+        stop
+      if loop-block is vines:
+        stop
+      if loop-block is iron bars:
+        stop
+      if loop-block is fence:
+        stop
+      if loop-block is large fern:
+        stop
+      if loop-block is tall grass:
+        stop
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.bubble.bypass} is not set:
+        set {%victim's uuid%.bubble.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            if {dragon.setback} is true:
+              cancel event
+            add 1 to {vl.%attacker%}
+            send "{@dc} &c%attacker% &7failed &cKillAura &7(T: B) &f(VL: &6%{vl.%attacker%}%&f)" to all players where [input has permission "HELPER"]
+            if {vl.%attacker%} >= 20:
+              if {dragon.autoban}:
+                make server execute command "/dcban %attacker% 1 day"
+        delete {%attacker's uuid%.bubble.killaura.check}
+  loop {Bubble.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.bubble.cheat.cooldown.damage}
+
+
+#/// SPEED ///
+on any move:
+   player does not have permission "dragon.bypass":
+      if {dragon.speed} is true:
+         player doesn't have speed
+         if {dragon.speed} is true:
+            set {_loc::%player%} to the x location of player
+            set {speedsetback::%player%} to location of the player
+            wait 5 ticks
+            set {_loc1::%player%} to the x location of player
+            wait 1 tick
+            set {_diffyx::%player%} to difference between {_loc::%player%} and {_loc1::%player%}
+            if difference between {_loc::%player%} and {_loc1::%player%} >= 5:
+               player's gamemode is not creative
+               player is not flying
+               if {%player's uuid%.dragon.teleport} is true:
+                  stop
+               if {%player's uuid%.dragon.epteleport} is true:
+                  stop
+               add 1 to {speed::%player%}
+               if {speed::%player%} >= 3:
+                  if {dragon.setback} is true:
+                     teleport player to {setback.%player%}
+                  set {_ping} to player's ping
+                  if {_ping} > 600:
+                     stop
+                  send "{@dc} &c%player% &7failed &cSpeed &7(T: A) (&c%{_ping}%&c MS&f) (&c%{_diffyx::%player%}%&c Blocks Per Second&f)." to all players where [player input has permission "HELPER"]
+                  add 1 to {speedalerts::%player%}
+                  add 1 to {alerts::%player%}
+
+on any move:
+   player does not have permission "dragon.bypass":
+      if {dragon.speed} is true:
+         player doesn't have speed
+         if {dragon.speed} is true:
+            set {_locz::%player%} to the z location of player
+            set {speedsetback::%player%} to location of the player
+            wait 5 ticks
+            set {_loc1z::%player%} to the z location of player
+            wait 1 tick
+            set {_diffy::%player%} to difference between {_locz::%player%} and {_loc1z::%player%}
+            if difference between {_locz::%player%} and {_loc1z::%player%} >= 5:
+               player's gamemode is not creative
+               player is not flying
+               if {%player's uuid%.dragon.teleport} is true:
+                  stop
+               if {%player's uuid%.dragon.epteleport} is true:
+                  stop
+               add 1 to {speed::%player%}
+               if {speed::%player%} >= 3:
+                  if {dragon.setback} is true:
+                     teleport player to {setback.%player%}
+                  set {_ping} to player's ping
+                  if {_ping} > 500:
+                     stop
+                  send "{@dc} &c%player% &7failed &cSpeed &7(T: B) (&c%{_ping}%&c MS&f) (&c%{_diffy::%player%}%&c Blocks Per Second&f)." to all players where [player input has permission "HELPER"]
+                  add 1 to {speedalerts::%player%}
+                  add 1 to {alerts::%player%}
+
+
+
+#/// EVENTS ///
+
+on join:
+   if player has permission "HELPER":
+      if {dragon.notify.%player%} is not set:
+         set {dragon.notify.%player%} to false
+         send "{@dc} &cNotifications turned off" to player
+on script load:
+   if {dragon.autoban} is not set:
+      set {dragon.autoban} to true
+
+on script load:
+   if {dragon.setback} is not set:
+      set {dragon.setback} to true
+
+every 1 second:
+   loop all players:
+      clear {cps.%loop-player%}
+
+every 30 second:
+   loop all players:
+      clear {vl.%loop-player%}
+
+on death:
+   set {void.%player%} to true
+
+on respawn:
+   set {void.%player%} to true
+
+every 4 second:
+   set {sback} to true
+   wait 2 second
+   set {sback} to false
+
+every 1 tick:
+   if {dragon.setback} is false:
+      loop all players:
+         clear {setback.%loop-player%}
+
+every 1 second:
+   if {dragon.setback} is false:
+      stop
+   loop all players:
+      loop-player is on ground:
+         set {setback.%loop-player%} to location of loop-player
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "                                                            &cYou have been banned by &c&lDragon&6&lChaser &c!                                                                                                                                                                                                                                                                          &7Time: &e%{_tempban2}% / %{tempban.time::%player%}%                                                                                                            &7Reason: &cCheating &6%{vl.%player%}%&r   &7BanID: &f%{id.%player%}%                                                                           &6Think its a bug or a mistake ? Then please appeal here: &6https://discord.gg/fDtUDmb"
+
+#/// FASTBOW ///
+
+on shoot:
+   if {dragon.Fastbow} is false:
+      stop
+   if projectile is an arrow:
+      if difference between {bow.%shooter%} and now is less than 2 ticks:
+         add 1 to {vl.%shooter%}
+         loop all players:
+            loop-player has permission "staff":
+               if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &7%shooter% &7failed&c FastBow&7 (T: A) &f(VL:&6&l %{vl.%shooter%}%&f)" to loop-player
+         if {vl.%shooter%} >= 10:
+            loop all players:
+               loop-player has permission "staff":
+                  if {dragon.autoban} is false:
+                     stop
+                     make server execute command "/dcban %shooter% 1 day "
+                     broadcast "{@dc} &7Banned &c%shooter% &7for &e30days &7reason : &cFastBow"
+
+#/// REACH ///
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {dragon.Reach} is false:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} >= 4.2:
+         if damage cause is not a projectile:
+            if {dragon.setback} is true:
+               cancel event
+            if attacker's ping < 300:
+               add 1 to {vl.%attacker%}
+            loop all players:
+               loop-player has permission "HELPER":
+                  if {dragon.notify.%loop-player%} is true:
+                     send "{@dc} &7%attacker% &7failed&c Reach&7 (T: A) &a(%{_distance.%attacker%}%) &f(VL:&6&l %{vl.%attacker%}%&f)" to loop-player
+            if {vl.%attacker%} = 5:
+               make server execute command "/ff %attacker%"
+            if {vl.%attacker%} >= 13:
+               if {dragon.autoban} is false:
+                  stop
+               make server execute command "/dcban %attacker% "
+               broadcast "{@dc} &7Banned &c%attacker% &7for &e30days &7reason : &cReach"
+
+on damage:
+   if {dragon.Reach} is false:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      set {_distance.%attacker%} to distance between attacker and victim
+      if {_distance.%attacker%} >= 6:
+         if damage cause is not a projectile:
+            cancel event
+            if {dragon.autoban} is false:
+               stop
+            make server execute command "/dcban %attacker% "
+            broadcast "{@dc} &7Banned &c%attacker% &7for &e30days &7reason : &cInfinitAura"
+
+#/// AUTOCLICKER (RIGHT,LEFT) ///
+
+on leftclick:
+   if {dragon.Autoclicker} is false:
+      stop
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 20:
+      cancel event
+      loop all players:
+         loop-player has permission "HELPER":
+            if {dragon.notify.%loop-player%} is true:
+               add 1 to {vl.%player%}
+               send "{@dc} &c&lWARNING ! &cYour clicking too fast on your right click !" to player
+               send "{@dc} &7&c%player% &7failed &c Autoclicker &7(T: A) &f(CPS: &6&l%{cps.%player%}%&f) (VL: &6&l%{vl.%player%}%&f)" to loop-player
+      if {vl.%player%} >= 10:
+         if {dragon.autoban} is false:
+            stop
+         make server execute command "/dcban %player% 1 day "
+         broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cAutoClicker (LEFT)"
+
+on rightclick:
+   if {dragon.Autoclicker} is false:
+      stop
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 20:
+      cancel event
+      loop all players:
+         loop-player has permission "HELPER":
+            if {dragon.notify.%loop-player%} is true:
+               add 1 to {vl.%player%}
+               send "{@dc} &c&lWARNING ! &cYour clicking too fast on your right click !" to player
+               send "{@dc} &7&c%player% &7failed &c Autoclicker&7 (T: B) &f(CPS: &6&l%{cps.%player%}%&f) (VL: &6&l%{vl.%player%}%&f)" to loop-player
+      if {vl.%player%} >= 10:
+         if {dragon.autoban} is false:
+            stop
+         make server execute command "/dcban %player% 1 day "
+         broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cAutoClicker (RIGHT)"
+
+#/// NOFALL ///
+
+on any move:
+    if {dragon.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        add 1 to {vl.%player%}
+        teleport player to {setback.%player%}
+        loop all players:
+            loop-player has permission "HELPER":
+                if {dragon.notify.%loop-player%} is true:
+                    send "{@dc} &c%player% &7failed &c Nofall &7(T: A) &f(VL: &6&l%{vl.%player%}%&f)" to loop-player
+        if {vl.%player%} >= 15:
+            if {dragon.autoban} is false:
+                stop
+            make server execute command "/dcban %player% 1 day "
+            broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cNofall"
+    if {_nofallcount} > 0:
+        stop
+   
+every 1 second:
+   if {dragon.Nofall} is false:
+      stop
+   loop all players:
+      loop-player's gamemode is Adventure or Survival
+      loop-player is on ground
+      block under loop-player is air
+      set {_y} to loop-player's y-location
+      wait 0.5 second
+      loop-player is on ground
+      set {_y2} to loop-player's y-location  
+      set {_yresult} to {_y} - {_y2}
+      if {_yresult} > 1:
+         add 1 to {vl.%loop-player%}
+         teleport loop-player to {setback.%loop-player%}
+         loop-player has permission "HELPER":
+            if {dragon.notify.%loop-player%} is true:
+               send "{@dc} %loop-player-1% &7failed&c Nofall &7(T: B) &f(VL: &6&l%{vl.%loop-player-1%}%&f)" to loop-player
+      if {vl.%loop-player%} >= 10:
+         if {dragon.autoban} is false:
+            stop
+         make server execute command "/dcban %loop-player% 1 day "
+         broadcast "{@dc} &7Banned &c%loop-player% &7for &e30days &7reason : &cNofall"
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on stairs:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#/// FLY ///
+
+#/// FLY V2 ///
+
+on any movement:
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.bypass} is not set:
+      player's flight mode is false
+      if block under player is not air or water:
+        set {%player's uuid%.dragon.tp.loc} to {_loc}
+      if {%player's uuid%.dragon.flight.delay} is not set:
+        set {%player's uuid%.dragon.flight.delay} to true
+        set {_y} to player's y coordinate
+        wait 10 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player's uuid%.dragon.slime} is not set:
+          if {_y} > 5:
+            {dragon.Flight} is true
+            if {dragon.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 2 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed &c Fly &7(T: A) &f(VL: &6&l%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {dragon.autoban} is false:
+                    stop
+                  make server execute command "/dcban %player% 1 day "
+                  broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cFly"
+          if {_y} = 0.1:
+            {dragon.Float} is true
+            {%player's uuid%.dragon.jump} is not set
+            block under player is air
+            player is not on ground
+            if {dragon.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 1 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed &c Fly &7(T: B) &f(VL: &6&l%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {dragon.autoban} is false:
+                    stop
+                  make server execute command "/dcban %player% 1 day "
+                  broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cFly"
+          if player's y coordinate is y coordinate of {_loc}:
+            {dragon.Float} is true
+            {%player's uuid%.dragon.jump} is not set
+            block under player is air
+            player is not on ground
+            if {dragon.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 1 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed &c Fly &7(T: C) &f(VL: &6&l%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {dragon.autoban} is false:
+                    stop
+                  make server execute command "/dcban %player% 1 day "
+                  broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cFly"
+        loop {dragon.Delay} times:
+          wait 0.21 second
+        delete {%player's uuid%.dragon.flight.delay}
+
+
+#/// FLY V1 ///
+
+function Detect(p: player, r: text):
+  if {legitfly.%{_p}%} is true:
+    stop
+  add 1 to {alertl::%{_p}%}
+  if fly mode of {_p} is true:
+    stop
+  loop all players:
+    loop-player have permission "HELPER":
+      send "{@dc} &c%{_p}% &7failed &c%{_r}% &f(VL: &6%{alertl::%{_p}%}%&f)" to loop-player
+      if {dragon.setback} is true:
+        teleport {_p} to {setback.%{_p}%}
+      if {alertl::%{_p}%} >= 15:
+        if {dragon.autoban} is true:
+          make server execute command "/dcban %{_p}% 1 day"
+on damage:
+  set {cooldown.%victim%} to now
+every 1 second:
+  clear {alertl::*}
+on any move:
+  player is not riding
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        Detect(player, "Fly V1 &a %{_diffy}%")
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        Detect(player, "Fly v1 &d 0.12")
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        Detect(player, "Fly v1 &d 0.4")
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        Detect(player, "Fly V1 &1 %{_diffy}%")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      Detect(player, "Fly v1 &a%{_diffy}%")
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+
+#/// JESUS ///
+
+on walk on water:
+  if {dragon.Jesus} is false:
+    stop
+  player's gamemode is not creative
+  player is not riding
+  player is not sneaking
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 2 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: C) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+                        if {dragon.autoban} is false:
+                          stop
+                        make server execute command "/dcban %player% 1 day "
+                        broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cJesus"
+                        stop
+                  if {Alerte.Jesus.%player%} > 19:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: C) &f(VL: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        if {jesus.%player%} is true:
+                          stop
+                        set {jesus.%player%} to true
+                        teleport player to {setback.%player%}
+                        if {dragon.autoban} is false:
+                          stop
+                        kick player due to "{@dc} &cJesus/Waterwalk"
+                        stop
+                  if {Alerte.Jesus.%player%} > 14:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: C) &f(VL: &e%{Alerte.Jesus.%player%}%)" to loop-player
+                        teleport player to {setback.%player%}
+      
+
+command /clearjesus:
+  trigger:
+    clear {Alerte.Jesus.%player%}
+    set {jesus.%player%} to false
+on any move:
+  if {dragon.Jesus} is false:
+    stop
+  if player's gamemode is not creative:
+    if player is sneaking:
+      stop
+    else:
+      if block below player is water:
+        if block south below player is water:
+          if block north below player is water:
+            if block west below player is water:
+              if block east below player is water:
+                if block south player is air:
+                  if block north player is air:
+                    if block west player is air:
+                      block east player is air
+                      add 1 to {Alerte.Jesus.%player%}
+                      if {Alerte.Jesus.%player%} > 25:
+                        loop all players:
+                          loop-player has permission "HELPER":
+                            if {dragon.notify.%loop-player%} is true:
+                              send "{@dc} &7&c%player% &7failed &c Jesus &7(T: D) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            teleport player to {setback.%player%}
+                            if {dragon.autoban} is false:
+                              stop
+                            make server execute command "/dcban %player% 1 day "
+                            broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cJesus"
+                            stop
+                      if {Alerte.Jesus.%player%} > 19:
+                        loop all players:
+                          loop-player has permission "HELPER":
+                            if {dragon.notify.%loop-player%} is true:
+                              send "{@dc} &7&c%player% &7failed &c Jesus &7(T: D) &f(Vl: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            if {jesus.%player%} is true:
+                              stop
+                            set {jesus.%player%} to true
+                            teleport player to {setback.%player%}
+                            if {dragon.autoban} is false:
+                              stop
+                            kick player due to "{@dc} &cJesus/Waterwalk"
+                          stop
+                      if {Alerte.Jesus.%player%} > 14:
+                        loop all players:
+                          loop-player has permission "HELPER":
+                            if {dragon.notify.%loop-player%} is true:
+                              send "{@dc} &7&c%player% &7failed &c Jesus &7(T: D) &f(VL: &e%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            teleport player to {setback.%player%}
+every 8 second:
+  loop all players:
+    clear {Alerte.Jesus.%loop-player%}
+on jump:
+  if {dragon.Jesus} is false:
+    stop
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 3 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: E) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+                        if {dragon.autoban} is false:
+                          stop
+                        make server execute command "/dcban %player% 1 day "
+                        broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cJesus"
+                        stop
+                  if {Alerte.Jesus.%player%} > 19:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: E) &f(VL: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        if {jesus.%player%} is true:
+                          stop
+                        set {jesus.%player%} to true
+                        teleport player to {setback.%player%}
+                        if {dragon.autoban} is false:
+                          stop
+                        kick player due to "{@dc} &cJesus/Waterwalk"
+                        stop
+                  if {Alerte.Jesus.%player%} > 14:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} &7&c%player% &7failed &c Jesus &7(T: E) &f(VL: &e%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+
+on join:
+   if {jesus.%player%} is not set:
+      set {jesus.%player%} to false
+
+#/// INVENTORY MOVE ///
+
+function Inventory(p: player, r: text):
+  if {dragon.Inventory} is false:
+    stop
+  add 1 to {alertl::%{_p}%}
+  teleport {_p} to {setback.%{_p}%}
+  loop all players:
+    loop-player has permission "HELPER":
+      if {dragon.notify.%loop-player%} is true:
+        send "{@dc} &c%{_p}%&7 failed &c InventoryMove &7(T: A) &f(VL: &6&l%{alertl::%{_p}%}%&f)" to loop-player
+  if {alertl::%{_p}%} >= 5:
+    if {dragon.autoban} is false:
+      stop
+      make server execute command "/dcban %{_p}% 1 day"
+      broadcast "{@dc} &7Banned &c%{_p}% &7for &e30days &7reason : &cInventoryMove"
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    cancel event
+    Inventory(player, "InventoryMove")
+    stop
+  if player is sneaking:
+    cancel event
+    Inventory(player, "AutoSneak/InventoryMove")
+    stop
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    Inventory(player, "Inventory Hack")
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    Inventory(player, "Inventory Move")
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+on inventory open:
+  if player is sprinting:
+    Inventory(player, "InventoryMove")
+    cancel event
+on inventory open:
+  if player is sneaking:
+    Inventory(player, "AutoSneak/InventoryMove")
+    cancel event
+  if player is sneaking:
+    Inventory(player, "AutoSneak")
+    cancel event
+#/// HIGHJUMP ///
+
+on step on slime block:
+   set {legitfly.%player%} to true
+
+on jump:
+   if {dragon.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+   set {_pos1} to y location of player
+   wait 10 ticks
+   set {_pos2} to y location of player
+   if difference between {_pos1} and {_pos2} is bigger than 2.6:
+      add 1 to {vl.%player%}
+      if {dragon.setback} is true:
+         teleport player to {setback.%player%}
+      loop all players:
+         loop-player has permission "HELPER":
+            if {dragon.notify.%loop-player%} is true:
+               send "{@dc} &c%player% &7failed &c HighJump &7(T: A) &f(VL: &6&l%{vl.%player%}%&f)" to loop-player
+            if {vl.%player%} >= 10:
+               if {dragon.autoban} is false:
+                  stop
+               make server execute command "/dcban %player% 1 day "
+               broadcast "{@dc} &7Banned &c%player% &7for &e30days &7reason : &cHighJump"
+         else:
+            stop
+
+
+#/// SPIDER|FLIGHT|NOFALL ///
+
+on any movement:
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.bypass} is not set:
+      player's flight mode is false
+      if block under player is not air or water:
+        set {%player's uuid%.dragon.tp.loc} to {_loc}
+      if {%player's uuid%.dragon.flight.delay} is not set:
+        set {%player's uuid%.dragon.flight.delay} to true
+        set {_y} to player's y coordinate
+        wait 10 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player's uuid%.dragon.slime} is not set:
+          if {_y} > 5:
+            {dragon.Flight} is true
+            if {flylegit.%player%} is true:
+              stop
+            teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 2 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed&c Fly &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {dragon.autoban} is false:
+                    stop
+                  make server execute command "/dcban %player% 30"
+          if {_y} = 0:
+            {dragon.Float} is true
+            {%player's uuid%.dragon.jump} is not set
+            block under player is air
+            player is not on ground
+            if {dragon.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 1 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed&c Fly &7(T: B) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  make server execute command "/dcban %player% 30"
+                  if {dragon.autoban} is false:
+                    stop
+          if player's y coordinate is y coordinate of {_loc}:
+            {dragon.Float} is true
+            {%player's uuid%.dragon.jump} is not set
+            block under player is air
+            player is not on ground
+            if {dragon.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "HELPER":
+                add 1 to {vl.%player%}
+                if {dragon.notify.%loop-player%} is true:
+                  send "{@dc} &c%player% &7failed&c Fly &7(T: C) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {dragon.autoban} is false:
+                    stop
+                  make server execute command "/dcban %player% 30"
+        loop {dragon.Delay} times:
+          wait 0.21 second
+        delete {%player's uuid%.dragon.flight.delay}
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.dragon.epteleport} is true:
+    stop
+  if {%player's uuid%.dragon.teleport} is true:
+    stop
+  else if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.nochecks} is set:
+      wait 1 second
+      delete {%player's uuid%.dragon.nochecks}
+      stop
+    if {%player's uuid%.dragon.bypass} is not set:
+      if {%player's uuid%.dragon.cheat.cooldown} is not set:
+        set {%player's uuid%.dragon.cheat.cooldown} to true
+        if block under player is not air or water:
+          set {%player's uuid%.dragon.tp.loc} to {_loc}
+        #NoFall
+        {dragon.NoFall} is true:
+          if player's flight mode is false:
+            if {%player's uuid%.dragon.jump} is not set:
+              if block under player is air:
+                set {_yloc} to player's y coordinate
+                set {_health} to player's health
+                wait 0.5 seconds
+                set {_yloc1} to player's y coordinate
+                if player is on ground:
+                  block under player is not slime block
+                  set {_dis} to {_yloc} - {_yloc1}
+                  block under player is not air
+                  block under player is ladder:
+                    stop
+                  loop all blocks in radius 2 around player:
+                    if loop-block is cobweb:
+                      stop
+                    if loop-block is water:
+                      stop
+                    if loop-block is vine:
+                      stop
+                    if loop-block is stairs:
+                      stop
+                  {%player's uuid%.dragon.nofall} is not set
+                  if {_dis} is greater than or equal to 5.5:
+                    if player's health = {_health}-0.5:
+                      set {_dmg} to floor({_dis} / 1)
+                      loop all players:
+                        loop-player has permission "HELPER":
+                          add 1 to {vl.%player%}
+                          if {dragon.notify.%loop-player%} is true:
+                            send "{@dc} %player% &7failed&c Nofall &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {dragon.autoban} is false:
+                              stop
+                            make server execute command "/dcban %player% 30"
+                      set {%player's uuid%.dragon.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.dragon.nofall}
+                      #damage the player by {_dmg} heart
+        #Spider
+        {dragon.Spider} is true
+        if block under player is air:
+          if block 2 under player is air:
+            if block 3 under player is air:
+              set {_y} to player's y coordinate
+              wait 1 tick
+              block under player is not ladder
+              block at player is not water
+              if {%player's uuid%.dragon.jump} is not set:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if difference between {_y} and player's y coordinate is less than 1:
+                    if distance between player and player's targeted block is less than 1.25:
+                      loop all players:
+                        loop-player has permission "HELPER":
+                          add 1 to {vl.%player%}
+                          if {dragon.notify.%loop-player%} is true:
+                            send "{@dc} %player% &7failed&c Spider &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {dragon.autoban} is false:
+                              stop
+                            make server execute command "/dcban %player% 30"
+                  else:
+                    if distance between player and player's targeted block is less than 1.25:
+                      {dragon.Speed} is true
+                      loop all players:
+                        loop-player has permission "HELPER":
+                          add 1 to {vl.%player%}
+                          if {dragon.notify.%loop-player%} is true:
+                            send "{@dc} %player% &7failed&c Spider &7(T: B) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {dragon.autoban} is false:
+                              stop
+                            make server execute command "/dcban %player% 30"
+              else:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if distance between player and player's targeted block is less than 1.25:
+                    loop all players:
+                      loop-player has permission "HELPER":
+                        add 1 to {vl.%player%}
+                        if {dragon.notify.%loop-player%} is true:
+                          send "{@dc} %player% &7failed&c Spider &7(T: C) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                        if {vl.%player%} >= 15:
+                          if {dragon.autoban} is false:
+                            stop
+                          make server execute command "/dcban %player% 30"
+        #Flight
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player's uuid%.dragon.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player's uuid%.dragon.slime} to true
+                          wait 10 second
+                          delete {%player's uuid%.dragon.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player's uuid%.dragon.slime} is not set:
+                        if block under player is air:
+                          if {%player's uuid%.dragon.slime} is not set:
+                            {dragon.Flight} is true
+                            block under player is not water or ladder
+                            if player's world is "ul_world":
+                              stop
+                            if {flylegit.%player%} is true:
+                              stop
+                            if {dragon.setback} is true:
+                              teleport player to {setback.%player%}
+                            loop all players:
+                              loop-player has permission "HELPER":
+                                add 1 to {vl.%player%}
+                                if {dragon.notify.%loop-player%} is true:
+                                  send "{@dc} %player% &7failed&c Fly &7(T: D) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                if {vl.%player%} >= 15:
+                                  if {dragon.autoban} is false:
+                                    stop
+                                  make server execute command "/dcban %player% 30"
+                            set {%player's uuid%::dragon.flight.status} to true
+                            wait 5 second
+                            delete {%player's uuid%::dragon.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player's uuid%.dragon.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {dragon.Float} is true
+                              if block under player is slab:
+                                stop
+                              remove 1 from y coordinate of {%player's uuid%.dragon.tp.loc}
+                              teleport player to {setback.%player%}
+                              loop all players:
+                                loop-player has permission "HELPER":
+                                  add 1 to {vl.%player%}
+                                  if {dragon.notify.%loop-player%} is true:
+                                    send "{@dc} %player% &7failed&c Fly &7(T: E) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                  if {vl.%player%} >= 15:
+                                    if {dragon.autoban} is false:
+                                      stop
+                                    make server execute command "/dcban %player% 30"
+                              add 1 to y coordinate of {%player's uuid%.dragon.tp.loc}
+          else:
+            #HOVER | FLIGHT | SPEED | CRITICALS
+            if {%player's uuid%.dragon.nochecks} is true:
+              stop
+              wait 1 second
+              delete {%player's uuid%.dragon.nochecks}
+            if {%player's uuid%.dragon.teleport} is true:
+              stop
+            if {%player's uuid%.dragon.epteleport} is true:
+              stop
+            else if {%player's uuid%.dragon.jump} is true:
+              stop
+            else:
+              if {%player's uuid%.dragon.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player's uuid%.dragon.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 10 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          set {_loop} to 255 -  y coordinate of player
+                          set y coordinate of {_123.loc} to 255
+                          loop {_loop} times:
+                            if block at {_123.loc} is slime block:
+                              stop
+                              set {%player's uuid%.dragon.slime} to true
+                              wait 10 second
+                              delete {%player's uuid%.dragon.slime}
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is not on ground:
+                            wait 3 ticks
+                            if {%player's uuid%.dragon.slime} is not set:
+                              if {%player's uuid%.dragon.damage} is not set:
+                                if {%player's uuid%.dragon.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player's uuid%.dragon.fix.slime} is not set:
+                                    set {_find} to player's location
+                                    set {_count} to 255 - y coordinate of player
+                                    loop 255 times:
+                                      if block at {_find} is slime block:
+                                        stop
+                                        set {%player's uuid%.dragon.slime} to true
+                                        wait 5 second
+                                        delete {%player's uuid%.dragon.slime}
+                                      else:
+                                        remove 1 from y coordinate of {_find}
+                                    wait 1 tick
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        if {_b1} is air:
+                                          {dragon.Flight} is true
+                                          loop all players:
+                                            loop-player has permission "HELPER":
+                                              add 1 to {vl.%player%}
+                                              if {dragon.notify.%loop-player%} is true:
+                                                send "{@dc} %player% &7failed&c Fly &7(T: F) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                              if {vl.%player%} >= 15:
+                                                if {dragon.autoban} is false:
+                                                  stop
+                                                make server execute command "/dcban %player% 30"
+                                          teleport player to {setback.%player%}
+                                      else:
+                                        if {%player's uuid%.dragon.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player's uuid%.dragon.damage} is not set:
+                                              block under player is not ladder:
+                                                {dragon.Hover} is true
+                                                loop all players:
+                                                  loop-player has permission "HELPER":
+                                                    add 1 to {vl.%player%}
+                                                    if {dragon.notify.%loop-player%} is true:
+                                                      send "{@dc} %player% &7failed&c Fly &7(T: G) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                                    if {vl.%player%} >= 15:
+                                                      if {dragon.autoban} is false:
+                                                        stop
+                                                      make server execute command "/dcban %player% 30"
+                                                    teleport player to {setback.%player%}
+                                          else:
+                                            loop all players:
+                                              loop-player has permission "HELPER":
+                                                if {dragon.notify.%loop-player%} is true:
+                                                  send "{@dc} %player% &7failed&c Nofall &7(T: C) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                                  if {vl.%player%} >= 15:
+                                                    if {dragon.autoban} is false:
+                                                      stop
+                                                    make server execute command "/dcban %player% 30"
+                                                    add 1 to {vl.%player%}
+                                                    teleport player to {setback.%player%}
+                                        else:
+                                          {dragon.Criticals} is true
+                                          loop all players:
+                                            loop-player has permission "HELPER":
+                                              add 1 to {vl.%player%}
+                                              if {dragon.notify.%loop-player%} is true:
+                                                send "{@dc} %player% &7failed&c Citicals &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                                                if {vl.%player%} >= 15:
+                                                  if {dragon.autoban} is false:
+                                                    stop
+                                                  make server execute command "/dcban %player% 30"
+                              else:
+                                {dragon.Criticals} is true
+                                loop all players:
+                                  loop-player has permission "HELPER":
+                                    add 1 to {vl.%player%}
+                                    if {dragon.notify.%loop-player%} is true:
+                                      send "{@dc} %player% &7failed&c Criticals &7(T: B) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+        #Speed
+        if player's flight mode is false:
+          if player doesn't have speed or jump boost:
+            if {%player's uuid%.dragon.nochecks} is not set:
+              if {%player's uuid%.dragon.teleport} is true:
+                stop
+              else if {%player's uuid%.dragon.epteleport} is true:
+                stop
+              else:
+                set {_x} to player's x coordinate
+                set {_z} to player's z coordinate
+                set {_bap} to block above player's head
+                wait 5 ticks
+                set {_bap2} to block above player's head
+                set {_x1} to player's x coordinate
+                set {_z1} to player's z coordinate
+                set {_x} to difference between {_x1} and {_x}
+                set {_z} to difference between {_z1} and {_z}
+                replace all "-" with "" in {_x}
+                replace all "-" with "" in {_z}
+                if {_x} > {_z}:
+                  set {_speed} to {_x}
+                if {_z} > {_x}:
+                  set {_speed} to {_z}
+                if {_x} = {_z}:
+                  set {_speed} to {_x}
+                player's walking speed is between 0 and 0.3
+                if {_speed} is greater than 3:
+                  if {%player's uuid%.dragon.teleport} is true:
+                    stop
+                  else if {%player's uuid%.dragon.epteleport} is true:
+                    stop
+                  set {%player's uuid%.dragon.cheat.speed} to {_speed} * 4
+                  if player is not riding:
+                    if {%player's uuid%.dragon.jump.bhop} is not set:
+                      if player is not flying:
+                        if block under player is not air:
+                          if block 2 under player is not air:
+                            {dragon.Speed} is true
+                            if {dragon.setback} is true:
+                              teleport player to {setback.%player%}
+                            loop all players:
+                              loop-player has permission "ADMIN":
+                                add 1 to {speed.%player%}
+                                if {dragon.notify.%loop-player%} is true:
+                                  send "{@dc} %player% &7failed&c Speed &7(T: A) &f(VL: &6%{speed.%player%}%&f)" to loop-player
+                          else:
+                            {dragon.Speed} is true
+                            if {dragon.setback} is true:
+                              teleport player to {setback.%player%}
+                            loop all players:
+                              loop-player has permission "ADMIN":
+                                add 1 to {speed.%player%}
+                                if {dragon.notify.%loop-player%} is true:
+                                  send "{@dc} %player% &7failed&c Speed &7(T: B)&f (VL: &6%{speed.%player%}%&f)" to loop-player
+                      else:
+                        {dragon.Speed} is true
+                        if {dragon.setback} is true:
+                          teleport player to {setback.%player%}
+                        loop all players:
+                          loop-player has permission "ADMIN":
+                            add 1 to {speed.%player%}
+                            if {dragon.notify.%loop-player%} is true:
+                              send "{@dc} %player% &7failed&c Speed &7(T: C) &f(VL: &6%{speed.%player%}%&f)" to loop-player
+                    else:
+                      {dragon.Bhop} is true
+                      {_bap} is air
+                      {_bap2} is air
+                      block above player is air
+                      loop all players:
+                        loop-player has permission "ADMIN":
+                          add 1 to {speed.%player%}
+                          if {dragon.notify.%loop-player%} is true:
+                            send "{@dc} %player% &7failed&c Speed &7(T: D) &f(VL: &6%{speed.%player%}%&f)" to loop-player
+        #Jesus
+        if player's flight mode is false:
+          if block under player is water:
+            if block at player is not water:
+              loop 3 times:
+                wait 4 ticks
+                if block under player is water:
+                  if block at player is not water:
+                    add 1 to {_check}
+              if {_check} is greater than or equal to 2:
+                set {_loc.check} to player's location
+                remove 0.5 from y coordinate of {_loc.check}
+                player is not on ground
+                set {_locj} to player's location
+                remove 1 from y coordinate of {_locj}
+                teleport player to {setback.%player%}
+                {dragon.Jesus} is true
+                if {_check} is 2:
+                  loop all players:
+                    loop-player has permission "HELPER":
+                      add 1 to {vl.%player%}
+                      if {dragon.notify.%loop-player%} is true:
+                        send "{@dc} %player% &7failed&c Jesus/Waterwalk &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                      if {vl.%player%} >= 15:
+                        if {dragon.autoban} is false:
+                          stop
+                        make server execute command "/dcban %player% 30"
+                else:
+                  loop all players:
+                    loop-player has permission "HELPER":
+                      add 1 to {vl.%player%}
+                      if {dragon.notify.%loop-player%} is true:
+                        send "{@dc} %player% &7failed&c Jesus/Waterwalk &7(T: B) &f(VL: &6%{vl.%player%}%&f)" to loop-player
+                      if {vl.%player%} >= 15:
+                        if {dragon.autoban} is false:
+                          stop
+                        make server execute command "/dcban %player% 30"
+      loop {dragon.Delay} times:
+        wait 0.21 second
+      delete {%player's uuid%.dragon.cheat.cooldown}
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.bypass} is not set:
+      if difference between {%player's uuid%.dragon.last.jump} and now is less than or equal to 1 seconds:
+        set {%player's uuid%.dragon.jump.bhop} to true
+        wait 10 ticks
+        delete {%player's uuid%.dragon.jump.bhop}
+      set {%player's uuid%.dragon.last.jump} to now
+      set {%player's uuid%.dragon.jump} to true
+      wait 10 ticks
+      delete {%player's uuid%.dragon.jump}
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.bypass} is not set:
+      set {%player's uuid%.dragon.teleport} to true
+      wait 1 second
+      delete {%player's uuid%.dragon.teleport}
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.dragon.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player's uuid%.dragon.epteleport} to true
+
+on any move:
+   if player is on ground:
+      wait 10 second
+      delete {%player's uuid%.dragon.epteleport}
+
+#/// BETA ///
+
+on any move:
+  player's gamemode is not creative
+  player is not flying
+  block below player is air
+  block north below player is air
+  block south below player is air
+  block west below player is air
+  block east below player is air
+  block north east below player is air
+  block south east below player is air
+  block north west below player is air
+  block south west below player is air
+  the gliding state of player is true:
+    player's chestplate is elytra:
+      stop
+  if block under player is air:
+    if block 2 under player is air:
+      if block 3 under player is air:
+        if block above player is air:
+          add 1 to {float.%player%}
+          if {float.%player%} >= 120:
+            send "{@dc} &c%player% &7is &cFloating &7for too long !" to all players where [player input has permission "HELPER"]
+          if {float.%player%} >= 150:
+            kick player due to "{@dc} &cFlying is not enabled on this server."
+            send "{@dc} &c%player% &7has been kicked due to '&cFlying is not enabled on this server&7'." to all players where [player input has permission "HELPER"]
+
+on any move:
+   if player is on ground:
+      set {float.%player%} to 0
+
+on quit:
+   set {float.%player%} to 0
+
+on right click on chest:
+  loop all blocks in radius 3 around player:
+    if loop-block is snow layer:
+      stop
+    if loop-block is ladder:
+      stop
+    if loop-block is vines:
+      stop
+    if loop-block is iron bars:
+      stop
+    if loop-block is fence:
+      stop
+    if loop-block is door:
+      stop
+    if loop-block is slab:
+      stop
+    if loop-block is stairs:
+      stop
+    if loop-block is iron door:
+      stop
+    set {_a.c} to distance between player and clicked chest
+    set {_a.atc} to distance between player and player's targeted block
+    player's targeted block is not block under clicked chest
+    if player's gamemode is not creative or spectator:
+      if {_a.c} > {_a.atc}:
+        if {dragon.setback} is true:
+          cancel event
+        #send "{@dc} &c%player% &7failed &cChestAura &7(T: A) &f(VL: &6%{vl.%player%}%&f)" to all players where [input has permission "HELPER"]
+
+on right click on ender chest:
+  loop all blocks in radius 3 around player:
+    if loop-block is snow layer:
+      stop
+    if loop-block is ladder:
+      stop
+    if loop-block is vines:
+      stop
+    if loop-block is iron bars:
+      stop
+    if loop-block is fence:
+      stop
+    if loop-block is door:
+      stop
+    set {_a.c} to distance between player and clicked chest
+    set {_a.atc} to distance between player and player's targeted block
+    player's targeted block is not block under clicked chest
+    if player's gamemode is not creative or spectator:
+      if {_a.c} > {_a.atc}:
+        if {dragon.setback} is true:
+          cancel event
+        #send "{@dc} &c%player% &7failed &cChestAura &7(T: A) &f(VL: &4BETA&f)" to all players where [input has permission "HELPER"]
+
+on login:
+  set {_now} to now
+  wait 5 seconds
+  while player is online:
+    if gamemode of player is not creative:
+      if player is flying:
+        stop
+      if fly mode of player is true:
+        stop
+      player is on ground:
+        stop
+      set {_Speed} to difference between y-coordinate of player and {_height}
+      if {Fly::%player%} is not set:
+        if y-coordinate of player is bigger than {_height}:
+          if block at player is air:
+            if block below player is not ladder:
+              if {_Speed} is {_Last.Speed}:
+                add 1 to {_Spider}
+                if {dragon.setback} is true:
+                  teleport player to {setback.%player%}
+                loop all players:
+                  loop-player has permission "HELPER":
+                    if {dragon.notify.%loop-player%} is true:
+                      send "{@dc} &c%player% &7failed &c FreeCam/Fly &7(T: B/J) &f(VL: &6&l%{_Spider}%&f)" to loop-player
+                if {_Spider} is greater than 20:
+                  if {dragon.autoban} is true:
+                    make server execute command "/dcban %player% 1 day"
+                  clear {_Spider}
+          if block at player is ladder:
+            if {_Speed} is bigger than 0.25:
+              add 1 to {_Fastclimb}
+              if {dragon.setback} is true:
+                teleport player to {setback.%player%}
+              loop all players:
+                loop-player has permission "HELPER":
+                  if {dragon.notify.%loop-player%} is true:
+                    send "{@dc} &c%player% &7failed &c FastClimb &7(T: A) &f(VL: &6&l%{_FastClimb}%&f)" to loop-player
+              if {_Fastclimb} is greater than 3:
+                if {dragon.setback} is true:
+                  make server execute command "/dcban %player% 1 day"
+                clear {_Fastclimb}
+          if {_Movetype} is "descend" :
+            if block below player is air:
+              add 1 to {_Infinitejump}
+              if {dragon.setback} is true:
+                teleport player to {setback.%player%}
+              loop all players:
+                loop-player has permission "HELPER":
+                  if {dragon.notify.%loop-player%} is true:
+                    send "{@dc} &c%player% &7failed &c Fly/FreeCam &7(T: I/A) &f(VL: &6&l%{_Infinitejump}%&f)" to loop-player
+              if {_Infinitejump} is greater than 30:
+                if {dragon.autoban} is true:
+                  make server execute command "/dcban %player% 1 day"
+                clear {_Infinitejump}
+          set {_Movetype} to "ascend"
+      if y-coordinate of player is smaller than {_height}:
+        set {_Movetype} to "descend"
+      if y-coordinate of player is {_height}:
+        set {_Movetype} to "idle"
+        if block above player is air:
+          if block at player is air or water or lava:
+            if block below player is air:
+              if block west below player is air:
+                if block east below player is air:
+                  if block north below player is  air:
+                    if block south below player is air:
+                      add 1 to {_Infinitejump}
+                      if {_Infinitejump} is greater than 25:
+                        if {dragon.autoban} is true:
+                          make server execute command "/dcban %player% 1 day"
+                        clear {_Infinitejump}
+            if block below player is water or lava:
+              if block west below player is water or lava or air:
+                if block east below player is water or lava or air:
+                  if block north below player is water or lava or air:
+                    if block south below player is water or lava or air:
+                      add 1 to {_Jesus}
+                      if {dragon.setback} is true:
+                        teleport player to {setback.%player%}
+                      if block above player is water:
+                        stop
+                      loop all players:
+                        loop-player has permission "HELPER":
+                          if {dragon.notify.%loop-player%} is true:
+                            send "{@dc} &c%player% &7failed &c Jesus &7(T: F) &f(VL: &6&l%{_Jesus}%&f)" to loop-player
+                      if {_Jesus} is greater than 35:
+                        if {dragon.autoban} is true:
+                          make server execute command "/dcban %player% 1 day"
+                        clear {_Jesus}    
+      set {_height} to y-coordinate of player
+      set {_Last.Speed} to {_Speed}
+      if {_Movetype} is "descend":
+        set {NormalCrit.%player%} to true
+      else:
+        clear {NormalCrit.%player%}
+      if difference between {_now} and now is bigger than 8 seconds:
+        clear {_Infinitejump}
+        clear {_Jesus}
+        clear {_Spider}
+        clear {_Fastclimb}
+        set {_now} to now
+    wait 1 tick
+
+command /watchdog [<player>]:
+   permission: ADMIN
+   trigger:
+      make player execute command "/watchdog2"
+      set {_n} to "%random integer between 1 and 99999%"
+      add {_n} to {bots::*}
+      create a citizen named {_n} at location of arg 1
+      set {_lnc} to last created citizen id
+      loop all entities :
+         uncoloured name of loop-entity is {_n}
+         make server execute command "/npc sel %{_lnc}%"
+         make server execute command "/npc gravity"
+         make server execute command "/npc vulnerable"
+         loop 4 times:
+            loop 5 times:
+               teleport loop-entity 10 meters above arg 1
+               wait 2 ticks
+               teleport loop-entity 5 meters behind arg 1
+               wait 2 ticks
+               teleport loop-entity 5 meters above arg 1
+               wait 5 ticks
+      make server execute command "/npc sel %{_lnc}%"
+      make server execute command "/npc rem %{_lnc}%"
+      
+command /watchdog2 [<player>]:
+   permission: ADMIN
+   trigger:
+      wait 5 seconds
+      set {_n1} to "%random integer between 1 and 99999%"
+      create a citizen named {_n1} at location of arg 1
+      add {_n1} to {bots::*}
+      set {_lnc1} to last created citizen id
+      loop all entities :
+         uncoloured name of loop-entity is {_n1}
+         make server execute command "/npc sel %{_lnc1}%"
+         make server execute command "/npc gravity"
+         make server execute command "/npc vulnerable"
+         loop 4 times:
+            loop 5 times:
+               teleport loop-entity 6 meters in front of arg 1
+               wait 5 ticks
+               teleport loop-entity 2 meters under arg 1
+               wait 5 ticks
+               teleport loop-entity 5 meters behind arg 1
+               wait 5 ticks
+      make server execute command "/npc sel %{_lnc1}%"
+      make server execute command "/npc rem %{_lnc1}%"
+
+on damage:
+    if {bots::*} contains victim:
+        if attacker is a player:
+            cancel event
+            add 1 to {botcheck::%attacker%}
+            if {botcheck::%attacker%} = 16:
+                wait 7 seconds
+                make server execute command "/dcban %attacker% 7 day"

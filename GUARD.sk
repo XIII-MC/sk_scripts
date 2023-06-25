@@ -1,0 +1,452 @@
+#-------------------------------------------
+#                G U A R D
+#            A N T I C H E A T
+#             V E R S I O N : B1
+#             A U T H O R : XIII___
+#-------------------------------------------
+
+options:
+   Guard: &9&lGUARD &7»&f 
+   Version: B1
+   Ban: true
+   Kick: true
+   SetBack: true
+
+on any move:
+   if block under player is air:
+      if block 2 under player is air:
+         if block 3 under player is air:
+            if player is on ground:
+               set {_y} to y location of player
+               remove 2 to {_y}
+               set {GUARD.%player%.setback} to {_y}
+
+function Flag(p: player, cheat: text, type: text:)
+  set {_uuid} to uuid of {_p}
+  loop all players:
+    if {GUARD.%loop-player%.alerts} is set:
+      send "{@Guard} %{_p}%&7 failed &f%{_cheat}%&f %{_type}%&7 VL[&9%{GUARD.%{_p}%.vl}%&7]" to loop-player
+
+command /guard [<text>] [<text>] [<timespan>]:
+   trigger:
+      if player does'nt have permission "GUARD.admin":
+         send "{@Guard} Author: XIII___"
+         send "{@Guard} Build: b1"
+         send "{@Guard} &7You don't have access to any other commands of GUARD."
+         stop
+      if player has permission "GUARD.admin":
+         if arg 1 is not set:
+            send "           {@Guard}"
+            send "&7/guard &8| &fShow this pop up"
+            send "&7/guard kick [player] &8| Kick a player"
+            send "&7/guard info [player] &8| Show informations about a selected player"
+            send ""
+            stop
+         if arg 1 is "kick":
+            if arg 2 is online player:
+               if executor is player:
+                  kick arg 2 due to "{@Guard} CHEAT DETECTION &7(ID-%player%&7)"
+                  broadcast "{@Guard} &c%arg 2%&f has been removed for &cUnfair Advantage"
+               else:
+                  kick arg 2 due to "{@Guard} CHEAT DECTECTION &7(ID-CONSOLE&7)"
+                  broadcast "{@Guard} &c%arg 2%&f has been removed for &cUnfair Advantage"
+                  stop
+         if arg 1 is "info":
+            if arg 2 is set:
+               send "         {@Guard}"
+               send "&fInformations about %arg 2%"
+               send ""
+               send "Anticheat Kicks: &7%{GUARD.%arg 2%.kick}%"
+               send "Anticheat Ban: &7%{GUARD.%arg 2%.kick}%"
+               send "Anticheat logs: &7%{GUARD.%arg 2%.total.vl}%"
+               send "Anticheat detection: &7%{GUARD.%arg 2%.detection::*}%"
+               send ""
+               stop
+
+
+#--------------------------------------------------------
+#
+#             A N T I  A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+on leftclick:
+   if {GUARD.check.AUTOCLICKER} is true:
+      add 1 to {cpsL.%player%}
+      if {cpsL.%player%} >= 20:
+         cancel event
+         add 1 to {GUARD.%player%.vl}
+         add 1 to {GUARD.%player%.total.vl}
+         Flag(player, "AutoClicker", "1A")
+         if {GUARD.%player%.vl} >= 3:
+            if {@Kick} is true:
+               make server execute command "/guard kick %player%"
+               stop
+            if {@Ban} is true:
+               make server execute command "/guard ban %player% 7 day"
+
+every 1 second:
+   loop all players:
+      clear {cpsL.%loop-player%}
+      clear {cpsR.%loop-player%}
+
+on rightclick:
+   if {GUARD.check.AUTOCLICKER} is true:
+      add 1 to {cpsR.%player%}
+      if {cpsL.%player%} >= 20:
+         cancel event
+         Flag(attacker, "AutoClicker", "2A")
+         add 1 to {GUARD.%player%.vl}
+         add 1 to {GUARD.%player%.total.vl}
+         if {GUARD.%player%.vl} >= 3:
+            if {@Kick} is true:
+               make server execute command "/guard kick %player%"
+               stop
+            if {@Ban} is true:
+               make server execute command "/guard ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   K I L L A U R A
+#
+#--------------------------------------------------------
+
+every 10 tick:
+   loop all players:
+      clear {combo.%loop-player%}
+
+on damage:
+   if {GUARD.check.KILLAURA} is true:
+      if attacker is player:
+         add 0.5 to {combo.%attacker%}
+         if {combo.%attacker%} >= 2:
+            add 1 to {GUARD.%attacker%.vl}
+            add 1 to {GUARD.%player%.total.vl}
+            Flag(attacker, "KillAura", "2A")
+            if {GUARD.%attacker%.vl} >= 3:
+               if {@Kick} is true:
+                  make server execute command "/guard kick %attacker%"
+                  stop
+               if {@Ban} is true:
+                  make server execute command "/guard ban %attacker% 7 day"
+         if {@setback} is true:
+            cancel event
+
+on damage:
+   if victim is not player:
+      stop
+   if attacker is not player:
+      stop
+   if {GUARD.check.KILLAURA} is false:
+    stop
+   if {ktarget.%attacker%} is not set:
+      add 1 to {GUARD.%attacker%.vl}
+      add 1 to {GUARD.%player%.total.vl}
+      if {@setback} is true:
+         cancel event
+      Flag(attacker, "KillAura", "3A")
+
+on leftclick:
+   set {ktarget.%player%} to targeted entity
+
+on damage:
+  if {GUARD.check.KILLAURA} is false:
+    stop
+  if attacker is a player:
+    loop all blocks in radius 3 around attacker:
+      if loop-block is snow layer:
+        stop
+      if loop-block is ladder:
+        stop
+      if loop-block is vines:
+        stop
+      if loop-block is iron bars:
+        stop
+      if loop-block is fence:
+        stop
+      if loop-block is large fern:
+        stop
+      if loop-block is tall grass:
+        stop
+      if loop-block is button:
+        stop
+      if loop-block is door:
+        stop
+      if loop-block is fence gate:
+        stop
+      if loop-block is cobblestone wall:
+        stop
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.VAC.bypass} is not set:
+        set {%victim's uuid%.VAC.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            if {@setback} is true:
+              cancel event
+            add 1 to {GUARD.%attacker%.vl}
+            add 1 to {GUARD.%player%.total.vl}
+            Flag(attacker, "KillAura", "2A"))
+            if {GUARD.%attacker%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/guard kick %attacker%"
+                stop
+              if {@Ban} is true:
+                 make server execute command "/guard ban %attacker% 7 day"
+        delete {%attacker's uuid%.VAC.killaura.check}
+  loop {GUARD.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+
+#--------------------------------------------------------
+#
+#             A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {GUARD.check.Reach} is false:
+      stop
+   if attacker has speed:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} > 4.7:
+         if damage cause is not a projectile:
+            if {@setback} is true:
+               cancel event
+            add 1 to {GUARD.%attacker%.vl}
+            add 1 to {GUARD.%attacker%.total.vl}
+            Flag(attacker, "Reach", "1A")
+
+on damage:
+  {VAC.Reach} is true
+  set {_distance.%attacKER%} to distance between attacker and victim
+  delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+  if distance between attacker and victim is greater than 4.25:
+    set {_r} to distance between attacker and victim
+    if attacker is a player:
+      if {%attacker's uuid%.VAC.bypass} is not set:
+        if {%attacker's uuid%.VAC.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.VAC.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              if {%attacker's uuid%.VAC.autoclicker.check} is not set:
+                if {_r} is less than 4.5:
+                  add 1 to {GUARD.%attacker%.vl}
+                  add 1 to {GUARD.%attacker%.total.vl}
+                  Flag(attacker, "Reach", "2A")
+                  if {@setback} is true:
+                    cancel event
+                  if {GUARD.%attacker%.vl} >= 10:
+                    if {@Kick} is true:
+                       make server execute command "/guard kick %attacker%"
+                       stop
+                    if {@Ban} is true:
+                       make server execute command "/guard ban %attacker% 7 day"
+                else if {_r} is less than 5.5:
+                  add 1 to {GUARD.%attacker%.vl}
+                  add 1 to {GUARD.%attacker%.total.vl}
+                  Flag(attacker, "Reach", "2B")
+                  if {@setback} is true:
+                    cancel event
+                  if {GUARD.%attacker%.vl} >= 10:
+                    if {@Kick} is true:
+                       make server execute command "/guard kick %attacker%"
+                       stop
+                    if {@Ban} is true:
+                       make server execute command "/guard ban %attacker% 7 day"
+              else:
+                if {%attacker's uuid%.VAC} > 5:
+                  add 1 to {GUARD.%attacker%.vl}
+                  add 1 to {GUARD.%attacker%.total.vl}
+                  Flag(attacker, "Reach", "3B")
+                  if {@setback} is true:
+                    cancel event
+                  if {GUARD.%attacker%.vl} >= 1:
+                    if {@Kick} is true:
+                       make server execute command "/guard kick %attacker%"
+                       stop
+                    if {@Ban} is true:
+                       make server execute command "/guard ban %attacker% 7 day"
+          delete {%attacker's uuid%.VAC.cheat.cooldown.damage}
+
+#--------------------------------------------------------
+#
+#             A N T I   N O F A L L
+#
+#--------------------------------------------------------
+
+on any move:
+    if {GUARD.check.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        add 1 to {GUARD.%player%.vl}
+        add 1 to {GUARD.%player%.total.vl}
+        Flag(player, "Nofall", "1A")
+        if {vl.NOFALL.%player%} >= 8:
+            if {@Kick} is true:
+                make server execute command "/guard kick %player%"
+                stop
+            if {@Ban} is true:
+                make server execute command "/guard ban %player% 7 day"
+
+    if {_nofallcount} > 0:
+        stop
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on ladder:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+
+
+on any movement:
+  {GUARD.check.Step} is true
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.VAC.nochecks} is not set
+    {%player's uuid%.VAC.epteleport} is not set
+    {%player's uuid%.VAC.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.VAC.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      if {%player's uuid%.VAC.step.player} is not set:
+        add 1 to {GUARD.%player%.vl}
+        add 1 to {GUARD.%player%.total.vl}
+        Flag(player, "Fly", "1A")
+        if {GUARD.%player%.vl} >= 5:
+          if {@Kick} is true:
+            make server execute command "/guard kick %player%"
+            stop
+          îf {@Ban} is true:
+            make server execute command "/guard ban %player% 7 day"
+    else:
+      {GUARD.check.FLY} is true
+      if {legitfly.%player%} is true:
+        stop
+      add 1 to {GUARD.%player%.vl}
+      add 1 to {GUARD.%player%.total.vl}
+      Flag(player, "Fly", "2A")
+      if {@setback} is true:
+        teleport player to {setback.%player%}
+      if {GUARD.%player%.vl} >= 5:
+        if {@Kick} is true:
+           make server execute command "/guard kick %player%"
+           stop
+        îf {@Ban} is true:
+           make server execute command "/guard ban %player% 7 day"
+
+on any movement:
+  if player's chestplate is an elytra:
+    stop
+  if {legitfly.%player%} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.VAC.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 0.18:
+        set {%player's uuid%.VAC.walking} to true
+        set {%player's uuid%.VAC.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player's uuid%.VAC.walking}
+        delete {%player's uuid%.VAC.walk.speed}
+      if {%player's uuid%.VAC.nochecks} is true:
+        stop
+      if {%player's uuid%.VAC.epteleport} is true:
+        stop
+      if {%player's uuid%.VAC.teleport} is true:
+        stop
+      player is not riding
+      if {_dif} > 5:
+        if {%player's uuid%.VAC.teleport} is true:
+          stop
+        set {%player's uuid%.VAC.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {GUARD.check.Blink} is true
+            add 1 to {GUARD.%player%.vl}
+            add 1 to {GUARD.%player%.total.vl}
+            Flag(player, "Blink", "1A")
+            if {@Kick} is true:
+              make server execute command "/guard kick %player%"
+              stop
+            if {@Ban} is true:
+              make server execute command "/guard ban %player% 7 day"
+          else:
+            {GUARD.check.FLY} is true
+            if {legitfly.%player%} is true:
+              stop
+            add 1 to {GUARD.%player%.vl}
+            add 1 to {GUARD.%player%.total.vl}
+            Flag(player, "Fly", "3A")
+            if {@setback} is true:
+              teleport player to {setback.%player%}
+            if {GUARD.%player%.vl} >= 5:
+              if {@Kick} is true:
+                make server execute command "/guard kick %player%"
+                stop
+              if {@Ban} is true:
+                make server execute command "/guard ban %player% 7 day"
+        else:
+          {VAC.ClickTP} is true
+          add 1 to {GUARD.%player%.vl}
+          add 1 to {GUARD.%player%.total.vl}
+          Flag(player, "Fly", "4A")
+          if {@setback} is true:
+            teleport player to {GUARD.%player%.setback}
+          if {GUARD.%player%.vl} >= 5:
+            if {@Kick} is true:
+              make server execute command "/guard kick %player%"
+              stop
+            if {@Ban} is true:
+              make server execute command "/guard ban %player% 7 day"

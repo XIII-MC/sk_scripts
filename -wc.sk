@@ -1,0 +1,312 @@
+#LegendaryOfCats#2651 AntiLag Config
+
+options:
+	version: 1.3
+	NoPermission: &c&lWatchCat &7>> &cNo Permission!
+	chat_cooldown_seconds: 0
+	enabled: true
+	kick_10_alerts: true
+
+
+command /WatchCat [<text>] [<offline player>]:
+	permission: WatchCat.command.admin
+	permission message: {@NoPermission}
+	trigger:
+		if arg 1 is not set:
+			send "&c&lWatchCat &8>> &c/WatchCat help"
+		if arg 1 is "help":
+			send "&c/WatchCat help"
+			send "&c/WatchCat freeze <player>"
+			send "&c/WatchCat alerts <player>"
+		if arg 1 is "freeze":
+			if arg 2 is set:
+				if player has permission "WatchCat.freeze":
+					if {freezed::%arg 2%} is false:
+						set {freezed.%arg 2%} to true
+						send "&c&lWatchCat &7>> &c%arg 2%&f is now frozen!"
+					else:
+						set {freezed::%arg 2%} to false
+						send "&c&lWatchCat &7>> &c%arg 2% is no longer frozen!"
+				else:
+					send "{@NoPermission}"
+		if arg 1 is "alerts":
+			if arg 2 is set:
+				if player has permission "WatchCat.command.logs":
+					send "&cAuto Clicker Logs: %{autoclickerlogs::%arg 2%}%"
+					send "&cFlight / AirWalk / NoFall Logs: %{flightlogs::%arg 2%}%"
+					send "&cKillaura logs: %{killauralogs::%arg 2%}%"
+					send "&cSpeed / Flight Logs: %{speedalerts::%arg 2%}%"
+					send "&cReach Logs: %{reachalerts::%arg 2%}%"
+					send "&cAnti Knockback Logs: %{antikbalerts::%arg 2%}%"
+					send "&cHigh Jump Logs: %{highjumplogs::%arg 2%}%"
+				else:
+					send "{@NoPermission}"
+			else:
+				send "&c&lWatchCat &8>> &cPlease specify a player!"
+
+
+every 30 seconds:
+	delete {alerts::*}
+
+on left click:
+	if {@enabled} is true:
+		player does not have permission "WatchCat.bypass.autoclicker":
+			add 1 to {killaura::%player%}
+			if {killaura::%player%} >= 18:
+				set {_ping} to player's ping
+				send "&c&lWatchCat &8>> &c%player%&f has failed Auto Clicking (&c%{_ping}%&c MS&f) (%{killaura::%player%}%&c&l CPS" to all players where [player input has permission "WatchCat.logs"]
+				add 1 to {autoclickerlogs::%player%}
+				execute console command "auratest %player%"
+				add 1 to {alerts::%player%}
+				if {alerts::%player%} >= 10:
+					if {kick_10_alerts} is true:
+						kick player due to "&c&lWatchCat &8>> &cCheating"
+
+on left click:
+	if {@enabled} is true:
+		add 1 to {clickauratest::%player%}
+		player does not have permission "WatchCat.bypass.killaura"
+		if {clickauratest::%player%} >= 13:
+			execute console command "auratest %player%"
+
+every 2 seconds:
+	delete {clickauratest::*}
+	delete {killaura::*}
+
+
+on damage:
+	add 1 to {hits::%attacker%}
+
+on left click:
+	add 1 to {leftclicks::%player%}
+
+on death:
+	if {@enabled} is true:
+		if player does not have permission "WatchCat.bypass.killaura":
+			if {hits::%attacker%} = {leftclicks::%attacker%}:
+				execute console command "auratest %attacker%"
+
+command /auratest [<player>]:
+	permission: WatchCat.aura
+	permission message: &c&lWatchCat >> No Permissions
+	trigger:
+		if {auratest.%arg 1%} is false:
+			set {loc} to location behind arg 1
+			set {attacker} to arg 1
+			set {auratest.%arg 1%} to true
+			spawn a zombie at {loc}
+			set {bot} to last spawned entity
+			wait 5 ticks
+			set {auratest.%arg 1%} to false
+			delete last spawned entity
+
+on damage:
+	if attacker is {attacker}:
+		if victim is {bot}:
+			delete {bot}
+			set {_ping} to attacker's ping
+			send "&c&lWatchCat &r&8>> &c%attacker%&f has failed KillAura. (&c%{_ping}%&c MS&f)" to all players where [player input has permission "WatchCat.logs"]
+			add 1 to {killauralogs::%attacker%}
+			add 1 to {alerts::%attacker%}
+			if {alerts::%attacker%} >= 10:
+				if {kick_10_alerts} is true:
+					kick attacker due to "&c&lWatchCat &8>> &cCheating"
+	else:
+		if victim is {bot}:
+			cancel event
+
+on any move:
+	player's gamemode is not creative
+	player is not flying
+	block below player is air
+	block north below player is air
+	block south below player is air
+	block west below player is air
+	block east below player is air
+	block north east below player is air
+	block south east below player is air
+	block north west below player is air
+	block south west below player is air
+	the gliding state of player is true:
+		player's chestplate is elytra:
+			stop
+	else:
+		block under player is air
+		player is not on ground
+		set {_y} to player's y coordinate
+		set {flysetback::%player%} to player's location
+		wait 10 tick
+		set {_ping} to player's ping
+		set {_y.2} to player's y coordinate
+		if {_y} > {_y.2}:
+			player does not have permission "WatchCat.bypass.fly":
+				if {@enabled} is true:
+					send "&c&lWatchCat &8>> &c%player%&f has failed Fly. (&c%{_ping}%&c MS&f)" to all players where [player input has permission "WatchCat.logs"]
+					add 1 to {alerts::%player%}
+					add 1 to {flightlogs::%player%}
+					if {alerts::%player%} >= 10:
+						if {kick_10_alerts} is true:
+							kick player due to "&c&lWatchCat &8>> &cCheating"
+		else if {_y} < {_y.2}:
+			player does not have permission "WatchCat.bypass.fly":
+				if {@enabled} is true:
+					send "&c&lWatchCat &8>> &c%player%&f has failed Fly. (&c%{_ping}%&c MS&f)" to all players where [player input has permission "WatchCat.logs"]
+					add 1 to {alerts::%player%}
+					add 1 to {flightlogs::%player%}
+					if {alerts::%player%} >= 10:
+						if {kick_10_alerts} is true:
+							kick player due to "&c&lWatchCat &8>> &cCheating"
+		else if {_y} = {_y.2}:
+			player does not have permission "WatchCat.bypass.airwalk":
+				if {@enabled} is true:
+					send "&c&lWatchCat &8>> &c%player%&f has failed AirWalk. (&c%{_ping}%&c MS&f)" to all players where [player input has permission "WatchCat.logs"]
+					add 1 to {alerts::%player%}
+					add 1 to {flightlogs::%player%}
+					if {alerts::%player%} >= 10:
+						if {kick_10_alerts} is true:
+							kick player due to "&c&lWatchCat &8>> &cCheating"
+		teleport player to {flysetback::%player%}
+
+every 2 seconds:
+	delete {fly::*}
+
+on flight toggle:
+	if {speedcheck::%player%} is true:
+		set {speedcheck::%player%} to false
+	else:
+		wait 15 seconds
+		set {speedcheck::%player%} to true
+
+on any move:
+	player does not have permission "WatchCat.bypass.speed":
+		if {@enabled} is true:
+			player doesn't have speed
+			if {speedcheck::%player%} is true:
+				set {_loc::%player%} to the x location of player
+				set {speedsetback::%player%} to location of the player
+				wait 5 ticks
+				set {_loc1::%player%} to the x location of player
+				wait 1 tick
+				set {_diffyx::%player%} to difference between {_loc::%player%} and {_loc1::%player%}
+				if difference between {_loc::%player%} and {_loc1::%player%} >= 3.7:
+					player's gamemode is not creative
+					player is not flying
+					add 1 to {speed::%player%}
+					if {speed::%player%} >= 3:
+						teleport player to {speedsetback::%player%}
+						set {_ping} to player's ping
+						send "&c&lWatchCat &8>> &c%player% &fhas failed Speed. (&c%{_ping}%&c MS&f) (&c%{_diffyx::%player%}% Blocks Per Second)." to all players where [player input has permission "WatchCat.logs"]
+						add 1 to {speedalerts::%player%}
+						add 1 to {alerts::%player%}
+						if {alerts::%player%} >= 10:
+							if {kick_10_alerts} is true:
+								kick player due to "&c&lWatchCat &8>> &cCheating"
+
+on any move:
+	player does not have permission "WatchCat.bypass.speed":
+		if {@enabled} is true:
+			player doesn't have speed
+			if {speedcheck::%player%} is true:
+				set {_locz::%player%} to the z location of player
+				set {speedsetback::%player%} to location of the player
+				wait 5 ticks
+				set {_loc1z::%player%} to the z location of player
+				wait 1 tick
+				set {_diffy::%player%} to difference between {_locz::%player%} and {_loc1z::%player%}
+				if difference between {_locz::%player%} and {_loc1z::%player%} >= 3.7:
+					player's gamemode is not creative
+					player is not flying
+					add 1 to {speed::%player%}
+					if {speed::%player%} >= 3:
+						teleport player to {speedsetback::%player%}
+						set {_ping} to player's ping
+						send "&c&lWatchCat &8>> &c%player% &fhas failed Speed. (&c%{_ping}%&c MS&f) (&c%{_diffy::%player%}%&c Blocks Per Second&f)." to all players where [player input has permission "WatchCat.logs"]
+						add 1 to {speedalerts::%player%}
+						add 1 to {alerts::%player%}
+						if {alerts::%player%} >= 10:
+							if {kick_10_alerts} is true:
+								kick player due to "&c&lWatchCat &8>> &cCheating"
+
+on damage:
+	attacker does not have permission "WatchCat.bypass.reach":
+		if {@enabled} is true:
+			attacker is a player
+			set {_reach} to distance between attacker and victim
+			if {_reach} > 4:
+				if damage cause is not a projectile:
+					attacker's gamemode is not creative:
+						cancel event
+						set {_ping} to attacker's ping
+						send "&c&lWatchCat &8>> &c%attacker% &fhas failed &cReach&f. (&c%{_ping}%&c MS&f)." to all players where [player input has permission "WatchCat.logs"]
+						add 1 to {reachalerts::%attacker%}
+						add 1 to {alerts::%attacker%}
+						if {alerts::%attacker%} >= 10:
+							if {kick_10_alerts} is true:
+								kick attacker due to "&c&lWatchCat &8>> &cCheating"
+
+
+on damage of a player:
+	victim is not flying
+	damage wasn't caused by fall, potion, lava, burning, fire, poison or wither
+	victim is not burning
+	victim doesn't have poison
+	victim doesn't have wither:
+		set {antikb::%victim%} to location of victim
+		wait 10 ticks
+		set {antikb2::%victim%} to location of victim
+		block at victim is not cobweb:
+			block at victim is not water:
+				victim is not riding:
+					if {antikb::%victim%} = {antikb2::%victim%}:
+						set {_ping} to victim's ping
+						attacker does not have permission "WatchCat.bypass.antiknockback":
+							if {@enabled} is true:
+								send "&c&lWatchCat &8>> &c%victim% has been detected using &cAnti Knockback&f. (&c%{_ping}%&c MS&f)." to all players where [player input has permission "WatchCat.logs"]
+								add 1 to {alerts::%victim%}
+								add 1 to {antikbalerts::%victim%}
+								if {alerts::%victim%} >= 10:
+									if {kick_10_alerts} is true:
+										kick victim due to "&c&lWatchCat &8>> &cCheating"
+
+on walk on water:
+	player's gamemode is not creative
+	player is not riding
+	player is not sneaking
+	block below player is water
+	block south below player is water
+	block east below player is water
+	block west below player is water
+	block north below player is water
+	block south player is air
+	block north player is air
+	block west player is air
+	block east player is air
+	player does not have permission "WatchCat.bypass.waterwalk":
+		if {@enabled} is true:
+			cancel event
+			set {_ping} to player's ping
+			add 1 to {alerts::%player%}
+			add 1 to {waterwalk::%player%}
+			send "&c&lWatchCat &8>> &c%player%&f has failed &cWaterWalk&f. (&c%{_ping}%&c MS&f)." to all players where [player input has permission "WatchCat.logs"]
+			if {alerts::%player%} >= 10:
+				if {kick_10_alerts} is true:
+					kick player due to "&c&lWatchCat &8>> &cCheating"
+
+on jump:
+    if {@enabled} is true:
+        player does not have permission "WatchCat.bypass.highjump":
+            player's gamemode is not creative
+            player is not flying
+            player is not riding
+            set {loc::%player%} to player's y coordinate
+            wait 7 ticks
+            set {loc1::%player%} to player's y coordinate
+            difference between {loc::%player%} and {loc1::%player%} >= 1.8:
+                teleport player to {loc::%player%}
+                add 1 to {highjumplogs::%player%}
+                add 1 to {alerts::%player%}
+                set {_ping} to player's ping
+                send "&c&lWatchCat &8>> &c%player%&f has failed &cHigh Jump&f. (&c%{_ping}%&c MS&f)." to all players where [player input has permission "WatchCat.logs"]
+                if {alerts::%player%} >= 10:
+                    if {kick_10_alerts} is true:
+                        kick player due to "&c&lWatchCat &8>> &cCheating"

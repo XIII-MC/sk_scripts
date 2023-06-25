@@ -1,0 +1,105 @@
+options:
+   logss: &c&l[logs]&7&o 
+   perm: server.logss
+
+command /logss [<text>]:
+   permission: {@perm}
+   trigger:
+      if arg 1 is not set:
+         send ""
+         send "{@logss}"
+         send "&7&oBy: XIII___"
+         send "&7&oBuild: b1"
+         send ""
+         stop
+      if arg 1 is "toggle":
+         if {logs.%player%.see} is not set:
+            set {logs.%player%.see} to false
+         if {logs.%player%.see} is false:
+            send "{@logss} You are now seeing logss." to player
+            set {logs.%player%.see} to true
+            stop
+         if {logs.%player%.see} is true:
+            send "{@logss} You are no longer seeing logss." to player
+            set {logs.%player%.see} to false
+            stop
+
+function logs(p: player, action: text, contain: text):
+  loop all players:
+    if {logs.%player%.see} is true:
+      if {_contain} is set:
+        send "{@logss} %{_p}%&7&o , %{_action}%&7&o , %{_contain}%" to loop-player
+      else:
+        send "{@logss} %{_p}%&7&o , %{_action}%&7&o" to loop-player
+
+on chat:
+   logs(player, "Chat", "%message%")
+
+on bed enter:
+   logs(player, "Bed Enter")
+
+on bed leave:
+   logs(player, "Bed Leave")
+
+on block damage:
+   logs(player, "Breaking Block", "%event-block%")
+
+on block break:
+   logs(player, "Block Broke", "%event-block%")
+
+on place:
+   logs(player, "Block Placed", "%event-block%")
+
+on bucket empty:
+   logs(player, "Bucket Empty", "%event-block%")
+
+on bucket fill:
+   logs(player, "Bucket Filled", "%event-block%")
+
+on burn:
+   logs(server, "Block Burning", "%event-block%")
+
+on chunk generate:
+   logs(player, "Chunk Generated")
+
+on chunk load:
+   logs(player, "Chunk Loaded")
+
+on chunk unload:
+   logs(player, "Chunk Unloaded")
+
+on left click:
+   logs(player, "Click Left")
+
+on right click:
+   logs(player, "Click Right")
+
+on combust:
+   logs(server, "Entity Burning", "%event-entity%")
+
+on command:
+   logs(player, "Command Executed", "%message%")
+
+on connect:
+   logs(player, "Connected")
+
+on craft:
+   logs(player, "Crafted Item", "%item-type%")
+
+on damage:
+   logs(victim, "Damage Taken", "%damage cause%")
+
+on damage:
+   logs(attacker, "Damage Dealed", "%damage cause%")
+
+on death:
+   logs(victim, "Death", "%death cause%")
+
+on drop:
+   logs(player, "Item Dropped", "%event-item%")
+
+on sheep eat:
+   logs(Sheep, "Block Eated", "%event-block%")
+
+on enderman pickup:
+   logs(EnderMan, "Block Picked Up", "%event-block")

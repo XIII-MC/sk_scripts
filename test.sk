@@ -1,0 +1,5 @@
+command /tppp [<player>]:
+   permission: op
+   trigger:
+      if arg 1 is set:
+         make server execute command "/minecraft:tp %arg 1% 41 20 -41"

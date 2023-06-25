@@ -1,0 +1,2046 @@
+#-------------------------------------------
+#                G U A R D
+#            A N T I C H E A T
+#             V E R S I O N : B1
+#             A U T H O R : XIII___
+#-------------------------------------------
+
+options:
+   guard: &5&lGUARD &8»&d 
+   Version: B1
+   Ban: false #IF KICK IS TRUE MAKE BAN FALSE !
+   Kick: true #IF BAN IS TRUE MAKE KICK FALSE !
+   setback: false
+   AntiAlt: false
+   AntiBot: false 
+   test: true
+
+#CORE
+on join:
+   delete {guard.%player%.vl}
+
+on load:
+   Reload("console")
+
+every 30 seconds:
+   loop all players:
+      set {guard.%loop-player%.vl} to 0
+
+command /guard [<text>] [<player>] [<timespan>]:
+   permission: guard
+   trigger:
+      if arg 1 is not set:
+         send "           {@guard}"
+         send "&7/guard &8| &fShow this pop up"
+         send "&7/guard version &8| &fShow guard version"
+         send "&7/guard notify &8| &fToggle guard alerts"
+         send "&7/guard setback &8| &fToggle setback"
+         send "&7/guard damage &8| &fToggle damage lagback"
+         send "&7/guard downwards &8| &fToggle downwards lagback"
+         send "&7/guard void &8| &fToggle void lagback"
+         send ""
+         stop
+      if arg 1 is "verbose":
+         if {@test} is true:
+            send "{@guard} Sorry but no"
+            stop
+         if {guard.%player%.verbose} is not set:
+            set {guard.%player%.verbose} to false
+         if {guard.%player%.verbose} is false:
+            set {guard.%player%.verbose} to true
+            send "{@guard} Verbose enabled"
+            stop
+         if {guard.%player%.verbose} is true:
+            set {guard.%player%.verbose} to false
+            send "{@guard} Verbose disabled"
+            stop
+      if arg 1 is "kick":
+         if {@test} is true:
+            if executor is player:
+               send "{@guard} Sorry but no"
+               stop
+         if {@test} is true:
+            send title "&cYou would be kicked now" with subtitle "&5&lGUARD &8»&d Unfair Advantage" to arg 2
+            stop
+         if arg 2 is set:
+            if {banning.%arg 2%} is true:
+               stop
+            set {banning.%arg 2%} to true
+            set fly mode of arg-2 to true
+            wait 2 ticks
+            push arg-2 upwards at speed 1
+            wait 1 seconds
+            strike lightning effect at arg-2
+            delete {banning.%arg 2%}
+            kick arg 2 due to "{@guard} &fGuard caught you cheating (AntiCheat) ! &7You can rejoin using /join VACDev &7&o&n(ID-G%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@guard} &c%arg 2%&f has been removed for &cUnfair Advantage"
+            broadcast ""
+      if arg 1 is "info":
+         if arg 2 is set:
+            send "         {@guard}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "Anticheat Kicks: &7%{guard.%arg 2%.kick}%"
+            send "Anticheat Ban: &7%{guard.%arg 2%.kick}%"
+            send "Anticheat logs: &7%{guard.%arg 2%.total.vl}%"
+            send "Anticheat detection: &7%{guard.%arg 2%.detection::*}%"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@guard} Build: b15"
+         stop
+      if arg 1 is "reload":
+         Reload("console")
+         send "{@guard} guard has been reloaded."
+         stop
+      if arg 1 is "notify":
+         if {guard.%player%.alerts} is not set:
+            set {guard.%player%.alerts} to false
+         if {guard.%player%.alerts} is false:
+            set {guard.%player%.alerts} to true
+            send "{@guard} Notifcations enabled"
+            stop
+         if {guard.%player%.alerts} is true:
+            set {guard.%player%.alerts} to false
+            send "{@guard} Notifcations disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            if {@test} is true:
+               send "{@guard} Sorry but no"
+               stop
+            if {tempban.time::%{_player}%} is not set:
+               broadcast ""
+               broadcast "{@guard} &c%arg 2%&f has been removed for &cUnfair Advantage"
+               broadcast ""
+               set {tempban.time::%arg 2%} to arg 3
+               set {tempban.%arg 2%} to true
+               set {tempban.timestamp::%arg 2%} to now
+               kick arg 2 due to "{@guard} &cYou have been banned for &e%{tempban.time::%arg 2%}% &cfrom this server !"
+               stop
+      if arg 1 is "unban":
+         if {@test} is true:
+            send "{@guard} Sorry but no"
+            stop
+         if arg 2 is set:
+            clear {tempban.time::%arg 2%}
+            clear {tempban.timestamp::%arg 2%}
+            clear {tempban.%arg 2%}
+            send "{@guard} %arg 2% has been unbanned."
+            stop
+      if arg 1 is "setback":
+         if {@test} is true:
+            if {setback.custom.%player%} is not set:
+               set {setback.custom.%player%} to false
+            if {setback.custom.%player%} is true:
+               set {setback.custom.%player%} to false
+               send "{@guard} Setback disabled."
+               stop
+            if {setback.custom.%player%} is false:
+               set {setback.custom.%player%} to true
+               send "{@guard} Setback enabled."
+               stop
+      if arg 1 is "damage":
+         if {@test} is true:
+            if {damage.%player%} is not set:
+               set {damage.%player%} to false
+            if {damage.%player%} is true:
+               set {damage.%player%} to false
+               send "{@guard} Damage disabled."
+               stop
+            if {damage.%player%} is false:
+               set {damage.%player%} to true
+               send "{@guard} Damage enabled."
+               stop
+      if arg 1 is "downwards":
+         if {@test} is true:
+            if {down.%player%} is not set:
+               set {down.%player%} to false
+            if {down.%player%} is true:
+               set {down.%player%} to false
+               send "{@guard} Downwards disabled."
+               stop
+            if {down.%player%} is false:
+               set {down.%player%} to true
+               send "{@guard} Downwards enabled."
+               stop
+      if arg 1 is "void":
+         if {@test} is true:
+            if {void.%player%} is not set:
+               set {void.%player%} to false
+            if {void.%player%} is true:
+               set {void.%player%} to false
+               send "{@guard} Void disabled."
+               stop
+            if {void.%player%} is false:
+               set {void.%player%} to true
+               send "{@guard} Void enabled."
+               stop
+      if arg 1 is "test":
+         if {@test} is true:
+            if {test.%player%} is not set:
+               set {test.%player%} to false
+            if {test.%player%} is true:
+               set {test.%player%} to false
+               send "{@guard} Test disabled."
+               stop
+            if {test.%player%} is false:
+               set {test.%player%} to true
+               send "{@guard} Test enabled."
+               stop
+
+on join:
+   set fly mode of player to false
+
+function Reload(p: text):
+  if {guard.check.ILLEGAL} is not set:
+    set {guard.check.ILLEGAL} to true
+  if {guard.check.Autoclicker} is not set:
+    set {guard.check.Autoclicker} to true
+  if {guard.check.Criticals} is not set:
+    set {guard.check.Criticals} to true
+  if {guard.check.Reach} is not set:
+    set {guard.check.Reach} to true
+  if {guard.check.Velocity} is not set:
+    set {guard.check.Velocity} to true
+  if {guard.check.Bhop} is not set:
+    set {guard.check.Bhop} to true
+  if {guard.check.Blink} is not set:
+    set {guard.check.Blink} to true
+  if {guard.check.ClickTP} is not set:
+    set {guard.check.ClickTP} to true
+  if {guard.check.Flight} is not set:
+    set {guard.check.Flight} to true
+  if {guard.check.Float} is not set:
+    set {guard.check.Float} to true
+  if {guard.check.HighJump} is not set:
+    set {guard.check.HighJump} to true
+  if {guard.check.Hover} is not set:
+    set {guard.check.Hover} to true
+  if {guard.check.Jesus} is not set:
+    set {guard.check.Jesus} to true
+  if {guard.check.NoFall} is not set:
+    set {guard.check.NoFall} to true
+  if {guard.check.NoSlow} is not set:
+    set {guard.check.NoSlow} to true
+  if {guard.check.Scaffold} is not set:
+    set {guard.check.Scaffold} to true
+  if {guard.check.Speed} is not set:
+    set {guard.check.Speed} to true
+  if {guard.check.Spider} is not set:
+    set {guard.check.Spider} to true
+  if {guard.check.Step} is not set:
+    set {guard.check.Step} to true
+
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            if player doesn't have permission "op":
+                kick player due to "{@guard} &cComprimised Account detected."
+                broadcast "{@guard} &c%player% &fhas been removed by &5&lGUARD &freason : Comprimised Account"
+            if {_name} is banned:
+                make server execute command "/vacban %{_name}% Ban Evading"
+
+on load:
+   Reload("console")
+
+on join:
+   delete {check.%player%} 
+   delete {legtifly.%player%} 
+   delete {bot.%player%}
+   delete {spam.%player%}
+   delete {lnc.%player%}
+   delete {ctr.%player%}
+   delete {botcheck::%player%}
+   delete {%player%.guard.telport}
+   delete {%player%.guard.flight.delay}
+   delete {%player%.guard.nochecks}
+   delete {%player%.guard.epteleport}
+   delete {dead.%player%}
+   delete {GUARD}
+   set fly mode of player to false
+   delete {%player%.guard.damage}
+   delete {%player%.guard.jump}
+   delete {%player%.guard.slime}
+   delete {%player%.guard.bypass}
+   delete {%player%.guard.cheat.cooldown}
+   delete {%player%.guard.falldmg}
+   delete {%player%.guard.jump}
+   delete {%player%.guard.slime}
+   delete {%player%.guard.fix.slime}
+   set {legitfly.%player%} to false
+
+on any move:
+   if block under player is not air:
+      set {guard.%player%.setback} to player's location
+
+function maybe(p: player, cheat: text, type: text):
+  if {teleport.%{_p}%} is true:
+    stop
+  if {_p} is citizen:
+    stop
+  add 1 to {guard.%{_p}%.vl.%{_cheat}%}
+  if {ac.guard.%{_p}%} is true:
+    send "{@guard} &d&o%{_p}%&7 is &nmaybe&7 using &d&o%{_cheat}% &7(&d%{_type}%&7) VL(&d%{guard.%{_p}%.vl.%{_cheat}%}%&7)" to {_p}
+  loop all players:
+    if {guard.%loop-player%.alerts} is true:
+      send "{@guard} &d&o%{_p}%&7 is &nmaybe&7 using &d&o%{_cheat}% &7(&d%{_type}%&7) VL(&d%{guard.%{_p}%.vl.%{_cheat}%}%&7)" to loop-player
+  if {guard.%{_p}%.vl.%{_cheat}%} >= 50:
+    if {@test} is true:
+      send title "&cYou would be kicked now" with subtitle "&5&lGUARD &7»&d Unfair Advantage" to {_p}
+      set {guard.%{_p}%.vl.%{_cheat}%} to 0
+    if {@Kick} is true:
+      make server execute command "/guard kick %{_p}%"
+      stop
+    if {@Ban} is true:
+      make server execute command "/guard ban %{_p}% 7 day"
+
+function clearly(p: player, cheat: text, type: text):
+  if {teleport.%{_p}%} is true:
+    stop
+  if {_p} is citizen:
+    stop
+  add 1 to {guard.%{_p}%.vl.%{_cheat}%}
+  if {ac.guard.%{_p}%} is true:
+    send "{@guard} &d&o%{_p}%&7 is &nclearly&7 using &d&o%{_cheat}% &7(&d%{_type}%&7) VL(&d%{guard.%{_p}%.vl.%{_cheat}%}%&7)" to {_p}
+  loop all players:
+    if {guard.%loop-player%.alerts} is true:
+      send "{@guard} &d&o%{_p}%&7 is &nclearly&7 using &d&o%{_cheat}% &7(&d%{_type}%&7) VL(&d%{guard.%{_p}%.vl.%{_cheat}%}%&7)" to loop-player
+      execute command "/wdr2 %{_p}%"
+  if {setback.custom.%{_p}%} is true:
+    teleport {_p} to {guard.%{_p}%.setback}
+  if {damage.%{_p}%} is true:
+    if {guard.%{_p}%.vl.%{_cheat}%} >= 10:
+      damage {_p} by 4 hearts
+  if {down.%{_p}%} is true:
+    if {guard.%{_p}%.vl.%{_cheat}%} >= 10:
+      set {_loc} to location of {_p}
+      remove 2 from y location of {_loc}
+      if block 2 under {_p} is air:
+        if block under {_p} is air:
+          teleport {_p} to {_loc} 
+  if {void.%{_p}%} is true:
+    if {guard.%{_p}%.vl.%{_cheat}%} >= 10:
+      set {_loc} to location of {_p}
+      set y location of {_loc} to -300
+      teleport {_p} to {_loc}
+  if {test.%{_p}%} is true:
+    if {ac.guard.%{_p}%} is not true:
+      stop
+    if {guard.%{_p}%.vl.%{_cheat}%} >= 1:
+      loop 10 times:
+        teleport {_p} to {guard.%{_p}%.setback}
+        wait 2 tick
+        push {_p} forwards at speed 10
+        teleport {_p} to {guard.%{_p}%.setback}
+        damage {_p} by 1 heart
+        wait 1 ticks
+  if {guard.%{_p}%.vl.%{_cheat}%} >= 25:
+    if {@test} is true:
+      send title "&cYou would be kicked now" with subtitle "&5&lGUARD &7»&d Unfair Advantage" to {_p}
+      set {guard.%{_p}%.vl.%{_cheat}%} to 0
+    if {@Kick} is true:
+      make server execute command "/guard kick %{_p}%"
+      stop
+    if {@Ban} is true:
+      make server execute command "/guard ban %{_p}% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   W A T E R  W A L K / J E S U S
+#
+#--------------------------------------------------------
+
+on walk on water:
+  if {guard.check.JESUS} is false:
+    stop
+  player's gamemode is not creative
+  player is not riding
+  player is not sneaking
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 2 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    #add 1 to {guard.%player%.total.vl}
+                    clearly(player, "Jesus", "1A")
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "2A")
+                  if {Alerte.Jesus.%player%} > 14:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "3A")
+      
+on any move:
+  if {guard.check.JESUS} is false:
+    stop
+  if player's gamemode is not creative:
+    if player is sneaking:
+      stop
+    else:
+      if block below player is water:
+        if block south below player is water:
+          if block north below player is water:
+            if block west below player is water:
+              if block east below player is water:
+                if block south player is air:
+                  if block north player is air:
+                    if block west player is air:
+                      block east player is air
+                      add 1 to {Alerte.Jesus.%player%}
+                      if {Alerte.Jesus.%player%} > 25:
+                        #add 1 to {guard.%player%.total.vl}
+                        clearly(player, "Jesus", "1B")
+                        if {@Kick} is true:
+                          make server execute command "/guard kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/guard ban %player% 7 day"
+                      if {Alerte.Jesus.%player%} > 19:
+                        #add 1 to {guard.%player%.total.vl}
+                        maybe(player, "Jesus", "2C")
+                      if {Alerte.Jesus.%player%} > 14:
+                        #add 1 to {guard.%player%.total.vl}
+                        maybe(player, "Jesus", "3C")
+every 8 second:
+  loop all players:
+    clear {Alerte.Jesus.%loop-player%}
+on jump:
+  if {guard.check.JESUS} is false:
+    stop
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 3 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    #add 1 to {guard.%player%.total.vl}
+                    clearly(player, "Jesus", "1C")
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "2C")
+                  if {Alerte.Jesus.%player%} > 14:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "3C")
+
+on walk on lava:
+  if {guard.check.JESUS} is false:
+    stop
+  player's gamemode is not creative
+  player is not riding
+  player is not sneaking
+  if block below player is lava:
+    if block south below player is lava:
+      if block north below player is lava:
+        if block west below player is lava:
+          if block east below player is lava:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 2 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    #add 1 to {guard.%player%.total.vl}
+                    clearly(player, "Jesus", "1D")
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "2D")
+                  if {Alerte.Jesus.%player%} > 14:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "3D")
+      
+on any move:
+  if {guard.check.JESUS} is false:
+    stop
+  if player's gamemode is not creative:
+    if player is sneaking:
+      stop
+    else:
+      if block below player is lava:
+        if block south below player is lava:
+          if block north below player is lava:
+            if block west below player is lava:
+              if block east below player is lava:
+                if block south player is air:
+                  if block north player is air:
+                    if block west player is air:
+                      block east player is air
+                      add 1 to {Alerte.Jesus.%player%}
+                      if {Alerte.Jesus.%player%} > 25:
+                        #add 1 to {guard.%player%.total.vl}
+                        clearly(player, "Jesus", "1E")
+                        if {@Kick} is true:
+                          make server execute command "/guard kick %player%"
+                          stop
+                        if {@Ban} is true:
+                          make server execute command "/guard ban %player% 7 day"
+                      if {Alerte.Jesus.%player%} > 19:
+                        #add 1 to {guard.%player%.total.vl}
+                        maybe(player, "Jesus", "2E")
+                      if {Alerte.Jesus.%player%} > 14:
+                        #add 1 to {guard.%player%.total.vl}
+                        maybe(player, "Jesus", "3E")
+every 8 second:
+  loop all players:
+    clear {Alerte.Jesus.%loop-player%}
+on jump:
+  if {guard.check.JESUS} is false:
+    stop
+  if block below player is lava:
+    if block south below player is lava:
+      if block north below player is lava:
+        if block west below player is lava:
+          if block east below player is lava:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 3 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    #add 1 to {guard.%player%.total.vl}
+                    clearly(player, "Jesus", "1F")
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %player%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %player% 7 day"
+                  if {Alerte.Jesus.%player%} > 19:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "2F")
+                  if {Alerte.Jesus.%player%} > 14:
+                    #add 1 to {guard.%player%.total.vl}
+                    maybe(player, "Jesus", "3F")
+
+#--------------------------------------------------------
+#
+#             A N T I  A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+on leftclick:
+   if {guard.check.AUTOCLICKER} is true:
+      add 1 to {cpsL.%player%}
+      if {cpsL.%player%} >= 20:
+         cancel event
+         #OLD VL COUNTER
+         #add 1 to {guard.%player%.total.vl}
+         maybe(player, "AutoClicker", "1A")
+         if {guard.%player%.vl.AutoClicker} >= 5:
+            clearly(player, "AutoClicker", "1A")
+
+every 1 second:
+   loop all players:
+      clear {cpsL.%loop-player%}
+      clear {cpsR.%loop-player%}
+
+on rightclick:
+   if {guard.check.AUTOCLICKER} is true:
+      add 1 to {cpsR.%player%}
+      if {cpsL.%player%} >= 20:
+         cancel event
+         maybe(player, "AutoClicker", "1B")
+         #OLD VL COUNTER
+         #add 1 to {guard.%player%.total.vl}
+         if {guard.%player%.vl.AutoClicker} >= 5:
+            clearly(player, "AutoClicker", "1B")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   K I L L A U R A
+#
+#--------------------------------------------------------
+
+on npc left click:
+    if {check.%player%} is true:
+        add 1 to {bost.%player%}
+        if {guard.%player%.vl.Killaura} < 3:
+            maybe(player,"KillAura", "1E")
+        else:
+            clearly(player,"KillAura", "1E")
+        stop
+
+on damage:
+   if attacker is player:
+      if target of attacker is not victim:
+         if target of attacker is not victim:
+            if target of attacker is not victim:
+               add 1 to {countk.%attacker%} 
+               if {countk.%attacker%} >= 2:
+                  clearly(attacker, "HitBox", "1A")
+                  execute command "/wdr %attacker%"
+                  cancel event
+
+every 1 second:
+   loop all players:
+      clear {combo.%loop-player%}
+      clear {countk.%loop-player%}
+
+on damage:
+   if {guard.check.KILLAURA} is true:
+      if attacker is player:
+         add 0.5 to {combo.%attacker%}
+         if {combo.%attacker%} >= 2:
+            #add 1 to {guard.%attacker%.total.vl}
+            cancel event
+            maybe(attacker, "KillAura", "1A")
+            execute command "/wdr %attacker%"
+         if {@setback} is true:
+            cancel event
+
+on damage:
+  if {guard.check.KILLAURA} is false:
+    stop
+  if attacker is a player:
+    loop all blocks in radius 3 around attacker:
+      if loop-block is snow layer:
+        stop
+      if loop-block is ladder:
+        stop
+      if loop-block is vines:
+        stop
+      if loop-block is iron bars:
+        stop
+      if loop-block is fence:
+        stop
+      if loop-block is large fern:
+        stop
+      if loop-block is tall grass:
+        stop
+      if loop-block is button:
+        stop
+      if loop-block is door:
+        stop
+      if loop-block is fence gate:
+        stop
+      if loop-block is cobblestone wall:
+        stop
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.guard.check.bypass} is not set:
+        set {%victim's uuid%.guard.check.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            if {@setback} is true:
+              cancel event
+            if {guard.%attacker%.vl.Killaura} < 3:
+            #add 1 to {guard.%attacker%.total.vl}
+              maybe(attacker, "KillAura", "1B")
+              execute command "/wdr %attacker%"
+            else:
+              clearly(attacker, "KillAura", "1B")
+        delete {%attacker's uuid%.guard.check.killaura.check}
+  loop {guard.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.guard.check.cheat.cooldown.damage}
+
+#--------------------------------------------------------
+#
+#             A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+   set {_distance} to distance between attacker and victim
+   set {_distance.%attacKER%} to distance between attacker and victim
+   if {guard.check.Reach} is false:
+      stop
+   if attacker has speed:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      if {_distance} > 4.7:
+         if damage cause is not a projectile:
+            if {@setback} is true:
+               cancel event
+            #add 1 to {guard.%attacker%.total.vl}
+            clearly(attacker, "Reach", "1A")
+            execute command "/wdr %attacker%"
+
+on damage:
+  {guard.check.Reach} is true
+  set {_distance.%attacKER%} to distance between attacker and victim
+  delete {%attacker's uuid%.guard.check.cheat.cooldown.damage}
+  if distance between attacker and victim is greater than 4.2:
+    set {_r} to distance between attacker and victim
+    if attacker is a player:
+      if {%attacker's uuid%.guard.check.bypass} is not set:
+        if {%attacker's uuid%.guard.check.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.guard.check.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              if {%attacker's uuid%.guard.check.autoclicker.check} is not set:
+                if {_r} is less than 4.2:
+                  #add 1 to {guard.%attacker%.vl}
+                  #add 1 to {guard.%attacker%.total.vl}
+                  maybe(attacker, "Reach", "1B")
+                  execute command "/wdr %attacker%"
+                  if {@setback} is true:
+                    cancel event
+                  if {guard.%attacker%.vl} >= 20:
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %attacker% 7 day"
+                else if {_r} is less than 5.5:
+                  #add 1 to {guard.%attacker%.vl}
+                  #add 1 to {guard.%attacker%.total.vl}
+                  clearly(attacker, "Reach", "2B")
+                  execute command "/wdr %attacker%"
+                  if {@setback} is true:
+                    cancel event
+                  if {guard.%attacker%.vl} >= 10:
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %attacker% 7 day"
+              else:
+                if {%attacker's uuid%.guard.check} > 5:
+                  #add 1 to {guard.%attacker%.vl}
+                  #add 1 to {guard.%attacker%.total.vl}
+                  clearly(attacker, "Reach", "3B")
+                  execute command "/wdr %attacker%"
+                  if {@setback} is true:
+                    cancel event
+                  if {guard.%attacker%.vl} >= 1:
+                    if {@Kick} is true:
+                      make server execute command "/guard kick %attacker%"
+                      stop
+                    if {@Ban} is true:
+                      make server execute command "/guard ban %attacker% 7 day"
+          delete {%attacker's uuid%.guard.check.cheat.cooldown.damage}
+
+
+#--------------------------------------------------------
+#
+#             A N T I   N O F A L L
+#
+#--------------------------------------------------------
+
+on any move:
+    if {guard.check.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        #OLD VL COUNTER
+        #add 1 to {guard.%player%.total.vl}
+        if {guard.%player%.vl.Nofall} < 5:
+            maybe(player, "Nofall", "1A")
+        else:
+            clearly(player, "Nofall", "1A")
+        if {guard.%player%.vl} >= 15:
+            if {@Kick} is true:
+                make server execute command "/guard kick %player%"
+                stop
+            if {@Ban} is true:
+                make server execute command "/guard ban %player% 7 day"
+
+    if {_nofallcount} > 0:
+        stop
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on ladder:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I  F L I G H T
+#
+#--------------------------------------------------------
+
+on any movement:
+  if player's gamemode is not creative or spectator:
+    if player's flight mode is false:
+      if block under player is air:
+        if block at player is air:
+          if block above player is air:
+            if block 2 under player is not air:
+              stop
+            player is not on ground:
+              loop all blocks in radius 3 around player:
+                if loop-block is not air:
+                  stop
+                if loop-block is slime:
+                  stop
+              set {_y} to y location of player
+              wait 5 ticks
+              set {_y2} to y location of player
+              set {_y1} to difference between {_y} and {_y2}
+              if {_y1} = 0:
+                clearly(player, "Fly", "1G")
+              if {_y1} is between 0.0001 and 0.9:
+                if {legitfly.%player%} is true:
+                  stop
+                block under player is slime:
+                  stop
+                if {jump.%player%} is true:
+                  stop
+                if {guard.%player%.vl.Fly} < 5:
+                  maybe(player, "Fly", "2G")
+                else:
+                  clearly(player, "Fly", "2G")
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player%.guard.nochecks} is true:
+    stop
+  if {%player%.guard.epteleport} is true:
+    stop
+  if {teleport.%player%} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.bypass} is not set:
+      player's flight mode is false
+      if {GUARD} is not set:
+        if block at player is cobweb:
+          stop
+        if block above player is cobweb:
+          stop
+        if block under player is cobweb:
+          stop
+        set {_y} to player's y coordinate
+        wait 3 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player%.guard.slime} is not set:
+          #send "Y: &e%{_y}%"
+          if {_y} > 3:
+            block under player is not any stairs or any slabs or slime:
+              {guard.check.Flight} is true
+              wait 5 tick
+              if {legitfly.%player%} is true:
+                stop
+              if {teleport.%player%} is true:
+                stop
+              if {guard.%player%.vl.Fly} < 5:
+                maybe(player, "Fly", "1D")
+              else:
+                clearly(player, "Fly", "1D")
+          if {_y} is between 0.00001 and 0.09:
+            block under player is not any stairs or any slabs or slime:
+              {guard.check.Float} is true
+              {%player%.guard.jump} is not set
+              block under player is air
+              player is not on ground
+              clearly(player, "Fly", "2D")
+          if player's y coordinate is y coordinate of {_loc}:
+            {guard.check.Float} is true
+            {%player%.guard.jump} is not set
+            block under player is air
+            player is not on ground
+            block under player is not any stairs or any slabs or slime:
+              loop all blocks in radius 3 around player:
+                if loop-block is cobweb:
+                  stop
+              if {guard.%player%.vl.Fly} < 5:
+                maybe(player, "Fly", "3D")
+              else:
+                clearly(player, "Fly", "3D")
+        loop {guard.Delay} times:
+          wait 0.21 second
+        delete {%player%.guard.flight.delay}
+
+on any movement:
+  set {_loc} to player's location
+  delete {%player%.guard.bypass}
+  delete {%player%.guard.cheat.cooldown}
+  delete {%player%.guard.falldmg}
+  delete {%player%.guard.jump}
+  delete {%player%.guard.slime}
+  if {GUARD} is not set:
+    if {%player%.guard.bypass} is not set:
+      if {%player%.guard.cheat.cooldown} is not set:
+        set {%player%.guard.cheat.cooldown} to true
+        if player's flight mode is false:
+          if block under player is air:
+            delete {GUARD}
+          else:
+            if player is riding:
+              stop
+            else:
+              if {%player%.guard.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player%.guard.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 5 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          loop 255 times:
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is on ground:
+                            wait 3 ticks
+                            if {%player%.guard.slime} is not set:
+                              if {%player%.guard.damage} is not set:
+                                if {%player%.guard.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player%.guard.fix.slime} is not set:
+                                    wait 1 tick
+                                    if block under player is air:
+                                      block under player is not any slabs
+                                      loop all blocks in radius 3 around player:
+                                        if loop-block is slime:
+                                          stop
+                                        if loop-block is stairs:
+                                          stop
+                                        if loop-block is ladder:
+                                          stop
+                                        if loop-block is ice:
+                                          stop
+                                        if loop-block is packed ice:
+                                          stop
+                                        if loop-block is vines:
+                                          stop
+                                        if loop-block is slabs:
+                                          stop
+                                        if loop-block is cactus:
+                                          stop
+                                      block under player is slime:
+                                        stop
+                                      if {legitfly.%player%} is true:
+                                        stop 
+                                      maybe(player, "Fly", "1F")
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        block under player is not any slabs
+                                        if {_b1} is air:
+                                          {guard.check.Flight} is true
+                                          loop all blocks in radius 3 around player:
+                                            if loop-block is slime:
+                                              stop
+                                            if loop-block is stairs:
+                                              stop
+                                            if loop-block is ladder:
+                                              stop
+                                            if loop-block is ice:
+                                              stop
+                                            if loop-block is packed ice:
+                                              stop
+                                            if loop-block is vines:
+                                              stop
+                                            if loop-block is slabs:
+                                              stop
+                                          block under player is slime:
+                                            stop
+                                          if {legitfly.%player%} is true:
+                                            stop
+                                          clearly(player, "Fly", "2F")
+                                          if {@setback} is true:
+                                            teleport player to {guard.%player%.setback}
+                                      else:
+                                        if {%player%.guard.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player%.guard.damage} is not set:
+                                              block under player is not ladder:
+                                                block under player is not any slabs
+                                                {guard.check.Hover} is true
+                                                loop all blocks in radius 3 around player:
+                                                  if loop-block is slime:
+                                                    stop
+                                                  if loop-block is stairs:
+                                                    stop
+                                                  if loop-block is ladder:
+                                                    stop
+                                                  if loop-block is ice:
+                                                    stop
+                                                  if loop-block is packed ice:
+                                                    stop
+                                                  if loop-block is vines:
+                                                    stop
+                                                  if loop-block is slabs:
+                                                    stop
+                                                block under player is slime:
+                                                  stop
+                                                if {legitfly.%player%} is true:
+                                                  stop
+                                                if block above player is air:
+                                                  clearly(player, "Fly","3F")
+                                                  if {@setback} is true:
+                                                    teleport player to {guard.%player%.setback}
+
+on load:
+   delete {GUARD}
+
+on any move:
+  if {GUARD} is not set:
+    if {GUARD} is not set:
+      if {GUARD} is not set:
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                if {legitfly.%player%} is true:
+                  stop
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player%.guard.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player%.guard.slime} to true
+                          wait 10 second
+                          delete {%player%.guard.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player%.guard.slime} is not set:
+                        if block under player is air:
+                          if {%player%.guard.slime} is not set:
+                            {guard.check.Flight} is true
+                            player's targeted block is not ladder
+                            block at player is not water
+                            loop all blocks in radius 3 around player:
+                              if loop-block is slabs:
+                                stop
+                              if loop-block is stairs:
+                                stop
+                            clearly(player, "Fly", "1E")
+                            if {@setback} is true:
+                              teleport player to {guard.%player%.setback}
+                            set {%player%::guard.flight.status} to true
+                            wait 5 second
+                            delete {%player%::guard.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player%.guard.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {guard.check.Float} is true
+                              remove 1 from y coordinate of {%player%.guard.tp.loc}
+                              clearly(player, "Fly", "2E")
+                              if {@setback} is true:
+                                teleport player to {guard.%player%.setback}
+                              add 1 to y coordinate of {%player%.guard.tp.loc}
+
+on any movement:
+  {guard.check.Step} is true
+  if {legitfly.%player%} is true:
+    stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player%.guard.check.nochecks} is not set
+    {%player%.guard.check.epteleport} is not set
+    {%player%.guard.check.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player%.guard.check.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    block under player is not any stairs or any slabs or slime
+    if block under player is not air:
+      if {%player%.guard.check.step.player} is not set:
+        #OLD VL COUNTER
+        #add 1 to {guard.%player%.total.vl}
+        clearly(player, "Fly", "1C")
+    else:
+      {guard.check.FLY} is true
+      if {legitfly.%player%} is true:
+        stop
+      #OLD VL COUNTER
+      #add 1 to {guard.%player%.total.vl}
+      clearly(player, "Fly", "2C")
+
+on any movement:
+  if player's chestplate is an elytra:
+    stop
+  if {legitfly.%player%} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.check.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 3:
+        set {%player%.guard.check.walking} to true
+        set {%player%.guard.check.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player%.guard.check.walking}
+        delete {%player%.guard.check.walk.speed}
+      if {%player%.guard.check.nochecks} is true:
+        stop
+      if {%player%.guard.check.epteleport} is true:
+        stop
+      if {%player%.guard.check.teleport} is true:
+        stop
+      player is not riding
+      if {_dif} >= 3:
+        if {%player%.guard.check.teleport} is true:
+          stop
+        set {%player%.guard.check.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {guard.check.Blink} is true
+            #OLD VL COUNTER
+            maybe(player, "Blink", "1A")
+          else:
+            {guard.check.FLY} is true
+            if {legitfly.%player%} is true:
+              stop
+            #OLD VL COUNTER
+            #add 1 to {guard.%player%.total.vl}
+            clearly(player, "Fly", "1B")
+            if {@setback} is true:
+              teleport player to {guard.%player%.setback}
+        else:
+          {guard.check.ClickTP} is true
+          #OLD VL COUNTER
+          #add 1 to {guard.%player%.total.vl}
+          clearly(player, "ClickTp", "1A")
+          if {@setback} is true:
+            teleport player to {guard.%player%.setback}
+
+on damage:
+  set {cooldown.%victim%} to now
+every 5 second:
+  clear {alertl::*}
+on any move:
+  player is not riding
+  fly mode of player is false
+  gamemode of player is not spectator or creative
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      if player's chestplate is an elytra:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or stairs or ladder or slab or 165
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+        #OLD VL COUNTER
+        clearly(player, "Fly", "1A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "2A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "3A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "4A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "5A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "6A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        #OLD VL COUNTER
+        clearly(player, "Fly", "7A")
+        if {@setback} is true:
+          teleport player to {guard.%player%.setback}
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      #OLD VL COUNTER
+      clearly(player, "Fly", "8A")
+      if {@setback} is true:
+        teleport player to {guard.%player%.setback}
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        clear {vlsame.%player%}
+        stop
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I   H I G H J U M P
+#
+#--------------------------------------------------------
+
+on damage:
+   set {highjump.%victim%} to true
+   wait 0.5 second
+   delete {highjump.%victim%}
+
+on jump:
+   if {guard.check.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   if {legitfly.%player%} is true:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+      if loop-block is stairs:
+         stop
+      if loop-block is slabs:
+         stop
+   if {highjump.%player%} is true:
+      stop
+   set {_pos1} to y location of player
+   wait 5 ticks
+   set {_pos2} to y location of player
+   set {_d} to difference between {_pos1} and {_pos2}
+   if {_d} > 1.3:
+      #add 1 to {guard.%player%.total.vl}
+      if {@setback} is true:
+         teleport player to {guard.%player%.setback}
+      clearly(player, "HighJump", "1A")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   V C L I P
+#
+#--------------------------------------------------------
+
+on any movement:
+  loop all blocks in radius 4 around player:
+    if loop-block is slime:
+      stop
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 1 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  if {legitfly.%player%} is true:
+    stop
+  if {_y} > 1.35:
+    player's chestplate is not an elytra
+    player's gamemode is not creative or spectator
+    player's flight mode is false
+    player is not riding
+    #add 1 to {guard.%player%.total.vl}
+    if {guard.%player%.vl} < 5:
+      maybe(player, "Invalid Motion", "1A")
+    else:
+      clearly(player, "Invalid Motion", "1A")
+
+#--------------------------------------------------------
+#
+#             A N T I   S C A F F O L D
+#
+#--------------------------------------------------------
+
+on block place:
+  if {guard.check.SCAFFOLD} is false:
+    stop
+  if {teleport.%player%} is true:
+    stop
+  else:
+    set {_b} to block under player
+    set {_b} to block under {_b}
+    if {_b} is not air:
+      stop
+    else:
+      if block under event-block is not air:
+        stop
+      else:
+        if player's gamemode is not creative or spectator:
+          if {%player%.guard.bypass} is not set:
+            if y coordinate of event-block < y coordinate of player:
+              if player's pitch is between 9 and -90:
+                if {guard.delay.scaffold.%player%} is true:
+                  stop
+                set {guard.delay.scaffold.%player%} to true
+                if {@setback} is true:
+                  cancel event
+                clearly(player, "Invalid Placement", "1A")
+                if {@Kick} is true:
+                  make server execute command "/guard kick %PLAYER%"
+                  stop
+                if {@Ban} is true:
+                  make server execute command "/guard ban %PLAYER% 7 day"
+              else:
+                set {%player%.guard.old.pitch.time} to {%player%.guard.new.pitch.time}
+                set {%player%.guard.old.pitch} to {%player%.guard.new.pitch}
+                set {%player%.guard.new.pitch} to player's pitch
+                set {%player%.guard.new.pitch.time} to now
+                set {_dif.time} to difference between {%player%.guard.old.pitch.time} and {%player%.guard.new.pitch.time}
+                set {_dif.pitch} to difference between {%player%.guard.old.pitch} and {%player%.guard.new.pitch}
+                if {_dif.time} <= 0.3 seconds:
+                  if {_dif.pitch} <= 2.5:
+                    #add 1 to {guard.%player%.total.vl}
+                    if {@setback} is true:
+                      cancel event
+                    if {guard.%player%.vl} < 15:
+                      maybe(player, "Scaffold", "1A")
+                    else:
+                      clearly(player, "Scaffold", "1A")
+                if {_dif.time} = 0 seconds:
+                  add 0.5 to {vl.%player%}
+                  #add 1 to {guard.%player%.total.vl}
+                  if {@setback} is true:
+                    cancel event
+                  clearly(player, "Invalid Placement", "2A")
+                  if {@Kick} is true:
+                    make server execute command "/guard kick %player%"
+                    stop
+                  if {@Ban} is true:
+                    make server execute command "/guard ban %player% 7 day"
+                if player is sprinting:
+                  if player's pitch is between 90 and 50:
+                    clearly(player, "Scaffold", "2A")
+                    cancel event
+            delete {guard.delay.scaffold.%player%}
+
+#--------------------------------------------------------
+#
+#             A N T I   S P E E D
+#
+#--------------------------------------------------------
+
+#import:
+  #org.bukkit.event.player.PlayerMoveEvent
+
+#on PlayerMoveEvent:
+on any move:
+   #set player to event.getPlayer()
+   if flight mode of player is false:
+      if player doesn't have speed or jump boost:
+         if {%player%.guard.check.nochecks} is not set:
+            if {%player%.guard.check.teleport} is true:
+               stop
+            if {%player%.guard.check.epteleport} is true:
+               stop
+            set {_x} to x coordinate of player
+            set {_z} to z coordinate of player
+            set {_bap} to block above player
+            set {_bap2} to block above player
+            wait 10 ticks
+            set {_x1} to x coordinate of player
+            set {_z1} to z coordinate of player
+            set {_x} to difference between {_x1} and {_x}
+            set {_z} to difference between {_z1} and {_z}
+            replace all "-" with "" in {_x}
+            replace all "-" with "" in {_z}
+            if {_x} > {_z}:
+               set {_speed} to {_x}
+            if {_z} > {_x}:
+               set {_speed} to {_z}
+            if {_x} = {_z}:
+               set {_speed} to {_x}
+            walking speed of player is between 0 and 0.3
+            if {_speed} is greater than 4:
+               set {%player%.guard.check.cheat.speed} to {_speed} * 4
+               if player is not riding:
+                  if {%player%.guard.check.jump.bhop} is not set:
+                     if  player is not flying:
+                        if block under player is not air:
+                           if block 2 under player is not air:
+                              loop all blocks in radius 3 around player:
+                                 if loop-block is ice:
+                                    stop
+                                 if loop-block is packed ice:
+                                    stop
+                                 if loop-block is slime:
+                                    stop
+                              {guard.check.Speed} is true
+                              wait 3 tick
+                              if {teleport.%player%} is true:
+                                 stop
+                              if {legitfly.%player%} is true:
+                                 stop
+                              #add 1 to {guard.%player%.total.vl}
+                              if {guard.%player%.vl.Speed} < 10:
+                                 maybe(player, "Speed", "1A")
+                              else:
+                                 clearly(player, "Speed", "1A")
+                           else:
+                              block under player is not any stairs or any slabs or slime:
+                                 {guard.check.Speed} is true
+                                 #add 1 to {guard.%player%.total.vl}
+                                 clearly(player, "Speed", "2A")
+
+on death:
+   set {dead.%victim%} to true
+   delete {guard.%victim%.setback}
+
+on respawn:
+   wait 1 second
+   delete {dead.%player%}
+   teleport player to {Spawn}
+
+on quit:
+   delete {dead.%player%}
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.bypass} is not set:
+      if difference between {%player%.guard.last.jump} and now is less than or equal to 1 seconds:
+        set {%player%.guard.jump.bhop} to true
+        wait 1 second
+        delete {%player%.guard.jump.bhop}
+      set {%player%.guard.last.jump} to now
+      set {%player%.guard.jump} to true
+      wait 10 ticks
+      delete {%player%.guard.jump}
+
+on jump:
+   set {jump.%player%} to true
+   wait 15 ticks
+   set {jump.%player%} to false
+
+on step on slime block:
+   if {GUARD} is not set:
+      set {legitfly.%player%} to true
+      wait 1.5 second
+      set {legitfly.%player%} to false
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.bypass} is not set:
+      set {teleport.%player%} to true
+      set {legitfly.%player%} to true
+      set {teleport.%player%} to true
+      wait 2.2 second
+      set {teleport.%player%} to false
+      set {legitfly.%player%} to false
+      set {teleport.%player%} to false
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player%.guard.epteleport} to true
+        set {teleport.%player%} to true
+
+on projectile hit:
+   if projectile is enderpearl:
+      delete {%shooter%.guard.eteleport}
+      delete {%shooter%.guard.teleport}
+
+#--------------------------------------------------------
+#
+#             A N T I   I N V M O V E
+#
+#--------------------------------------------------------
+
+on inventory open:
+   wait 2 ticks
+   set {invstat.%player%} to true
+
+on inventory close:
+   set {invstate.%player%} to false
+
+on quit:
+   set {invstate.%player%} to false
+
+on any move:
+   set {_loc} to player's location
+   set y coordinate of {_loc} to 0
+   wait 5 tick
+   set {_loc1} to player's location
+   set y coordinate of {_loc1} to 0
+   set {_loc} to distance between {_loc1} and {_loc}
+   if {invpop.%player%} is set:
+      if {_loc} > 2:
+         block under player is not water or air or packed ice:
+            close player's inventory
+            clearly(player, "Invalid Actions", "1A*")
+
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    cancel event
+    clearly(player, "Inventory Move", "1A")
+    close player's inventory
+  if player is sneaking:
+    cancel event
+    clearly(player, "Inventory Move", "2A")
+    close player's inventory
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    clearly(player, "Inventory Move", "3A")
+    close player's inventory
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    clearly(player, "AutoSneak", "4A")
+    close player's inventory
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+on inventory open:
+  wait 4 ticks
+  if player is sprinting:
+    clearly(player, "Inventory Move", "5A")
+    close player's inventory
+on inventory open:
+  wait 4 ticks
+  if player is sneaking:
+    clearly(player, "AutoSneak", "6A")
+    close player's inventory
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T P L A C E
+#
+#--------------------------------------------------------
+
+on block place:
+   set {_waited} to difference between {fastplace.%player%} and now
+   if {_waited} is less than 1 ticks:
+      #add 1 to {guard.%player%.total.vl}
+      if {guard.%player%.vl.FastPlce} < 5:
+         maybe(player, "FastPlace", "1A")
+      else:
+         clearly(player, "FastPlace", "1A")
+      cancel event
+      set {fastplace.%player%} to now
+      set {fastplace.amount.%player%} to {fastplace.amount.%player%} + 1
+   else:
+      set {fastplace.%player%} to now
+
+#--------------------------------------------------------
+#
+#             T E M P B A N C O D E 
+#
+#--------------------------------------------------------
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "{@guard} &cYour are banned for &e%{tempban.time::%player%}%&c from this server !"
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+
+
+#--------------------------------------------------------
+#
+#             A N T I   N O S L O W
+#
+#--------------------------------------------------------
+
+on eating:
+  if player's gamemode is not creative or spectator:
+    if {%player%.guard.bypass} is not set:
+      {guard.check.NoSlow} is true
+      player's flight mode is false
+      if player has speed:
+        stop
+    set {_loc} to player's location
+    set y coordinate of {_loc} to 0
+    wait 5 tick
+    set {_loc1} to player's location
+    set y coordinate of {_loc1} to 0
+    set {_loc} to distance between {_loc1} and {_loc}
+    if {_loc} > 1.2:
+      set {%player%.guard.cancel.eat} to true
+      #add 1 to {guard.%player%.total.vl}
+      clearly(player, "NoSlow", "1A")
+      wait 1 seconds
+      delete {%player%.guard.cancel.eat}
+
+#--------------------------------------------------------
+#
+#             A N T I   F U C K E R
+#
+#--------------------------------------------------------
+
+on break:
+  if event-block is not player's targeted block:
+    if "%event-block%" contains "bed" or "dragon egg":
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player%.guard.nochecks} is not set
+        {%player%.guard.epteleport} is not set
+        {teleport.%player%} is not set
+        player's gamemode is not creative or spectator
+        {%player%.guard.bypass} is not set
+        if targeted block is iron bars or fence or glass pane:
+          stop
+        cancel event
+        if "%event-block%" contains "bed" or "dragon egg":
+          if "%event-block%" contains "bed":
+            #add 1 to {guard.%player%.total.vl}
+            clearly(player, "Invalid Break", "1A")
+            if {@Kick} is true:
+              make server execute command "/guard kick %player%"
+              stop
+            if {@Ban} is true:
+              make server execute command "/guard ban %player% 7 day"
+          else:
+            #add 1 to {guard.%player%.total.vl}
+            clearly(player, "Invalid Break", "2A")
+            if {@Kick} is true:
+              make server execute command "/guard kick %player%"
+              stop
+            if {@Ban} is true:
+              make server execute command "/guard ban %player% 7 day"
+    else:
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player%.guard.nochecks} is not set
+        {%player%.guard.epteleport} is not set
+        {teleport.%player%} is not set
+        player's gamemode is not creative or spectator
+        {%player%.guard.bypass} is not set
+        cancel event
+        #add 1 to {guard.%player%.total.vl}
+        clearly(player, "Invalid Break", "3A")
+        if {@Kick} is true:
+          make server execute command "/guard kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/guard ban %player% 7 day"
+
+on left click:
+  if clicked block is not targeted block:
+    {%player%.guard.nochecks} is not set
+    {%player%.guard.epteleport} is not set
+    {teleport.%player%} is not set
+    player's gamemode is not creative or spectator
+    {%player%.guard.bypass} is not set
+    if targeted block is iron bars or fence or glass pane:
+      stop
+    if event-block is cake:
+      cancel event
+      if event-block is cake:
+        #add 1 to {guard.%player%.total.vl}
+        clearly(player, "Invalid Use", "1A")
+        if {@Kick} is true:
+          make server execute command "/guard kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/guard ban %player% 7 day"
+
+on right click:
+  if clicked block is not targeted block:
+    {%player%.guard.nochecks} is not set
+    {%player%.guard.epteleport} is not set
+    {teleport.%player%} is not set
+    player's gamemode is not creative or spectator
+    {%player%.guard.bypass} is not set
+    if targeted block is iron bars or fence or glass pane:
+      stop
+    loop all blocks in radius 3 around player:
+      if loop-block is glass pane:
+        stop
+    if event-block is dragon egg or cake:
+      cancel event
+      if event-block is cake:
+        #add 1 to {guard.%player%.total.vl}
+        clearly(player, "Invalid Use", "1B")
+        if {@Kick} is true:
+          make server execute command "/guard kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/guard ban %player% 7 day"
+      else:
+        if targeted block is iron bars or fence or glass panes:
+          stop
+        #add 1 to {guard.%player%.total.vl}
+        clearly(player, "Invalid Break", "1B")
+        if {@Kick} is true:
+          make server execute command "/guard kick %player%"
+          stop
+        if {@Ban} is true:
+          make server execute command "/guard ban %player% 7 day"
+
+#--------------------------------------------------------
+#
+#             A N T I   N O W E B
+#
+#--------------------------------------------------------
+
+on any move:
+   if block at player is cobweb:
+      if {teleport.%player%} is true:
+         stop
+      set {_w1} to player's location
+      wait 5 ticks
+      if distance between {_w1} and player's location is bigger than 0.35:
+         #add 1 to {guard.%player%.total.vl}
+         clearly(player, "NoWeb", "1A")
+
+#--------------------------------------------------------
+#
+#             A N T I   C H E S T S T E A L E R
+#
+#--------------------------------------------------------
+
+on unstore:
+   set {_waited} to difference between {ChestStealer.%player%} and now
+   if {_waited} is less than 1 ticks:
+      #add 1 to {guard.%player%.total.vl}
+      clearly(player, "ChestStealer", "1A")
+      cancel event
+      close player's inventory
+      set {ChestStealer.%player%} to now
+      set {ChestStealer.amount.%player%} to {ChestStealer.amount.%player%} + 1
+   else:
+      set {ChestStealer.%player%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I   F A S T B O W
+#
+#--------------------------------------------------------
+
+on shoot:
+   if projectile is arrow:
+      set {_waited} to difference between {Shoot.%shooter%} and now
+      if {_waited} is less than 2 ticks:
+         add 1 to {guard.%shooter%.total.vl}
+         clearly(shooter, "FastBow", "1A")
+         cancel event
+         set {Shoot.%shooter%} to now
+         set {Shoot.amount.%shooter%} to {Shoot.amount.%shooter%} + 1
+      else:
+         set {Shoot.%shooter%} to now
+
+#--------------------------------------------------------
+#
+#             A N T I   T I M E R
+#
+#--------------------------------------------------------
+
+on any move:
+   add 1 to {move.%player%}
+
+every 1 second:
+   loop all players:
+      delete {move.%loop-player%}
+
+on any move:
+   if {move.%player%} > 25:
+      if {guard.%player%.vl.Timer} < 10:
+         maybe(player, "Timer", "1A")
+      else:
+         clearly(player, "Timer", "1A")
+
+
+#--------------------------------------------------------
+#
+#             A N T I   I N V A L I D  M O V E S
+#
+#--------------------------------------------------------
+
+on damage:
+   set {invalidmove.%victim%} to true
+   wait 0.5 second
+   delete {invalidmove.%victim%}
+
+on any move:
+   if player is not on ground:
+      if block under player is air:
+         if fly mode of player is false:
+            if block at player is air:
+               if block under player is any stairs or any slabs or slime:
+                  stop
+               set {_loc} to player's location
+               set y coordinate of {_loc} to 0
+               wait 5 tick
+               set {_loc1} to player's location
+               set y coordinate of {_loc1} to 0
+               set {_loc} to distance between {_loc1} and {_loc}
+               if {_loc} >= 3.8:
+                  if {legitfly.%player%} is true:
+                     stop
+                  if {invalidmove.%player%} is true:
+                     stop
+                  if {guard.%player%.vl.Invalid Move} < 5:
+                     maybe(player, "Invalid Move", "1A")
+                  else:
+                     clearly(player, "Invalid Move", "1A")
+
+on any move:
+   if player is not on ground:
+      if block under player is air:
+         if fly mode of player is false:
+            if block at player is air:
+               if block under player is any stairs or any slabs or slime:
+                  stop
+               set {_loc} to player's location
+               set y coordinate of {_loc} to 0
+               wait 5 tick
+               set {_loc1} to player's location
+               set y coordinate of {_loc1} to 0
+               set {_loc} to distance between {_loc1} and {_loc}
+               if {_loc} >= 5:
+                  if {legitfly.%player%} is true:
+                     stop
+                  clearly(player, "Invalid Move", "1B")
+
+#--------------------------------------------------------
+#
+#             A N T I   A I R  S T R A F E
+#
+#--------------------------------------------------------
+
+on any move:
+   if player is not on ground:
+      if block under player is air:
+         if block at player is air:
+            if player's fly mode is true:
+               stop
+            loop all blocks in radius 3 around player:
+               if loop-block is not air:
+                  stop
+            set {_pos1} to player's location
+            set y coordinate of {_pos1} to 0
+            wait 2 tick
+            set {_pos2} to player's location
+            set y coordinate of {_pos2} to 0
+            set {_loc} to distance between {_pos1} and {_pos2}
+            if {_loc} >= 1.3:
+               if {guard.%player%.vl.Strafe} < 3:
+                  maybe(player, "Strafe", "1A")
+               else:
+                  clearly(player, "Strafe", "1A")
+
+#BETA ---------------------------------------------------------------------------------------------------------------------
+
+on place:
+   if target block of player is not event-block:
+      clearly(player, "Invalid Interact", "1A*")
+
+on any move:
+   if player is sneaking:
+      if player's fly mode is true:
+         stop
+      if {teleport.%player%} is true:
+         stop
+      set {_loc} to player's location
+      set y location of {_loc} to 0
+      wait 2 ticks
+      set {_loc1} to player's location
+      set y location of {_loc1} to 0
+      set {_d} to distance between {_loc1} and {_loc}
+      if player doesn't have speed or jump boost:
+         if {_d} >= 0.56:
+            if {legitfly.%player%} is true:
+               stop
+            if player is sneaking:
+               if block under player is not air:
+                  clearly(player, "Sneak", "1A*")
+
+on eat:
+   set {_waited} to difference between {eat.%player%} and now
+   if {_waited} is less than 1.6 second:
+      #add 1 to {guard.%player%.total.vl}
+      clearly(player, "FastUse", "1A*")
+      cancel event
+      close player's inventory
+      set {eat.%player%} to now
+      set {eat.amount.%player%} to {eat.amount.%player%} + 1
+   else:
+      set {eat.%player%} to now
+
+on any move:
+   block at player is vines or ladder:
+      if block under player is vines or ladder:
+         set {_y} to y location of player
+         wait 2 tick
+         set {_y2} to y location of player
+         set {_yd} to difference between {_y} and {_y2}
+         if {_yd} > 0.68:
+            clearly(player, "FastClimb", "1A*")
+
+on any move:
+   if block under player is cobweb:
+      if block above player is air:
+         if block at player is air:
+            add 1 to {countw.%player%}
+            if {countw.%player%} > 5:
+               clearly(player, "BlockWalk", "1A*")
+               delete {countw.%player%}
+            if {coutw.%player%} < 5:
+               stop

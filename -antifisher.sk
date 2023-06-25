@@ -1,0 +1,1970 @@
+﻿#/// TEST ///
+
+command /ff [<text>] [<player>]:
+  permission: op
+  trigger:
+    if arg 1 is not set:
+      send "&c/ff invoque"
+      send "&c/ff check [<player>]"
+    if arg 1 is "invoque":
+      spawn a zombie at {Anticheat.loc}
+      set {last} to last spawned entity
+    if arg 1 is "check" :
+      if arg 2 is set:
+        set {Anticheat.loc} to location of arg 2
+        make server execute command "/ff invoque"
+        loop all entities:
+          "%uncoloured name of loop-entity%" is "Zombie"
+          loop 10 times:
+            teleport loop-entity 3 meter behind arg 2
+            wait 2 tick
+            teleport loop-entity 3 meter behind arg 2
+          loop 10 times:
+            teleport loop-entity 5 meters above arg 2
+            wait 1 ticks
+            teleport loop-entity 5 meters above arg 2
+          loop 15 times:
+            teleport loop-entity 4.5 meters in front of arg 2
+            wait 5 ticks
+            teleport loop-entity 4.5 meters in front of arg 2
+          wait 10 ticks
+          delete last spawned entity
+
+on damage:
+   if attacker is player:
+      if victim is "BugerKing":
+         send "&7[&b&lAnti&5&lFisher&7] &c%attacker% &7failed &cKillAura" to all players where [player input has permission "WatchCat.logs"]
+
+
+command /anticheat:
+   permission: op
+   trigger:
+      clear {Anticheat.loc}
+      set {Anticheat.loc} to player's location
+      clear {last}
+      clear {namenpc}
+
+#/// FASTBOW ///
+
+on shoot:
+   if {antifisher.Fastbow} is false:
+      stop
+   if projectile is an arrow:
+      if difference between {bow.%shooter%} and now is less than 2 ticks:
+         add 1 to {vl.%shooter%}
+         loop all players:
+            loop-player has permission "staff":
+               if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] &7%shooter% &futilise FastBow&7 (T: A) &f(VL:&b %{vl.%shooter%}%&f)" to loop-player
+         if {vl.%shooter%} >= 10:
+            loop all players:
+               loop-player has permission "staff":
+                  if {antifisher.autoban} is false:
+                     stop
+                  make server execute command "/afban %shooter% 1 hour"
+                  broadcast "&7&m-----------------------------------"
+                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%shooter% &edu serveur!"
+                  broadcast "&c&l❌ &eRaison: &cFastBow"
+                  broadcast "&7&m-----------------------------------"
+         set {bow.%shooter%} to now
+
+#/// REACH ///
+
+on damage:
+   if {antifisher.Reach} is false:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      set {_distance.%attacker%} to distance between attacker and victim
+      if {_distance.%attacker%} >= 3.8:
+         if damage cause is not a projectile:
+            cancel event
+            add 1 to {vl.%attacker%}
+            loop all players:
+               loop-player has permission "anticheat.alerts":
+                  if {antifisher.notify.%loop-player%} is true:
+                     send "&7[&b&lAnti&5&lFisher&7] &7%attacker% &futilise Reach&7 (T: A) &a(%{_distance.%attacker%}%) &f(VL:&b %{vl.%attacker%}%&f)" to loop-player
+            if {vl.%attacker%} >= 13:
+               if {antifisher.autoban} is false:
+                  stop
+               broadcast "&7&m-----------------------------------"
+               broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%attacker% &edu serveur!"
+               broadcast "&c&l❌ &eRaison: &cReach"
+               broadcast "&7&m-----------------------------------"
+               make server execute command "/smite %attacker%"
+               make server execute command "/afban %attacker% 1 hour"
+
+on damage:
+   if {antifisher.Reach} is false:
+      stop
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      set {_distance.%attacker%} to distance between attacker and victim
+      if {_distance.%attacker%} >= 6.7:
+         if damage cause is not a projectile:
+            cancel event
+            if {antifisher.autoban} is false:
+               stop
+            make server execute command "/smite %attacker%"
+            make server execute command "/afban %attacker% 1 hour"
+            broadcast "&7&m-----------------------------------"
+            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%attacker% &edu serveur!"
+            broadcast "&c&l❌ &eRaison: &cInfinit Aura"
+            broadcast "&7&m-----------------------------------"
+
+
+#/// ANTIKNOCKBACK ///
+
+on damage:
+   if {antifisher.Velocity} is false:
+      stop
+   if victim is a player:
+      if damage cause is fall:
+         stop
+      if damage cause is drown:
+         stop
+      if victim's gamemode is creative:
+         stop
+      if victim is flying:
+         stop
+      if victim have poison:
+         stop
+      if victim have wither:
+         stop
+      if victim is burning:
+         stop
+      set {loc1.%victim%} to location of victim
+      wait 1 second
+      set {loc2.%victim%} to location of victim
+      if {loc1.%victim%} = {loc2.%victim%}:
+         add 1 to {vl.%victim%}
+         loop all players:
+            loop-player has permission "anticheat.alerts":
+               send "&7[&b&lAnti&5&lFisher&7] &7%victim% &futilise AntiKnockback &f(VL: &b%{vl.%victim%}%" to loop-player
+      if {vl.%victim%} >= 15:
+         if {antifisher.autoban} is false:
+            stop
+         make server execute command "/afban %victim% 1 hour"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%victim% &edu serveur!"
+         broadcast "&c&l❌ &eRaison: &cAntiKnockBack"
+         broadcast "&7&m-----------------------------------"
+
+
+#/// AUTOCLICKER / MACRO ///
+
+on leftclick:
+   if {antifisher.Autoclicker} is false:
+      stop
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 18:
+      cancel event
+      send "&b&lFish&5&lFish &e&l>> &cWarning ! Your clicking too fast !"
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Autoclicker &7(T: A) &f(CPS: &b%{cps.%player%}%&f) (VL: &b%{vl.%player%}%&f)" to loop-player
+            add 1 to {vl.%player%}
+      if {vl.%player%} >= 10:
+         if {antifisher.autoban} is false:
+            stop
+         make server execute command "/smite %player%"
+         make server execute command "/tempban %player% 30 minute"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+         broadcast "&c&l❌ &eRaison: &cAutoclicker"
+         broadcast "&7&m-----------------------------------"
+
+on rightclick:
+   if {antifisher.Autoclicker} is false:
+      stop
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 15:
+      cancel event
+      send "&b&lFish&5&lFish &e&l>> &cWarning ! Your clicking too fast !"
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Autoclicker&7 (T: B) &f(CPS: &b%{cps.%player%}%&f) (VL: &b%{vl.%player%}%&f)" to loop-player
+            add 1 to {vl.%player%}
+      if {vl.%player%} >= 10:
+         if {antifisher.autoban} is false:
+            stop
+         make server execute command "/smite %player%"
+         make server execute command "/afban %player% 1 hour"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+         broadcast "&c&l❌ &eRaison: &cAutoclicker"
+         broadcast "&7&m-----------------------------------"
+
+
+#/// EVENTS ///
+on join:
+   if player has permission "anticheat.alerts":
+      if {antifisher.notify.%player%} is not set:
+         set {antifisher.notify.%player%} to false
+         send "&7[&b&lAnti&5&lFisher&7] &cNotifications turned off" to player
+on script load:
+   if {antifisher.autoban} is not set:
+      set {antifisher.autoban} to true
+
+on script load:
+   if {antifisher.setback} is not set:
+      set {antifisher.setback} to true
+
+on join:
+   wait 2 second
+   message "&7[&b&lAnti&5&lFisher&7] &r&eAnything that gives you an unfair advantage over other players is against the rules...this includes autoclickers, minimaps, & other cheats. You have been warned!"
+
+every 1 second:
+   loop all players:
+      clear {cps.%loop-player%}
+
+every 10 second:
+   loop all players:
+      clear {vl.%loop-player%}
+
+on death:
+   set {void.%player%} to true
+
+on respawn:
+   set {void.%player%} to true
+
+every 4 second:
+   set {sback} to true
+   wait 2 second
+   set {sback} to false
+
+#/// SETBACK ///
+
+every 1 tick:
+   if {antifisher.setback} is false:
+      loop all players:
+         clear {setback.%loop-player%}
+
+every 1 second:
+   if {antifisher.setback} is false:
+      stop
+   loop all players:
+      loop-player is on ground:
+         set {setback.%loop-player%} to location of loop-player
+
+#/// NOFALL ///
+
+on any move:
+    if {antifisher.Nofall} is false:
+        stop
+    {time.%player%} is not set
+    player's gamemode is Adventure or Survival
+    player is on ground
+    block at player is air
+    block under player is air
+    set {_nofallcount} to 0
+    loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+            stop
+        if loop-block is slab:
+            stop
+    loop all blocks in radius 2 around player:
+        if loop-block is not air:
+            add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+        add 1 to {vl.%player%}
+        teleport player to {setback.%player%}
+        loop all players:
+            loop-player has permission "anticheat.alerts":
+                if {antifisher.notify.%loop-player%} is true:
+                    send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Nofall &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+        if {vl.%player%} >= 15:
+            if {antifisher.autoban} is false:
+                stop
+            make server execute command "/afban %player% 1 hour"
+            broadcast "&7&m-----------------------------------"
+            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+            broadcast "&c&l❌ &eRaison: &cNofall"
+            broadcast "&7&m-----------------------------------"
+    if {_nofallcount} > 0:
+        stop
+   
+every 1 second:
+   if {antifisher.Nofall} is false:
+      stop
+   loop all players:
+      loop-player's gamemode is Adventure or Survival
+      loop-player is on ground
+      block under loop-player is air
+      set {_y} to loop-player's y-location
+      wait 0.5 second
+      loop-player is on ground
+      set {_y2} to loop-player's y-location  
+      set {_yresult} to {_y} - {_y2}
+      if {_yresult} > 1:
+         add 1 to {vl.%loop-player%}
+         teleport loop-player to {setback.%loop-player%}
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               send "&7[&b&lAnti&5&lFisher&7] %loop-player-1% &futilise Nofall &7(T: B) &f(VL: &b%{vl.%loop-player-1%}%&f)" to loop-player
+      if {vl.%loop-player%} >= 10:
+         if {antifisher.autoban} is false:
+            stop
+         make server execute command "/tban %loop-player% 1 hour"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%loop-player% &edu serveur!"
+         broadcast "&c&l❌ &eRaison: &cNofall"
+         broadcast "&7&m-----------------------------------"
+   
+on walk on slab:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on walk on stairs:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 2 seconds
+        clear {time.%player%}
+on break:
+    if {time.%player%} is not set:
+        set {time.%player%} to true
+        wait 0.5 seconds
+        clear {time.%player%}
+
+#/// FLY ///
+
+function Detect(p: player, r: text):
+  if {antifisher.Float} is false:
+    stop
+  if {_p} is flying:
+    stop
+  if {_p} fly mode is true:
+    stop
+  block under {_p} is ladder:
+    stop
+  loop all blocks in radius 3 around {_p}:
+    if loop-block is slab:
+      stop
+    if loop-block is water:
+      stop
+    if loop-block is vine:
+      stop
+    if loop-block is snow layer:
+      stop
+  loop all blocks in radius 3 around {_p}:
+    if loop-block is stairs:
+      stop
+    if loop-block is slab:
+      stop
+    if loop-block is ladder:
+      stop
+  add 1 to {alertl::%{_p}%}
+  if {alertl::%{_p}%} >= 3:
+    teleport {_p} to {setback.%{_p}%}
+  loop all players:
+    loop-player has permission "anticheat.alerts":
+      if {antifisher.notify.%loop-player%} is true:
+        send "&7[&b&lAnti&5&lFisher&7] &7%{_p}% &futilise Fly &c(%{_r}%&c) &f(VL: &b%{alertl::%{_p}%}%&f)" to loop-player
+  if {alertl::%{_p}%} >= 15:
+    if {antifisher.autoban} is false:
+      stop
+    make server execute command "/smite %{_p}%"
+    make server execute command "/afban %{_p}% 1 hour"
+    broadcast "&7&m-----------------------------------"
+    broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%{_p}% &edu serveur!"
+    broadcast "&c&l❌ &eRaison: &cFly"
+    broadcast "&7&m-----------------------------------"
+on damage:
+  set {cooldown.%victim%} to now
+
+every 8 second:
+  clear {alertl::*}
+
+on any move:
+  player is not riding
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.08":
+        {vl08.%player%} is set
+        clear {vl08.%player%}
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+        player's gamemode is not creative
+        loop blocks in radius 3 around player:
+          loop-block is vines
+          clear {vlsame.%player%}
+          stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+      if "%{_diffy}%" = "0.08":
+        add 1 to {vl08.%player%}
+        {vl08.%player%} > 12
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 12
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 12
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 12
+        Detect(player, "Fly V1 &a %{_diffy}%")
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}               
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        Detect(player, "Fly v1 &d 0.12")
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        Detect(player, "Fly v1 &d 0.4")
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        Detect(player, "Fly V1 &1 %{_diffy}%")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.08" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      Detect(player, "Fly v1 &a%{_diffy}%")
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+#/// JESUS ///
+
+on walk on water:
+  if {antifisher.Jesus} is false:
+    stop
+  player's gamemode is not creative
+  player is not riding
+  player is not sneaking
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 2 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: C) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+                        if {antifisher.autoban} is false:
+                          stop
+                        make server execute command "/afban %player% 1 hour"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                        broadcast "&7&m-----------------------------------"
+                        stop
+                  if {Alerte.Jesus.%player%} > 19:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: C) &f(VL: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        if {jesus.%player%} is true:
+                          stop
+                        set {jesus.%player%} to true
+                        teleport player to {setback.%player%}
+                        if {antifisher.autoban} is false:
+                          stop
+                        kick player due to "&7[&b&lAnti&5&lFisher&7] &cJesus/Waterwalk"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                        broadcast "&7&m-----------------------------------"
+                        stop
+                  if {Alerte.Jesus.%player%} > 14:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: C) &f(VL: &e%{Alerte.Jesus.%player%}%)" to loop-player
+                        teleport player to {setback.%player%}
+      
+
+command /clearjesus:
+  trigger:
+    clear {Alerte.Jesus.%player%}
+    set {jesus.%player%} to false
+on any move:
+  if {antifisher.Jesus} is false:
+    stop
+  if player's gamemode is not creative:
+    if player is sneaking:
+      stop
+    else:
+      if block below player is water:
+        if block south below player is water:
+          if block north below player is water:
+            if block west below player is water:
+              if block east below player is water:
+                if block south player is air:
+                  if block north player is air:
+                    if block west player is air:
+                      block east player is air
+                      add 1 to {Alerte.Jesus.%player%}
+                      if {Alerte.Jesus.%player%} > 25:
+                        loop all players:
+                          loop-player has permission "anticheat.alerts":
+                            if {antifisher.notify.%loop-player%} is true:
+                              send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: D) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            teleport player to {setback.%player%}
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                            broadcast "&7&m-----------------------------------"
+                            stop
+                      if {Alerte.Jesus.%player%} > 19:
+                        loop all players:
+                          loop-player has permission "anticheat.alerts":
+                            if {antifisher.notify.%loop-player%} is true:
+                              send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: D) &f(Vl: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            if {jesus.%player%} is true:
+                              stop
+                            set {jesus.%player%} to true
+                            teleport player to {setback.%player%}
+                            if {antifisher.autoban} is false:
+                              stop
+                            kick player due to "&7[&b&lAnti&5&lFisher&7] &cJesus/Waterwalk"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                            broadcast "&7&m-----------------------------------"
+                          stop
+                      if {Alerte.Jesus.%player%} > 14:
+                        loop all players:
+                          loop-player has permission "anticheat.alerts":
+                            if {antifisher.notify.%loop-player%} is true:
+                              send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: D) &f(VL: &e%{Alerte.Jesus.%player%}%&f)" to loop-player
+                            teleport player to {setback.%player%}
+every 8 second:
+  loop all players:
+    clear {Alerte.Jesus.%loop-player%}
+on jump:
+  if {antifisher.Jesus} is false:
+    stop
+  if block below player is water:
+    if block south below player is water:
+      if block north below player is water:
+        if block west below player is water:
+          if block east below player is water:
+            if block south player is air:
+              if block north player is air:
+                if block west player is air:
+                  block east player is air
+                  add 3 to {Alerte.Jesus.%player%}
+                  if {Alerte.Jesus.%player%} > 25:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: E) &f(VL: &4%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+                        if {antifisher.autoban} is false:
+                          stop
+                        make server execute command "/afban %player% 1 hour"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                        broadcast "&7&m-----------------------------------"
+                        stop
+                  if {Alerte.Jesus.%player%} > 19:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: E) &f(VL: &6%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        if {jesus.%player%} is true:
+                          stop
+                        set {jesus.%player%} to true
+                        teleport player to {setback.%player%}
+                        if {antifisher.autoban} is false:
+                          stop
+                        kick player due to "&7[&b&lAnti&5&lFisher&7] &cJesus/Waterwalk"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus/WaterWalk"
+                        broadcast "&7&m-----------------------------------"
+                        stop
+                  if {Alerte.Jesus.%player%} > 14:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] &7%player% &futilise Jesus &7(T: E) &f(VL: &e%{Alerte.Jesus.%player%}%&f)" to loop-player
+                        teleport player to {setback.%player%}
+
+on join:
+   if {jesus.%player%} is not set:
+      set {jesus.%player%} to false
+ 
+#/// AUTOPOTION ///
+
+function Potion(p: player, r: text):
+  if {antifisher.Autopot} is false:
+    stop
+  add 1 to {alertl::%{_p}%}
+  teleport {_p} to {setback.%{_p}%}
+  loop all players:
+    loop-player is op:
+      if {antifisher.notify.%loop-player%} is true:
+        send "&7[&b&lAnti&5&lFisher&7] &7%{_p}% &futilise AutoPotion &7(T: A) &f(VL: &b%{alertl::%{_p}%}%&f)" to loop-player
+  if {alertl::%{_p}%} >= 15:
+    if {antifisher.autoban} is false:
+      stop
+    make server execute command "/smite %{_p}%"
+    make server execute command "/tban %{_p}% 1 hour"
+    broadcast "&7&m-----------------------------------"
+    broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%{_p}% &edu serveur!"
+    broadcast "&c&l❌ &eRaison: &cAutoPotion"
+    broadcast "&7&m-----------------------------------"
+every 8 second:
+  clear {alertl::*}
+on right click with splash potion:
+  set {lpot.%player%} to now
+on join:
+  set {lpot.%event-player%} to now
+on projectile shoot:
+  "%shooter's tool%" contains "splash health potion"
+  difference between {lpot.%shooter%} and now > 0.2 second
+  Potion(shooter,"AutoPot")
+
+#/// INVENTORY MOVE ///
+
+function Inventory(p: player, r: text):
+  if {antifisher.Inventory} is false:
+    stop
+  add 1 to {alertl::%{_p}%}
+  teleport {_p} to {setback.%{_p}%}
+  loop all players:
+    loop-player is op:
+      if {antifisher.notify.%loop-player%} is true:
+        send "&7[&b&lAnti&5&lFisher&7] &7%{_p}% &futilise InventoryMove &7(T: A) &f(VL: &b%{alertl::%{_p}%}%&f)" to loop-player
+  if {alertl::%{_p}%} >= 5:
+    if {antifisher.autoban} is false:
+      stop
+    make server execute command "/smite %{_p}%"
+    make server execute command "/afban %{_p}% 1 hour"
+    broadcast "&7&m-----------------------------------"
+    broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%{_p}% &edu serveur!"
+    broadcast "&c&l❌ &eRaison: &cInventoryMove"
+    broadcast "&7&m-----------------------------------"
+on inventory click:
+  player's gamemode is not creative
+  if player is sprinting:
+    cancel event
+    Inventory(player, "InventoryMove")
+    stop
+  if player is sneaking:
+    cancel event
+    Inventory(player, "AutoSneak/InventoryMove")
+    stop
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    Inventory(player, "Inventory Hack")
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    Inventory(player, "Inventory Move")
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+
+
+#/// HIGHJUMP ///
+
+on jump:
+   if {antifisher.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+   set {_poshh} to location of player
+   wait 7 ticks
+   if distance between {_poshh} and player is bigger than 3:
+      add 1 to {vl.%player%}
+      teleport player to {setback.%player%}
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               send "&7[&b&lAnti&5&lFisher&7] %player% &futilise HighJump &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+            if {vl.%player%} >= 10:
+               if {antifisher.autoban} is false:
+                  stop
+               make server execute command "/afban %player% 1 hour"
+               broadcast "&7&m-----------------------------------"
+               broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+               broadcast "&c&l❌ &eRaison: &cHighJump"
+               broadcast "&7&m-----------------------------------"
+         else:
+            stop
+
+#/// UPDATE ///
+
+on script load:
+     set {update} to false
+     wait 5 ticks
+     if text from "https://pastebin.com/ANZzTF6J" is not "1.1":
+          set {update} to true
+          
+on join:
+     wait 3 second
+     if {update} is true:
+          if player has permission "anticheat.alerts":
+               send " "
+               send "&7[&b&lAnti&5&lFisher&7] &fNew version available ! Download it here: &3??????????"
+               send " "
+
+#/// BLINK / TP ///
+
+on any movement:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 0.18:
+        set {%player's uuid%.antifisher.walking} to true
+        set {%player's uuid%.antifisher.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player's uuid%.antifisher.walking}
+        delete {%player's uuid%.antifisher.walk.speed}
+      if {%player's uuid%.antifisher.nochecks} is true:
+        stop
+      if {%player's uuid%.antifisher.epteleport} is true:
+        stop
+      if {%player's uuid%.antifisher.teleport} is true:
+        stop
+      player is not riding
+      difference between {antifisher.LastLoad} and now is greater than 15 seconds
+      if {_dif} >= 5:
+        if {%player's uuid%.antifisher.teleport} is true:
+          stop
+        set {%player's uuid%.antifisher.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {antifisher.Blink} is true
+            add 1 to {vl.%player%}
+            loop all players:
+              loop-player has permission "anticheat.alerts":
+                if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Blink &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+            teleport player to {%player's uuid%.antifisher.tp.loc}
+          else:
+            {antifisher.Flight} is true
+            add 1 to {vl.%player%}
+            loop all players:
+              loop-player has permission "anticheat.alerts":
+                if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: H) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+            teleport player to {%player's uuid%.antifisher.tp.loc}
+        else:
+          {antifisher.ClickTP} is true
+          add 1 to {vl.%player%}
+          loop all players:
+            loop-player has permission "anticheat.alerts":
+              if {antifisher.notify.%loop-player%} is true:
+                send "&7[&b&lAnti&5&lFisher&7] %player% &futilise ClickTP &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+          teleport player to {%player's uuid%.antifisher.tp.loc}
+        teleport player to {%player's uuid%.antifisher.tp.loc}
+
+#/// AF COMMANDS ///
+
+command /idset [<offline player>] [<number>]:
+   permission: anticheat.alerts
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            set {id.%arg 1%} to arg 2
+            send "&7[&b&lAnti&5&lFisher&7] &fId set" to player
+            stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            send "&7[&b&lAnti&5&lFisher&7] &fYou might wanna put a number here..." to player
+            stop
+      if arg 1 is not set:
+         send "&7[&b&lAnti&5&lFisher&7] &fUsage: /idset PLAYER NUMBER" to player
+
+on first join:
+   add 1 to {id}
+   set {id.%player%} to {id}
+   set {idname.%player%} to player's name
+
+command /afban [<offline player>] [<timespan>]:
+    permission: op
+    trigger:
+        if arg 1 is not set:
+            message "&7[&b&lAnti&5&lFisher&7] &cUsage : /afban <player> <time>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                if {tban.time:%{_player}%} is not set:
+                    send "&7[&b&lAnti&5&lFisher&7] &c%arg 1% has been banned"
+                    set {tban.time::%{_player}%} to arg 2
+                    set {tban.timestamp::%{_player}%} to now
+                    kick {_player} due to "                                                            &cVous avez été banni par &b&lAnti&5&lFisher &c!                                                                                                                                                                                                                                                                          &7Durée: &e1 Heures  &7Raison: &cTriche &6(AF,AB)&r                                                                        &bVous pensez que c'est une erreur ou un bug  ? Alors faite un appelle ici: &bhttps://discord.gg/H5RxwmV"
+                    stop
+                if {tban.time::%{_player}%} is set:
+                    message "&7[&b&lAnti&5&lFisher&7] &cThis player is alerdy banned"
+                    stop
+            if "%{_player}%" is offline player:
+                if {tban.time:%{_player}%} is not set:
+                    message "&7[&b&lAnti&5&lFisher&7] &c%arg 1% has been banned"
+                    set {tban.time::%{_player}%} to 1
+                    set {tban.timestamp::%{_player}%} to now
+                    stop
+                if {tban.time::%{_player}%} is set:
+                    message "&7[&b&lAnti&5&lFisher&7] &cThis player is alerdy banned"
+
+command /tban [<offline player>] [<timespan>]:
+    permission: op
+    trigger:
+        if arg 1 is not set:
+            message "&7[&b&lAnti&5&lFisher&7] &cUsage : /afban <player> <time>"
+        if arg 1 is set:
+            set {_player} to arg 1
+            if {_player} is a player:
+                if {tban.time:%{_player}%} is not set:
+                    send "&7[&b&lAnti&5&lFisher&7] &c%arg 1% has been banned"
+                    set {tban.time::%{_player}%} to arg 2
+                    set {tban.timestamp::%{_player}%} to now
+                    kick {_player} due to "                                                            &cVous avez été banni par &b&lAnti&5&lFisher &c!                                                                                                                                                                                                                                                                          &7Durée: &e1 Heures  &7Raison: &cTriche &6(AF,AB)&r                                                                        &bVous pensez que c'est une erreur ou un bug  ? Alors faite un appelle ici: &bhttps://discord.gg/H5RxwmV"
+                    stop
+                if {tban.time::%{_player}%} is set:
+                    message "&7[&b&lAnti&5&lFisher&7] &cThis player is alerdy banned"
+                    stop
+            if "%{_player}%" is offline player:
+                if {tban.time:%{_player}%} is not set:
+
+                    message "&7[&b&lAnti&5&lFisher&7] &c%arg 1% has been banned"
+                    set {tban.time::%{_player}%} to 1
+                    set {tban.timestamp::%{_player}%} to now
+                    stop
+                if {tban.time::%{_player}%} is set:
+                    message "&7[&b&lAnti&5&lFisher&7] &cThis player is alerdy banned"
+
+
+on join:
+    if {tban.time::%player%} is set:
+        set {_tban} to  difference between now and {tban.timestamp::%player%}
+        set {_tban2} to  difference between {tban.timestamp::%player%} and now
+        reduce {_tban} by {tban.time::%player%}
+        if difference between now and {tban.timestamp::%player%} is bigger than {tban.time::%player%}:
+            clear {tban.time::%player%}
+            clear {tban.timestamp::%player%}
+            unban player
+        if difference between now and {tban.timestamp::%player%} is smaller than {tban.time::%player%}:
+            set join message to ""
+            set {tban.%player%} to true
+            kick player due to "                                                            &cVous avez été banni par &b&lAnti&5&lFisher &c!                                                                                                                                                                                                                                                                          &7Durée: &e%{_tban2}% / %{tban.time::%player%}%                                                                                                                    &7Raison: &cTriche &6(AF,AB)&r                                                                        &bVous pensez que c'est une erreur ou un bug  ? Alors faite un appelle ici: &bhttps://discord.gg/H5RxwmV"
+
+on quit:
+    if {tban.time::%player%} is set:
+        set quit message to ""
+command /tbc [<offline player>]:
+    permission: tbc.use
+    trigger:
+        clear {tban.time::%arg 1%}
+        clear {tban.timestamp::%arg 1%}
+        message "&c %arg 1% unbanned"
+  
+on first join:
+   set {firstjoin.%player%} to now
+
+command /check [<offline player>]:
+   permission: check.use
+   trigger:
+      send "&7[&b&lAnti&5&lFisher&7] &7Récupération des données..."
+      wait 1 second
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         send "&7[&b&lAnti&5&lFisher&7] &cERROR: &4Player not found"
+         stop
+      send "&7[&b&lAnti&5&lFisher&7] &7NAME: &c%arg 1%"
+      send "&7[&b&lAnti&5&lFisher&7] &7IP: &c%ip of arg 1%"
+      if {joina.%arg 1%} is true:
+         send "&7[&b&lAnti&5&lFisher&7] &7PING: &c%arg 1's ping%"
+      send "&7[&b&lAnti&5&lFisher&7] &7FIRST JOIN: &c%{firstjoin.%arg 1%}%"
+      if {joina.%arg 1%} is true:
+         send "&7[&b&lAnti&5&lFisher&7] &7STATUS: &aONLINE"
+         send "&7[&b&lAnti&5&lFisher&7] &7CONNECTION TIME: &c%{join.%arg 1%}%"
+      if {joina.%arg 1%} is false:
+         send "&7[&b&lAnti&5&lFisher&7] &7STATUS: &cOFFLINE"
+      if {firstalt.%{ip.%arg 1%}%} is not set:
+         set {firstalt.%{ip.%arg 1%}%} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7FIRST ACCOUNT: &c%{firstalt.%{ip.%arg 1%}%}%"
+      if {altip.%{ip.%arg 1%}%::*} is not set:
+         set {altip.%{ip.%arg 1%}%::*} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7ALTS: &c%{altip.%{ip.%arg 1%}%::*}%"
+      if {ban.%arg 1%} is not set:
+         set {ban.%arg 1%} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7BANS: &c%{ban.%arg 1%}%"
+      if {banre.%arg 1%} is not set:
+         set {banre.%arg 1%} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7ID: &c%{id.%arg 1%}%"
+      send "&7[&b&lAnti&5&lFisher&7] &7REASON: &c%{banre.%arg 1%}%"
+      if {warns.%arg 1%} is not set:
+         set {warns.%arg 1%} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7WARNS: &c%{warns.%arg 1%}%"
+      if {unban.%arg 1%} is not set:
+         set {unban.%arg 1%} to 0
+      send "&7[&b&lAnti&5&lFisher&7] &7UNBANS: &c%{unban.%arg 1%}%"
+
+
+command /flagtoggle [<text>]:
+  permission: anticheat.alerts
+  trigger:
+    if arg-1 is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "Fastbow", "Inventory", "Speed", "Spider" or "Step":
+      if {antifisher.%arg-1%} is false:
+        send "&7[&b&lAnti&5&lFisher&7] &e%sender% &7has &aenabled &6%arg-1%&7!" to all players where [player input has permission "anticheat.alerts"]
+        set {antifisher.%arg-1%} to true
+      else:
+        if {antifisher.%arg-1%} is true:
+          send "&7[&b&lAnti&5&lFisher&7] &e%sender% &7has &cdisabled &6%arg-1%&7!" to all players where [player input has permission "anticheat.alerts"]
+          set {antifisher.%arg-1%} to false
+          stop
+    else:
+      send "&7[&b&lAnti&5&lFisher&7] &cInvalid Argument! &8(&6Autoclicker, Bhop, Blink, ClickTP, Criticals, Flight, Float, HighJump, Hover, Jesus, Killaura, NoFall, Fastbow, Reach, Inventory, Speed, Spider, Step, Velocity&8)"
+
+on join:
+  if {antifisher.Autoclicker} is not set:
+    set {antifisher.Autoclicker} to true
+  if {antifisher.Criticals} is not set:
+    set {antifisher.Criticals} to true
+  if {antifisher.Reach} is not set:
+    set {antifisher.Reach} to true
+  if {antifisher.Velocity} is not set:
+    set {antifisher.Velocity} to true
+  if {antifisher.Bhop} is not set:
+    set {antifisher.Bhop} to true
+  if {antifisher.Blink} is not set:
+    set {antifisher.Blink} to true
+  if {antifisher.ClickTP} is not set:
+    set {antifisher.ClickTP} to true
+  if {antifisher.Flight} is not set:
+    set {antifisher.Flight} to true
+  if {antifisher.Float} is not set:
+    set {antifisher.Float} to true
+  if {antifisher.HighJump} is not set:
+    set {antifisher.HighJump} to true
+  if {antifisher.Hover} is not set:
+    set {antifisher.Hover} to true
+  if {antifisher.Jesus} is not set:
+    set {antifisher.Jesus} to true
+  if {antifisher.NoFall} is not set:
+    set {antifisher.NoFall} to true
+  if {antifisher.Fastbow} is not set:
+    set {antifisher.Fastbow} to true
+  if {antifisher.Inventorymove} is not set:
+    set {antifisher.Inventorymove} to true
+  if {antifisher.Speed} is not set:
+    set {antifisher.Speed} to true
+  if {antifisher.Spider} is not set:
+    set {antifisher.Spider} to true
+  if {antifisher.Step} is not set:
+    set {antifisher.Step} to true
+
+command /d:
+   permission: op
+   trigger:
+      set {antifisher.Inventory} to true
+
+on inventory click:
+  if inventory name of player's current inventory contains "&7[&b&lAnti&5&lFisher&7]":
+    if inventory name of player's current inventory contains "&7[&b&lAnti&5&lFisher&7]":
+      if inventory name of player's current inventory contains "Movement":
+        close inventory of player
+        set {_name} to uncolored name of clicked item
+        if {_name} is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "Fastbow", "InvMove", "Speed", "Spider" or "Step":
+          player command "/flagtoggle %{_name}%"
+        player command "/af movement"
+      else if inventory name of player's current inventory contains "Combat":
+        close inventory of player
+        set {_name} to uncolored name of clicked item
+        if {_name} is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "Fastbow", "Inventory", "Speed", "Spider" or "Step":
+          player command "/flagtoggle %{_name}%"
+        player command "/af combat"
+    if clicked slot is 3:
+      if name of clicked item is "&7Detections":
+        close inventory of player
+        player command "af gui"
+      if name of clicked item is "&6Combat Detections":
+        close inventory of player
+        player command "af combat"
+    if clicked slot is 5:
+      if name of clicked item is "&6Movement Detections":
+        close inventory of player
+        player command "af movement"
+
+command /af [<text>]:
+   permission: anticheat.alerts
+   trigger:
+      if arg-1 is "gui":
+         wait 2 ticks
+         open chest with 1 row named "             &7[&b&lAnti&5&lFisher&7]" to player
+         set slot 3 of player's current inventory to diamond sword named "&6Combat Detections" with lore "&7", "&7Manage Combat Detections" and "&7"
+         set slot 5 of player's current inventory to diamond boots named "&6Movement Detections" with lore "&7", "&7Manage Movement Detections" and "&7"
+      if arg-1 is "movement":
+         wait 2 ticks
+         open chest with 2 rows named "&7[&b&lAnti&5&lFisher&7] &6Movement" to player
+         set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         set slot 9 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         set slot 16 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         set slot 17 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         if {antifisher.Bhop} is false:
+            set slot 1 of player's current inventory to red wool named "&cBhop" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 1 of player's current inventory to lime wool named "&aBhop" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Blink} is false:
+            set slot 2 of player's current inventory to red wool named "&cBlink" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 2 of player's current inventory to lime wool named "&aBlink" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.ClickTP} is false:
+            set slot 3 of player's current inventory to red wool named "&cClickTP" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 3 of player's current inventory to lime wool named "&aClickTP" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Flight} is false:
+            set slot 4 of player's current inventory to red wool named "&cFlight" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 4 of player's current inventory to lime wool named "&aFlight" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Float} is false:
+            set slot 5 of player's current inventory to red wool named "&cFloat" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 5 of player's current inventory to lime wool named "&aFloat" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.HighJump} is false:
+            set slot 6 of player's current inventory to red wool named "&cHighJump" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 6 of player's current inventory to lime wool named "&aHighJump" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Hover} is false:
+            set slot 7 of player's current inventory to red wool named "&cHover" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 7 of player's current inventory to lime wool named "&aHover" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Jesus} is false:
+            set slot 7 of player's current inventory to red wool named "&cJesus" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 7 of player's current inventory to lime wool named "&aJesus" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.NoFall} is false:
+            set slot 10 of player's current inventory to red wool named "&cNoFall" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 10 of player's current inventory to lime wool named "&aNoFall" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.NoSlow} is false:
+            set slot 11 of player's current inventory to red wool named "&cNoSlow" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 11 of player's current inventory to lime wool named "&aNoSlow" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Inventory} is false:
+            set slot 12 of player's current inventory to red wool named "&cInventorymove" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 12 of player's current inventory to lime wool named "&aInventormove" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Speed} is false:
+            set slot 13 of player's current inventory to red wool named "&cSpeed" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 13 of player's current inventory to lime wool named "&aSpeed" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Spider} is false:
+            set slot 14 of player's current inventory to red wool named "&cSpider" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 14 of player's current inventory to lime wool named "&aSpider" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Step} is false:
+            set slot 15 of player's current inventory to red wool named "&cStep" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 15 of player's current inventory to lime wool named "&aStep" with lore "&7", "&7Click to Disable!" and "&7"
+      if arg-1 is "combat":
+         wait 2 ticks
+         open chest with 1 row named "&7[&b&lAnti&5&lFisher&7] &6Combat" to player
+         set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         set slot 1 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+         if {antifisher.Autoclicker} is false:
+            set slot 2 of player's current inventory to red wool named "&cAutoclicker" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 2 of player's current inventory to lime wool named "&aAutoclicker" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Criticals} is false:
+            set slot 3 of player's current inventory to red wool named "&cCriticals" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 3 of player's current inventory to lime wool named "&aCriticals" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Fastbow} is false:
+            set slot 4 of player's current inventory to red wool named "&cFastBow" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 4 of player's current inventory to lime wool named "&aFastBow" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Reach} is false:
+            set slot 5 of player's current inventory to red wool named "&cReach" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 5 of player's current inventory to lime wool named "&aReach" with lore "&7", "&7Click to Disable!" and "&7"
+         if {antifisher.Velocity} is false:
+            set slot 6 of player's current inventory to red wool named "&cVelocity" with lore "&7", "&7Click to Enable!" and "&7"
+         else:
+            set slot 6 of player's current inventory to lime wool named "&aVelocity" with lore "&7", "&7Click to Disable!" and "&7"
+            set slot 7 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+            set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+      if arg-1 is set:
+         if arg-1 is "help":
+            send " "
+            send "&7&m-----------&7[ &b&lAnti&5&lFisher&7 ]&m-----------"
+            send " "
+            send "&7Permission"
+            send "&7Permission principale: &banticheat.alerts"
+            send " "
+            send "&7Commands"
+            send "&7/af help &bAffiche cette jolie page"
+            send "&7/af update &bMdr pourquoi tu devrais utiliser ça ?"
+            send "&7/af reload &bRecharge l'anticheat"
+            send "&7/af disable &bDésactiver l'anticheat"
+            send "&7/af gui &bOuvre le gui des checks"
+            send "&7/flagtoogle &bActive/Désactive un check"
+            send "&7/afban &bBan un joueur"
+            send "&7/idset &bMettre un ID pour un joueur"
+            send "&7/af notify &bActive/Désactive les notifications"
+            send "&7/af setback &bActive/Désactive le setback"
+            send "&7/af autoban &bActive/Désactive l'autoban"
+            send ""
+            send "&7&m-----------&7[ &b&lAnti&5&lFisher&7 ]&m-----------"
+         if arg-1 is "update":
+            if {update} is true:
+               send "&7[&b&lAnti&5&lFisher&7] &4Impossible de trouver une MAJ dans une version custom!"
+               stop
+            if {update} is false:
+               send "&7[&b&lAnti&5&lFisher&7] &4Impossible de trouver une MAJ dans une version custom!"
+               stop
+         if arg 1 is "disable":
+            make server execute command "/sk disable antifisher"
+            send "&7[&b&lAnti&5&lFisher&7] &fAntifisher désactiver"
+            send "&7[&b&lAnti&5&lFisher&7] &fPour le reactiver faite /sk enable antifisher"
+            stop
+         if arg 1 is "reload":
+            send "&7[&b&lAnti&5&lFisher&7] &fChargement de la version afucustom:LIBERTYCITY.1.2.2"
+            make server execute command "/sk reload antifisher"
+            send "&7[&b&lAnti&5&lFisher&7] &fAntifisher recharger"
+         if arg 1 is not set:
+            make player execute command "/af help"
+         if arg 1 is "notify":
+            if {antifisher.notify.%player%} is true:
+               set {antifisher.notify.%player%} to false
+               send "&7[&b&lAnti&5&lFisher&7] &fNotifications désactiver" to player
+               stop
+            if {antifisher.notify.%player%} is false:
+               set {antifisher.notify.%player%} to true
+               send "&7[&b&lAnti&5&lFisher&7] &fNotifications activer" to player
+         if arg 1 is "setback":
+            if {antifisher.setback} is true:
+               set {antifisher.setback} to false
+               send "&7[&b&lAnti&5&lFisher&7] &fSetback désactiver" to player
+               stop
+            if {antifisher.setback} is false:
+               set {antifisher.setback} to true
+               send "&7[&b&lAnti&5&lFisher&7] &fSetback activer" to player
+         if arg 1 is "autoban":
+            if {antifisher.autoban} is true:
+               set {antifisher.autoban} to false
+               send "&7[&b&lAnti&5&lFisher&7] &fAutoban désactiver" to player
+               stop
+            if {antifisher.autoban} is false:
+               set {antifisher.autoban} to true
+               send "&7[&b&lAnti&5&lFisher&7] &fAutoban activer" to player
+         if arg 1 is "debug":
+            if {antifisher.debug} is not set:
+               set {antifisher.debug} to false
+            if {antifisher.debug} is true:
+               set {antifisher.debug} to false
+               send "&7[&b&lAnti&5&lFisher&7] &fDebug désactiver" to player
+               stop
+            if {antifisher.debug} is false:
+               set {antifisher.debug} to true
+               send "&7[&b&lAnti&5&lFisher&7] &fDebug activer" to player
+
+
+#/// FLY / JESUS / SPEED / NOFALL / SPIDER V0.9 ///
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.bypass} is not set:
+      player's flight mode is false
+      if block under player is not air or water:
+        set {%player's uuid%.antifisher.tp.loc} to {_loc}
+      if {%player's uuid%.antifisher.flight.delay} is not set:
+        set {%player's uuid%.antifisher.flight.delay} to true
+        set {_y} to player's y coordinate
+        wait 10 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player's uuid%.antifisher.slime} is not set:
+          if {_y} > 5:
+            {antifisher.Flight} is true
+            if {antifisher.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "anticheat.alerts":
+                add 2 to {vl.%player%}
+                if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {antifisher.autoban} is false:
+                    stop
+                  make server execute command "/afban %player% 1 hour"
+                  broadcast "&7&m-----------------------------------"
+                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                  broadcast "&c&l❌ &eRaison: &cFly"
+                  broadcast "&7&m-----------------------------------"
+          if {_y} = 0:
+            {antifisher.Float} is true
+            {%player's uuid%.antifisher.jump} is not set
+            block under player is air
+            player is not on ground
+            if {antifisher.setback} is true:
+              teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "anticheat.alerts":
+                add 1 to {vl.%player%}
+                if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: B) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  make server execute command "/afban %player% 1 hour"
+                  if {antifisher.autoban} is false:
+                    stop
+                  broadcast "&7&m-----------------------------------"
+                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                  broadcast "&c&l❌ &eRaison: &cFly"
+                  broadcast "&7&m-----------------------------------"
+          if player's y coordinate is y coordinate of {_loc}:
+            {antifisher.Float} is true
+            {%player's uuid%.antifisher.jump} is not set
+            block under player is air
+            player is not on ground
+            teleport player to {setback.%player%}
+            loop all players:
+              loop-player has permission "anticheat.alerts":
+                add 1 to {vl.%player%}
+                if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: C) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                if {vl.%player%} >= 15:
+                  if {antifisher.autoban} is false:
+                    stop
+                  make server execute command "/afban %player% 1 hour"
+                  broadcast "&7&m-----------------------------------"
+                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                  broadcast "&c&l❌ &eRaison: &cFly"
+                  broadcast "&7&m-----------------------------------"
+        loop {antifisher.Delay} times:
+          wait 0.21 second
+        delete {%player's uuid%.antifisher.flight.delay}
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.antifisher.epteleport} is true:
+    stop
+  if {%player's uuid%.antifisher.teleport} is true:
+    stop
+  else if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.nochecks} is set:
+      wait 1 second
+      delete {%player's uuid%.antifisher.nochecks}
+      stop
+    if {%player's uuid%.antifisher.bypass} is not set:
+      if {%player's uuid%.antifisher.cheat.cooldown} is not set:
+        set {%player's uuid%.antifisher.cheat.cooldown} to true
+        if block under player is not air or water:
+          set {%player's uuid%.antifisher.tp.loc} to {_loc}
+        #NoFall
+        {antifisher.NoFall} is true:
+          if player's flight mode is false:
+            if {%player's uuid%.antifisher.jump} is not set:
+              if block under player is air:
+                set {_yloc} to player's y coordinate
+                set {_health} to player's health
+                wait 0.5 seconds
+                set {_yloc1} to player's y coordinate
+                if player is on ground:
+                  block under player is not slime block
+                  set {_dis} to {_yloc} - {_yloc1}
+                  block under player is not air
+                  block under player is ladder:
+                    stop
+                  loop all blocks in radius 2 around player:
+                    if loop-block is cobweb:
+                      stop
+                    if loop-block is water:
+                      stop
+                    if loop-block is vine:
+                      stop
+                    if loop-block is stairs:
+                      stop
+                  {%player's uuid%.antifisher.nofall} is not set
+                  if {_dis} is greater than or equal to 5.5:
+                    if player's health = {_health}-0.5:
+                      set {_dmg} to floor({_dis} / 1)
+                      loop all players:
+                        loop-player has permission "anticheat.alerts":
+                          add 1 to {vl.%player%}
+                          if {antifisher.notify.%loop-player%} is true:
+                            send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Nofall &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cNofall"
+                            broadcast "&7&m-----------------------------------"
+                      set {%player's uuid%.antifisher.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.antifisher.nofall}
+                      damage the player by {_dmg} heart
+                  if {_dis} is greater than or equal to 4.25:
+                    if player's health = {_health}:
+                      set {_dmg} to floor({_dis} / 1)
+                      loop all players:
+                        loop-player has permission "anticheat.alerts":
+                          add 1 to {vl.%player%}
+                          if {antifisher.notify.%loop-player%} is true:
+                            send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Nofall &7(T: B) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cNofall"
+                            broadcast "&7&m-----------------------------------"
+                      set {%player's uuid%.antifisher.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.antifisher.nofall}
+                      damage the player by {_dmg} heart
+        #Spider
+        {antifisher.Spider} is true
+        if block under player is air:
+          if block 2 under player is air:
+            if block 3 under player is air:
+              set {_y} to player's y coordinate
+              wait 1 tick
+              block under player is not ladder
+              block at player is not water
+              if {%player's uuid%.antifisher.jump} is not set:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if difference between {_y} and player's y coordinate is less than 1:
+                    if distance between player and player's targeted block is less than 1.25:
+                      loop all players:
+                        loop-player has permission "anticheat.alerts":
+                          add 1 to {vl.%player%}
+                          if {antifisher.notify.%loop-player%} is true:
+                            send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Spider &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cSpider"
+                            broadcast "&7&m-----------------------------------"
+                  else:
+                    if distance between player and player's targeted block is less than 1.25:
+                      {antifisher.Spider} is true
+                      loop all players:
+                        loop-player has permission "anticheat.alerts":
+                          add 1 to {vl.%player%}
+                          if {antifisher.notify.%loop-player%} is true:
+                            send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Spider &7(T: B) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cSpider"
+                            broadcast "&7&m-----------------------------------"
+              else:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if distance between player and player's targeted block is less than 1.25:
+                    loop all players:
+                      loop-player has permission "anticheat.alerts":
+                        add 1 to {vl.%player%}
+                        if {antifisher.notify.%loop-player%} is true:
+                          send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Spider &7(T: C) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                        if {vl.%player%} >= 15:
+                          if {antifisher.autoban} is false:
+                            stop
+                          make server execute command "/afban %player% 1 hour"
+                          broadcast "&7&m-----------------------------------"
+                          broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                          broadcast "&c&l❌ &eRaison: &cSpider"
+                          broadcast "&7&m-----------------------------------"
+        #Flight
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player's uuid%.antifisher.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player's uuid%.antifisher.slime} to true
+                          wait 10 second
+                          delete {%player's uuid%.antifisher.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player's uuid%.antifisher.slime} is not set:
+                        if block under player is air:
+                          if {%player's uuid%.antifisher.slime} is not set:
+                            {antifisher.Flight} is true
+                            block under player is not water or ladder
+                            if {antifisher.setback} is true:
+                              teleport player to {%player's uuid%.antifisher.tp.loc}
+                            loop all players:
+                              loop-player has permission "anticheat.alerts":
+                                add 1 to {vl.%player%}
+                                if {antifisher.notify.%loop-player%} is true:
+                                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: D) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                if {vl.%player%} >= 15:
+                                  if {antifisher.autoban} is false:
+                                    stop
+                                  make server execute command "/afban %player% 1 hour"
+                                  broadcast "&7&m-----------------------------------"
+                                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                  broadcast "&c&l❌ &eRaison: &cFly"
+                                  broadcast "&7&m-----------------------------------"
+                            set {%player's uuid%::antifisher.flight.status} to true
+                            wait 5 second
+                            delete {%player's uuid%::antifisher.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player's uuid%.antifisher.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {antifisher.Float} is true
+                              remove 1 from y coordinate of {%player's uuid%.antifisher.tp.loc}
+                              if {antifisher.setback} is true:
+                                teleport player to {%player's uuid%.antifisher.tp.loc}
+                              loop all players:
+                                loop-player has permission "anticheat.alerts":
+                                  add 1 to {vl.%player%}
+                                  if {antifisher.notify.%loop-player%} is true:
+                                    send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: E) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                  if {vl.%player%} >= 15:
+                                    if {antifisher.autoban} is false:
+                                      stop
+                                    make server execute command "/afban %player% 1 hour"
+                                    broadcast "&7&m-----------------------------------"
+                                    broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                    broadcast "&c&l❌ &eRaison: &cFly"
+                                    broadcast "&7&m-----------------------------------"
+                              add 1 to y coordinate of {%player's uuid%.antifisher.tp.loc}
+          else:
+            #HOVER | FLIGHT | SPEED | CRITICALS
+            if {%player's uuid%.antifisher.nochecks} is true:
+              stop
+              wait 1 second
+              delete {%player's uuid%.antifisher.nochecks}
+            if {%player's uuid%.antifisher.teleport} is true:
+              stop
+            if {%player's uuid%.antifisher.epteleport} is true:
+              stop
+            else if {%player's uuid%.antifisher.jump} is true:
+              stop
+            else:
+              if {%player's uuid%.antifisher.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player's uuid%.antifisher.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 10 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          set {_loop} to 255 -  y coordinate of player
+                          set y coordinate of {_123.loc} to 255
+                          loop {_loop} times:
+                            if block at {_123.loc} is slime block:
+                              stop
+                              set {%player's uuid%.antifisher.slime} to true
+                              wait 10 second
+                              delete {%player's uuid%.antifisher.slime}
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is not on ground:
+                            wait 3 ticks
+                            if {%player's uuid%.antifisher.slime} is not set:
+                              if {%player's uuid%.antifisher.damage} is not set:
+                                if {%player's uuid%.antifisher.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player's uuid%.antifisher.fix.slime} is not set:
+                                    set {_find} to player's location
+                                    set {_count} to 255 - y coordinate of player
+                                    loop 255 times:
+                                      if block at {_find} is slime block:
+                                        stop
+                                        set {%player's uuid%.antifisher.slime} to true
+                                        wait 5 second
+                                        delete {%player's uuid%.antifisher.slime}
+                                      else:
+                                        remove 1 from y coordinate of {_find}
+                                    wait 1 tick
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        if {_b1} is air:
+                                          {antifisher.Flight} is true
+                                          loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                              add 1 to {vl.%player%}
+                                              if {antifisher.notify.%loop-player%} is true:
+                                                send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: F) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                              if {vl.%player%} >= 15:
+                                                if {antifisher.autoban} is false:
+                                                  stop
+                                                make server execute command "/afban %player% 1 hour"
+                                                broadcast "&7&m-----------------------------------"
+                                                broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                                broadcast "&c&l❌ &eRaison: &cFly"
+                                                broadcast "&7&m-----------------------------------"
+                                          if {antifisher.setback} is true:
+                                            teleport player to {%player's uuid%.antifisher.tp.loc}
+                                      else:
+                                        if {%player's uuid%.antifisher.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player's uuid%.antifisher.damage} is not set:
+                                              block under player is not ladder:
+                                                {antifisher.Hover} is true
+                                                loop all players:
+                                                  loop-player has permission "anticheat.alerts":
+                                                    add 1 to {vl.%player%}
+                                                    if {antifisher.notify.%loop-player%} is true:
+                                                      send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: G) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                                    if {vl.%player%} >= 15:
+                                                      if {antifisher.autoban} is false:
+                                                        stop
+                                                      make server execute command "/afban %player% 1 hour"
+                                                      broadcast "&7&m-----------------------------------"
+                                                      broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                                      broadcast "&c&l❌ &eRaison: &cFly"
+                                                      broadcast "&7&m-----------------------------------"
+                                                    if {antifisher.setback} is true:
+                                                      teleport player to {%player's uuid%.antifisher.tp.loc}
+                                                else:
+                                                  loop all players:
+                                                    loop-player has permission "anticheat.alerts":
+                                                      if {antifisher.notify.%loop-player%} is true:
+                                                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Nofall &7(T: C) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                                      if {vl.%player%} >= 15:
+                                                        if {antifisher.autoban} is false:
+                                                          stop
+                                                        make server execute command "/afban %player% 1 hour"
+                                                        broadcast "&7&m-----------------------------------"
+                                                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                                        broadcast "&c&l❌ &eRaison: &cNofall"
+                                                        broadcast "&7&m-----------------------------------"
+                                                      add 1 to {vl.%player%}
+                                                      if {antifisher.setback} is true:
+                                                        teleport player to {%player's uuid%.antifisher.tp.loc}
+                                                else:
+                                                  {antifisher.Criticals} is true
+                                                  loop all players:
+                                                    loop-player has permission "anticheat.alerts":
+                                                      add 1 to {vl.%player%}
+                                                      if {antifisher.notify.%loop-player%} is true:
+                                                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Citicals &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                                      if {vl.%player%} >= 15:
+                                                        if {antifisher.autoban} is false:
+                                                          stop
+                                                        make server execute command "/afban %player% 1 hour"
+                                                        broadcast "&7&m-----------------------------------"
+                                                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                                        broadcast "&c&l❌ &eRaison: &cCriticals"
+                                                        broadcast "&7&m-----------------------------------"
+                              else:
+                                {antifisher.Criticals} is true
+                                loop all players:
+                                  loop-player has permission "anticheat.alerts":
+                                    add 1 to {vl.%player%}
+                                    if {antifisher.notify.%loop-player%} is true:
+                                      send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Criticals &7(T: B) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+
+        #Speed
+        if player's flight mode is false:
+          if player doesn't have speed or jump boost:
+            if {%player's uuid%.antifisher.nochecks} is not set:
+              if {%player's uuid%.antifisher.teleport} is true:
+                stop
+              else if {%player's uuid%.antifisher.epteleport} is true:
+                stop
+              else:
+                set {_x} to player's x coordinate
+                set {_z} to player's z coordinate
+                set {_bap} to block above player's head
+                wait 5 ticks
+                set {_bap2} to block above player's head
+                set {_x1} to player's x coordinate
+                set {_z1} to player's z coordinate
+                set {_x} to difference between {_x1} and {_x}
+                set {_z} to difference between {_z1} and {_z}
+                replace all "-" with "" in {_x}
+                replace all "-" with "" in {_z}
+                if {_x} > {_z}:
+                  set {_speed} to {_x}
+                if {_z} > {_x}:
+                  set {_speed} to {_z}
+                if {_x} = {_z}:
+                  set {_speed} to {_x}
+                player's walking speed is between 0 and 0.3
+                if {_speed} is greater than 2.1:
+                  if {%player's uuid%.antifisher.teleport} is true:
+                    stop
+                  else if {%player's uuid%.antifisher.epteleport} is true:
+                    stop
+                  set {%player's uuid%.antifisher.cheat.speed} to {_speed} * 4
+                  if player is not riding:
+                    if {%player's uuid%.antifisher.jump.bhop} is not set:
+                      if player is not flying:
+                        if block under player is not air:
+                          if block 2 under player is not air:
+                            if block under player is ice:
+                              stop
+                            if block 2 under player is air:
+                              stop
+                            if player's ping is bigger than 450:
+                              stop
+                            {antifisher.Speed} is true
+                            if {antifisher.setback} is true:
+                              teleport player to {%player's uuid%.antifisher.tp.loc}
+                            loop all players:
+                              loop-player has permission "anticheat.alerts":
+                                add 1 to {vl.%player%}
+                                if {antifisher.notify.%loop-player%} is true:
+                                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                                if {vl.%player%} >= 15:
+                                  if {antifisher.autoban} is false:
+                                    stop
+                                  make server execute command "/afban %player% 1 hour"
+                                  broadcast "&7&m-----------------------------------"
+                                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                  broadcast "&c&l❌ &eRaison: &cSpeed"
+                                  broadcast "&7&m-----------------------------------"
+                          else:
+                            {antifisher.Speed} is true
+                            if {antifisher.setback} is true:
+                              teleport player to {%player's uuid%.antifisher.tp.loc}
+                            loop all players:
+                              loop-player has permission "anticheat.alerts":
+                                add 1 to {vl.%player%}
+                                if {antifisher.notify.%loop-player%} is true:
+                                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: B)&f (VL: &b%{vl.%player%}%&f)" to loop-player
+                                if {vl.%player%} >= 15:
+                                  if {antifisher.autoban} is false:
+                                    stop
+                                  make server execute command "/afban %player% 1 hour"
+                                  broadcast "&7&m-----------------------------------"
+                                  broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                                  broadcast "&c&l❌ &eRaison: &cSpeed"
+                                  broadcast "&7&m-----------------------------------"
+                      else:
+                        {antifisher.Speed} is true
+                        if {antifisher.setback} is true:
+                          teleport player to {%player's uuid%.antifisher.tp.loc}
+                        loop all players:
+                          loop-player has permission "anticheat.alerts":
+                            add 1 to {vl.%player%}
+                            if {antifisher.notify.%loop-player%} is true:
+                              send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: C) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                            if {vl.%player%} >= 15:
+                              if {antifisher.autoban} is false:
+                                stop
+                              make server execute command "/afban %player% 1 hour"
+                              broadcast "&7&m-----------------------------------"
+                              broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                              broadcast "&c&l❌ &eRaison: &cSpeed"
+                              broadcast "&7&m-----------------------------------"
+                    else:
+                      {antifisher.Bhop} is true
+                      {_bap} is air
+                      {_bap2} is air
+                      block above player is air
+                      if {antifisher.setback} is true:
+                        teleport player to {%player's uuid%.antifisher.tp.loc}
+                      loop all players:
+                        loop-player has permission "anticheat.alerts":
+                          add 1 to {vl.%player%}
+                          if {antifisher.notify.%loop-player%} is true:
+                            send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: D) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                          if {vl.%player%} >= 15:
+                            if {antifisher.autoban} is false:
+                              stop
+                            make server execute command "/afban %player% 1 hour"
+                            broadcast "&7&m-----------------------------------"
+                            broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                            broadcast "&c&l❌ &eRaison: &cSpeed"
+                            broadcast "&7&m-----------------------------------"
+        #Jesus
+        if player's flight mode is false:
+          if block under player is water:
+            if block at player is not water:
+              loop 3 times:
+                wait 4 ticks
+                if block under player is water:
+                  if block at player is not water:
+                    add 1 to {_check}
+              if {_check} is greater than or equal to 2:
+                set {_loc.check} to player's location
+                remove 0.5 from y coordinate of {_loc.check}
+                player is not on ground
+                set {_locj} to player's location
+                remove 1 from y coordinate of {_locj}
+                teleport player to {_locj}
+                {antifisher.Jesus} is true
+                if {_check} is 2:
+                  loop all players:
+                    loop-player has permission "anticheat.alerts":
+                      add 1 to {vl.%player%}
+                      if {antifisher.notify.%loop-player%} is true:
+                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Jesus/Waterwalk &7(T: A) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                      if {vl.%player%} >= 15:
+                        if {antifisher.autoban} is false:
+                          stop
+                        make server execute command "/afban %player% 1 hour"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus"
+                        broadcast "&7&m-----------------------------------"
+                else:
+                  loop all players:
+                    loop-player has permission "anticheat.alerts":
+                      add 1 to {vl.%player%}
+                      if {antifisher.notify.%loop-player%} is true:
+                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Jesus/Waterwalk &7(T: B) &f(VL: &b%{vl.%player%}%&f)" to loop-player
+                      if {vl.%player%} >= 15:
+                        if {antifisher.autoban} is false:
+                          stop
+                        make server execute command "/afban %player% 1 hour"
+                        broadcast "&7&m-----------------------------------"
+                        broadcast "&c&l❌ &b&lAnti&5&lFisher &ea banni &c%player% &edu serveur!"
+                        broadcast "&c&l❌ &eRaison: &cJesus"
+                        broadcast "&7&m-----------------------------------"
+      loop {antifisher.Delay} times:
+        wait 0.21 second
+      delete {%player's uuid%.antifisher.cheat.cooldown}
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.bypass} is not set:
+      if difference between {%player's uuid%.antifisher.last.jump} and now is less than or equal to 1 seconds:
+        set {%player's uuid%.antifisher.jump.bhop} to true
+        wait 10 ticks
+        delete {%player's uuid%.antifisher.jump.bhop}
+      set {%player's uuid%.antifisher.last.jump} to now
+      set {%player's uuid%.antifisher.jump} to true
+      wait 10 ticks
+      delete {%player's uuid%.antifisher.jump}
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.bypass} is not set:
+      set {%player's uuid%.antifisher.teleport} to true
+      wait 1 second
+      delete {%player's uuid%.antifisher.teleport}
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.antifisher.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player's uuid%.antifisher.epteleport} to true
+        wait 1 second
+        delete {%player's uuid%.antifisher.epteleport}
+
+
+#/// DEBUG ///
+
+on jump:
+   if {antifisher.Highjump} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   if player have jump boost:
+      stop
+   loop all blocks in radius 3 around player:
+      if loop-block is slime:
+         stop
+   set {_posh} to location of player
+   wait 7 ticks
+   if distance between {_posh} and player is bigger than 2.7:
+      add 1 to {debug.%player%}
+      if {debug.%player%} >= 15:
+         loop all players:
+            loop-player has permission "anticheat.alerts":
+               if {antifisher.notify.%loop-player%} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise HighJump &7(T: &6AA,DEBUG&7)" to loop-player
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               if {antifisher.debug} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise HighJump &7(T: &cDEBUG&7)" to loop-player
+         else:
+            stop
+
+#-----------
+
+on jump:
+  set {af.debug.flyb} to true
+  wait 1.2 second
+  set {af.debug.flyb} to false
+
+on any movement:
+  player is not on ground
+  loop all blocks in radius 3 around player:
+    if loop-block is not air:
+      stop
+  if player's chestplate is an elytra:
+    stop
+  if player's gamemode is not creative or spectator:
+    player's fly mode is false
+    if player is not on ground:
+      {antifisher.Float} is true
+      block under player is air
+      player is not on ground:
+        block under player is air
+        if {af.debug.flyb} is true:
+          stop
+        player is on ground:
+          stop
+        if {debug.%player%} >= 15:
+          loop all players:
+            loop-player has permission "anticheat.alerts":
+              if {antifisher.notify.%loop-player%} is true:
+                send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: &6AA,DEBUG&7)" to loop-player
+        loop all players:
+          loop-player has permission "anticheat.alerts":
+            add 1 to {debug.%player%}
+            if {antifisher.notify.%loop-player%} is true:
+              if {antifisher.debug} is true:
+                send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Fly &7(T: &cDEBUG&7)" to loop-player
+
+#-------------
+
+on any move:
+   if {antifisher.Speed} is false:
+      stop
+   if player is flying:
+      stop
+   if player's gamemode is creative:
+      stop
+   loop all blocks in radius 0.5 around player:
+      if loop-block is not air:
+         set {_pos} to location of player
+         wait 1 second
+         block 2 under player is air:
+            stop
+         if distance between {_pos} and player is bigger than 8:
+            if {debug.%player%} >= 15:
+               loop all players:
+                  loop-player has permission "anticheat.alerts":
+                     if {antifisher.notify.%loop-player%} is true:
+                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: &6AA,DEBUG&7)" to loop-player
+            loop all players:
+               loop-player has permission "anticheat.alerts":
+                  add 1 to {debug.%player%}
+                  if {antifisher.notify.%loop-player%} is true:
+                     if {antifisher.debug} is true:
+                        send "&7[&b&lAnti&5&lFisher&7] %player% &futilise Speed &7(T: &cDEBUG&7)" to loop-player
+      else:
+         stop
+
+every 15 second:
+   loop all players:
+      clear {debug.%loop-player%}
+
+
+on left click:
+   if player is blocking:
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            if {antifisher.notify.%loop-player%} is true:
+               if {antifisher.debug} is true:
+                  send "&7[&b&lAnti&5&lFisher&7] %player% &futilise AutoBlock &7(T: &cDEBUG&7)" to loop-player

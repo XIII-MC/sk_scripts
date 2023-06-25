@@ -1,0 +1,394 @@
+Antifisher indev 0.6
+
+#/// FASTBOW ///
+
+on shoot:
+   if projectile is an arrow:
+      if difference between {bow.%shooter%} and now is less than 2 ticks:
+         add 1 to {vl.%shooter%}
+         loop all players:
+            loop-player has permission "staff":
+               send action bar "&7[&b&lFish&5&lFisher&e&lAC] &e%shooter% &7may be using FastBow &f(VL:&b %{vl.%shooter%}%&f)" to loop-player
+         if {vl.%shooter%} >= 10:
+            loop all players:
+               loop-player has permission "staff":
+                  send action bar "&7[&b&lFish&5&lFisher&e&lAC] &e%shooter% &7has been kicked for: &cFastBow &7&m| &r&f(VL:&b %{vl.%shooter%}%&f)" to loop-player
+                  kick shooter due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                  ban shooter due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                  broadcast "&7&m-----------------------------------"
+                  broadcast "&c&l❌ 7[&b&lFish&5&lFisher&e&lAC &eremoved &c%shooter% &efrom the server!"
+                  broadcast "&c&l❌ &eReason: &cFastBow"
+                  broadcast "&7&m-----------------------------------"
+         set {bow.%shooter%} to now
+
+#/// REACH ///
+
+on damage:
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      set {_distance.%attacker%} to distance between attacker and victim
+      if {_distance.%attacker%} >= 4.7:
+         if damage cause is not a projectile:
+            add 1 to {vl.%attacker%}
+            loop all players:
+               loop-player has permission "anticheat.alerts":
+                  send action bar "&7[&b&lFish&5&lFish&e&lAC&7] &e%attacker% &7may be using reach &m|&r &a(%{_distance.%attacker%}%) &7&m|&r &f(VL:&b %{vl.%attacker%}%&f)" to loop-player
+            if {vl.%attacker%} >= 13:
+               loop all players:
+                  loop-player has permission "anticheat.alerts":
+                     send action bar "&7[&b&lFish&5&lFish&e&lAC&7] &e%attacker% &7has been kicked for: &cCheating Reach &m|&r &a(%{_distance.%attacker%}%) &f(VL:&b%{vl.%attacker%}%&f)" to loop-player
+                     broadcast "&7&m-----------------------------------"
+                     broadcast "&c&l❌ &b&lFish&5&lFish&e&lAC &eremoved &c%attacker% &efrom the server!"
+                     broadcast "&c&l❌ &eReason: &cReach"
+                     broadcast "&7&m-----------------------------------"
+                     make server execute command "/smite %attacker%"
+                     kick attacker due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                     make server execute command "/tempban %attacker% 30min &7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+
+on damage:
+   if attacker is a player:
+      if attacker's gamemode is creative:
+         stop
+      set {_distance.%attacker%} to distance between attacker and victim
+      if {_distance.%attacker%} >= 6.7:
+         if damage cause is not a projectile:
+            cancel event
+            make server execute command "/smite %attacker%"
+            kick attacker due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+            ban attacker due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+            broadcast "&7&m-----------------------------------"
+            broadcast "&c&l❌ &b&lFish&5&lFish&e&lAC &eremoved &c%attacker% &efrom the server!"
+            broadcast "&c&l❌ &eReason: &cInfinit Aura"
+            broadcast "&7&m-----------------------------------"
+
+
+#/// ANTIKNOCKBACK ///
+
+on damage:
+   if victim is a player:
+      if damage cause is fall:
+         stop
+      if damage cause is drown:
+         stop
+      if victim's gamemode is creative:
+         stop
+      if victim is flying:
+         stop
+      if victim have poison:
+         stop
+      if victim have wither:
+         stop
+      if victim is burning:
+         stop
+      set {loc1.%victim%} to location of victim
+      wait 1 second
+      set {loc2.%victim%} to location of victim
+      if {loc1.%victim%} = {loc2.%victim%}:
+         add 1 to {vl.%victim%}
+         loop all players:
+            loop-player has permission "anticheat.alerts":
+               send action bar "&7[&b&lFish&5&lFisher&e&lAC] &c&l%victim% &7may be using AntiKnockback &f(VL: &b%{vl.%victim%}%" to loop-player
+      if {vl.%victim%} >= 15:
+         kick attacker due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         make server execute command "/tempban %attacker% 30min &7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lFish&5&lFisher&e&lAC &eremoved &c%victim% &efrom the server!"
+         broadcast "&c&l❌ &eReason: &cAntiKnockBack"
+         broadcast "&7&m-----------------------------------"
+
+
+#/// AUTOCLICKER / MACRO ///
+
+on leftclick:
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 18:
+      cancel event
+      send "&b&lFish&5&lFish &e&l>> &cWarning ! Your clicking too fast !"
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            send action bar "&7[&b&lFish&5&lFish&e&lAC] &7%player% is clicking too fast! (CPS: &b%{cps.%player%}%&f) &7&m|&r (VL: &b%{vl.%player%}%&f)" to loop-player
+            add 1 to {vl.%player%}
+      if {vl.%player%} >= 10:
+         make server execute command "/smite %player%"
+         kick player due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         make server execute command "/tempban %player% 30min &7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lFish&5&lFish&e&lAC &eremoved &c%player% &efrom the server!"
+         broadcast "&c&l❌ &eReason: &cAutoclicker"
+         broadcast "&7&m-----------------------------------"
+
+on rightclick:
+   add 1 to {cps.%player%}
+   if {cps.%player%} >= 15:
+      cancel event
+      send "&b&lFish&5&lFish &e&l>> &cWarning ! Your clicking too fast !"
+      loop all players:
+         loop-player has permission "anticheat.alerts":
+            send action bar "&7[&b&lFish&5&lFish&e&lAC] &7%player% is clicking too fast! (CPS: &b%{cps.%player%}%&f) &7&m|&r (VL: &b%{vl.%player%}%&f)" to loop-player
+            add 1 to {vl.%player%}
+      if {vl.%player%} >= 10:
+         make server execute command "/smite %player%"
+         kick player due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         make server execute command "/tempban %player% 30min &7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+         broadcast "&7&m-----------------------------------"
+         broadcast "&c&l❌ &b&lFish&5&lFish&e&lAC &eremoved &c%player% &efrom the server!"
+         broadcast "&c&l❌ &eReason: &cAutoclicker"
+         broadcast "&7&m-----------------------------------"
+
+
+#/// EVENTS ///
+
+on join:
+   wait 2 second
+   message "&7[&b&lFish&5&lFisher&e&lAC&7] &r&eAnything that gives you an unfair advantage over other players is against the rules...this includes autoclickers, minimaps, & other cheats. You have been warned!"
+
+every 1 second:
+   loop all players:
+      clear {cps.%loop-player%}
+
+every 10 second:
+   loop all players:
+      clear {vl.%loop-player%}
+
+on death:
+   set {void.%player%} to true
+
+on respawn:
+   set {void.%player%} to true
+
+#/// NOSLOW ///
+
+
+
+#/// FLY ///
+
+function Detect(p: player, r: text):
+  if {_p} is flying:
+    stop
+  add 1 to {alertl::%{_p}%}
+  loop all players:
+    loop-player has permission "anticheat.alerts":
+      send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%{_p}% &7may be using Fly: &c%{_r}% &6(%{alertl::%{_p}%}%)'" to loop-player
+  if {alertl::%{_p}%} >= 15:
+    make server execute command "/smite %{_p}%"
+    kick {_p} due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+    make server execute command "/tempban %{_p}% 30min &7[&b&lFish&5&lFisher&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFisher &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+    broadcast "&7&m-----------------------------------"
+    broadcast "&c&l❌ &b&lFish&5&lFisher&e&lAC &eremoved &c%{_p}% &efrom the server!"
+    broadcast "&c&l❌ &eReason: &cFly"
+    broadcast "&7&m-----------------------------------"
+on damage:
+  set {cooldown.%victim%} to now
+every 3 second:
+  clear {alertl::*}
+on any move:
+  player is not riding
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.08":
+        {vl08.%player%} is set
+        clear {vl08.%player%}
+      if "%{_diffy}%" != "0.16":
+        {vl16.%player%} is set
+        clear {vl16.%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42.%player%} is set
+        clear {vl42.%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23.%player%} is set
+        clear {vl23.%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65.%player%} is set
+        clear {vl65.%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12.%player%} is set
+        clear {vl12.%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04.%player%} is set
+        clear {vl04.%player%}
+      player's gamemode is not creative
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or stairs or slab or 165 or ladder or vines
+        clear {vlsame.%player%}
+        stop
+      wait 3 ticks
+      if {cooldown.%player%} is set:
+        difference between {cooldown.%player%} and now < 0.3 seconds
+        clear {vlsame.%player%}
+        stop
+      if "%{_diffy}%" = "0.08":
+        
+        add 1 to {vl08.%player%}
+        {vl08.%player%} > 12
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.16":
+        
+        add 1 to {vl16.%player%}
+        {vl16.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42.%player%}
+        {vl42.%player%} > 2
+        Detect(player, "Fly V1 &e%{_diffy}%")
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23.%player%}
+        {vl23.%player%} > 2
+        Detect(player, "Fly V1 &a %{_diffy}%")
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos.%player%} to {_diffy}
+          stop
+        add 1 to {vl12.%player%}
+        {vl12.%player%} > 2
+        Detect(player, "Fly v1 &d 0.12")
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04.%player%}
+        {vl04.%player%} > 2
+        Detect(player, "Fly v1 &d 0.4")
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65.%player%}
+        {vl65.%player%} > 2
+        Detect(player, "Fly V1 &1 %{_diffy}%")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.08" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame.%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame.%player%} > {_maxvl}
+      Detect(player, "Fly v1 &a%{_diffy}%")
+    else:
+      set {lasposy.%player%} to {_diffy}
+      clear {vlsame.%player%}
+
+#/// JESUS ///
+
+on walk on water:
+    player's gamemode is not creative
+    player is not riding
+    player is not sneaking
+    if block below player is water:
+        if block south below player is water:
+            if block north below player is water:
+                if block west below player is water:
+                    if block east below player is water:
+                        if block south player is air:
+                            if block north player is air:
+                                if block west player is air:
+                                    block east player is air
+                                    add 1 to {Alerte.Jesus.%player%}
+                                    if {Alerte.Jesus.%player%} > 22:
+                                        loop all players:
+                                            loop-player has permission "anticheats.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &4(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                make server execute command "/smite %player%"
+                                                kick player due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                make server execute command "/tempban %player% 30min &7[&b&lFish&5&lFisher&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFisher &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                broadcast "&7&m-----------------------------------"
+                                                broadcast "&c&l❌ &b&lFish&5&lFisher&e&lAC &eremoved &c%player% &efrom the server!"
+                                                broadcast "&c&l❌ &eReason: &cJesus/WaterWalk"
+                                                broadcast "&7&m-----------------------------------"
+                                                stop
+                                    if {Alerte.Jesus.%player%} > 15:
+                                        loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &c(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                stop
+                                    if {Alerte.Jesus.%player%} > 8:
+                                        loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &6(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+           
+ 
+command /clearjesus:
+    trigger:
+        clear {Alerte.Jesus.%player%}
+on any move:
+    if player's gamemode is not creative:
+        if player is sneaking:
+            stop
+        else:
+            if block below player is water:
+                if block south below player is water:
+                    if block north below player is water:
+                        if block west below player is water:
+                            if block east below player is water:
+                                if block south player is air:
+                                    if block north player is air:
+                                        if block west player is air:
+                                            block east player is air
+                                            add 1 to {Alerte.Jesus.%player%}
+                                            if {Alerte.Jesus.%player%} > 22:
+                                                loop all players:
+                                                    loop-player has permission "anticheat.alerts":
+                                                        send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &4(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                        make server execute command "/smite %player%"
+                                                        kick player due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                        make server execute command "/tempban %player% 30min &7[&b&lFish&5&lFisher&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFisher &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                        broadcast "&7&m-----------------------------------"
+                                                        broadcast "&c&l❌ &b&lFish&5&lFisher&e&lAC &eremoved &c%player% &efrom the server!"
+                                                        broadcast "&c&l❌ &eReason: &cJesus/WaterWalk"
+                                                        broadcast "&7&m-----------------------------------"
+                                                        stop
+                                            if {Alerte.Jesus.%player%} > 15:
+                                                loop all players:
+                                                    loop-player has permission "anticheat.alerts":
+                                                        send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &c(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                    stop
+                                            if {Alerte.Jesus.%player%} > 8:
+                                                loop all players:
+                                                    loop-player has permission "anticheat.alerts":
+                                                        send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &6(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+every 3 second:
+    loop all players:
+        clear {Alerte.Jesus.%loop-player%}
+on jump:
+    if block below player is water:
+        if block south below player is water:
+            if block north below player is water:
+                if block west below player is water:
+                    if block east below player is water:
+                        if block south player is air:
+                            if block north player is air:
+                                if block west player is air:
+                                    block east player is air
+                                    add 1 to {Alerte.Jesus.%player%}
+                                    if {Alerte.Jesus.%player%} > 22:
+                                        loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &4(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                make server execute command "/smite %player%"
+                                                kick player due to "&7[&b&lFish&5&lFish&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFish &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                make server execute command "/tempban %player% 30min &7[&b&lFish&5&lFisher&e&lAC&7] &7Your account has been suspended from &b&lFish&5&lFisher &7! Reason: &cCheating &7Think it's a mistake ? Then please appeal on discord: &bhttps://discord.gg/Na7P79H"
+                                                broadcast "&7&m-----------------------------------"
+                                                broadcast "&c&l❌ &b&lFish&5&lFisher&e&lAC &eremoved &c%player% &efrom the server!"
+                                                broadcast "&c&l❌ &eReason: &cJesus/WaterWalk"
+                                                broadcast "&7&m-----------------------------------"
+                                                stop
+                                    if {Alerte.Jesus.%player%} > 15:
+                                        loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &c(%{Alerte.Jesus.%player%}% alerts)" to loop-player
+                                                stop
+                                    if {Alerte.Jesus.%player%} > 8:
+                                        loop all players:
+                                            loop-player has permission "anticheat.alerts":
+                                                send action bar "&7[&b&lFish&5&lFisher&e&lAC&7] &c%player% &7may be using WaterWalk/Jesus &6(%{Alerte.Jesus.%player%}% alertes)" to loop-player
+
+#/// FLY V2 ///

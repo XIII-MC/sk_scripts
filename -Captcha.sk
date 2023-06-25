@@ -1,0 +1,62 @@
+#---------------CAPTCHA START----------------#
+
+on join:
+   wait 2 seconds
+   set {cp.%player%} to true
+   set {bot.%player%} to true
+   wait 2 seconds
+   send "&b&lFish&5&lFisher &e&l>> &cTo be sure you are not a bot , what is 18+4 ?"
+   send "&b&lFish&5&lFisher &e&l>> &cTo be sure you are not a bot , what is 18+4 ?" 
+   send "&b&lFish&5&lFisher &e&l>> &cTo be sure you are not a bot , what is 18+4 ?" 
+   wait 30 seconds
+   if {cp.%player%} is false:
+      stop
+   kick player due to "&cYou failed the captcha !"
+   set {cp.%player%} to false
+
+#---------------CAPTCHA EVENTS----------------#
+
+on chat:
+   if {cp.%player%} is true:
+      if message is "22":
+         cancel event
+         send "&b&lFish&5&lFisher &e&l>> &aYou are not a bot ! You can go play !" 
+         set {cp.%player%} to false
+      if {cp.%player%} is true:
+         if message is not "22":
+            cancel event
+            kick player due to "&cYou failed the captcha !"
+      if {bot.%player%} is true:
+         if {cp.%player%} is false:
+            stop
+            cancel event 
+            send "&b&lFish&5&lFisher &e&l>> &cBefore typing in chat please move a bit !" 
+
+on any move:
+   set {bot.%player%} to false
+   if {cp.%player%} is true:
+      cancel event
+   if {bot.%player%} is true:
+      if {cp.%player%} is false:
+         add 1 to {sb.%player%}
+         if {sb.%player%} >= 50:
+            set {bot.%player%} to false
+            clear {sb.%player%}
+
+on quit:
+   set {cp.%player%} to false
+   set {bot.%player%} to false
+
+on inventory click:
+   if {cp.%player%} is true:
+      cancel event
+
+on left click:
+   if {cp.%player%} is true:
+      cancel event
+
+on right click:
+   if {cp.%player%} is true:
+      cancel event
+
+#---------------CAPTCHA END----------------#

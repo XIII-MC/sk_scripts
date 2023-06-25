@@ -1,0 +1,92 @@
+options:
+   LOGSs: &c&l[LOGS]&7&o 
+   perm: server.LOGSs
+
+command /minecraft:me:
+   trigger:
+      make server execute command "/pentagon kick %player%"
+
+command /logs [<text>]:
+   permission: {@perm}
+   trigger:
+      if arg 1 is not set:
+         send ""
+         send "{@LOGSs}"
+         send "&7&oBy: XIII___"
+         send "&7&oBuild: b1"
+         send ""
+         stop
+      if arg 1 is "toggle":
+         if {LOGS.%player%.see} is not set:
+            set {LOGS.%player%.see} to false
+         if {LOGS.%player%.see} is false:
+            send "{@LOGSs} You are now seeing LOGSs." to player
+            set {LOGS.%player%.see} to true
+            stop
+         if {LOGS.%player%.see} is true:
+            send "{@LOGSs} You are no longer seeing LOGSs." to player
+            set {LOGS.%player%.see} to false
+            stop
+
+function LOGS(p: player, action: text, contain: text):
+  loop all players:
+    if {LOGS.%loop-player%.see} is true:
+      if {_contain} is set:
+        send "{@LOGSs} %{_p}%&7&o , %{_action}%&7&o , %{_contain}%" to loop-player
+
+function LOGS1(p: player, action: text):
+  loop all players:
+    if {LOGS.%loop-player%.see} is true:
+      if {_contain} is set:
+        send "{@LOGSs} %{_p}%&7&o , %{_action}%&7&o" to loop-player
+
+function LOGS2(p: text, action: text):
+  loop all players:
+    if {LOGS.%loop-player%.see} is true:
+      if {_contain} is set:
+        send "{@LOGSs} %{_p}%&7&o , %{_action}%&7&o" to loop-player
+
+on chat:
+   LOGS(player, "Chat", "%message%")
+
+on block damage:
+   LOGS(player, "Breaking Block", "%event-block%")
+
+on block break:
+   LOGS(player, "Block Broke", "%event-block%")
+
+on place:
+   LOGS(player, "Block Placed", "%event-block%")
+
+on chunk generate:
+   LOGS2("Server", "Chunk Generated")
+
+on chunk load:
+   LOGS2("Server", "Chunk Loaded")
+
+on chunk unload:
+   LOGS2("Server", "Chunk Unloaded")
+
+on left click:
+   LOGS1(player, "Click Left")
+
+on right click:
+   LOGS1(player, "Click Right")
+
+on command:
+   LOGS(player, "Command Executed", "%command%")
+
+on connect:
+   LOGS1(player, "Connected")
+
+on damage:
+   LOGS(victim, "Damage Taken", "%damage cause%")
+
+on damage:
+   LOGS(attacker, "Damage Dealed", "%damage cause%")
+
+on death:
+   LOGS1(victim, "Death")
+
+on drop:
+   LOGS(player, "Item Dropped", "%event-item%")

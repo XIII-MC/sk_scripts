@@ -1,0 +1,635 @@
+# Made by ghoul_matt, discord: ghoul_matt#9858
+# Do not claim as your own or sell this
+# Support me on patreon: patreon.com/ghoul_matt
+# ChatColor
+
+Options:
+    version: 1.0 # do not change, this is for the dev
+    chatcolormenu: chatcolor.open
+    colordenymessage: &cYou don't have permission to use this color!
+ # "All" Perms:
+    allperms: chatcolor* # including colors
+    allcolors: chatcolor.colors* # just colors
+    allspecials: chatcolor.specials*
+ # Specific Color Perms:
+    green: chatcolor.green
+    lime: chatcolor.lime
+    blue: chatcolor.blue
+    turquoise: chatcolor.turquoise
+    cyan: chatcolor.cyan
+    lightblue: chatcolor.lightblue
+    darkred: chatcolor.darkred
+    red: chatcolor.red
+    purple: chatcolor.purple
+    pink: chatcolor.pink
+    gold: chatcolor.gold
+    yellow: chatcolor.yellow
+    black: chatcolor.black
+    gray: chatcolor.gray
+    lightgray: chatcolor.lightgray
+ # Specific Special Perms:
+    crazy: chatcolor.crazy
+    bold: chatcolor.bold
+    strikethrough: chatcolor.strikethrough
+    underline: chatcolor.underline
+    italic: chatcolor.italic
+
+# Basic
+
+function reopen(p: player):
+    wait 2 ticks
+    execute {_p} command "/chatcolor"
+    stop
+
+function deleteall(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    delete {green::%{_uuid}%}
+    delete {lime::%{_uuid}%}
+    delete {blue::%{_uuid}%}
+    delete {cyan::%{_uuid}%}
+    delete {lightblue::%{_uuid}%}
+    delete {darkred::%{_uuid}%}
+    delete {red::%{_uuid}%}
+    delete {selectedcolor::%{_uuid}%}
+
+function deleteallspecial(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    delete {crazy::%{_uuid}%}
+    delete {bold::%{_uuid}%}
+    delete {strikethrough::%{_uuid}%}
+    delete {underline::%{_uuid}%}
+    delete {italic::%{_uuid}%}
+    delete {selectedspecial::%{_uuid}%}
+
+function resetboth(p: player,uuid: text):
+    deleteall({_p},uuid)
+    deleteallspecial({_p},uuid)
+
+# Colors
+
+function green(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@green}" or "{@allcolors}" or "{@allperms}":
+        if {green::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {green::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&2Green"
+            send "&2Green selected." to {_p}
+            stop
+        else if {green::%{_uuid}%} is true:
+            delete {green::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&2Green deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@green}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function lime(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@lime}" or "{@allcolors}" or "{@allperms}":
+        if {lime::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {lime::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&aLime"
+            send "&aLime selected." to {_p}
+            stop
+        else if {lime::%{_uuid}%} is true:
+            delete {lime::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&aLime deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@lime}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function blue(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@blue}" or "{@allcolors}" or "{@allperms}":
+        if {blue::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {blue::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&1Blue"
+            send "&1Blue selected." to {_p}
+            stop
+        else if {blue::%{_uuid}%} is true:
+            delete {blue::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&1Blue deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@blue}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function turquoise(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@turquoise}" or "{@allcolors}" or "{@allperms}":
+        if {turqoise::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {turqoise::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&3Turqoise"
+            send "&3Turqoise selected." to {_p}
+            stop
+        else if {turqoise::%{_uuid}%} is true:
+            delete {turqoise::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&3Turqoise deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@turquoise}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function cyan(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@cyan}" or "{@allcolors}" or "{@allperms}":
+        if {cyan::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {cyan::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&9Cyan"
+            send "&9Cyan selected." to {_p}
+            stop
+        else if {cyan::%{_uuid}%} is true:
+            delete {cyan::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&9Cyan deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@cyan}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function lightblue(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@lightblue}" or "{@allcolors}" or "{@allperms}":
+        if {lightblue::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {lightblue::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&bLight Blue"
+            send "&bLight Blue selected." to {_p}
+            stop
+        else if {lightblue::%{_uuid}%} is true:
+            delete {lightblue::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&bLight Blue deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@lightblue}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function darkred(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@darkred}" or "{@allcolors}" or "{@allperms}":
+        if {darkred::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {darkred::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&4Dark Red"
+            send "&4Dark Red selected." to {_p}
+            stop
+        else if {darkred::%{_uuid}%} is true:
+            delete {darkred::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&4Dark Red deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@darkred}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function red(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@red}" or "{@allcolors}" or "{@allperms}":
+        if {red::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {red::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&cRed"
+            send "&cRed selected." to {_p}
+            stop
+        else if {red::%{_uuid}%} is true:
+            delete {red::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&cRed deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@red}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function purple(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@purple}" or "{@allcolors}" or "{@allperms}":
+        if {purple::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {purple::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&dPurple"
+            send "&dPurple selected." to {_p}
+            stop
+        else if {purple::%{_uuid}%} is true:
+            delete {purple::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&dPurple deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@purple}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function pink(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@pink}" or "{@allcolors}" or "{@allperms}":
+        if {pink::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {pink::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&5Pink"
+            send "&5Pink selected." to {_p}
+            stop
+        else if {pink::%{_uuid}%} is true:
+            delete {pink::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&5Pink deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@pink}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function gold(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@gold}" or "{@allcolors}" or "{@allperms}":
+        if {gold::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {gold::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&6Gold"
+            send "&6Gold selected." to {_p}
+            stop
+        else if {gold::%{_uuid}%} is true:
+            delete {gold::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&6Gold deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@gold}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function yellow(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@yellow}" or "{@allcolors}" or "{@allperms}":
+        if {yellow::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {yellow::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&eYellow"
+            send "&eYellow selected." to {_p}
+            stop
+        else if {yellow::%{_uuid}%} is true:
+            delete {yellow::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&eYellow deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@yellow}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function black(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@black}" or "{@allcolors}" or "{@allperms}":
+        if {black::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {black::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&0Black"
+            send "&0Black selected." to {_p}
+            stop
+        else if {black::%{_uuid}%} is true:
+            delete {black::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&0Black deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@black}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function gray(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@gray}" or "{@allcolors}" or "{@allperms}":
+        if {gray::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {gray::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&8Gray"
+            send "&8Gray selected." to {_p}
+            stop
+        else if {gray::%{_uuid}%} is true:
+            delete {gray::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&8Gray deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@gray}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function lightgray(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@lightgray}" or "{@allcolors}" or "{@allperms}":
+        if {lightgray::%{_uuid}%} isn't set:
+            deleteall({_p},uuid)
+            set {lightgray::%{_uuid}%} to true
+            set {selectedcolor::%{_uuid}%} to "&7Light Gray"
+            send "&7Light Gray selected." to {_p}
+            stop
+        else if {lightgray::%{_uuid}%} is true:
+            delete {lightgray::%{_uuid}%}
+            delete {selectedcolor::%{_uuid}%}
+            send "&7Light Gray deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@lightgray}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+# Specials
+
+function crazy(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@crazy}" or "{@allcolors}" or "{@allperms}":
+        if {crazy::%{_uuid}%} isn't set:
+            deleteallspecial({_p},uuid)
+            set {crazy::%{_uuid}%} to true
+            set {selectedspecial::%{_uuid}%} to "&f&kCrazy&r&f"
+            send "&f&kCrazy&r&f selected." to {_p}
+            stop
+        else if {crazy::%{_uuid}%} is true:
+            delete {crazy::%{_uuid}%}
+            delete {selectedspecial::%{_uuid}%}
+            send "&f&kCrazy&r&f deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@crazy}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function bold(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@bold}" or "{@allcolors}" or "{@allperms}":
+        if {bold::%{_uuid}%} isn't set:
+            deleteallspecial({_p},uuid)
+            set {bold::%{_uuid}%} to true
+            set {selectedspecial::%{_uuid}%} to "&f&lBold&r&f"
+            send "&f&lBold&r&f selected." to {_p}
+            stop
+        else if {bold::%{_uuid}%} is true:
+            delete {bold::%{_uuid}%}
+            delete {selectedspecial::%{_uuid}%}
+            send "&f&lBold&r&f deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@bold}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function strikethrough(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@strikethrough}" or "{@allcolors}" or "{@allperms}":
+        if {strikethrough::%{_uuid}%} isn't set:
+            deleteallspecial({_p},uuid)
+            set {strikethrough::%{_uuid}%} to true
+            set {selectedspecial::%{_uuid}%} to "&f&mStrikethrough&r&f"
+            send "&f&mStrikethrough&r&f selected." to {_p}
+            stop
+        else if {strikethrough::%{_uuid}%} is true:
+            delete {strikethrough::%{_uuid}%}
+            delete {selectedspecial::%{_uuid}%}
+            send "&f&mStrikethrough&r&f deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@strikethrough}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function underline(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@underline}" or "{@allcolors}" or "{@allperms}":
+        if {underline::%{_uuid}%} isn't set:
+            deleteallspecial({_p},uuid)
+            set {underline::%{_uuid}%} to true
+            set {selectedspecial::%{_uuid}%} to "&f&nUnderline&r&f"
+            send "&f&nUnderline&r&f selected." to {_p}
+            stop
+        else if {underline::%{_uuid}%} is true:
+            delete {underline::%{_uuid}%}
+            delete {selectedspecial::%{_uuid}%}
+            send "&f&nUnderline&r&f deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@underline}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+function italic(p: player,uuid: text):
+    set {_uuid} to {_p}'s uuid
+    if {_p} has permission "{@italic}" or "{@allcolors}" or "{@allperms}":
+        if {italic::%{_uuid}%} isn't set:
+            deleteallspecial({_p},uuid)
+            set {italic::%{_uuid}%} to true
+            set {selectedspecial::%{_uuid}%} to "&f&oItalic&r&f"
+            send "&f&oItalic&r&f selected." to {_p}
+            stop
+        else if {italic::%{_uuid}%} is true:
+            delete {italic::%{_uuid}%}
+            delete {selectedspecial::%{_uuid}%}
+            send "&f&oItalic&r&f deselected." to {_p}
+            stop
+    else if {_p} doesn't have permission "{@italic}" or "{@allcolors}" or "{@allperms}":
+        send "{@colordenymessage}" to {_p}
+        stop
+
+on chat:
+#Colors:
+  if {green::%player's uuid%} is true:
+    set {_color} to "&2"
+  else if {lime::%player's uuid%} is true:
+    set {_color} to "&a"
+  else if {cyan::%player's uuid%} is true:
+    set {_color} to "&9"
+  else if {turquoise::%player's uuid%} is true:
+    set {_color} to "&3"
+  else if {blue::%player's uuid%} is true:
+    set {_color} to "&1"
+  else if {lightblue::%player's uuid%} is true:
+    set {_color} to "&b"
+  else if {darkred::%player's uuid%} is true:
+    set {_color} to "&4"
+  else if {red::%player's uuid%} is true:
+    set {_color} to "&c"
+  else if {purple::%player's uuid%} is true:
+    set {_color} to "&5"
+  else if {pink::%player's uuid%} is true:
+    set {_color} to "&d"
+  else if {gold::%player's uuid%} is true:
+    set {_color} to "&6"
+  else if {yellow::%player's uuid%} is true:
+    set {_color} to "&e"  
+  if {_color} isn't set:
+    set {_color} to "&r"
+
+#Specials:
+  if {crazy::%player's uuid%} is true:
+    set {_special} to "&k"
+  else if {bold::%player's uuid%} is true:
+    set {_special} to "&l"
+  else if {strikethrough::%player's uuid%} is true:
+    set {_special} to "&m"
+  else if {underline::%player's uuid%} is true:
+    set {_special} to "&n"
+  else if {italic::%player's uuid%} is true:
+    set {_special} to "&o"
+  if {_special} isn't set:
+    set {_special} to {_color}
+
+  set message to "%{_color}%%{_special}%%message%"
+
+command /chatcolor [<text>]:
+  aliases: /chatc, /ccolor
+  usage: /chatcolor [<help, version, reload>]
+  permission: {@chatcolormenu}, {@allperms}
+  permission message: &cYou aren't allowed to use this command.
+  trigger:
+    if arg-1 isn't set:
+      open chest with 3 rows named "Chat Colors" to player
+      format slot 7 of player with black stained glass pane named "&f" to close then run [reopen(player)]
+      format slot 16 of player with black stained glass pane named "&f" to close then run [reopen(player)]
+      format slot 17 of player with book named "&fReset Both!" to close then run [resetboth(player,uuid)]
+      format slot 19 of player with light gray stained glass pane named "&f" to close then run [reopen(player)]
+      format slot 25 of player with black stained glass pane named "&f" to close then run [reopen(player)]
+
+# Colors
+
+      if {green::%player's uuid%} isn't set:
+        format slot 0 of player with green dye named "&2Green" with lore "&2Click to enable this color!" to close then run [green(player,uuid)]
+      else if {green::%player's uuid%} is true:
+        format slot 0 of player with green dye named "&2Green" with lore "&2Click to disable this color!" to close then run [green(player,uuid)]
+        format slot 8 of player with green dye named "&2Current Color: Green" with lore "&2Click to disable this color!" to close then run [green(player,uuid)]
+
+      if {lime::%player's uuid%} isn't set:
+        format slot 1 of player with lime dye named "&aLime" with lore "&aClick to enable this color!" to close then run [lime(player,uuid)]
+      else if {lime::%player's uuid%} is true:
+        format slot 1 of player with lime dye named "&aLime" with lore "&aClick to disable this color!" to close then run [lime(player,uuid)]
+        format slot 8 of player with lime dye named "&aCurrent Color: Lime" with lore "&aClick to disable this color!" to close then run [lime(player,uuid)]
+
+      if {blue::%player's uuid%} isn't set:
+        format slot 2 of player with lapis named "&1Blue" with lore "&1Click to enable this color!" to close then run [blue(player,uuid)]
+      else if {blue::%player's uuid%} is true:
+        format slot 2 of player with lapis named "&1Blue" with lore "&1Click to disable this color!" to close then run [blue(player,uuid)]
+        format slot 8 of player with lapis named "&1Current Color: Blue" with lore "&1Click to disable this color!" to close then run [blue(player,uuid)]
+
+      if {turquoise::%player's uuid%} isn't set:
+        format slot 3 of player with cyan dye named "&3Turquoise" with lore "&3Click to enable this color!" to close then run [turquoise(player,uuid)]
+      else if {turquoise::%player's uuid%} is true:
+        format slot 3 of player with cyan dye named "&3Turquoise" with lore "&3Click to disable this color!" to close then run [turquoise(player,uuid)]
+        format slot 8 of player with cyan dye named "&3Current Color: Turquoise" with lore "&3Click to disable this color!" to close then run [turquoise(player,uuid)]
+
+      if {cyan::%player's uuid%} isn't set:
+        format slot 4 of player with blue dye named "&9Cyan" with lore "&9Click to enable this color!" to close then run [cyan(player,uuid)]
+      else if {cyan::%player's uuid%} is true:
+        format slot 4 of player with blue dye named "&9Cyan" with lore "&9Click to disable this color!" to close then run [cyan(player,uuid)]
+        format slot 8 of player with blue dye named "&9Current Color: Cyan" with lore "&9Click to disable this color!" to close then run [cyan(player,uuid)]
+
+      if {lightblue::%player's uuid%} isn't set:
+        format slot 5 of player with light blue dye named "&bLight Blue" with lore "&bClick to enable this color!" to close then run [lightblue(player,uuid)]
+      else if {lightblue::%player's uuid%} is true:
+        format slot 5  of player with light blue dye named "&bLight Blue" with lore "&bClick to disable this color!" to close then run [lightblue(player,uuid)]
+        format slot 8 of player with light blue dye named "&bCurrent Color: Light Blue" with lore "&bClick to disable this color!" to close then run [lightblue(player,uuid)]
+
+      if {darkred::%player's uuid%} isn't set:
+        format slot 6 of player with redstone named "&4Dark Red" with lore "&4Click to enable this color!" to close then run [darkred(player,uuid)]
+      else if {darkred::%player's uuid%} is true:
+        format slot 6 of player with redstone named "&4Dark Red" with lore "&4Click to disable this color!" to close then run [darkred(player,uuid)]
+        format slot 8 of player with redstone named "&4Current Color: Dark Red" with lore "&4Click to disable this color!" to close then run [darkred(player,uuid)]
+
+      if {red::%player's uuid%} isn't set:
+        format slot 9 of player with red dye named "&cRed" with lore "&cClick to enable this color!" to close then run [red(player,uuid)]
+      else if {red::%player's uuid%} is true:
+        format slot 9 of player with red dye named "&cRed" with lore "&cClick to disable this color!" to close then run [red(player,uuid)]
+        format slot 8 of player with red dye named "&cCurrent Color: Red" with lore "&cClick to disable this color!" to close then run [red(player,uuid)]
+
+      if {purple::%player's uuid%} isn't set:
+        format slot 10 of player with purple dye named "&5Purple" with lore "&5Click to enable this color!" to close then run [purple(player,uuid)]
+      else if {purple::%player's uuid%} is true:
+        format slot 10 of player with purple dye named "&5Purple" with lore "&5Click to enable this color!" to close then run [purple(player,uuid)]
+        format slot 8 of player with purple dye named "&5Current Color: Purple" with lore "&5Click to enable this color!" to close then run [purple(player,uuid)]
+
+      if {pink::%player's uuid%} isn't set:
+        format slot 11 of player with pink dye named "&dPink" with lore "&dClick to enable this color!" to close then run [pink(player,uuid)]
+      else if {pink::%player's uuid%} is true:
+        format slot 11 of player with pink dye named "&dPink" with lore "&dClick to disable this color!" to close then run [pink(player,uuid)]
+        format slot 8 of player with pink dye named "&dCurrent Color: Pink" with lore "&dClick to disable this color!" to close then run [pink(player,uuid)]
+
+      if {gold::%player's uuid%} isn't set:
+        format slot 12 of player with orange dye named "&6Gold" with lore "&6Click to enable this color!" to close then run [gold(player,uuid)]
+      else if {gold::%player's uuid%} is true:
+        format slot 12 of player with orange dye named "&6Gold" with lore "&6Click to disable this color!" to close then run [gold(player,uuid)]
+        format slot 8 of player with orange dye named "&6Current Color: Gold" with lore "&6Click to disable this color!" to close then run [gold(player,uuid)]
+
+      if {yellow::%player's uuid%} isn't set:
+        format slot 13 of player with yellow dye named "&eYellow" with lore "&eClick to enable this color!" to close then run [yellow(player,uuid)]
+      else if {yellow::%player's uuid%} is true:
+        format slot 13 of player with yellow dye named "&eYellow" with lore "&eClick to disable this color!" to close then run [yellow(player,uuid)]
+        format slot 8 of player with yellow dye named "&eCurrent Color: Yellow" with lore "&eClick to disable this color!" to close then run [yellow(player,uuid)]
+
+      if {black::%player's uuid%} isn't set:
+        format slot 14 of player with black dye named "&0Black" with lore "&0Click to enable this color!" to close then run [black(player,uuid)]
+      else if {black::%player's uuid%} is true:
+        format slot 14 of player with black dye named "&0Black" with lore "&0Click to disable this color!" to close then run [black(player,uuid)]
+        format slot 8 of player with black dye named "&0Current Color: Black" with lore "&0Click to disable this color!" to close then run [black(player,uuid)]
+
+      if {gray::%player's uuid%} isn't set:
+        format slot 15 of player with gray dye named "&8Gray" with lore "&8Click to enable this color!" to close then run [gray(player,uuid)]
+      else if {gray::%player's uuid%} is true:
+        format slot 15 of player with gray dye named "&8Gray" with lore "&8Click to disable this color!" to close then run [gray(player,uuid)]
+        format slot 8 of player with gray dye named "&8Current Color: Gray" with lore "&8Click to disable this color!" to close then run [gray(player,uuid)]
+
+      if {lightgray::%player's uuid%} isn't set:
+        format slot 18 of player with light gray dye named "&7Light Gray" with lore "&7Click to enable this color!" to close then run [lightgray(player,uuid)]
+      else if {light gray::%player's uuid%} is true:
+        format slot 18 of player with light gray dye named "&7Light Gray" with lore "&7Click to disable this color!" to close then run [lightgray(player,uuid)]
+        format slot 8 of player with light gray dye named "&7Current Color: Light Gray" with lore "&7Click to disable this color!" to close then run [lightgray(player,uuid)]
+
+      if {selectedcolor::%player's uuid%} isn't set:
+        format slot 8 of player with white dye named "&fYour selected color will appear here!" to close then run [reopen(player)]
+
+# Specials
+
+      if {crazy::%player's uuid%} isn't set:
+        format slot 20 of player with name tag named "&f&kCrazy" with lore "&fClick to enable this special!" to close then run [crazy(player,uuid)]
+      else if {crazy::%player's uuid%} is true:
+        format slot 20 of player with name tag named "&f&kCrazy" with lore "&fClick to disable this special!" to close then run [crazy(player,uuid)]
+        format slot 26 of player with name tag named "&fCurrent Special: &kCrazy" with lore "&fClick to disable this special!" to close then run [crazy(player,uuid)]
+
+      if {bold::%player's uuid%} isn't set:
+        format slot 21 of player with name tag named "&f&lBold" with lore "&fClick to enable this special!" to close then run [bold(player,uuid)]
+      if {bold::%player's uuid%} is true:
+        format slot 21 of player with name tag named "&f&lBold" with lore "&fClick to disable this special!" to close then run [bold(player,uuid)]
+        format slot 26 of player with name tag named "&fCurrent Special: &f&lBold" with lore "&fClick to disable this special!" to close then run [bold(player,uuid)]
+
+      if {strikethrough::%player's uuid%} isn't set:
+        format slot 22 of player with name tag named "&f&mStrikethrough" with lore "&fClick to enable this special!" to close then run [strikethrough(player,uuid)]
+      if {strikethrough::%player's uuid%} is true:
+        format slot 22 of player with name tag named "&f&mStrikethrough" with lore "&fClick to disable this special!" to close then run [strikethrough(player,uuid)]
+        format slot 26 of player with name tag named "&fCurrent Special: &f&mStrikethrough" with lore "&fClick to disable this special!" to close then run [strikethrough(player,uuid)]
+
+      if {underline::%player's uuid%} isn't set:
+        format slot 23 of player with name tag named "&f&nUnderline" with lore "&fClick to enable this special!" to close then run [underline(player,uuid)]
+      if {underline::%player's uuid%} is true:
+        format slot 23 of player with name tag named "&f&nUnderline" with lore "&fClick to disable this special!" to close then run [underline(player,uuid)]
+        format slot 26 of player with name tag named "&fCurrent Special: &f&nUnderline" with lore "&fClick to disable this special!" to close then run [underline(player,uuid)]
+
+      if {italic::%player's uuid%} isn't set:
+        format slot 24 of player with name tag named "&f&oItalic" with lore "&fClick to enable this special!" to close then run [italic(player,uuid)]
+      if {italic::%player's uuid%} is true:
+        format slot 24 of player with name tag named "&f&oItalic" with lore "&fClick to disable this special!" to close then run [italic(player,uuid)]
+        format slot 26 of player with name tag named "&fCurrent Special: &f&oItalic" with lore "&fClick to disable this special!" to close then run [italic(player,uuid)]
+
+      if {selectedspecial::%player's uuid%} isn't set:
+        format slot 26 of player with name tag named "&fYour selected special will appear here!" to close then run [reopen(player)]
+
+    else if arg-1 is "help" or "hel" or "he" or "h":
+      send "&6ChatColor > Help" to player
+      send "&6/chatcolor - Opens the chatcolor menu." to player
+      send "&6/chatcolor help - Prints this help message." to player
+      send "&6/chatcolor version - Prints the version of the Skript." to player
+
+    else if arg-1 is "version" or "versio" or "versi" or "vers" or "ver" or "ve" or "v":
+      send "&6ChatColor > Version: {@version}" to player
+
+    else if arg-1 is "reload" or "reloa" or "relo" or "rel" or "re" or "r":
+      execute console command "/sk reload ChatColor"
+      send "&6ChatColor > Reloaded" to player
+
+# To Do List:
+# Possibly add support for multiple specials

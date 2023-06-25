@@ -1,0 +1,57 @@
+every 5 seconds:
+   loop all players:
+      if {scoreboard.%loop-player%} is true:
+         if loop-player's world is "ul_world":
+            wipe loop-player's sidebar
+            if {gems.%loop-player%} is not set:
+               set {gems.%loop-player%} to 0
+            if {coins.%loop-player%} is not set:
+               set {coins.%loop-player%} to 0
+            if {kill.%loop-player%} is not set:
+               set {kill.%loop-player%} to 0
+            if {deaths.%loop-player%} is not set:
+               set {deaths.%loop-player%} to 0
+            if {wins.%loop-player%} is not set:
+               set {wins.%loop-player%} to 0
+            set name of sidebar of loop-player to "&b&lFish&e&lRoyale &7&o(Lobby-1)"
+            set score "&8&m------------------------" in sidebar of loop-player to 8
+            set score " &7*  &2Gems: &7&o%{gems.%loop-player%}%" in sidebar of loop-player to 7
+            set score " &7*  &eCoins: &7&o%{coins.%loop-player%}%" in sidebar of loop-player to 6
+            set score " &7*  &cKills: &7&o%{kill.%loop-player%}%" in sidebar of loop-player to 5
+            set score " &7*  &4Death: &7&o%{deaths.%loop-player%}%" in sidebar of loop-player to 4
+            set score " &7*  &6Victorys: &7&o%{wins.%loop-player%}%" in sidebar of loop-player to 3
+            set score " &7&oFor more stats , /stats" in sidebar of loop-player to 2
+            set score "&r&8&m------------------------" in sidebar of loop-player to 1
+            set score "&7FishRoyale.minehut.gg" in sidebar of loop-player to 0
+         else:
+            if {game.%loop-player's world%} is true:
+               add 3 to {gametime.%loop-player's world%}
+            else:
+               set {gametime.%loop-player's world%} to 0
+            wipe loop-player's sidebar
+            if {gamekill.%loop-player%} is not set:
+               set {gamekill.%loop-player%} to 0
+            set name of sidebar of loop-player to "&b&lFish&e&lRoyale &7&o(GPB-%loop-player's world%&7&o)"
+            set score "&8&m------------------------" in sidebar of loop-player to 12
+            set score " &7*  &e&lGame Status: &r%{s%loop-player's world%}%" in sidebar of loop-player to 11
+            set score " &7*  &6&lloop-Players: &e%{%loop-player's world%.loop-players}%" in sidebar of loop-player to 10
+            set score " &7*  &e&lKills: &6%{gamekill.%loop-player%}%" in sidebar of loop-player to 9
+            set score " &7*  &6&lTime: &e%{gametime.%loop-player's world%}%&6s" in sidebar of loop-player to 8
+            set score " &7*  &e&lBorder: &6%{gameborder.%loop-player's world%}%" in sidebar of loop-player to 7
+            set score "&r&8&m------------------------" in sidebar of loop-player to 6
+            set score "&7FishRoyale.minehut.gg" in sidebar of loop-player to 0
+
+options:
+   prefix: &b&lFish&e&lRoyale &7»  &7» 
+
+command /scoreboard:
+   trigger:
+      if {scoreboard.%player%} is not set:
+         set {scoreboard.%player%} to true
+      if {scoreboard.%player%} is false:
+         set {scoreboard.%player%} to true
+         send "{@prefix} &7Scoreboard has been enabled."
+         stop
+      if {scoreboard.%player%} is true:
+         set {scoreboard.%player%} to false
+         send "{@prefix} &7Scoreboard has been disabled."

@@ -1,0 +1,344 @@
+command /cheat:
+   permission: staff
+   trigger:
+      wait 2 ticks
+      open chest with 3 rows named "&6&lLegit Cheats" to player
+      format slot 10 of player with diamond sword named "&c&lCombat" to close then run [execute console command "sudo %player% cheat1"]
+      format slot 12 of player with gold boots named "&b&lMovement" to close then run [execute console command "sudo %player% cheat2"]
+      format slot 21 of player with red wool named "&c&lDisable All" to close then run [execute console command "sudo %player% a"]
+      format slot 23 of player with green wool named "&a&lEnable All" to close then run [execute console command "sudo %player% a2"]
+      format slot 14 of player with iron helmet named "&5&LRender" to close then run [execute console command "sudo %player% cheat3"]
+      format slot 22 of player with barrier named "&4&lClose Menu" to close 
+
+command /cheat2:
+   permission: staff
+   trigger:
+      wait 2 tick
+      open chest with 3 rows named "&b&lMovement Cheats" to player
+      format slot 10 of player with iron boots named "&6&lNofall" to close then run [execute player command "nofall"]
+      format slot 16 of player with iron boots named "&9&lSafeWalk" to close then run [execute player command "safe"]
+      format slot 12 of player with magma cream named "&3&lSpeed" to close then run [execute player command "speedhack"]
+      format slot 14 of player with feather named "&d&lFly" to close then run [execute player command "flyhack"]
+      format slot 15 of player with sugar named "&f&lHighJump" to close then run [execute player command "jumphack"]
+      format slot 11 of player with slime block named "&2&lBugUp" to close then run [execute console command "sudo %player% noclip"]
+      format slot 13 of player with sandstone named "&B&lScaffold" to close then run [execute console command "sudo %player% safew"]
+      format slot 22 of player with arrow named "&c&lBack" to close then run [execute player command "cheat"]
+      format slot 21 of player with red wool named "&c&lDisable All Movement Cheats" to close then run [execute player command "a4"]
+      format slot 23 of player with green wool named "&a&lEnable All Movement Cheats" to close then run [execute player command "a3"]
+
+command /cheat1:
+   permission: staff
+   trigger:
+      wait 2 tick
+      open chest with 3 rows named "&c&lCombat Cheats" to player
+      format slot 10 of player with anvil named "&a&lAnti-KB" to close then run [execute console command "sudo %player% antikb"]
+      format slot 11 of player with gold chestplate named "&e&lGod Mode" to close then run [execute console command "sudo %player% godmod"]
+      format slot 13 of player with wooden sword named "&c&lReach" to close then run [execute console command "sudo %player% reach"]
+      format slot 14 of player with bow named "&6&lFastBow" to close then run [execute console command "sudo %player% fb"]
+      format slot 15 of player with golden apple named "&d&lRegen" to close then run [execute console command "sudo %player% regen"]
+      format slot 12 of player with diamond boots named "&4&lCriticals" to close then run [execute console command "sudo %player% crit"]
+
+on any move:
+   if {safe.%player%} is true:
+      if player is sneaking:
+         make server execute command "/effect %player% speed 999999 35 true"
+      if player is not sneaking:
+         make server execute command "/effect %player% clear"
+      if {night.%player%} is true:
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         make server execute command "/effect %player% night_vision 999999 1 true"
+
+command /crit:
+   permission: staff
+   trigger:
+      if {cr.%player%} is false:
+         send "&4&lCriticals: &a&lON" to player
+         set {cr.%player%} to true
+         stop 
+      if {cr.%player%} is true:
+         send "&4&lCriticals: &c&lOFF" to player
+         set {cr.%player%} to false
+         stop 
+
+every 1 second in "world":
+   loop all players:
+      if {cr.%loop-player%} is true:
+         make loop-player execute command "/minecraft:teleport %loop-player% ~ ~2 ~"
+
+command /cheat3:
+   permission: staff
+   trigger:
+      wait 2 tick
+      open chest with 3 rows named "&5&lPlayer" to player
+      format slot 10 of player with glowstone named "&9&lFullBright" to close then run [execute console command "sudo %player% fullb"]
+
+on right click:
+   if {fb.%player%} is true:
+      if player's tool is bow:
+         cancel event
+         loop 3 times:
+            shoot an arrow
+
+command /safew:
+   permission: staff
+   trigger:
+      if {sw.%player%} is false:
+         send "&1&lScaffold: &a&lON" to player
+         set {sw.%player%} to true
+         stop 
+      if {sw.%player%} is true:
+         send "&1&lScaffold: &c&lOFF" to player
+         set {sw.%player%} to false
+         stop  
+
+command /safe:
+   permission: staff
+   trigger:
+      if {safe.%player%} is false:
+         send "&9&lSafeWalk: &a&lON" to player
+         set {safe.%player%} to true
+         stop 
+      if {safe.%player%} is true:
+         send "&9&lSafeWalk: &c&lOFF" to player
+         set {safe.%player%} to false
+         stop  
+
+on any move:
+   if {sw.%player%} is true:
+      make player execute command "/setblock ~ ~-1 ~ sandstone"
+
+command /fb:
+   permission: staff
+   trigger:
+      if {fb.%player%} is false:
+         send "&e&lFastBow: &a&lON" to player
+         set {fb.%player%} to true
+         stop 
+      if {fb.%player%} is true:
+         send "&e&lFastBow: &c&lOFF" to player
+         set {fb.%player%} to false
+         stop  
+
+command /noclip:
+   permission: staff
+   trigger:
+      if {clip.%player%} is false:
+         set {clip.%player%} to true
+         send "&2&lBugUp: &a&lON" to player
+         set {noclip.%player%} to true
+         stop 
+      if {clip.%player%} is true:
+         set {clip.%player%} to false
+         send "&2&lBugUp: &c&lOFF" to player
+         set {noclip.%player%} to false
+         stop  
+
+every 30 ticks in "world":
+   loop all players:
+      if {clip.%loop-player%} is true:
+         make server execute command "/sudo %loop-player% minecraft:teleport %loop-player% ~ ~10 ~"
+
+command /antikb:
+   permission: staff
+   trigger:
+      if {kb.%player%} is false:
+         set {kb.%player%} to true
+         send "&a&lAnti-KB: ON" to player
+         stop
+      if {kb.%player%} is true:
+         set {kb.%player%} to false
+         send "&a&lAnti-KB: &c&lOFF" to player
+         stop
+
+on damage:
+   if {kb.%victim%} is true:
+      set {lk.%victim%} to location of victim
+      wait 2 ticks
+      teleport victim to {lk.%victim%}
+   if damage cause is fall:
+      cancel event
+
+command /a:
+   trigger:
+      set {kb.%player%} to false
+      set {god.%player%} to false
+      set {reach.%player%} to false
+      set {fall.%player%} to false
+      set {speed.%player%} to false
+      set {fly.%player%} to false
+      set {jump.%player%} to false
+      set {regen.%player%} to false
+      set {night.%player%} to false
+      set {clip.%player%} to false
+      set {noclip.%player%} to false
+      set {fb.%player%} to false
+      set {sw.%player%} to false
+      set {cr.%player%} to false
+      set {sw.%player%} to false
+      set {safe.%player%} to false
+      make server execute command "/effect %player% clear"
+      send "&d&lCheats: &c&lOFF" to player
+
+command /a3:
+   trigger:
+      set {fall.%player%} to false
+      set {speed.%player%} to false
+      set {fly.%player%} to false
+      set {jump.%player%} to false
+      make server execute command "/effect %player% clear"
+      make player execute command "/nofall"
+      make player execute command "/flyhack"
+      make player execute command "/jumphack"
+      make player execute command "/speedhack"
+      send "&d&lMovemnt Cheats: &a&lON" to player
+
+command /a4:
+   trigger:
+      set {fall.%player%} to true
+      set {speed.%player%} to true
+      set {fly.%player%} to true
+      set {jump.%player%} to true
+      make server execute command "/effect %player% clear"
+      make player execute command "/nofall"
+      make player execute command "/flyhack"
+      make player execute command "/jumphack"
+      make player execute command "/speedhack"
+      send "&d&lMovemnt Cheats: &c&lOFF" to player
+
+command /a2:
+   trigger:
+      make player execute command "/a"
+      make player execute command "/nofall"
+      make player execute command "/regen"
+      make player execute command "/flyhack"
+      make player execute command "/jumphack"
+      make player execute command "/reach"
+      make player execute command "/antikb"
+      make player execute command "/godmod"
+      make player execute command "/speedhack"
+      send "&d&lCheats: &a&lON" to player
+
+command /godmod:
+   permission: staff
+   trigger:
+      if {god.%player%} is false:
+         set {god.%player%} to true
+         send "&e&lGod mode: &a&lON" to player
+         make server execute command "/god %player%"
+         stop
+      if {god.%player%} is true:
+         set {god.%player%} to false
+         send "&e&lGod mode: &c&lOFF" to player
+         make server execute command "/god %player%"
+         stop  
+
+command /fullb:
+   permission: staff
+   trigger:
+      if {night.%player%} is false:
+         set {night.%player%} to true
+         send "&9&lFullBright: &a&lON" to player
+         make server execute command "/effect %player% night_vision 999999 1 true"
+         stop
+      if {night.%player%} is true:
+         set {night.%player%} to false
+         send "&9&lFullBright: &c&lOFF" to player
+         make server execute command "/effect %player% clear"
+         stop  
+
+
+command /reach:
+   permission: staff
+   trigger:
+      if {reach.%player%} is false:
+         set {reach.%player%} to true
+         send "&c&lReach: &a&lON" to player
+         stop
+      if {reach.%player%} is true:
+         set {reach.%player%} to false
+         send "&c&lReach: &c&lOFF" to player
+         stop
+
+on leftclick:
+    {reach.%player%} or {reach.server} is true
+    set {_targetedplayer} to targeted entity
+    if {_targetedplayer} isn't set:
+        stop
+    make the player damage {_targetedplayer} by 3
+
+command /nofall:
+   permission: staff
+   trigger:
+      if {fall.%player%} is false:
+         set {fall.%player%} to true
+         send "&6&lNofall: &a&lON" to player
+         stop
+      if {fall.%player%} is true:
+         set {fall.%player%} to false
+         send "&6&lNofall: &c&lOFF" to player
+         stop
+
+command /speedhack:
+   permission: staff
+   trigger:
+      if {speed.%player%} is false:
+         set {speed.%player%} to true
+         send "&3&lSpeed: &a&lON" to player
+         make server execute command "/speed walk 5 %player%"
+         stop
+      if {speed.%player%} is true:
+         set {speed.%player%} to false
+         make server execute command "/speed walk 1 %player%"
+         send "&3&lSpeed: &c&lOFF" to player
+         stop
+
+command /flyhack:
+   permission: staff
+   trigger:
+      if {fly.%player%} is false:
+         set {fly.%player%} to true
+         send "&d&lFly: &a&lON" to player
+         make server execute command "/fly %player%"
+         stop
+      if {fly.%player%} is true:
+         set {fly.%player%} to false
+         make server execute command "/fly %player%"
+         send "&d&lFly: &c&lOFF" to player
+         stop
+
+command /jumphack:
+   permission: staff
+   trigger:
+      if {jump.%player%} is false:
+         set {jump.%player%} to true
+         send "&a&lHighJump: &a&lON" to player
+         make server execute command "/effect %player% jump_boost 999999 2 true"
+         stop
+      if {jump.%player%} is true:
+         set {jump.%player%} to false
+         make server execute command "/effect %player% clear"
+         send "&a&lHighJump: &c&lOFF" to player
+         stop
+
+command /regen:
+   permission: staff
+   trigger:
+      if {regen.%player%} is false:
+         set {regen.%player%} to true
+         send "&d&lRegen: &a&lON" to player
+         make server execute command "/effect %player% regeneration 999999 2 true"
+         stop
+      if {regen.%player%} is true:
+         set {regen.%player%} to false
+         send "&d&lRegen: &c&lOFF" to player
+         make server execute command "/effect %player% clear"
+         stop  

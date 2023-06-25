@@ -1,0 +1,251 @@
+options:
+   ss: &8(&b&lAssistant&8)
+
+on load:
+   if {ASSISTANT.command::*} contains "add":
+      stop
+   add "add" to {ASSISTANT.command::*}
+   if {ASSISTANT.command::*} contains "remove":
+      stop
+   add "remove" to {ASSISTANT.command::*}
+   if {ASSISTANT.command::*} contains "list":
+      stop
+   add "list" to {ASSISTANT.command::*}
+   if {ASSISTANT.command::*} contains "feedbacks":
+      stop
+   add "feedbacks" to {ASSISTANT.command::*}
+   if {ASSISTANT.default::*} contains "shutup":
+      stop
+   add "shutup" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "shut up":
+      stop
+   add "shut up" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "nigger":
+      stop
+   add "nigger" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "nigga":
+      stop
+   add "nigga" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "niger":
+      stop
+   add "niger" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "niga":
+      stop
+   add "niga" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "bitch":
+      stop
+   add "bitch" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "fuck":
+      stop
+   add "fuck" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dick":
+      stop
+   add "dick" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "suck":
+      stop
+   add "suck" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "sex":
+      stop
+   add "sex" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "fucc":
+      stop
+   add "fucc" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "succ":
+      stop
+   add "succ" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "fuk":
+      stop
+   add "fuk" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dumb":
+      stop
+   add "dumb" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dick":
+      stop
+   add "dick" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "gay":
+      stop
+   add "gay" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "gey":
+      stop
+   add "gey" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dik":
+      stop
+   add "dik" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dicc":
+      stop
+   add "dicc" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "dum":
+      stop
+   add "dum" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "stupid":
+      stop
+   add "stupid" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "shit":
+      stop
+   add "shit" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "sh1t":
+      stop
+   add "sh1t" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "cock":
+      stop
+   add "cock" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "coke":
+      stop
+   add "coke" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "niga":
+      stop
+   add "niga" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "bitch":
+      stop
+   add "bitch" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "cum":
+      stop
+   add "cum" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "sperm":
+      stop
+   add "sperm" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "drugs":
+      stop
+   add "drugs" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "drug":
+      stop
+   add "drug" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "noob":
+      stop
+   add "noob" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "e z":
+      stop
+   add "e z" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "fucked":
+      stop
+   add "fucked" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "fuc":
+      stop
+   add "fuc" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "pussy":
+      stop
+   add "pussy" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "pusy":
+      stop
+   add "pusy" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "pussi":
+      stop
+   add "pussi" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "pusi":
+      stop
+   add "pusi" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "bullshit":
+      stop
+   add "bullshit" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "penis":
+      stop
+   add "penis" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "peni":
+      stop
+   add "peni" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "pepe":
+      stop
+   add "pepe" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "nude":
+      stop
+   add "nude" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "naked":
+      stop
+   add "naked" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "naced":
+      stop
+   add "naced" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "nacked":
+      stop
+   add "nacked" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "bitch":
+      stop
+   add "bitch" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "jerk":
+      stop
+   add "jerk" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "jerc":
+      stop
+   add "jerc" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "porn":
+      stop
+   add "porn" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "n1gger":
+      stop
+   add "n1gger" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "n1ger":
+      stop
+   add "n1ger" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "n1ga":
+      stop
+   add "n1ga" to {ASSISTANT.default::*}
+   if {ASSISTANT.default::*} contains "n1gga":
+      stop
+   add "n1gga" to {ASSISTANT.default::*}
+   if {ASSISTANT.hacks::*} contains "hacks":
+      stop
+   add "hacks" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hax":
+      stop
+   add "hax" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hack":
+      stop
+   add "hack" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hacc":
+      stop
+   add "hacc" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hac":
+      stop
+   add "hac" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "cheat":
+      stop
+   add "cheat" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "cheating":
+      stop
+   add "cheating" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hacker":
+      stop
+   add "hacker" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "hacking":
+      stop
+   add "hacking" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "fly":
+      stop
+   add "fly" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "reach":
+      stop
+   add "reach" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "antikb":
+      stop
+   add "antikb" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "antiknockback":
+      stop
+   add "antiknockback" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "killaura":
+      stop
+   add "killaura" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.hacks::*} contains "haxor":
+      stop
+   add "haxor" to {ASSISTANT.hacks::*}
+   if {ASSISTANT.good::*} contains "great server":
+      stop
+   add "great server" to {ASSISTANT.good::*}
+   if {ASSISTANT.good::*} contains "good server":
+      stop
+   add "good server" to {ASSISTANT.good::*}
+   if {ASSISTANT.good::*} contains "awsome server":
+      stop
+   add "awsome server" to {ASSISTANT.good::*}
+   if {ASSISTANT.good::*} contains "super server":
+      stop
+   add "super server" to {ASSISTANT.good::*}
+   if {ASSISTANT.good::*} contains "original server":
+      stop
+   add "original server" to {ASSISTANT.good::*}
+   loop all players:
+      if loop-player has permission "HELPER":
+         send "{@ss} &aAssistant loaded." to loop-player
+         wait 5 seconds
+         send "{@ss} &aAssistant initialization file has been disabled." to loop-player
+         set {_temp} to script's name
+         make server execute command "/sk disable %{_temp}%"
