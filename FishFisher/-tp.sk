@@ -1,0 +1,60 @@
+on region enter:
+   wait 3 ticks
+   if "%region at player%" contains "tpl":
+      if {tpc.%player%} is not set:
+         set {tpc.%player%} to false
+      if {tpc.%player%} is true:
+         make server execute command "/minecraft:tp %player% -87 76 -187"
+      if {tpc.%player%} is false:
+         teleport player to {spawn}
+         send "&b&lFish&5&lFisher &e&l>> &cYou need to buy Lobby Card first ! At the shop !"
+
+on right click with paper:
+   if name of tool is "&aLobby Card":
+      set {xp.%player%} to name of player's tool
+      replace all "&a" in {xp.%player%} with ""
+      replace all "Lobby" in {xp.%player%} with ""
+      replace all "Card" in {xp.%player%} with "Paper"
+      remove 1 paper from player's inventory
+      set {tpc.%player%} to true
+command /rlo:
+   permission: op
+   trigger:
+      set {tpc.%player%} to false
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "status":
+      if {tpc.%player%} is not set:
+         set {tpc.%player%} to false
+      if {tpc.%player%} is true:
+         stop
+      if {tpc.%player%} is false:
+         push player upwards at speed 3
+         wait 2 ticks
+         push player backwards at speed 5
+         send "&b&lFish&5&lFisher &e&l>> &cYou need to buy Lobby Card first ! At the shop !"
+
+on region enter:
+   wait 3 ticks
+   if "%region at player%" contains "dp":
+      if {fl.%player%} is not set:
+         set {fl.%player%} to 0
+      if {fl.%player%} >= 3:
+         make server execute command "/tp %player%"
+      if {fl.%player%} < 3:
+         push player backwards at speed 1.2
+         send "&b&lFish&5&lFisher &e&l>> &cYou need to be &bLevel 3 in Fishing &c!"
+
+on region enter:
+   wait 3 ticks
+   if "%region at player%" contains "pvpportal":
+      make server execute command "/minecraft:tp %player% -124 90 -200"
+
+on step on sponge:
+   push player forward at speed 5
+
+command /lreset:
+   permission: op
+   trigger:
+      set {tpc.%player%} to false

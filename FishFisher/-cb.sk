@@ -1,0 +1,25 @@
+options:
+  
+  levels needed for speed boots: 50
+  set 1 below the wanted enchantment level: 49
+                     
+
+every 1 seconds:
+    loop all players:
+        if lore of loop-player's boots contains "&cSpeed I":
+            apply speed 1 to the loop-player for 10000 seconds
+
+every 1 seconds:
+    loop all players:
+        if lore of loop-player's boots does not contain "&cSpeed I":
+            remove speed from loop-player
+
+command /Catboots [<player>]:
+    executable by: console
+    trigger:
+        wait 3 ticks
+        set the lore of player-argument's tool to "&cSpeed I"
+        message "&9[&b&oSpeed&3Boots&9] &aApplied Speed I to boots!" to player-argument
+
+
+    

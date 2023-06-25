@@ -1,0 +1,24 @@
+command /customfish:
+    permission: customfish.command
+    trigger:
+        customFishGUI(player)
+     
+function customFishGUI(p: player):
+    open chest inventory with 6 rows named "&9&lFishing Drops" to {_p}
+    set {_i} to 0
+    loop {fishingdrops::*}:
+        set slot {_i} of {_p}'s current inventory to loop-value
+        add 1 to {_i}
+    while name of current inventory of {_p} is "&9&lFishing Drops":
+        delete {_items::*}
+        set {_items::*} to items in current inventory of {_p}
+        wait 1 tick
+    delete {fishingdrops::*}
+    set {fishingdrops::*} to {_items::*}
+ 
+on fish:
+    fish state is CAUGHT_FISH
+    set {_e} to caught fish
+    {_e} is set
+    set {_i} to random element out of {fishingdrops::*}
+    set item of {_e} to {_i}

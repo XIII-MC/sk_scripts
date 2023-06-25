@@ -1,0 +1,1051 @@
+#/// PING / ANTIPINGSPOOF ///
+
+on join:
+   teleport player to {spawn} 
+
+command /ping [<player>]:
+  aliases: /p
+  trigger:
+    if arg 1 is not set:
+      send "&ePing &6» &a%player's ping%"
+    else:
+      send "&ePing &6» &a%player-arg's ping%"
+
+on chat:
+   if message contain "bitenet":
+      cancel event
+      make server execute command "/ban %player%"
+
+#/// ANTISPAM ///
+
+command /cooldownchat [<time span>]:
+   permission: perm.cooldown
+   trigger:
+      if arg 1 is not set:
+         send "&cSyntaxe incorecte : /cooldownchat <TimeSpan>"
+         stop
+      set {cdchat} to arg 1
+      send "&a[CoolDown] Temps définis à %arg 1%"
+
+command /cooldownchatp [<text>]:
+   permission: cooldown.chat.permission
+   trigger:
+      if arg 1 is not set:
+         send "&cSyntaxe incorecte : /cooldownchatp <permission>"
+         stop
+      set {cdperm} to arg 1
+      send "&a[CoolDown] Permission définie à %arg 1%"
+
+on load:
+   if {cdperm} is not set:
+      set {cdperm} to op
+   if {cdchat} is not set:
+      set {cdchat} to 3 seconds
+on chat:
+   player doesn't have permission "%{cdperm}%"
+   set {_cd} to difference between {lastchat.%player%} and now
+   if {_cd} < {cdchat}:
+      send "&b&lFish&5&lFisher &e&l>> &cWait a bit before talking again !"
+      cancel event
+      stop
+   set {lastchat.%player%} to now
+
+#/// ///
+
+#/// GRAPPLING HOOK ///
+
+on player fishing:
+   name of tool is "&aGrappling Hook":
+      if fishing state is in ground:
+         push player (direction from player to location of hook) at speed 5
+
+#/// ///
+
+#/// STAFFCHAT ///
+
+command /sc:
+    trigger:
+        player has permission "staffchat":
+            {staffchat::%player's uuid%} = false:
+                set {staffchat::%player's uuid%} to true
+                send "&7Now talking in staff chat"
+            else:
+                set {staffchat::%player's uuid%} to false
+                send "&7No longer talking in staff chat"
+        else:
+            send "&7No permissions"
+
+chat:
+    {staffchat::%player's uuid%} = true:
+        cancel event
+        send "&7(&5&lStaff&b&lChat&7) &b %player%:&f %message%" to all players where [input has permission "staffchat"]
+
+#/// ///
+
+command /alert [<text>]:
+   permission: alert.use
+   trigger:
+      if arg 1 is set:
+         broadcast "&b&lFish&5&lFisher &e&l>> &f%arg 1%"
+         stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage: /alert MESSAGE"
+         stop
+
+command /startpoll [<text>] [<text>] [<text>] [<number>]:
+   permission: startpoll.use
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 3 is set:
+               if arg 4 is set:
+                  make server execute command "/alert &6%player% &fis making a poll vote ! %arg 1% ! Do /pollvote to vote ! Green wool for %arg 2% ! Red Wool for %arg 3% ! You have %arg 4% seconds to vote !"
+                  set {poll} to true
+                  wait arg 4 seconds
+                  make server execute command "/alert Poll has ended ! There is the results: %arg 1% got voted %{vote1}% , %arg 2% got voted %{vote2}%"
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage /startpoll QUESTION PROPOSITION PROPOSITION TIME"
+
+command /ppond:
+   trigger:
+      if player doesn't have permission "ppond":
+         send "&b&lFish&5&lFisher &e&l>> &cSorry , but you don't have the required permission !"
+         stop
+      if player has permission "ppond":
+         teleport player to {ppond}
+         send "&b&lFish&5&lFisher &e&l>> &aTeleported !"
+
+command /sp:
+   permission: op
+   trigger:
+      set {ppond} to location of player
+      send "End of debug"
+
+every 1 second:
+   if {poll} is true:
+      remove 1 from {cdown}
+      if {cdown} = 0:
+         make server execute command "/alert Poll has ended ! There is the results: %arg 1% got voted %{vote1}% , %arg 2% got voted %{vote2}%"
+         set {poll} to false
+         loop all players:
+            clear {poll.%loop-player%}
+
+
+command /pollvote:
+   trigger:
+      if {poll} is true:
+         wait 5 ticks
+         open chest with 1 row named "&6&lVote: &aGreen wool for 1 , &cRed wool for 2 !" to player
+         format slot 0 of player with green wool named "&aVote for 1!" to close then run [make player execute command "/vote1"]
+         format slot 2 of player with red wool named "&cVote for 2!" to close then run [make player execute command "/vote2"]
+
+command /vote1:
+   trigger:
+      if {poll} is true:
+         if {poll.%player%} = true:
+            send "&b&lFish&5&lFisher &e&l>> &cYou alerdy voted!"
+            stop
+         add 1 to {vote1}
+         send "&b&lFish&5&lFisher &e&l>> &aYour vote has been placed!"
+         set {poll.%player%} to true
+
+command /vote2:
+   trigger:
+      if {poll} is true:
+         if {poll.%player%} = true:
+            send "&b&lFish&5&lFisher &e&l>> &cYou alerdy voted!"
+            stop
+         add 1 to {vote2}
+         send "&b&lFish&5&lFisher &e&l>> &aYour vote has been placed!"
+         set {poll.%player%} to true
+
+
+command /warn [<player>] [<text>]:
+   permission: staff
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            add 1 to {warn.%arg 1%}
+            send "&b&lFishFisher &e&l>> &cYou have been warned ! Reason: &e%arg 2% &cThis is your %{warn.%arg 1%}% &cwarn !" to arg 1
+            send "&b&lFish&5&lFisher &e&l>> &a%arg 1% has been warned for &e%arg 2%" to player
+            if {warn.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warn.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warn.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 1d 5 Warns"
+            if {warn.%arg 1%} = 6:
+               make server execute command "/ban %arg 1% 6 Warns"
+               stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            add 1 to {warn.%arg 1%}
+            send "&b&lFishFisher &e&l>> &cYou have been warned !&cThis is your %{warn.%arg 1%}% &cwarn !" to arg 1
+            send "&b&lFish&5&lFisher &e&l>> &a%arg 1% has been warned for &e%arg 2%" to player
+            if {warn.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warn.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warn.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 1d 5 Warns"
+            if {warn.%arg 1%} = 6:
+               make server execute command "/ban %arg 1% 6 Warns"
+               stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage /warn PLAYER REASON" to player
+         stop
+
+command /removewarn [<player>]:
+   permission: staff
+   trigger:
+      if arg 1 is set:
+         remove 1 from {warn.%arg 1%}
+         send "&b&lFish&5&lFisher &e&l>> &a1 warn have been removed ! Be happy :D" to arg 1
+         send "&b&lFish&5&lFisher &e&l>> &aRemoved 1 warn from &e%arg 1%" to player
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage /removedwarn PLAYER"
+
+on join:
+    if {bvn.%player%} is not set:
+        set {lastplayer} to player
+        set {bvn.%player%} to true
+        wait 2 tick
+        broadcast "&b&lFish&5&lFisher &e&l>> &9%player% &3joinned the server for the first time ! Say welcome with &c/wlc"
+        wait 20 seconds
+        if {lastplayer} = player:
+            clear {lastplayer}
+command /wlc:
+    trigger:
+        if {lastplayer} is not set:
+            stop
+        if {bienvenue.%{lastplayer}%.%player%} is set:
+            stop
+        if player = {lastplayer}:
+            stop
+        loop all players:
+            send action bar "&b&lFish&5&lFisher &e&l>> &9%player% &3said welcome to &9%{lastplayer}%" to loop-player
+        give player 3 emerald named "&a&lGems"
+        set {bienvenue.%{lastplayer}%.%player%} to true
+on quit:
+    if {lastplayer} = player:
+        clear {lastplayer}
+
+
+every 2 second:
+   loop all players:
+      if loop-player's ping is greater than 1000:
+         send action bar "&e&lThe connection is unstable." to loop-player
+
+on first join:
+   make player execute command "/kit start"
+
+on respawn:
+   teleport player to {spawn}
+
+every 1 second:
+   loop all players:
+      add 1 to {sec.%loop-player%}
+      if {sec.%loop-player%} = 60:
+         remove 60 from {sec.%loop-player%}
+         add 1 to {min.%loop-player%}
+         if {min.%loop-player%} = 60:
+            remove 60 from {min.%loop-player%}
+            add 1 to {he.%loop-player%}
+            if {he.%loop-player%} = 24:
+               remove 24 from {he.%loop-player%}
+               add 1 to {day.%loop-player%}
+
+command /playtime:
+   trigger:
+      if {day.%player%} is not set:
+         set {day.%player%} to 0
+      if {he.%player%} is not set:
+         set {he.%player%} to 0
+      if {min.%player%} is not set:
+         set {min.%player%} to 0
+      send "&b&lFish&5&lFisher &e&l>> &a%{day.%player%}% &aDays &a%{he.%player%}% &aHours &a%{min.%player%}% &aMinutes&a %{sec.%player%}% &aSeconds"
+
+command /discord:
+   trigger:
+      make server execute command "/msg %player% https://discord.gg/4Z27HnU"
+
+on death:
+   if attacker is a player:
+      if victim is a player:
+         set death message to "&c%victim% &7got killed by &c%attacker%"
+
+command /rules:
+   trigger:
+      send "Do not spam"
+      send "Do not swear"
+      send "Alts are not allowed"
+      send "Do not flood"
+      send "Do not insult"
+      send "Do not hack"
+      send "Don't be toxic"
+      send "Don't ask for ranks or items"
+      send "No homophics or rasicm"
+      send "Do not advertise"
+      send "Do not steal other person fish"
+
+#/// AUTOMESSAGES / SAVE ///
+
+on step on slime block:
+   push player forwards at speed 10
+
+command /vote:
+   trigger:
+      send "&b&lFish&5&lFisher &e&l>> &cComming soon !"
+
+
+
+command /store:
+   trigger:
+      send "&b&lFish&5&lFisher &e&l>> &cComming soon !"
+
+command /help:
+   trigger:
+      send "&b&lFish&5&lFisher &e&l>> &dTo start do /kit start"
+      send "&b&lFish&5&lFisher &e&l>> &5To report someone do /report"
+      send "&b&lFish&5&lFisher &e&l>> &aIf you see anybugs report them to the staff"
+      send "&b&lFish&5&lFisher &e&l>> &2If you can't trade or think a trade is too expansive contact the staff team"
+      send "&b&lFish&5&lFisher &e&l>> &eTo show this again do /help"
+
+every 2 second:
+   loop all players:
+      if {vanish.%loop-player%} is true:
+         send action bar "&b&lFish&5&lFisher &e&l>> &aYou are currently vanished !" to loop-player
+
+every 1 second:
+   loop all players:
+      clear {cps.%loop-player%}
+
+
+
+every 10 second:
+   loop all players:
+      clear {vl.%loop-player%}
+
+
+
+every 10 minutes:
+   broadcast "&b&lFish&5&lFisher &e&l>> &c&lHackers ? Bugs ? /report them ! Or report them diricly on the discord server !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &aWant to support the server ? Do /buy or /vote !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cClearlag is every 4 minutes! Always pick up your items !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &cHacking is &4&l&oNOT &callowed on &b&lFish&5&lFisher"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &aJoin us on discord with /discord !"
+   wait 2 minutes
+
+
+#/// CLEARLAG ///
+
+command /clearlag:
+   permission: staff
+   trigger:
+      clear {_count}
+      loop entities:
+         loop-entity is a dropped item
+         clear loop-entity
+         add 1 to {_count}
+      if {_count} is not set:
+         set {_count} to 0
+      if {_count} is not 0 or 1:
+         broadcast "&b&lFish&5&lFisher &e&l>> %{_count}% items on the ground cleared !"
+         make server execute command "/killall arrow"
+      else:
+         broadcast "&b&lFish&5&lFisher &e&l>> %{_count}% items on the ground cleared !"
+         make server execute command "/killall arrow world"
+
+every 590 seconds:
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 10 seconds"
+   wait 5 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 5 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 4 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 3 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 2 seconds"
+   wait 1 seconds
+   broadcast "&b&lFish&5&lFisher &e&l>> Clearing items on the ground in 1 seconds"
+   wait 1 seconds
+   make server execute command "/clearlag"
+
+#/// USEFULL COMMANDS ///
+
+on join:
+   set join message to "&7[&a+&7] &e%player%"
+
+on join:
+   set join message to "&7[&a+&7] &e%player%"
+
+on quit:
+   set quit message  to "&7[&c-&7] &e%player%"
+
+on quit:
+   set quit message to "&7[&c-&7] &e%player%"
+
+on first join:
+   broadcast "&6&lWelcome &5%player% &6&lto &b&lFish&5&lFisher &6&lhave a nice time !"
+
+command /debug:
+   permission: debug.use
+   trigger:
+      if {debug.%player%} is not set:
+         set {debug.%player%} to false
+      if {debug.%player%} is false:
+         set {debug.%player%} to true
+         send "&b&lFish&5&lFisher &e&l>> &aYour now in debug mode"
+         make server execute command "/sk disable debug"
+         stop
+      if {debug.%player%} is true:
+         set {debug.%player%} to false
+         send "&b&lFish&5&lFisher &e&l>> &cYou are no longer in debug mode"
+         make server execute command "/sk enable debug"
+         stop
+
+command /ban [<offline player>] [<text>]:
+   permission: ban.use
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            ban arg 1
+            kick arg 1
+            broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &7has permanently banned &c%arg 1%"
+            send "&b&lFish&5&lFisher &e&l>> &c%arg 1% &ahas been succecfuly banned!" to player
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            ban arg 1 due to arg 2
+            kick arg 1 due to arg 2
+            broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &7has permanently banned &c%arg 1% &7for &6%arg 2%"
+            send "&b&lFish&5&lFisher &e&l>> &c%arg 1% &ahas been succecfuly banned for &6%arg 2%" to player
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage /ban PLAYER REASON" to player
+         stop
+
+command /unban [<text>]:
+   permission: unban.use
+   trigger:
+      if arg 1 is set:
+         make server execute command "/pardon %arg 1%"
+         broadcast "&b&lFish&5&lFisher &e&l>> &e%player% &ahas unbanned &e%arg 1%"
+         send "&b&lFish&5&lFisher &e&l>> &aYou succecfuly unbanned &e%arg 1%"
+         stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage: /unban PLAYER"
+         stop
+
+command /bans:
+   permission: ban.list
+   trigger:
+      send "&b&lFish&5&lFisher &e&l>> &c%{banlist}%" to player
+
+
+command /alt [<offline player>]:
+    permission: alt.see
+    trigger:
+        if arg 1 is not set:
+            send "&cUsage : /alt <player>"
+            stop
+        if {ip.%arg 1%} is not set:
+            send "&7[&b&lFish&5&lFisher&e&lAC&7] &cError: &4This player never joinned the server !"
+            stop
+        if {firstalt.%{ip.%arg 1%}%} is not set:
+            send "&7[&b&lFish&5&lFisher&e&lAC&7] &cError: &4This player never joinned the server !"
+            stop
+        else:
+            send "&7[&b&lFish&5&lFisher&e&lAC&7] &9Alts of %arg 1% : &c%{altip.%{ip.%arg 1%}%::*}%&9 First Account : &c%{firstalt.%{ip.%arg 1%}%}% &9Ip of the player : &c%{ip.%arg 1%}%"
+on join:
+    if {ip.%player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {ip.%player%} to ip of player
+    if {firstalt.%ip of player%} is not set:
+        remove player from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+        set {firstalt.%ip of player%} to player's name
+    else:
+        remove "%player%" from {altip.%ip of player%::*}
+        wait 1 tick
+        add player to {altip.%ip of player%::*}
+    if {firstalt.%ip of player%} is set:
+        set {_name} to player's name
+        if {_name} is {firstalt.%ip of player%}:
+            stop
+        else:
+            loop all players:
+                if loop-player has permission "alt.see":
+                    send "&7[&b&lFish&5&lFisher&e&lAC&7] &c%{_name}% is an alt of %{firstalt.%ip of player%}%" to loop-player
+            loop {altip.%ip of player%::*}:
+                if loop-value is banned:
+                    ban player due to "&cBan evading"
+                    kick player due to "&cAlt of %loop-value%"
+                    broadcast "&7[&b&lFish&5&lFisher&e&lAC&7] &9The play &c%player% &9has been banned for &cBan Evading '&cAlt of %loop-value%'"
+
+command /suspend [<offline player>] [<text>]:
+   permission: suspend.use
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            send "&b&lFish&5&lFisher &e&l>> &a%arg 1% has been suspended!" to player
+            make server execute command "/banip %arg 1% &cYour IP has been suspended from &b&lFish&5&lFisher &c Reason: %arg 2%! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            make server execute command "/ban %arg 1% &cYour IP has been suspended from &b&lFish&5&lFisher &c Reason: %arg 2%! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            broadcast "&7[&b&lFish&5&lFisher&e&lAC&7] &c%arg 1% IP got suspended from the server! Reason: &e%arg 2%"
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            send "&b&lFish&5&lFisher &e&l>> &a%arg 1% has been suspended!" to player
+            make server execute command "/banip %arg 1% %arg 1% &cYour IP has been suspended from &b&lFish&5&lFisher &c! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            make server execute command "/ban %arg 1% &cYour IP has been suspended from &b&lFish&5&lFisher &c! Think its an error ? Contact the support on discord, &bhttps://discord.gg/CJqfbZF"
+            broadcast "&7[&b&lFish&5&lFisher&e&lAC&7] &c%arg 1% IP got suspended from the server!"
+            add arg 1 to {banlist}
+            stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage: /suspend NAME REASON" to player
+
+command /setspawn:
+   permission: op
+   trigger:
+      set {spawn} to location of player
+      send "&b&lFish&5&lFisher &e&l>> &aSpawn set to %{spawn}% !"
+      stop
+
+
+on damage:
+   if damage cause is fall:
+      stop
+   if attacker is a player:
+      if victim is a player:
+         set {t.%victim%} to 18
+         set {t.%attacker%} to 18
+         if {c.%victim%} is true:
+            stop
+         if {c.%attacker%} is true:
+            stop
+         send "&b&lFish&5&lFisher &e&l>> &cYou are now in combat for 18 seconds !" to victim
+         send "&b&lFish&5&lFisher &e&l>> &cYou are now in combat for 18 seconds !" to attacker
+         set {c.%victim%} to true
+         set {c.%attacker%} to true
+
+on death:
+   set {c.%player%} to false
+
+on quit:
+   if {c.%player%} is true:
+      make server execute command "/tempban %player% 5min Logged out in combat"
+      broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &7logout while be in combat !"
+      set {c.%player%} to false
+
+every 1 second:
+   loop all players:
+      if {c.%loop-player%} is true:
+         remove 1 from {t.%loop-player%}
+         if {t.%loop-player%} = 0:
+            set {t.%loop-player%} to 0
+            set {c.%loop-player%} to false
+            send "&b&lFish&5&lFisher &e&l>> &aYou are no longer in combat!" to loop-player
+
+command /tag:
+   aliases: ctag
+   trigger:
+      if {c.%player%} = false:
+         send "&b&lFish&5&lFisher &e&l>> &aYour are not in combat !" to player
+         stop
+      send "&b&lFish&5&lFisher &e&l>> &CYou are in combat for &4%{t.%player%}% &cmore seconds " to player
+
+on join:
+   set {c.%player%} to false
+
+command /spawn:
+   trigger:
+      if {c.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cYou can go to spawn , you are in combat !"
+         stop
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn in 5 seconds..." to player
+      if {move.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cTeleporation canceled !"
+         stop
+      wait 1 second
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn in 4 seconds..." to player
+      if {move.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cTeleporation canceled !"
+         stop
+      wait 1 second
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn in 3 seconds..." to player
+      if {move.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cTeleporation canceled !"
+         stop
+      wait 1 second
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn in 2 seconds..." to player
+      if {move.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cTeleporation canceled !"
+         stop
+      wait 1 second
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn in 1 seconds..." to player
+      if {move.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cTeleporation canceled !"
+         stop
+      send "&b&lFish&5&lFisher &e&l>> &aTeleporting to spawn.." to player
+      teleport player to {spawn}
+
+on chat:
+   if message contain "shutup":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "shut up":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "nigga":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "nigger":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "niga":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "niger":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "fuck":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "suck":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dick":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "sex":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dumb":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain ".com":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "minehut":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain ".net":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain ".gg":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "gay":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "bitch":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "hacked":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "hacker":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "stupid":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      if {iv.%player%} = 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+on chat:
+   if message contain "dumb":
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cYou message has been blocked!" to player
+      add 1 to {iv.%player%}
+      if {iv.%player%} >= 3:
+         make server execute command "/mute %player% 5min Banned Words Servals Times"
+
+every 1 second:
+   loop all players:
+      set {p1.%loop-player%} to location of loop-player
+      wait 10 ticks
+      if distance between {p1.%loop-player%} and loop-player >= 0.1:
+         set {move.%loop-player%} to true
+         wait 1 seconds
+         set {move.%loop-player%} to false
+
+
+
+every 5 minutes:
+   loop all players:
+      clear {iv.%loop-player%}
+
+command /unsuspend [<text>]:
+   permission: unsuspend.use
+   trigger:
+      if arg 1 is set:
+         send "&b&lFish&5&lFisher &e&l>> &a%arg 1% has been unsuspended!"
+         make server execute command "/pardonip %arg 1%"
+         make server execute command "/pardon %arg 1%"
+         remove arg 1 from {banlist}
+         stop
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage: /unsuspend NAME" to player
+         stop
+
+
+options:
+  logo: &b&lFish&5&lFisher &e&l>>
+  permission: vanish.use
+  permissionm: &4You do not have access to this command!
+  permissionalert: vanish.use
+
+command /vanish [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: v
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is not set:
+        hide the player from all players
+        send "{@logo} &7You are &cVanished&7."
+        set {vanish.%player%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the player from all players
+        send "{@logo} &7You are &cUnvanished&7."
+        delete {vanish.%player%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%player%: &r&eunvanished&7&o]" to loop-player
+    if arg 1 is set:
+      if {vanish.%arg 1%} is not set:
+        hide the arg 1 from all players
+        send "{@logo} &7You are &cVanish&7." to arg 1
+        set {vanish.%arg 1%} to true
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "&7&o[%arg 1%: &r&evanished&7&o]" to loop-player
+      else:
+        reveal the arg 1 from all players
+        send "&7&o[%arg 1%: &r&eunvanished&7&o]" to arg 1
+        delete {vanish.%arg 1%}
+        loop all players:
+          if loop-player has permission "{@permissionalert}":
+            send "{@logo} &7The player &c%arg 1% &7is no longer in vanish." to loop-player
+
+command /vanishinfo [<offline player>]:
+  permission: {@permission}
+  permission message: {@permissionm}
+  aliases: vinfo
+  executable by: player
+  trigger:
+    if arg 1 is not set:
+      if {vanish.%player%} is set:
+        send "{@logo} &7You're &cVanish&7."
+      else:
+        send "{@logo} &7You are not &cVanish&7."
+    if arg 1 is set:
+      if {vanish.%arg 1%} is set:
+        send "{@logo} &7The player &c%arg 1% &7is vanish."
+      else:
+        send "{@logo} &7The player &c%arg 1% &7is not vanish."
+
+on join:
+  loop all players:
+    if {vanish.%loop-player%} is true:
+      reveal the loop-player from all players
+      hide the loop-player from all players
+
+every 5 seconds:
+  loop all players:
+    if {vanish.%loop-player%} is true:
+      loop all players:
+        if loop-player-2 has permission "{@permissionalert}":
+          reveal the loop-player-1 from loop-player-2
+
+command /tp [<player>] [<player>]:
+   permission: use.teleport
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            teleport player to arg 1
+            send "&eYou've teleported to %arg 1%"
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport to %arg 1%&7&o]" to loop-player
+                  stop
+      if arg 1 is set:
+         if arg 2 is set:
+            teleport arg 1 to arg 2
+            send "&eYou've been teleported to %arg 2%" to arg 1
+            send "&eYou've been teleported to %arg 1%" to arg 2
+            send "&eYou've been teleported %arg 1% to %arg 2%" to player
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7&o[%player%: &r&eteleport %arg 1% to %arg 2%&7&o]" to loop-player
+      if arg 1 is not set:
+         send "&cUsage /tp [<player>] [<player>]"
+         stop
+
+command /chatclear:
+   permission: chatclear.use
+   trigger:
+      loop 200 times:
+         broadcast " "
+      broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &3cleared the chat !"
+
+command /mutechat:
+   permission: mutechat.use
+   aliases: mc
+   trigger:
+      if {chat} is not set:
+         set {chat} to false
+      if {chat} is false:
+         set {chat} to true
+         broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &3muted the chat !"
+         stop
+      if {chat} is true:
+         set {chat} to false
+         broadcast "&b&lFish&5&lFisher &e&l>> &c%player% &3unmuted the chat !"
+         stop
+
+on chat:
+   if {chat} is true:
+      if player has permission "talk":
+         uncancel event
+         stop
+   if {chat} is true:
+      cancel event
+      send "&b&lFish&5&lFisher &e&l>> &cChat is currently muted !"
+
+command /silent [<text>]:
+   permission: staff
+   trigger:
+      if arg 1 is "on":
+         if {silent.%player%} is true:
+            send "&b&lFish&5&lFisher &e&l>> &cYou are alerdy silently ! Do /silent off to be visible"
+            stop
+         set {silent.%player%} to true
+         send "&b&lFish&5&lFisher &e&l>> &aYou are now silently ! There will be no join and leave message for you."
+         stop
+      if arg 1 is "off":
+         if {silent.%player%} is false:
+            send "&b&lFish&5&lFisher &e&l>> &cYou are alerdy visible ! Do /silent on to be silenlty"
+            stop
+         set {silent.%player%} to false
+         send "&b&lFish&5&lFisher &e&l>> &cYou are now visible ! There will be a join and leave message for you."
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cUsage: /silent on , /silent off"
+         stop
+
+command /blacklist [<offline player>] [<text>]:
+   permission: staff
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            make server execute command "/banip %arg 1%"
+            send "&b&lFish&5&lFisher &e&l>> &4%arg 1% &ahas been blacklisted" to player
+            add arg 1 to {banlist}
+            if {silent.%player%} is true:
+               loop all players:
+                  loop-player has permission "staff":
+                     send "&7(Silent) &4%player% &ahas permanently blacklisted &4%arg 1%" to loop-player
+                     stop
+            broadcast "&4%player% &ahas permanently blacklisted &4%arg 1%"
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "&b&lFish&5&lFisher &e&l>> &cYou can't ban this person !" to player
+               stop
+            make server execute command "/banip %arg 1% %arg 2%"
+            send "&b&lFish&5&lFisher &e&l>> &4%arg 1% &ahas been permanently blacklisted for &c%arg 2%" to player
+            add arg 1 to {banlist}
+            if {silent.%player%} is true:
+               loop all players:
+                  loop-player has permission "staff":
+                     send "&7(Silent) &4%player% &ahas permanently blacklisted &4%arg 1% &afor &c%arg 2%" to loop-player
+                     stop
+            broadcast "&4%player% &ahas permanently blacklisted &4%arg 1% &afor &c%arg 2%"
+      if arg 1 is not set:
+         send "&b&lFish&5&lFisher &e&l>> &cYou need to specify a player ! /blacklist [NAME] [REASON]" to player
+         stop
+
+command /unblacklist [<text>]:
+   permission: staff
+   trigger:
+      if arg 1 is set:
+         make server execute command "/pardonip %arg 1%"
+         send "&b&lFish&5&lFisher &e&l>> &aYou unblacklisted &4%arg 1%" to player
+         remove arg 1 from {banlist}
+         if {silent.%player%} is true:
+            loop all players:
+               loop-player has permission "staff":
+                  send "&7(Silent) &4%player% &ahas unblacklisted &4%arg 1%" to loop-player
+                  stop
+         broadcast "&4%player% &ahas unblacklisted &4%arg 1%"
+
+
+#/// EVENT ///
+
+command /eventstart [<text>]:
+   permission: op
+   trigger:
+      if {event} is not set:
+         set {event} to false
+      if {event} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cAn event is alerdy hosted !"
+         stop
+      broadcast "&b&lFish&5&lFisher &e&l>> &e&lAn event as started ! Join the event with /eventjoin ! Prize to win: %arg 1%"
+      make player execute command "/playsound minecraft:entity.elder_guardian.curse ambient @a"
+      wait 1 second
+      make player execute command "/playsound minecraft:entity.elder_guardian.curse ambient @a"
+      wait 1 second
+      make player execute command "/playsound minecraft:entity.elder_guardian.curse ambient @a"
+      set {event} to true
+
+command /eventclose:
+   permission: op
+   trigger:
+      broadcast "&b&lFish&5&lFisher &e&l>> &c&lYou can no longer join the event !"
+      set {event} to false
+
+on load:
+   make server execute command "/papi ecloud download Server"
+   make server execute command "/papi ecloud download Player"
+   make server execute command "/papi reload"
+
+command /eventjoin:
+   trigger:
+      if {event} is false:
+         send "&b&lFish&5&lFisher &e&l>> &cNo event currently"
+         stop
+      if {event.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cYou alerdy joinned the event !"
+         stop
+      if {event} is true:
+         make console execute command "/minecraft:teleport %player% 151 84 141"
+         send "&b&lFish&5&lFisher &e&l>> &aYou joinned the event"
+         set {event.%player%} to true
+
+on quit:
+   set {event.%player%} to false
+
+command /eventend [<player>]:
+   permission: op
+   trigger:
+      broadcast "&b&lFish&5&lFisher &e&l>> &e&lEvent ended ! Thanks for playing ! And gg to &c%arg 1% &e&l!"
+      make player execute command "/playsound minecraft:entity.ender_dragon.ambient ambient @a"
+      set {event} to false
+      loop all players:
+         set {event.%loop-player%} to false
+
+
+
+on death:
+   if victim is zombie:
+      clear drops
+      set {_drop} to emerald named "Dirty Emerald"
+      drop {_drop} at victim's location

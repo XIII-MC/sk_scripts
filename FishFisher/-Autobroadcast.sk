@@ -1,0 +1,11 @@
+every 10 minutes:
+   broadcast "&b&lFish&5&lFisher &e&l>> &c&lHackers ? Bugs ? /report them ! Or report them diricly on the discord server !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &aWant to support the server ? Do /buy or /vote !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &aWant to help devloppers and test feature before everyone ? Join the Dev server !"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &c&lServer restart every 2 hours"
+   wait 2 minutes
+   broadcast "&b&lFish&5&lFisher &e&l>> &aWe are searching staff ! Apply on discord with /discord !"
+   wait 2 minutes

@@ -1,0 +1,200 @@
+command /shop:
+   trigger:
+      wait 1 ticks
+      open chest with 1 rows named "          &2&l&nEmerald Shop" to player
+      format slot 1 of player with emerald named "&aBuy 1 Emerald" with lore "Price: &61$" to run [make player execute command "/eb1"]
+      format slot 3 of player with emerald named "&aBuy 32 Emeralds" with lore "Price: &632$" to run [make player execute command "/eb32"]
+      format slot 5 of player with emerald named "&aBuy 64 Emeralds" with lore "Price: &664$" to run [make player execute command "/eb64"]
+      format slot 7 of player with emerald block named "&aBuy 256 Emeralds" with lore "Price: &6256$" to run [make player execute command "/eb256"]
+
+command /eb1:
+   trigger:
+      if player's balance >= 1:
+         if player doesn't have enough space for 1 barrier:
+            send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough space in your inventory !"
+            stop
+         give 1 emerald named "&a&lGems" to player
+         make server execute command "/eco take %player% 1"
+      if player's balance < 1:
+         send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough money !"
+         stop
+every 10 tick:
+   loop all players:
+      if loop-player have 1 emerald with lore "&5&oPrice":
+         remove 1 of loop-player's tool from loop-player's inventory
+         send "&b&lFish&5&lFisher &e&l>> &4&lAn illegal item has been found in your inventory ! It automaticly been removed." to loop-player
+
+every 10 tick:
+   loop all players:
+      if loop-player have 1 emerald block with lore "&5&oPrice":
+         set {a.%loop-player%} to name of loop-player's tool
+         remove 1 emerald block named "%{a.%loop-player%}%" from loop-player's inventory
+         send "&b&lFish&5&lFisher &e&l>> &4&lAn illegal item has been found in your inventory ! It automaticly been removed." to loop-player
+
+on inventory click:
+   if name of clicked item contains "&aBuy":
+      set {a.%player%} to name of clicked item
+      remove 1 emerald named "%{a.%player%}%" from player's inventory
+      send "&b&lFish&5&lFisher &e&l>> &4&lAn illegal item has been found in your inventory ! It automaticly been removed." to player
+
+every 1 minutes:
+   loop all players:
+      add 1 to {bank.%loop-player%}
+on join:
+   if player's name is "LananasBleu":
+      broadcast "&c[OWNER] LananasBleu &4joined the server !"
+      make player execute command "/playsound minecraft:entity.ender_dragon.ambient ambient @a"
+
+on quit:
+   if player's name is "LananasBleu":
+      broadcast "&c[OWNER] LananasBleu &4left the server !"
+      make player execute command "/playsound minecraft:entity.ender_dragon.ambient ambient @a"
+
+command /bank:
+   trigger:
+      if {bank.%player%} = 0:
+         send "&b&lFish&5&lFisher &e&l>> &cYou don't have any gems to get !"
+         stop
+      if {bank.%player%} > 1:
+         make server execute command "/give %player% emerald %{bank.%player%}% name:&a&lGems"
+         send "&b&lFish&5&lFisher &e&l>> &aYou got %{bank.%player%}% &agems !"
+         set {bank.%player%} to 0
+command /eb32:
+   trigger:
+      if player's balance >= 32:
+         if player doesn't have enough space for 32 barrier:
+            send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough space in your inventory !"
+            stop
+         give 32 emerald named "&a&lGems" to player
+         make server execute command "/eco take %player% 32"
+      if player's balance < 32:
+         send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough money !"
+         stop
+
+command /eb64:
+   trigger:
+      if player's balance >= 64:
+         if player doesn't have enough space for 64 barrier:
+            send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough space in your inventory !"
+            stop
+         give 64 emerald named "&a&lGems" to player
+         make server execute command "/eco take %player% 64"
+      if player's balance < 64:
+         send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough money !"
+         stop
+
+command /eb256:
+   trigger:
+      if player's balance >= 256:
+         if player doesn't have enough space for 256 barrier:
+            send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough space in your inventory !"
+            stop
+         give 256 emerald named "&a&lGems" to player
+         make server execute command "/eco take %player% 256"
+      if player's balance < 256:
+         send "&b&lFish&5&lFisher &e&l>> &cYou don't have enough money !"
+         stop
+
+
+command /sell:
+   trigger:
+      if "%lore of player's tool%" contains "COMMON":
+         remove 1 of player's tool from player's inventory
+         make server execute command "/eco give %player% 3"
+         send "&b&lFish&5&lFisher &e&l>> &aYou sold your fish for 3$ !"
+      if "%lore of player's tool%" contains "RARE":
+         remove 1 of player's tool from player's inventory
+         make server execute command "/eco give %player% 8"
+         send "&b&lFish&5&lFisher &e&l>> &aYou sold your fish for 8$ !"
+      if "%lore of player's tool%" contains "EPIC":
+         remove 1 of player's tool from player's inventory
+         make server execute command "/eco give %player% 16"
+         send "&b&lFish&5&lFisher &e&l>> &aYou sold your fish for 16$ !"
+      if "%lore of player's tool%" contains "LEGENDARY":
+         remove 1 of player's tool from player's inventory
+         make server execute command "/eco give %player% 30"
+         send "&b&lFish&5&lFisher &e&l>> &aYou sold your fish for 30$ !"
+      if "%lore of player's tool%" contains "SPECIAL":
+         send "&b&lFish&5&lFisher &e&l>> &4Bro, this is super rare and you wanna sell that ? Pretty dumb dumb..."
+         stop
+
+command /boosters:
+   trigger:
+      if {boost} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cA booster is alerdy in use !"
+         stop
+      wait 2 ticks
+      open chest with 2 rows named "      &e&l&oBOOSTERS &c(temporarily)" to player
+      format slot 1 of player with coal named "&eBoost: x1.20" with lore "&6Cost: &a120 &aGems !" to run [make player execute command "/§xbb1"]
+      format slot 3 of player with iron ingot named "&eBoost: x1.80" with lore "&6Cost: &a250 &aGems !" to run [make player execute command "/§xbb2"]
+      format slot 5 of player with gold ingot named "&eBoost: x2.0" with lore "&6Cost: &a500 &aGems !" to run [make player execute command "/§xbb3"]
+      format slot 7 of player with diamond named "&eBoost: x2.5" with lore "&6Cost: &a800 &aGems !" to run [make player execute command "/§xbb4"]
+      format slot 13 of player with emerald named "&eBoost: x3" with lore "&6Cost: &a1200 &aGems !" to run [make player execute command "/§xbb5"]
+
+command /§xbb1:
+   trigger:
+      if player have 120 emerald named "&a&lGems":
+         remove 120 emerald named "&a&lGems" from player's inventory
+         make server execute command "/alert %player% activated a x1.20 booster for 2 hours !"
+         set {exp} to 1.20
+         set {boost} to true
+         wait 2 hours
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The x1.20 experience has ended !"
+
+command /§xbb2:
+   trigger:
+      if player have 250 emerald named "&a&lGems":
+         remove 250 emerald named "&a&lGems" from player's inventory
+         make server execute command "/alert %player% activated a x1.80 EXP booster for 2 hours !"
+         set {exp} to 1.80
+         set {boost} to true
+         wait 2 hours
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The x1.80 experience has ended !"
+
+command /§xbb3:
+   trigger:
+      if player have 500 emerald named "&a&lGems":
+         remove 500 emerald named "&a&lGems" from player's inventory
+         make server execute command "/alert %player% activated a x2 booster for 2 hours !"
+         set {exp} to 2
+         set {boost} to true
+         wait 2 hours
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The x2 experience has ended !"
+
+command /§xbb4:
+   trigger:
+      if player have 800 emerald named "&a&lGems":
+         remove 800 emerald named "&a&lGems" from player's inventory
+         make server execute command "/alert %player% activated a x2.50 booster for 2 hours !"
+         set {exp} to 2.50
+         set {boost} to true
+         wait 2 hours
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The x2.50 experience has ended !"
+
+command /§xbb5:
+   trigger:
+      if player have 1200 emerald named "&a&lGems":
+         remove 1200 emerald named "&a&lGems" from player's inventory
+         make server execute command "/alert %player% activated a x3 booster for 2 hours !"
+         set {exp} to 3
+         set {boost} to true
+         wait 2 hours
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The x3 experience has ended !"
+
+command /stopboost:
+   permission: op
+   trigger:
+      if {boost} is true:
+         set {exp} to 1
+         set {boost} to false
+         make server execute command "/alert The experience boost has been ended by %player% !"

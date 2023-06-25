@@ -1,0 +1,110 @@
+on rightclick on oak wood stairs:
+    spawn armor stand at location below event-block
+    set {_entity} to last spawned entity
+    apply potion of invisibility without any particles to {_entity} for 9 days
+    make player ride {_entity}
+    while {_entity} exists:
+        if player is sneaking:
+            eject any passenger of {_entity}
+            push player upwards at speed 1
+            wait 2 ticks
+            delete {_entity}
+
+/p v ZachAttack_13
+
+command /ppond:
+   trigger:
+      if player doesn't have permission "ppond":
+         send "&b&lFish&5&lFisher &e&l>> &cSorry , but you don't have the required permission !"
+         stop
+      if player has permission "ppond":
+         teleport player to {ppond}
+         send "&b&lFish&5&lFisher &e&l>> &aTeleported !"
+
+command /sp:
+   permission: op
+   trigger:
+      set {ppond} to location of player
+      send "End of debug"
+
+on join:
+   teleport player to {spawn}
+   wait 1 second
+   message "&b&lFish&5&lFisher &e&l>> &a&lPLEASE CLICK THE GOLDEN SWORD" 
+   message "&b&lFish&5&lFisher &e&l>> &a&lPLEASE CLICK THE GOLDEN SWORD"
+   message "&b&lFish&5&lFisher &e&l>> &a&lPLEASE CLICK THE GOLDEN SWORD"
+   message "&b&lFish&5&lFisher &e&l>> &a&lPLEASE CLICK THE GOLDEN SWORD"
+   message "&b&lFish&5&lFisher &e&l>> &a&lPLEASE CLICK THE GOLDEN SWORD"
+   make server execute command "/effect give %player% blindness 999999 255"
+   make server execute command "/effect give %player% slowness 999999 255"
+   open chest with 1 row named "                 &b&lAnti&5&lBot" to player
+   format slot 0 of player with fishing rod named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 1 of player with glass named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 2 of player with green wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 3 of player with yellow glass pane named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 4 of player with red wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 5 of player with gold sword named "&a&lClick this" to close then run [make server execute command "sudo %player% §v"]
+   format slot 6 of player with iron boots named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 7 of player with grass block named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+   format slot 8 of player with brown wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+
+on join:
+   wait 15 seconds
+   if {bot.%player%} is false:
+      kick player due to "&cYou failed the captcha !"
+
+command /§v:
+   trigger:
+      set {bot.%player%} to true
+      send "&b&lFish&5&lFisher &e&l>> &aOk , your not a bot !" to player
+      make server execute command "/effect clear %player%"
+
+on any move:
+   if {bot.%player%} is false:
+      cancel event
+
+on drop:
+   if {bot.%player%} is false:
+      make server execute command "/sudo %player% §pot"
+      cancel event
+
+command /§pot:
+   trigger:
+      wait 10 ticks
+      open chest with 1 row named "              &b&lAnti&5&lBot" to player
+      format slot 0 of player with fishing rod named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 1 of player with glass named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 2 of player with green wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 3 of player with yellow glass pane named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 4 of player with red wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 5 of player with gold sword named "&a&lClick this" to close then run [make server execute command "sudo %player% §v"]
+      format slot 6 of player with iron boots named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 7 of player with grass block named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+      format slot 8 of player with brown wool named "&c&lDo not click this !" to close then run [make server execute command "kick %player% &cYou failed the captcha !"]
+
+on rightclick:
+   if {bot.%player%} is false:
+      make server execute command "/sudo %player% §pot"
+      cancel event
+
+on leftclick:
+   if {bot.%player%} is false:
+      make server execute command "/sudo %player% §pot"
+      cancel event
+
+on jump:
+   if {bot.%player%} is false:
+      make server execute command "/sudo %player% §pot"
+      cancel event
+
+on quit:
+   set {bot.%player%} to false
+
+on damage:
+   if {bot.%victim%} is false:
+      cancel event
+
+
+on chat:
+   if {bot.%player%} is false:
+      cancel event

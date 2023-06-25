@@ -1,0 +1,51 @@
+on right click with stick:
+   name of tool is "&a&oLuck Stick":
+      if {lc.%player%} > 0:
+         send "&b&lFish&5&lFisher &e&l>> &cSorry but you have to wait &4%{lc.%player%}% &4seconds &cbefore using the ability again !"
+         stop
+      add 120 to {lc.%player%}
+      send "&b&lFish&5&lFisher &e&l>> &eAbility used ! &aYou feel prety lucky !"
+      make server execute command "/effect give %player% luck 30 1"
+
+every 1 second:
+   loop all players:
+      if {lc.%loop-player%} > 0:
+         remove 1 from {lc.%loop-player%}
+      if {sc.%loop-player%} > 0:
+         remove 1 from {sc.%loop-player%}
+      if {sss.%loop-player%} > 0:
+         remove 1 from {sss.%loop-player%}
+      if {po.%loop-player%} > 0:
+         remove 1 from {po.%loop-player%}
+
+command /cs:
+   permission: op
+   trigger:
+      set {lc.%player%} to 0
+
+on right click with golden hoe:
+   name of tool is "&c&oStrenght Hoe":
+      if {sc.%player%} > 0:
+         send "&b&lFish&5&lFisher &e&l>> &cSorry but you have to wait &4%{sc.%player%}% &4seconds &cbefore using the ability again !"
+         stop
+      add 220 to {sc.%player%}
+      send "&b&lFish&5&lFisher &e&l>> &eAbility used ! &cYou feel enraged !"
+      make server execute command "/effect give %player% strength 60 2"
+
+on right click with sugar:
+   name of tool is "&f&oSpeeed":
+      if {sss.%player%} > 0:
+         send "&b&lFish&5&lFisher &e&l>> &cSorry but you have to wait &4%{sss.%player%}% &4seconds &cbefore using the ability again !"
+         stop
+      add 60 to {sss.%player%}
+      send "&b&lFish&5&lFisher &e&l>> &eAbility used ! &fYou feel fassssssssssssssst !"
+      make server execute command "/effect give %player% speed 10 2"
+
+on right click with potato:
+   name of tool is "&e&oPotato":
+      if {po.%player%} > 0:
+         send "&b&lFish&5&lFisher &e&l>> &cSorry but you have to wait &4%{po.%player%}% &4seconds &cbefore using the ability again !"
+         stop
+      add 60 to {po.%player%}
+      send "&b&lFish&5&lFisher &e&l>> &eAbility used ! &6Your like a ninja !"
+      make server execute command "/effect give %player% invisibility 30 2"

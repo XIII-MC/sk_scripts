@@ -1,0 +1,1123 @@
+command /resett:
+   trigger:
+      send "&b&lFish&5&lFisher &e&l>> &4&lIMPORTANT ! &cAll levels and exp has been rested due to a update that needed them to be reseted , we are really sorry !"
+      set {season2.%player%} to false
+      set {lvl.%player%} to 0
+      set {fishing.%player%} to 0
+      set {mining.%player%} to 0
+      set {farming.%player%} to 0
+      set {lvl1.%player%} to false
+      set {lvl2.%player%} to false
+      set {lvl3.%player%} to false
+      set {lvl4.%player%} to false
+      set {lvl5.%player%} to false
+      set {lvl6.%player%} to false
+      set {lvl7.%player%} to false
+      set {lvl8.%player%} to false
+      set {lvl9.%player%} to false
+      set {lvl10.%player%} to false
+      set {fishing1.%player%} to false
+      set {fishing2.%player%} to false
+      set {fishing3.%player%} to false
+      set {fishing4.%player%} to false
+      set {fishing5.%player%} to false
+      set {fishing6.%player%} to false
+      set {fishing8.%player%} to false
+      set {fishing9.%player%} to false
+      set {fishing10.%player%} to false
+      set {mining1.%player%} to false
+      set {mining2.%player%} to false
+      set {mining3.%player%} to false
+      set {mining4.%player%} to false
+      set {mining5.%player%} to false
+      set {mining6.%player%} to false
+      set {mining7.%player%} to false
+      set {mining8.%player%} to false
+      set {mining9.%player%} to false
+      set {mining10.%player%} to false
+      set {me.%player%} to false
+      set {nether.%player%} to false
+      set {msgd.%player%} to false
+      set {ff.%player%} to false
+      set {msgd.%player%} to false
+      set {msgdd.%player%} to false
+      set {f.%player%} to false
+      set {s.%player%} to false
+      set {d.%player%} to false
+      set {cl.%player%} to 0
+      set {ml.%player%} to 0
+      set {fl.%player%} to 0
+      set {frm.%player%} to 0
+      set {season1.%player%} to false
+      set {farming1.%player%} to false
+      set {farming2.%player%} to false
+      set {farming3.%player%} to false
+      set {farming4.%player%} to false
+      set {farming5.%player%} to false
+      set {farming6.%player%} to false
+      set {farming7.%player%} to false
+      set {farming8.%player%} to false
+      set {farming9.%player%} to false
+      set {farming10.%player%} to false
+
+#/// COMBAT ///
+
+on death:
+   if victim is zombie:
+      add 1 to {lvl.%attacker%}
+      add 1 to {lc.%attacker%}
+      send action bar "&a+%{lc.%attacker%}% Combat EXP" to attacker
+      wait 2 second
+      clear {lc.%attacker%}
+      if {lvl1.%attacker%} is not set:
+         set {lvl1.%attacker%} to false
+      if {lvl2.%attacker%} is not set:
+         set {lvl2.%attacker%} to false
+      if {lvl3.%attacker%} is not set:
+         set {lvl3.%attacker%} to false
+      if {lvl4.%attacker%} is not set:
+         set {lvl4.%attacker%} to false
+      if {lvl1.%attacker%} = false:
+         if {lvl.%attacker%} >= 40:
+            set {cnl.%player%} to 110
+            send "&e&lLevel UP ! You are now level &c&l1 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 1 in combat !"
+            add 1 to {cl.%player%}
+            set {lvl1.%attacker%} to true
+            set {lvl2.%attacker%} to true
+      if {lvl2.%attacker%} is true:
+         if {lvl.%attacker%} >= 110:
+            set {cnl.%player%} to 240
+            send "&e&lLevel UP ! You are now level &c&l2 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 2 in combat !"
+            set {lvl2.%attacker%} to false
+            set {lvl3.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl3.%attacker%} = true:
+         if {lvl.%attacker%} >= 240:
+            set {cnl.%player%} to 350
+            send "&e&lLevel UP ! You are now level &c&l3 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 3 in combat !"
+            set {lvl3.%attacker%} to false
+            set {lvl4.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl4.%attacker%} is true:
+         if {lvl.%attacker%} = 350:
+            set {cnl.%player%} to 490
+            send "&e&lLevel UP ! You are now level &c&l4 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 4 in combat !"
+            set {lvl4.%attacker%} to false
+            set {lvl5.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl5.%attacker%} = true:
+         if {lvl.%attacker%} >= 490:
+            set {cnl.%player%} to 580
+            send "&e&lLevel UP ! You are now level &c&l5 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 5 in combat !"
+            set {lvl5.%attacker%} to false
+            set {lvl6.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl6.%attacker%} is true:
+         if {lvl.%attacker%} >= 580:
+            set {cnl.%player%} to 650
+            send "&e&lLevel UP ! You are now level &c&l6 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 6 in combat !"
+            set {lvl6.%attacker%} to false
+            set {lvl7.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl7.%attacker%} = true:
+         if {lvl.%attacker%} >= 650:
+            set {cnl.%player%} to 790
+            send "&e&lLevel UP ! You are now level &c&l7 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 7 in combat !"
+            set {lvl7.%attacker%} to false
+            set {lvl8.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl8.%attacker%} is true:
+         if {lvl.%attacker%} >= 790:
+            set {cnl.%player%} to 850
+            send "&e&lLevel UP ! You are now level &c&l8 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 8 in combat !"
+            set {lvl8.%attacker%} to false
+            set {lvl9.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl9.%attacker%} is true:
+         if {lvl.%attacker%} >= 850:
+            set {cnl.%player%} to 1000
+            send "&e&lLevel UP ! You are now level &c&l9 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 9 in combat !"
+            set {lvl9.%attacker%} to false
+            set {lvl10.%attacker%} to true
+            add 1 to {cl.%player%}
+      if {lvl10.%attacker%} is true:
+         if {lvl.%attacker%} >= 1000:
+            send  "&e&lLevel UP ! You are now level &c&l10 &e&l!" to attacker
+            broadcast "&c&lCombat &e&l>> &c%attacker% &eis now Level 10 in combat !"
+            set {lvl10.%attacker%} to false
+            add 1 to {cl.%player%}
+
+#/// MINING ///
+
+
+on block break:
+   if block is emerald ore:
+      if blocks is lapis ore:
+         add 2.75 to {mining.%player%}
+      add 1 to {mining.%player%}
+      send action bar "&a+1 Mining EXP" to player
+      if {mining1.%player%} is not set:
+         set {mining1.%player%} to false
+      if {mining2.%player%} is not set:
+         set {mining2.%player%} to false
+      if {mining3.%player%} is not set:
+         set {mining3.%player%} to false
+      if {mining4.%player%} is not set:
+         set {mining4.%player%} to false
+      if {mining1.%player%} = false:
+         if {mining.%player%} >= 120:
+            set {mnl.%player%} to 240
+            send "&e&lLevel UP ! You are now level &b&l1 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 1 in mining !"
+            set {mining1.%player%} to true
+            set {mining2.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining2.%player%} is true:
+         if {mining.%player%} >= 240:
+            set {mnl.%player%} to 350
+            send "&e&lLevel UP ! You are now level &c&l2 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 2 in mining !"
+            set {mining2.%player%} to false
+            set {mining3.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining3.%player%} = true:
+         if {mining.%player%} >= 350:
+            set {mnl.%player%} to 480
+            send "&e&lLevel UP ! You are now level &c&l3 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 3 in mining !"
+            set {mining3.%player%} to false
+            set {mining4.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining4.%player%} is true:
+         if {mining.%player%} >= 480:
+            set {mnl.%player%} to 590
+            send "&e&lLevel UP ! You are now level &c&l4 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 4 in mining !"
+            set {mining4.%player%} to false
+            set {mining5.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining5.%player%} = true:
+         if {mining.%player%} >= 590:
+            set {mnl.%player%} to 660
+            send "&e&lLevel UP ! You are now level &c&l5 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 5 in mining !"
+            set {mining5.%player%} to false
+            set {mining6.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining6.%player%} is true:
+         if {mining.%player%} >= 660:
+            set {mnl.%player%} to 730
+            send "&e&lLevel UP ! You are now level &c&l6 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 6 in mining !"
+            set {mining6.%player%} to false
+            set {mining7.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining7.%player%} = true:
+         if {mining.%player%} >= 730:
+            set {mnl.%player%} to 880
+            send "&e&lLevel UP ! You are now level &c&l7 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 7 in mining !"
+            set {mining7.%player%} to false
+            set {mining8.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining8.%player%} is true:
+         if {mining.%player%} >= 880:
+            set {mnl.%player%} to 990
+            send "&e&lLevel UP ! You are now level &c&l8 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &b%player% &eis now Level 8 in mining !"
+            set {mining8.%player%} to false
+            set {mining9.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining9.%player%} is true:
+         if {mining.%player%} >= 990:
+            set {mnl.%player%} to 1120
+            send "&e&lLevel UP ! You are now level &c&l9 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &c%player% &eis now Level 9 in mining !"
+            set {mining9.%player%} to false
+            set {mining10.%player%} to true
+            add 1 to {ml.%player%}
+      if {mining10.%player%} is true:
+         if {mining.%player%} >= 1120:
+            send "&e&lLevel UP ! You are now level &c&l10 &e&l!" to player
+            broadcast "&a&lMining &e&l>> &B%player% &eis now Level 10 in mining !"
+            set {mining10.%player%} to false
+            add 1 to {ml.%player%}
+
+#/// DROPS ///
+
+on death:
+   if victim is spider:
+      clear drops
+      set {_drop} to string named "&r&bEnchanted String"
+      add 60 to {lvl.%attacker%}
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+
+on death:
+   if victim is cave spider:
+      clear drops
+      set {_drop} to string named "&r&bString"
+      add 50 to {lvl.%attacker%}
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+
+on death:
+   if victim is skeleton:
+      add 4 to {lvl.%attacker%}
+      add 4 to {lc.%attacker%}
+      send action bar "&a+%{lc.%attacker%}% Combat EXP" to player
+      clear drops
+      set {_drop} to emerald named "Dirty Emerald"
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      wait 2 seconds
+      clear {lc.%attacker%}
+
+on death:
+   if victim is wither skeleton:
+      add 10 to {lvl.%attacker%}
+      add 10 to {lc.%attacker%}
+      send action bar "&a+%{lc.%attacker%}% Combat EXP" to player
+      clear drops
+      set {_drop} to emerald named "Dirty Emerald"
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      drop {_drop} at victim's location
+      wait 2 seconds
+      clear {lc.%attacker%}
+
+#/// REGIONS ///
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "mine":
+      if {me.%player%} = true:
+         stop
+      if {fishing.%player%} >= 50:
+         send "&a&lMining &e&l>> &d&lNEW ZONE DISCOVERED ! &aThe Emerald Mine"
+         set {me.%player%} to true
+         stop
+      if {fishing.%player%} < 50:
+         send "&a&lMining &e&l>> &cSeems you are not Level 5 in &b&lfishing &c! Come back when you are Level 5 in &b&lFishing"
+         teleport player to {spawn}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "nether":
+      if {nether.%player%} is true:
+         stop
+      if {mining.%player%} >= 210:
+         if player have 1 golden pickaxe:
+            send "&a&lMining &e&l>> &d&lNEW ZONE DISCOVERED ! &cNether Caves" to player
+            set {nether.%player%} to true
+      if player doesn't have 1 golden pickaxe:
+         teleport player to {nc}
+         send "&a&lMining &e&l>> &cYou need a golden pickaxe !"
+         stop
+      if {mining.%player%} < 210:
+         send "&a&lMining &e&l>> &cYou need to be Level 7 in mining !"
+         teleport player to {nc}
+         stop
+
+on region enter:
+   if "%region at player%" contains "lvl2":
+      if {lvl.%player%} >= 120:
+         if {msgd.%player%} is true:
+            stop
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &bDeep Caves"
+         set {msgd.%player%} to true
+         stop
+      if {lvl.%player%} < 120:
+         teleport player to {combatlvl2}
+         send "&c&lCombat &e&l>> &cYou need to be Level 2 in Combat !"
+
+on region enter:
+   wait 2 ticks
+   if {ff.%player%} = true:
+      stop
+   if "%region at player%" contains "sr":
+      if {fishing.%player%} < 555:
+         send "&b&lFishing &e&l>> &cYou need to be Level 10 in fishing !"
+         teleport player to {spawn}
+      if {fishing.%player%} >= 555:
+         send "&b&lFishing &e&l>> &d&lNEW ZONE DISCOVERED ! &bSecret Pond &a&o(Boosted)"
+         set {ff.%player%} to true
+
+on region enter:
+   if {potato.%player%} is true:
+      stop
+   wait 2 ticks
+   if "%region at player%" contains "potato":
+      if {farming.%player%}>= 480:
+         send "&6&lFarming &e&l>> &d&lNEW ZONE DISCOVERED ! &ePotato Farm"
+         set {potato.%player%} to true
+         stop
+      if {farming.%player%} < 480:
+         send "&6&lFarming &e&l>> &c&lSeems like your are not level 4 in farming !  Come back when you are level 4 !"
+         teleport player to {f}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "tpm":
+      if {tpm.%player%} is true:
+         make server execute command "/minecraft:teleport %player% -52 75 -175"
+         stop
+      if {farming.%player%} >= 1120:
+         send "&a&lMining &e&l>> &d&lNEW ZONE DISCOVERED ! &aEmerald Mine"
+         make server execute command "/minecraft:teleport %player% -52 75 -175"
+         set {tpm.%player%} to true
+         stop
+      if {farming.%player%} < 1120:
+         send "&a&lMining &e&l>> &c&lSeems like your are not level 10 in farming !  Come back when you are level 10 !"
+         teleport player to {spawn}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "emerald":
+      if {tpm.%player%} is true:
+         make server execute command "/minecraft:teleport %player% -52 75 -175"
+         stop
+      if {farming.%player%} >= 1120:
+         send "&a&lMining &e&l>> &d&lNEW ZONE DISCOVERED ! &aEmerald Mine"
+         make server execute command "/minecraft:teleport %player% -52 75 -175"
+         set {tpm.%player%} to true
+         stop
+      if {farming.%player%} < 1120:
+         send "&a&lMining &e&l>> &c&lSeems like your are not level 10 in farming !  Come back when you are level 10 !"
+         teleport player to {spawn}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "lpp":
+      if {tpll.%player%} is not set:
+         set {tpll.%player%} to false
+      if {tpll.%player%} is true:
+         make server execute command "/minecraft:teleport %player% -4 75 -176"
+         stop
+      if {mining.%player%} >= 480:
+         send "&a&lMining &e&l>> &d&lNEW ZONE DISCOVERED ! &9Lapis Mine"
+         make server execute command "/minecraft:teleport %player% -4 75 -176"
+         set {tpll.%player%} to true
+         stop
+      if {mining.%player%} < 480:
+         send "&a&lMining &e&l>> &c&lSeems like your are not level 4 in farming !  Come back when you are level 4 !"
+         push player backwards at speed 1
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "lvl3":
+      if {msgd.%player%} is true:
+         stop
+      if {lvl.%player%} >= 240:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &cKing Cave"
+         set {msgd.%player%} to true
+      if {lvl.%player%} < 240:
+         teleport player to {combatlvl3}
+         send "&c&lCombat &e&l>> &cYou need to be Level 3 in Combat !"
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "lvl5":
+      if {msgdd.%player%} is true:
+         stop
+      if {lvl.%player%} >= 960:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &0&l&oDeath Cave"
+         set {msgdd.%player%} to true
+      if {lvl.%player%} < 960:
+         teleport player to {combatlvl4}
+         send "&c&lCombat &e&l>> &cYou need to be Level 5 in Combat !"
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "farm":
+      if {f.%player%} is true:
+         stop
+      if {fishing.%player%} >= 250:
+         set {f.%player%} to true
+         send "&6&lFarming &e&l>> &d&lNEW ZONE DISCOVERED ! &6Wheat farm"
+         stop
+      if {fishing.%player%} < 250:
+         send "&6&lFarming &e&l>> &cSeems you are not Level 5 in Fishing ! Come back when you are level 5 in fishing !"
+         teleport player to {spawn}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "spider":
+      if {s.%player%} is true:
+         stop
+      if {lvl.%player%} >= 3840:
+         set {s.%player%} to true
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &5Spider Cave"
+         stop
+      if {lvl.%player%} < 3840:
+         send "&c&lCombat &e&l>> &cSeems you are not Level 7 in Combat ! Come back when you are level 7 in combat !"
+         teleport player to {ss}
+         stop
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "combat":
+      if {d.%player%} is true:
+         stop
+      if {fishing.%player%} < 50:
+         send "&c&lCombat &e&l>> &cSeems you are not Level 5 in &b&lFishing &c, come back when you are Level 5 in &b&lFishing &c!"
+         teleport player to {spawn}
+         stop
+      if player have 1 stone sword:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &4Dungeons"
+         set {d.%player%} to true
+         stop
+      if player have 1 iron sword:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &4Dungeons"
+         set {d.%player%} to true
+         stop
+      if player have 1 iron sword:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &4Dungeons"
+         set {d.%player%} to true
+         stop
+      if player have 1 diamond sword:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &4Dungeons"
+         set {d.%player%} to true
+         stop
+      if player have 1 wooden sword:
+         send "&c&lCombat &e&l>> &d&lNEW ZONE DISCOVERED ! &4Dungeons"
+         set {d.%player%} to true
+         stop
+      if player doesn't have 1 stone sword:
+         send "&c&lCombat &e&l>> &cHum ... Seems like you don't have a sword ! You need a stone sword or up !"
+         teleport player to {spawn}
+         stop
+      if player doesn't have 1 wooden sword:
+         send "&c&lCombat &e&l>> &cHum ... Seems like you don't have a sword ! You need a stone sword or up !"
+         teleport player to {spawn}
+         stop
+      if player doesn't have 1 iron sword:
+         send "&c&lCombat &e&l>> &cHum ... Seems like you don't have a sword ! You need a stone sword or up !"
+         teleport player to {spawn}
+         stop
+      if player doesn't have 1 diamond sword:
+         send "&c&lCombat &e&l>> &cHum ... Seems like you don't have a sword ! You need a wooden sword or up !"
+         teleport player to {spawn}
+         stop
+
+#/// DEATH MSG ///
+
+on death:
+   if victim is a player:
+      if attacker is a monster:
+         set death message to "&c%victim% &7got killed by a &c%attacker%"
+         set {msg.%victim%} to true
+
+on respawn:
+   set {msg.%player%} to false
+ 
+on death:
+   if {msg.%victim%} is true:
+      stop
+   if victim is a player:
+      set death message to "&c%victim% &7died somehow"
+
+#/// DEBUG ///
+
+command /setc2:
+   permission: op
+   trigger:
+      set {combatlvl2} to location of player
+      send "Done"
+
+command /setc3:
+   permission: op
+   trigger:
+      set {combatlvl3} to location of player
+      send "Done"
+command /sf:
+   permission: op
+   trigger:
+      set {f} to location of player
+      send "Done"
+
+command /setc4:
+   permission: op
+   trigger:
+      set {combatlvl4} to location of player
+      send "Done"
+command /d:
+   permission: op
+   trigger:
+      set {mining1.%player%} to false
+      set {mining.%player%} to 0
+      set {mining2.%player%} to false
+      set {mining.%player%} to 0
+      set {mining3.%player%} to false
+      set {mining.%player%} to 0
+      set {mining4.%player%} to false
+      set {mining.%player%} to 0
+      set {mining5.%player%} to false
+      set {mining.%player%} to 0
+      set {mining7.%player%} to false
+      set {mining.%player%} to 0
+      set {mining9.%player%} to false
+      set {mining.%player%} to 0
+      set {mining8.%player%} to false
+      set {mining.%player%} to 0
+
+command /resetlvl:
+   permission: staff
+   trigger:
+      set {lvl.%player%} to 0
+      set {lvl2.%player%} to false
+      send "Lvl Reseted"
+
+
+command /dlvl:
+   permission: op
+   trigger:
+      set {lvl1.%player%} to false
+      set {lvl2.%player%} to false
+      set {lvl.%player%} to 59
+
+command /snc:
+   permission: op
+   trigger:
+      set {nc} to location of player
+      send "End" to player
+
+command /aexp:
+   permission: op
+   trigger:
+      add 59 to {lvl.%player%}
+      set {lvl2.%player%} to true
+
+command /lvl:
+   trigger:
+      wait 1 ticks
+      if {cl.%player%} is not set:
+         set {cl.%player%} to 0
+      if {fl.%player%} is not set:
+         set {fle.%player%} to 0
+      if {ml.%player%} is not set:
+         set {ml.%player%} to 0
+      if {frm.%player%} is not set:
+         set {frm.%player%} to 0
+      if {combat.%player%} is not set:
+         set {combat.%player%} to 0
+      if {fishing.%player%} is not set:
+         set {fishing.%player%} to 0
+      if {mining.%player%} is not set:
+         set {mining.%player%} to 0
+      if {farming.%player%} is not set:
+         set {farming.%player%} to 0
+      if {cnl.%player%} is not set:
+         set {cnl.%player%} to 40
+      if {fnl.%player%} is not set:
+         set {fnl.%player%} to 35
+      if {mnl.%player%} is not set:
+         set {mnl.%player%} to 120
+      if {fanl.%player%} is not set:
+         set {fanl.%player%} to 240
+      if {wcn.%player%} is not set:
+         set {wcn.%player%} to 0
+      if {Wood.%player%} is not set:
+         set {Wood.%player%} to 0
+      if {wcn.%player%} is not set:
+         set {wcn.%player%} to 120
+      if {wd.%player%} > 120:
+         remove 120 from {wd.%player%}
+      open chest with 3 rows named "                &2&l&nLevels" to player
+      format slot 9 of player with diamond sword named "&cCombat: &a%{cl.%player%}%" with lore "&e%{combat.%player%}%/%{cnl.%player%}%" to be unstealable
+      format slot 11 of player with fishing rod named "&bFishing: &a%{fl.%player%}%" with lore "&e%{fishing.%player%}%/%{fnl.%player%}%" to be unstealable
+      format slot 13 of player with iron pickaxe named "&aMining: &a%{ml.%player%}%" with lore "&e%{mining.%player%}%/%{mnl.%player%}%" to be unstealable
+      format slot 15 of player with golden hoe named "&6Farming: &a%{frm.%player%}%" with lore "&e%{farming.%player%}%/%{fanl.%player%}%" to be unstealable
+      format slot 17 of player with iron axe named "&9Wood Cuting: &a%{wd.%player%}%" with lore "&e%{Wood.%player%}%/%{wcn.%player%}%" to be unstealable
+
+on join:
+   if {fishing.%player%} is not set:
+      set {fishing.%player%} to 0
+
+#/// FISHING ///
+
+on fishing:
+   if fish state is CAUGHT_FISH:
+      if {exp} is not set:
+         set {exp} to 1
+      add {exp} to {fishing.%player%}
+      send action bar "&a+%{exp}% Fishing EXP" to player
+      if {fishing1.%player%} is not set:
+         set {fishing1.%player%} to false
+      if {fishing2.%player%} is not set:
+         set {fishing2.%player%} to false
+      if {fishing3.%player%} is not set:
+         set {fishing3.%player%} to false
+      if {fishing4.%player%} is not set:
+         set {fishing4.%player%} to false
+      if {fishing1.%player%} = false:
+         if {fishing.%player%} >= 35:
+            set {fnl.%player%} to 60
+            send "&e&lLevel UP ! You are now level &b&l1 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 1 in Fishing !"
+            set {fishing1.%player%} to true
+            set {fishing2.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing2.%player%} is true:
+         if {fishing.%player%} >= 60:
+            set {fnl.%player%} to 110
+            send "&e&lLevel UP ! You are now level &c&l2 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 2 in Fishing !"
+            set {fishing2.%player%} to false
+            set {fishing3.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing3.%player%} = true:
+         if {fishing.%player%} >= 110:
+            set {fnl.%player%} to 180
+            send "&e&lLevel UP ! You are now level &c&l3 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 3 in Fishing !"
+            set {fishing3.%player%} to false
+            set {fishing4.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing4.%player%} is true:
+         if {fishing.%player%} >= 180:
+            set {fnl.%player%} to 250
+            send "&e&lLevel UP ! You are now level &c&l4 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 4 in Fishing !"
+            set {fishing4.%player%} to false
+            set {fishing5.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing5.%player%} = true:
+         if {fishing.%player%} >= 250:
+            set {fnl.%player%} to 330
+            send "&e&lLevel UP ! You are now level &c&l5 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 5 in Fishing !"
+            set {fishing5.%player%} to false
+            set {fishing6.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing6.%player%} is true:
+         if {fishing.%player%} >= 330:
+            set {fnl.%player%} to 450
+            send "&e&lLevel UP ! You are now level &c&l6 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 6 in Fishing !"
+            set {fishing6.%player%} to false
+            set {fishing7.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing7.%player%} = true:
+         if {fishing.%player%} >= 450:
+            set {fnl.%player%} to 590
+            send "&e&lLevel UP ! You are now level &c&l7 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 7 in Fishing !"
+            set {fishing7.%player%} to false
+            set {fishing8.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing8.%player%} is true:
+         if {fishing.%player%} >= 590:
+            set {fnl.%player%} to 660
+            send "&e&lLevel UP ! You are now level &c&l8 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &b%player% &eis now Level 8 in Fishing !"
+            set {fishing8.%player%} to false
+            set {fishing9.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing9.%player%} is true:
+         if {fishing.%player%} >= 660:
+            set {fnl.%player%} to 780
+            send "&e&lLevel UP ! You are now level &c&l9 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &c%player% &eis now Level 9 in Fishing !"
+            set {fishing9.%player%} to false
+            set {fishing10.%player%} to true
+            add 1 to {fl.%player%}
+      if {fishing10.%player%} is true:
+         if {fishing.%player%} >= 780:
+            send "&e&lLevel UP ! You are now level &c&l10 &e&l!" to player
+            broadcast "&b&lFishing &e&l>> &B%player% &eis now Level 10 in Fishing !"
+            set {fishing10.%player%} to false
+            add 1 to {fl.%player%}
+
+#/// FARMING ///
+
+on block break:
+   if block is wheat:
+      add 0.5 to {farming.%player%}
+   if block is ripe potato plant:
+      add 1 to {farming.%player%}
+   if block is ripe beetroot plant:
+      add 3.25 to {farming.%player%}
+   if block is ripe carrot plant:
+      add 2 to {farming.%player%}
+      if {farming1.%player%} is not set:
+         set {farming1.%player%} to false
+      if {farming2.%player%} is not set:
+         set {farming2.%player%} to false
+      if {farming3.%player%} is not set:
+         set {farming3.%player%} to false
+      if {farming4.%player%} is not set:
+         set {farming4.%player%} to false
+      if {farming1.%player%} = false:
+         if {farming.%player%} > 120:
+            set {fanl.%player%} to 240
+            send "&e&lLevel UP ! You are now level &b&l1 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 1 in farming !"
+            set {farming1.%player%} to true
+            set {farming2.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming2.%player%} is true:
+         if {farming.%player%} >= 240:
+            set {fanl.%player%} to 350
+            send "&e&lLevel UP ! You are now level &c&l2 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 2 in farming !"
+            set {farming2.%player%} to false
+            set {farming3.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming3.%player%} = true:
+         if {farming.%player%} >= 350:
+            set {fanl.%player%} to 480
+            send "&e&lLevel UP ! You are now level &c&l3 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 3 in farming !"
+            set {farming3.%player%} to false
+            set {farming4.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming4.%player%} is true:
+         if {farming.%player%} >= 480:
+            set {fanl.%player%} to 590
+            send "&e&lLevel UP ! You are now level &c&l4 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 4 in farming !"
+            set {farming4.%player%} to false
+            set {farming5.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming5.%player%} = true:
+         if {farming.%player%} >= 590:
+            set {fanl.%player%} to 660
+            send "&e&lLevel UP ! You are now level &c&l5 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 5 in farming !"
+            set {farming5.%player%} to false
+            set {farming6.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming6.%player%} is true:
+         if {farming.%player%} >= 660:
+            set {fanl.%player%} to 730
+            send "&e&lLevel UP ! You are now level &c&l6 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 6 in farming !"
+            set {farming6.%player%} to false
+            set {farming7.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming7.%player%} = true:
+         if {farming.%player%} >= 730:
+            set {fanl.%player%} to 880
+            send "&e&lLevel UP ! You are now level &c&l7 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 7 in farming !"
+            set {farming7.%player%} to false
+            set {farming8.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming8.%player%} is true:
+         if {farming.%player%} >= 880:
+            set {fanl.%player%} to 990
+            send "&e&lLevel UP ! You are now level &c&l8 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &b%player% &eis now Level 8 in farming !"
+            set {farming8.%player%} to false
+            set {farming9.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming9.%player%} is true:
+         if {farming.%player%} >= 990:
+            set {fanl.%player%} to 1120
+            send "&e&lLevel UP ! You are now level &c&l9 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &c%player% &eis now Level 9 in farming !"
+            set {farming9.%player%} to false
+            set {farming10.%player%} to true
+            add 1 to {frm.%player%}
+      if {farming10.%player%} is true:
+         if {farming.%player%} >= 1120:
+            send "&e&lLevel UP ! You are now level &c&l10 &e&l!" to player
+            broadcast "&6&lFarming &e&l>> &B%player% &eis now Level 10 in farming !"
+            set {farming10.%player%} to false
+            add 1 to {frm.%player%}
+
+command /rlvl [<text>] [<number>] [<player>]:
+   permission: op
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            set {%arg 1%.%arg 3%} to arg 2
+            send "Setted %arg 1% of %arg 3% to %arg 2%"
+
+ 
+command /xp [<number>] [<player>] [<text>]:
+   permission: op
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 3 is set:
+               set {%arg 3%.%arg 2%} to arg 1
+               send "&b&lFish&5&lFisher &e&l>> &aSucess ! To: &e%arg 2% &aJob: &e%arg 3% &aExp: &e%arg 1%" to player
+               send "&b&lFish&5&lFisher &e&l>> &c[OWNER] LananasBleu &agave you &e%arg 1% &aexp for &e%arg 3%" to arg 2
+
+on join:
+   if {season2.%player%} is false:
+      stop
+   if {season2.%player%} is not set:
+      send "&b&lFish&5&lFisher &e&l>> &4&lIMPORTANT ! &cAll levels and exp has been rested due to a update that needed them to be reseted , we are really sorry !"
+      set {season2.%player%} to false
+      set {lvl.%player%} to 0
+      set {fishing.%player%} to 0
+      set {mining.%player%} to 0
+      set {farming.%player%} to 0
+      set {lvl1.%player%} to false
+      set {lvl2.%player%} to false
+      set {lvl3.%player%} to false
+      set {lvl4.%player%} to false
+      set {lvl5.%player%} to false
+      set {lvl6.%player%} to false
+      set {lvl7.%player%} to false
+      set {lvl8.%player%} to false
+      set {lvl9.%player%} to false
+      set {lvl10.%player%} to false
+      set {fishing1.%player%} to false
+      set {fishing2.%player%} to false
+      set {fishing3.%player%} to false
+      set {fishing4.%player%} to false
+      set {fishing5.%player%} to false
+      set {fishing6.%player%} to false
+      set {fishing8.%player%} to false
+      set {fishing9.%player%} to false
+      set {fishing10.%player%} to false
+      set {mining1.%player%} to false
+      set {mining2.%player%} to false
+      set {mining3.%player%} to false
+      set {mining4.%player%} to false
+      set {mining5.%player%} to false
+      set {mining6.%player%} to false
+      set {mining7.%player%} to false
+      set {mining8.%player%} to false
+      set {mining9.%player%} to false
+      set {mining10.%player%} to false
+      set {me.%player%} to false
+      set {nether.%player%} to false
+      set {msgd.%player%} to false
+      set {ff.%player%} to false
+      set {msgd.%player%} to false
+      set {msgdd.%player%} to false
+      set {f.%player%} to false
+      set {s.%player%} to false
+      set {d.%player%} to false
+      set {cl.%player%} to 0
+      set {ml.%player%} to 0
+      set {fl.%player%} to 0
+      set {frm.%player%} to 0
+      set {season1.%player%} to false
+      set {farming1.%player%} to false
+      set {farming2.%player%} to false
+      set {farming3.%player%} to false
+      set {farming4.%player%} to false
+      set {farming5.%player%} to false
+      set {farming6.%player%} to false
+      set {farming7.%player%} to false
+      set {farming8.%player%} to false
+      set {farming9.%player%} to false
+      set {farming10.%player%} to false
+
+
+on block break:
+   if block is emerald ore:
+      set {_block} to "%target block%" parsed as item type
+      set {_loc} to location of target block
+      set block at target block to emerald ore
+      wait 45 second
+      set block at {_loc} to {_block}
+
+every 3 minutes:
+   make server execute command "/fill -175 65 -109 -161 65 -137 wheat"
+   make server execute command "/killall drop world"
+
+every 7 minutes:
+   make server execute command "/fill -149 65 -137 -175 65 -151 carrots"
+   make server execute command "/killall drop world"
+
+every 5 minutes:
+   make server execute command "/fill -142 65 -123 -160 65 -109 minecraft:potatoes"
+   make server execute command "/killall drop world"
+
+every 10 minutes:
+   make server execute command "/fill -149 65 -132 -142 65 -148 minecraft:beetroots"
+   make server execute command "/killall drop world"
+
+#/// WOOD CUTING ///
+
+on block break:
+   if block is spruce log:
+      add 1 to {Wood.%player%}
+      send action bar "&a+1 Wood cuting EXP" to player
+      if {Wood1.%player%} is not set:
+         set {Wood1.%player%} to false
+      if {Wood2.%player%} is not set:
+         set {Wood2.%player%} to false
+      if {Wood3.%player%} is not set:
+         set {Wood3.%player%} to false
+      if {Wood4.%player%} is not set:
+         set {Wood4.%player%} to false
+      if {Wood1.%player%} = false:
+         if {Wood.%player%} >= 120:
+            set {wcn.%player%} to 240
+            send "&e&lLevel UP ! You are now level &b&l1 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 1 in wood cuting !"
+            set {Wood1.%player%} to true
+            set {Wood2.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood2.%player%} is true:
+         if {Wood.%player%} >= 240:
+            set {wcn.%player%} to 350
+            send "&e&lLevel UP ! You are now level &c&l2 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 2 in wood cuting !"
+            set {Wood2.%player%} to false
+            set {Wood3.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood3.%player%} = true:
+         if {Wood.%player%} >= 350:
+            set {wcn.%player%} to 480
+            send "&e&lLevel UP ! You are now level &c&l3 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 3 in wood cuting !"
+            set {Wood3.%player%} to false
+            set {Wood4.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood4.%player%} is true:
+         if {Wood.%player%} >= 480:
+            set {wcn.%player%} to 590
+            send "&e&lLevel UP ! You are now level &c&l4 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 4 in wood cuting !"
+            set {Wood4.%player%} to false
+            set {Wood5.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood5.%player%} = true:
+         if {Wood.%player%} >= 590:
+            set {wcn.%player%} to 660
+            send "&e&lLevel UP ! You are now level &c&l5 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 5 in wood cuting !"
+            set {Wood5.%player%} to false
+            set {Wood6.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood6.%player%} is true:
+         if {Wood.%player%} >= 660:
+            set {wcn.%player%} to 730
+            send "&e&lLevel UP ! You are now level &c&l6 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 6 in wood cuting !"
+            set {Wood6.%player%} to false
+            set {Wood7.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood7.%player%} = true:
+         if {Wood.%player%} >= 730:
+            set {wcn.%player%} to 880
+            send "&e&lLevel UP ! You are now level &c&l7 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 7 in wood cuting !"
+            set {Wood7.%player%} to false
+            set {Wood8.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood8.%player%} is true:
+         if {Wood.%player%} >= 880:
+            set {wcn.%player%} to 990
+            send "&e&lLevel UP ! You are now level &c&l8 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &b%player% &eis now Level 8 in wood cuting !"
+            set {Wood8.%player%} to false
+            set {Wood9.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood9.%player%} is true:
+         if {Wood.%player%} >= 990:
+            set {wcn.%player%} to 1120
+            send "&e&lLevel UP ! You are now level &c&l9 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &c%player% &eis now Level 9 in wood cuting !"
+            set {Wood9.%player%} to false
+            set {Wood10.%player%} to true
+            add 1 to {wd.%player%}
+      if {Wood10.%player%} is true:
+         if {Wood.%player%} >= 1120:
+            send "&e&lLevel UP ! You are now level &c&l10 &e&l!" to player
+            broadcast "&9&lWood Cuting &e&l>> &B%player% &eis now Level 10 in wood cuting !"
+            set {Wood10.%player%} to false
+            add 1 to {wd.%player%}
+
+
+every 3 minutes:
+   make server execute command "/setblock -30 71 -138 spruce_sapling"
+   make server execute command "/setblock -36 71 -133 spruce_sapling"
+   make server execute command "/setblock -37 71 -140 spruce_sapling"
+   make server execute command "/setblock -26 71 -140 spruce_sapling"
+   make server execute command "/setblock -28 71 -145 spruce_sapling"
+   make server execute command "/setblock -22 71 -142 spruce_sapling"
+   make server execute command "/setblock -18 71 -145 spruce_sapling"
+   make server execute command "/setblock -7 71 -137 spruce_sapling"
+   make server execute command "/setblock -8 71 -133 spruce_sapling"
+   make server execute command "/setblock -14 71 -132 spruce_sapling"
+   make server execute command "/setblock -20 71 -130 spruce_sapling"
+   make server execute command "/setblock -12 71 -128 spruce_sapling"
+   make server execute command "/setblock -20 71 -122 spruce_sapling"
+   make server execute command "/setblock -14 71 -120 spruce_sapling"
+   make server execute command "/setblock -11 71 -155 spruce_sapling"
+   make server execute command "/setblock -9 71 -120 spruce_sapling"
+   make server execute command "/setblock -7 71 -113 spruce_sapling"
+   make server execute command "/setblock -11 71 -104 spruce_sapling"
+   make server execute command "/setblock -16 71 -106 spruce_sapling"
+   make server execute command "/setblock -21 71 -110 spruce_sapling"
+   make server execute command "/setblock -25 71 -105 spruce_sapling"
+   make server execute command "/setblock -26 71 -111 spruce_sapling"
+   make server execute command "/setblock -29 71 -105 spruce_sapling"
+   make server execute command "/setblock -31 71 -111 spruce_sapling"
+   make server execute command "/setblock -8 71 -133 spruce_sapling"
+   make server execute command "/setblock -36 71 -110 spruce_sapling"
+   make server execute command "/setblock -20 71 -130 spruce_sapling"
+   make server execute command "/setblock -36 71 -105 spruce_sapling"
+   make server execute command "/setblock -36 71 -116 spruce_sapling"
+   make server execute command "/setblock -30 71 -115 spruce_sapling"
+
+on region enter:
+   wait 2 ticks
+   if "%region at player%" contains "wood":
+      if {wo.%player%} is true:
+         stop
+      if {mining.%player%} >= 480:
+         set {wo.%player%} to true
+         send "&9&lWood Cuting &e&l>> &d&lNEW ZONE DISCOVERED ! &5Spruce Forest"
+         stop
+      if {lvl.%player%} < 1120:
+         send "&9&lWood Cuting &e&l>> &cSeems you are not Level 4 in Mining ! Come back when you are level 4 in Mining !"
+         teleport player to {spawn}
+         stop
+
+on rightclick with iron axe:
+   if name of player's tool is "&6&oThor Axe":
+      if {ct.%player%} is true:
+         send "&b&lFish&5&lFisher &e&l>> &cYour ability is on cooldown !"
+         stop
+      set {_targetedplayer} to location of targeted block
+      if {_targetedplayer} isn't set:
+         stop
+      make server execute command "/summon lighningbolt %{_targetedplayer}%"
+      set {ct.%player%} to true
+      wait 60 seconds
+      set {ct.%player%} to false

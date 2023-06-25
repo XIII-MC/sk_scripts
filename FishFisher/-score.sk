@@ -1,0 +1,5 @@
+on join:
+	set title of player's scoreboard to "&6&lServer Info"
+	while player is online:
+		set line 1 of player's scoreboard to "&7• &eOnline: &f%size of all players%"
+		wait 1 second
