@@ -1,0 +1,20 @@
+function GA_GUI(player: player) :: inventory:
+  set metadata tag "GACGUI" of {_player} to chest inventory with 6 rows named "{@guard} &3&lGUI"
+  set slot 0 of metadata tag "GACGUI" of {_player} to light green dye named "&aMotion" with lore "&7Various checks for movement modifications." and "&7Such as Step, Glide, Fly, Spider..." and "" and "&7Currently: &aEnabled" if {GUARD.CHECK.MOTION} is not set
+  set slot 0 of metadata tag "GACGUI" of {_player} to light gray dye named "&cMotion" with lore "&7Various checks for movement modifications." and "&7Such as Step, Glide, Fly, Spider..." and "" and "&7Currently: &cDisabled" if {GUARD.CHECK.MOTION} is set
+  open (metadata tag "GACGUI" of {_player}) to {_player}
+ 
+on inventory click:
+  if event-inventory contains (metadata tag "GACGUI" of player):
+    cancel event
+    set {_item} to event-item
+    replace all "§c" and "§a" with "" in {_temp}
+    if {GUARD.CHECK.%{_temp}%} is not set: 
+      set {GUARD.CHECK.%{_temp}%} to false
+      close player's inventory 
+      GA_GUI(player)
+      stop 
+    else:
+      delete {GUARD.CHECK.%{_temp}%}
+      close player's inventory 
+      GA_GUI(player)

@@ -1,0 +1,12 @@
+function GDC_Flight_B(p: player):
+  stop
+  GDA_returnTimeSpan({_p}, "BUBBLE") > 0.6 second
+  GDA_returnValue({_p}, "CLIMABLETICKS") = 0
+  GDA_returnTimeSpan({_p}, "ABOVETICKS") > 0.6 seconds
+  GDA_returnTimeSpan({_p}, "BLOCKPLACE") > 0.6 seconds
+  set {_diffy} to difference between y location of {_p} and {GUARD::%{_p}%::TEMP::YLOC}
+  set {GUARD::%{_p}%::TEMP::YLOC} to y location of {_p}
+  set {_y} to GDA_getDeltaY({_p}, 1, false)
+  delete {GUARD::%{_p}%::TEMP::VL::FLIGHT.B} if "%{_diffy}%" = "0.41999998688697815"
+  if {_diffy} is between 0.000000001 and 0.41999998688697815:
+    GA_clearly({_p}, "Flight", "B", "Invalid y motion", 5, "B", "%{_diffy}%", 1, 50) if "%{_diffy}%" != "0.41999998688697815"

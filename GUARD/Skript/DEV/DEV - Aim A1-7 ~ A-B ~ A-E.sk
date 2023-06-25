@@ -1,0 +1,85 @@
+function getDev(a: number, b: number) :: number: 
+  if {_a} < {_b}:
+    return getDev({_b}, {_a})
+  if abs({_b}) < 0.001:
+    return {_a}
+  else:
+    return getDev({_b}, {_a} - floor({_a} / {_b}) * {_b})
+function getGCD(current: number, previous: number) :: number:
+    if {_previous} <= 16384:
+        return {_current}
+    return getGCD({_previous}, mod({_current}, {_previous}))
+
+on any move:
+   difference between {GUARD::%player%::ATTACK} and now < 0.3 second
+   set {_gcd} to getDev(getDeltaPitch(player, 1) ^ 7, getDeltaPitch(player, 2) ^ 7)
+   set {_lmc} to player's pitch - (player's pitch * 8) ^ 1
+   set {_rgcd} to getGCD(getDeltaPitch(player, 1) * 16777216, getDeltaPitch(player, 2) * 16777216)
+   set {_lcm} to getDev(getDeltaPitch(player, 1) * 16777216, getDeltaPitch(player, 2) * 16777216)
+   set {_cinematic} to mod(getDeltaPitch(player, 2), 1)
+   set {_cinematic} to roundTo({_cinematic}, 7) * 10000000
+   if {_cinematic} > 100000:
+      {_cinematic} / 100 = round({_cinematic} / 100)
+      send "&cYou flagged AIM E (BETA) (&4%{_cinematic}%&c)"
+   add 1 to {GUARD::%player%::AIM.TEMP} if {_gcd} is between 0.0000000001 and 0.00001
+   send "&cYou flagged AIM A (BETA)" if {GUARD::%player%::AIM.TEMP} > 6
+   send "&cYou flagged AIM B (BETA)" if "%{_lcm}%" contains "."
+   send "&cYou flagged AIM C (BETA) (&4%{_lmc}%&c)" if "%{_lmc}%" doesn't contain "."
+   send "&cYou flagged AIM D (BETA) (&4%{_rgcd}%&c)" if {_rgcd} is between 0.000001 and 300000
+   delete {GUARD::%player%::AIM.TEMP} if {_gcd} > 0.00001
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  set {GUARD::%attacker%::ATTACK} to now
+
+
+on any move:
+   difference between {GUARD::%player%::ATTACK} and now < 0.1 second
+   set {_idk} to sqrt(player's pitch ^ getDeltaPitch(player, 1))
+   set {_Pitch} to getDeltaPitch(player, 1) * 16777216
+   set {_PreviusPitch} to getDeltaPitch(player, 2) * 16777216
+   set {_GCD} to getGCD({_Pitch}, {_PreviusPitch})
+   set {_lmc} to min(getDeltaPitch(player, 3)) ^ 2
+   set {_test} to (player's pitch / (player's pitch * 8) ^ 1)
+   set {_lcm} to (player's pitch - (player's pitch * 8) ^ 1)
+   set {_cinematic} to mod(getDeltaPitch(player, 2), 1)
+   set {_dev} to getDev(getDeltaPitch(player, 1) * 16777216, getDeltaPitch(player, 2) * 16777216)
+   send "GCD: %{_lmc}%"
+   GA_clearly(player, "Aim", "A-7", "{@AimA7_Status}", {@AimA7_PunishVL}, 1, "%{_dev}%", {@AimA7_BufferAdd}, {@AimA7_Buffer}) if "%{_dev}%" contains "."
+   getDeltaYaw(player, 2) != 0
+   GA_clearly(player, "Aim", "A-2", "{@AimA2_Status}", {@AimA2_PunishVL}, 1, "%{_cinematic}%", {@AimA2_BufferAdd}, {@AimA2_Buffer}) if {_cinematic} = 0.1 or 0.2 or 0.3 or 0.4 or 0.5 or 0.6 or 0.7 or 0.8 or 0.9 or 1
+   GA_clearly(player, "Aim", "A-1", "{@AimA1_Status}", {@AimA1_PunishVL}, 1, "%{_test}%", {@AimA1_BufferAdd}, {@AimA1_Buffer}) if {_test} != 0.125
+   GA_clearly(player, "Aim", "A-5", "{@AimA5_Status}", {@AimA5_PunishVL}, 1, "%{_idk}%", {@AimA5_BufferAdd}, {@AimA5_Buffer}) if {_idk} <= 0
+   if {_GCD} > 0:
+      GA_clearly(player, "Aim", "A-3", "{@AimA3_Status}", {@AimA3_PunishVL}, 1, "%{_lmc}%", {@AimA3_BufferAdd}, {@AimA3_Buffer}) if {_GCD} < 400000
+   GA_clearly(player, "Aim", "A-6", "{@AimA6_Status}", {@AimA6_PunishVL}, 1, "%{_dev}%", {@AimA6_BufferAdd}, {@AimA6_Buffer}) if "%{_lcm}%" doesn't contain "."
+   delete {GUARD::%player%::AIM.A-3} if {_GCD} > 400000
+   delete {GUARD::%player%::AIM.A-5} if {_idk} > 0
+   delete {GUARD::%player%::AIM.A-2} if {_cinematic} != 0.1 or 0.2 or 0.3 or 0.4 or 0.5 or 0.6 or 0.7 or 0.8 or 0.9 or 1
+   delete {GUARD::%player%::AIM.A-1} if {_test} = 0.125
+   delete {GUARD::%player%::AIM.A-6} if "%{_lcm}%" contains "."
+   delete {GUARD::%player%::AIM.A-7} if "%{_dev}%" doesn't contain "."
+
+function getDev(a: number, b: number) :: number: 
+  if {_a} < {_b}:
+    return getDev({_b}, {_a})
+  if abs({_b}) < 0.001:
+    return {_a}
+  else:
+    return getDev({_b}, {_a} - floor({_a} / {_b}) * {_b})
+
+on any move:
+   difference between {GUARD::%player%::ATTACK} and now < 0.3 second
+   set {_lmc} to min(getDeltaPitch(player, 3)) ^ 2
+   set {_angle} to (player's pitch / (player's pitch * 8) ^ 1)
+   set {_dev} to mod(getDeltaPitch(player, 1), floor(getDeltaPitch(player, 2)))
+   set {_idk} to sqrt(getDeltaPitch(player, 2) / (player's pitch * 8) ^ 1)
+   set {_idk} to roundTo({_idk}, 7) * 10000000
+   GA_clearly(player, "Aim", "A", "{@AimA_Status}", {@AimA_PunishVL}, 1, "%{_lmc}%", {@AimA_BufferAdd}, {@AimA_Buffer}) if {_lmc} < 0.002
+   GA_clearly(player, "Aim", "A", "{@AimA_Status}", 1, 1, "%{_angle}%", 0, 0) if {_angle} != 0.125
+   GA_clearly(player, "Aim", "B", "{@AimB_Status}", {@AimB_PunishVL}, 1, "%{_idk}%", 1, 7) if {_idk} < 400000
+   delete {GUARD::%player%::AIM.A} if {_lmc} > 0.002
+   delete {GUARD::%player%::AIM.B} if {_dev} < 0
+   delete {GUARD::%player%::AIM.C} if {_idk} > 400000

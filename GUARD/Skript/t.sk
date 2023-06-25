@@ -1,0 +1,58 @@
+options:
+   AC: &e&lDu&6&lko &8»&7 
+
+function AC_Hack(player: player, cheat: text, type: text, vl: integer, lvl: integer):
+  add 1 to {AC::VL::%{_cheat}%::%{_player}%}
+  broadcast "{@AC} &6%{_player}%&7 flagged &e%{_cheat}% &7(&e%{_type}%&7) &7(&e%{AC::VL::%{_cheat}%::%{_player}%}%&7)"
+
+on any move:
+  player is not flying
+  block at player is air or void air
+  loop all blocks in radius 3 around player:
+    loop-block is stairs or slab:
+      stop
+  player is on ground:
+    AC_GetDeltaY(player)
+    set {_ycheck} to ({AC::%player%::YP.LOC10} - player's y coordinate)
+    {_ycheck} < 0
+    set {_y} to difference between {AC::%player%::YP.LOC10} and player's y coordinate
+    set {_yfloor} to floor({_y})
+    if {_yfloor} > 0:
+      difference between {AC::%player%::DAMAGE} and now > 1 second
+      add 1 to {AC::%player%::STEP.A}
+      {AC::%player%::STEP.A} > 2
+      AC_Hack(player, "Step", "A &8| &7%{_yfloor}%&7", 3, 1)
+    else:
+      delete {AC::%player%::STEP.A}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function AC_GetDeltaY(p: player):
+  set {AC::%{_p}%::YP.LOC10} to {AC::%{_p}%::YP.LOC9}
+  set {AC::%{_p}%::YP.LOC9} to {AC::%{_p}%::YP.LOC8}
+  set {AC::%{_p}%::YP.LOC8} to {AC::%{_p}%::YP.LOC7}
+  set {AC::%{_p}%::YP.LOC7} to {AC::%{_p}%::YP.LOC6}
+  set {AC::%{_p}%::YP.LOC6} to {AC::%{_p}%::YP.LOC5}
+  set {AC::%{_p}%::YP.LOC5} to {AC::%{_p}%::YP.LOC4}
+  set {AC::%{_p}%::YP.LOC4} to {AC::%{_p}%::YP.LOC3}
+  set {AC::%{_p}%::YP.LOC3} to {AC::%{_p}%::YP.LOC2}
+  set {AC::%{_p}%::YP.LOC2} to {AC::%{_p}%::YP.LOC1}
+  set {AC::%{_p}%::YP.LOC1} to {_p}'s y location
+function AC_DamageHandler(p: player):
+  set {AC::%{_p}%::DAMAGE} to now
+on join:
+   AC_DamageHandler(player)
+on damage:
+   damage cause is attacker or explosion
+   victim is not attacker
+   AC_DamageHandler(victim)

@@ -1,0 +1,48 @@
+function GDC_FastClimb_A(p: player):
+  GDA_returnValue({_p}, "CLIMABLETICKS") > 3
+  block 2 under {_p} is vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+  block under {_p} is vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+  block at {_p} is vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+  GA_clearly({_p}, "FastClimb", "A", "Moved upwards too fast", 5, "A", "%GDA_getDeltaY({_p}, 1, false)%", 1, 1) if GDA_getDeltaY({_p}, 1, false) > 0.1177
+  if {GUARD::%{_p}%::TEMP::VL::FASTCLIMB.A} >= 0.25:
+    remove 0.25 from {GUARD::%{_p}%::TEMP::VL::FASTCLIMB.A} if GDA_getDeltaY({_p}, 1, false) < 0.1177
+
+function GDC_Ground_C(p: player):
+  set {GUARD::%{_p}%::TEMP::NOFALLY4} to {_p}'s y location if GDA_getDeltaY({_p}, 1, false) > 0
+  if GDA_getDeltaY({_p}, 1, false) < 0:
+    set {_y} to {_p}'s y location
+    GDA_getLastBlock({_p}, air, "AIR", 1) <= 2 
+    GDA_returnTimeSpan({_p}, "ATLIQUID") > 600
+    GDA_returnTimeSpan({_p}, "DAMAGE") > 1200
+    GA_clearly({_p}, "Ground", "C", "Invalid fall distance", 3, "C", "%difference between round(GDA_getDeltaY({_p}, 1, true)) and round({_p}'s fall distance)%", 1, 3) if difference between round({GUARD::%{_p}%::TEMP::NOFALLY4} - {_y}) and round({_p}'s fall distance) != 0
+  set {GUARD::%{_p}%::TEMP::NOFALLY4} to {_p}'s y location if GDA_getDeltaY({_p}, 1, false) = 0
+  if {GUARD::%{_p}%::TEMP::VL::GROUND.C} >= 0.25:
+    remove 0.25 from {GUARD::%{_p}%::TEMP::VL::GROUND.C} if difference between round({GUARD::%{_p}%::TEMP::NOFALLY4} - {_y}) and round({_p}'s fall distance) = 0
+
+on inventory click: 
+  set {GUARD::%player%::TEMP::INVSTATE} to true
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sprinting", 3, "A", "NaN", 1, 0) if player is sprinting
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sneaking", 3, "A", "NaN", 1, 0) if player is sneaking
+
+on sprint toggle:
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sprint toggle", 3, "A", "NaN", 1, 0) if {GUARD::%player%::TEMP::INVSTATE} is set
+
+on inventory close:
+  delete {GUARD::%player%::TEMP::INVSTATE}
+  delete {GUARD::%player%::TEMP::VL::INVENTORY.A}
+
+function GDC_Inventory_A(p: player):
+  GDA_getDeltaLoc({_p}, 1, true) > 0
+  GDA_returnTimeSpan({_p}, "FLY") > 2000
+  GDA_returnTimeSpan({_p}, "GAMEMODE") > 2000
+  GDA_returnTimeSpan({_p}, "ICE") > 2000
+  GDA_returnTimeSpan({_p}, "SLIME") > 800
+  GA_clearly({_p}, "Inventory", "A", "Moving while having inventory open", 5, "A", "NaN", 1, 15) if {GUARD::%{_p}%::TEMP::INVSTATE} is set
+
+function GDC_Ground_B(p: player):
+  GDA_getLastBlock({_p}, air, "AIR", 1) <= 2
+  GDA_getLastBlock({_p}, air, "AIR", 0.05) <= 2
+  GDA_returnTimeSpan({_p}, "ATAIR") > 600
+  GDA_returnTimeSpan({_p}, "LOWBLOCK") > 600
+  set metadata value "GUARD::TEMP::TIMESPAN::OFFGROUND" of {_p} to unix timestamp of now if {_p} is not on ground 
+  GA_clearly({_p}, "Ground", "B", "Switched ground state too fast", 10, "B", "%difference between metadata value "GUARD::TEMP::TIMESPAN::OFFGROUND" of {_p} and unix timestamp of now%", 1, 1) if difference between metadata value "GUARD::TEMP::TIMESPAN::OFFGROUND" of {_p} and unix timestamp of now > 700

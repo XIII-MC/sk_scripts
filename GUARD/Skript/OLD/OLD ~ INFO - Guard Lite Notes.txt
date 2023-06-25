@@ -1,0 +1,38 @@
+To fix:
+
+- NoWeb (A) | Breaking blocks below player
+- Glide (A)
+- FastClimb (A)
+- Fly (D)
+- Spider (A)
+- Step (B)
+
+To add:
+
+- Velocity Checks
+- Better Aim Checks
+- Sneak Check
+- FastClimb
+- FastBreak Check
+- Hover alert check descripition
+
+Fixed or added:
+
+- Fly (E) | Lag or semi blocks ?
+- Fly (B) | Lag or semi blocks ?
+- Speed (A | B) | Lag or ice, getting damaged with knockback 1/2
+- Fly (C) | Soulsand jump or slime
+- Add option "DoubleCheck" with "true" or "false" to decide if a check has to be double checked
+- Add option "PunishVL" for every checks so we can choose how much alerts before some gets kicked
+- Jesus (A) | To optimize
+- NoFall (A) | To optimize
+- Timer (A) | To optimize
+- WaterSpeed Check
+- Nofall (A) | Ghost blocks
+- NoWeb (A) | Breaking blocks below player
+- Interact (B | C) | With WG Regions by breaking the block next to the bed and hold right click or leftclick
+- LowJump (A) | Getting damaged / PvP
+- NoWeb (B) | Not working??
+- Scaffold (D) | God Bridge
+- FastPlace (A) | Placing blocks fast
+- Fly (A) | Place block 

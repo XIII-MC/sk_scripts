@@ -1,0 +1,28 @@
+#Ghost block handler (Thanks Eths !)
+
+function GA_GB(p: player):
+    {_p} is on ground
+    mathGround({_p}) = true
+    serverGround({_p}) = false
+    loop blocks in radius 2 of {_p}:
+        difference between {GUARD::%{_p}%::GBBLOCK} and now > 0.55 second
+        make {_p} see loop-block as loop-block
+function serverGround(l: location) :: boolean:
+    remove 1 / 64 from y coord of {_l}
+    if block 0.3 meters north west of {_l} is air:
+        block 0.3 meters north east of {_l} is air
+        block 0.3 meters south west of {_l} is air
+        block 0.3 meters south east of {_l} is air
+        if (y coord of {_l} + (1 / 64)) mod 1/2 = 0:
+            remove 32 / 64 from y coord of {_l}
+            if block 0.3 meters north west of {_l} is air:
+                block 0.3 meters north east of {_l} is air
+                block 0.3 meters south west of {_l} is air
+                block 0.3 meters south east of {_l} is air
+                return true
+            return false
+        return true
+    return false
+function mathGround(l: location) :: boolean:
+    return true if y coord of {_l} mod 1 / 64 = 0
+    return false

@@ -1,0 +1,73 @@
+options:
+   version: Build_001
+
+#Customization Settings :
+
+   ThemePreset: 2 #Must be a number, 0, 1, 2 or 3
+   # 0 = Uses Prefix, PrefixUsage, MainColor and SecondColor (Custom)
+   # 1 = Uses AntiFisher theme, [AntiFisher] XIII___ failed Fly (T: C) (VL: 69)
+   # 2 = Uses original Guard theme, GUARD » XIII___ failed Speed A (x42) (Blue Guard)
+   # 3 = Uses old Guard theme, GUARD » XIII___ failed Invalid A (x16) (Cyan Guard)
+
+   Prefix: &9&lGUARD &8» 
+   #Prefix used in alerts, commands, message of Guard
+
+   PrefixUsage: &9&lGUARD
+   #Prefix used in punish broadcast
+
+   MainColor: &9 #Use Minecraft color codes, &1, &2, &3...
+   #Main color used by Guard (This color will not affect the Prefix option above)
+
+   SecondColor: &f #Uses Minecraft color codes, &1, &2, &3...
+   #Second color used by Guard (This color will not affect the Prefix or MainColor options above)
+
+   PermissionMessage: &fUnknown command. Type ""help"" for help. #Preferable to set it to your Unknown Command message (If you changed it)
+   #This message will be sent to people trying to execute /guard without required permission
+
+#Bedrock Players :
+
+   AutoKickBedrock: false #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Will automatically kick bedrock players (Only works on Minehut)   
+
+   IgnoreBedrock: true #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Guard will ignore all bedrock players (Only works on Minehut)
+  
+#Punishements :
+
+   AutoPunish: false #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Toggles if Guard automatically punish players
+
+   BroadcastPunishment: true #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Will send a broadcast message saying "Player has been removed for Unfair Advantage" when someone gets banned/kicked by Guard
+   
+   StrikeOnPunish: true #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Will summon a lightning bolt on the player when he gets punished by Guard
+   
+   AutoBanAllowed: true #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Toggles if a player can get automatically banned by Guard
+
+   BanCommand: /ban %{_Player}% perm Unfair Advantage -s # %{_Player}% = player
+   #Command ran by Guard when a player gets banned
+   
+   AutoKickAllowed: true #True = Allowed/Enabled | False = Unallowed/Disabled
+   #Toggles if a player can get automatically kicked by Guard
+
+   KickCommand: /kick %{_Player}% Unfair Advantage # %{_Player}% = player
+   #Command ran by Guard when a player gets kicked
+   
+   AutoMuteAllowed: true
+   #Toggles if a player can get automatically muted by Guard
+
+   MuteCommand: /mute %{_Player}% perm Innappropriate Message -s # %{_Player}% = player
+   #Command ran by Guard when a player gets muted
+
+#Permissions :
+
+   AlertsPermission: guard.command.alerts #Permission node for /guard alerts
+   AutoAlertsPermission: guard.command.autoalerts #Permission node to automatically enable alerts on join
+   HelpPermission: guard.command.help #Permission node for /guard help
+   KickPermission: guard.command.kick #Permission node for /guard kick
+   BanPermission: guard.command.ban #Permission node for /guard ban
+   MutePermission: guard.command.mute #Permission node for /guard mute
+   MainPermission: guard.command.guard #Permission node for /guard
+   UpdatePermission: guard.update.alert #Permission node to recieve guard update message warning

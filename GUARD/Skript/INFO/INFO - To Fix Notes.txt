@@ -1,0 +1,28 @@
+- Motion A1:
+  - Desync ?
+  - Jump Boost
+  - Slime
+  - Constant high teleport
+
+- Invalid A:
+  - Ghost blocks 
+
+- Nofall A:
+  - Ghost Block
+
+- Inventory A:
+  - Middle click block
+
+- Flight A:
+  - Jump boost
+  - Ghost Block
+  - Slime
+
+- Speed BA / BB:
+  - Constant high teleport
+
+- Flight A5:
+  - Bubble elevator
+
+- Invalid D:
+  - Honey

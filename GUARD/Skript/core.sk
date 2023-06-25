@@ -1,0 +1,375 @@
+options:
+   Duck: &e&lDu&6&lko &8»&7
+
+on hunger meter change:
+   cancel event
+
+command /jailset:
+  permission: DUKO.ADMIN
+  trigger:
+    set {jail} to player's location
+
+on any move:
+  teleport player to {jail} if {DUKO::%player%::JAILED} is true
+  teleport player to {jail} if {DUKO::%player%::VERIFICATION} is true
+
+command /jail [<offline player>]:
+  permission: DUKO.ADMIN
+  trigger:
+    set {DUKO::%arg 1%::JAILED} to true 
+    send "{@Duck} &7Player '&e%arg 1%&7' jailed." to player
+    send "{@Duck} &cYou've been jailed !" to arg 1
+
+command /unjail [<offline player>]:
+  permission: DUKO.ADMIN
+  trigger:
+    set {DUKO::%arg 1%::JAILED} to false
+    send "{@Duck} &7Player '&e%arg 1%&7' unjailed." to player
+    send "{@Duck} &aYou've been unjailed !" to arg 1
+    teleport arg 1 to {Spawn}
+
+on place:
+  if event-block is command block:
+    cancel event 
+    send "{@Duck} &cNO"
+
+command /minecraft:me:
+  trigger:
+    make server execute command "/kick %player% No"
+
+on step on red wool:
+  heal player
+  shoot arrow
+
+command /duko [<text>]:
+   permission: DUKO.ADMIN
+   trigger:
+      send "{@Duck} &7Processing..."
+      wait 1 second
+      if arg 1 is set:
+         broadcast "{@Duck} &f%arg 1%"
+
+command /wadd [<text>]:
+   permission: DUKO.ADMIN
+   trigger:
+      send "{@Duck} &7Processing..."
+      wait 1 second
+      if arg 1 is set:
+         {WHITELIST.%arg 1%} is not set:
+            send "{@Duck} &aPlayer '&2%arg 1%&a' whitelisted !"
+            set {WHITELIST.%arg 1%} to true
+            add arg 1 to {WHITELIST::*}
+         else:
+            send "{@Duck} &cPlayer '&4%arg 1%&c' is already whitelisted."
+            stop
+      else:
+         send "{@Duck} &cPlease choose a player !"
+
+command /wremove [<text>]:
+   permission: DUKO.ADMIN
+   trigger:
+      send "{@Duck} &7Processing..."
+      wait 1 second
+      if arg 1 is set:
+         {WHITELIST.%arg 1%} is set:
+            send "{@Duck} &aPlayer '&2%arg 1%&a' unwhitelisted !"
+            delete {WHITELIST.%arg 1%}
+            remove arg 1 from {WHITELIST::*}
+         else:
+            send "{@Duck} &cPlayer '&4%arg 1%&c' is not whitelisted."
+            stop
+      else:
+         send "{@Duck} &cPlease choose a player !"
+
+command /wtoggle:
+   permission: DUKO.ADMIN
+   trigger:
+      send "{@Duck} &7Processing..."
+      wait 1 second
+      {WHITELISTMODE} is not set:
+         send "{@Duck} &aWhitelist has been enabled !"
+         set {WHITELISTMODE} to true
+      else:
+         send "{@Duck} &cWhitelist has been disabled !"
+         delete {WHITELISTMODE}
+         stop
+
+command /wban [<offline player>]:
+  permission: DUKO.ADMIN
+  trigger:
+    send "{@Duck} &7Processing..."
+    wait 1 second
+    set {DUKO::%arg 1%::BANNED} to true
+    kick arg 1 due to "Timed out"
+    send "{@Duck} &7Player '&e%arg 1%&7' has been banned !"
+
+command /wunban [<offline player>]:
+  permission: DUKO.ADMIN
+  trigger:
+    send "{@Duck} &7Processing..."
+    wait 1 second
+    delete {DUKO::%arg 1%::BANNED}
+    send "{@Duck} &7Player '&e%arg 1%&7' has been unbanned !"
+
+command /wlist:
+  permission: DUKO.ADMIN
+  trigger:
+    send "{@Duck} &7Processing..."
+    wait 1 second
+    send "{@Duck} &7Whitelisted player(s): &f%{WHITELIST::*}%"
+
+on join:
+   set join message to "&7(&2+&7) &e%player%"
+   set player's gamemode to survival
+   kick player if {DUKO::%player%::BANNED} is set
+   {WHITELISTMODE} is set
+   kick player if {WHITELIST.%player%} is not set
+
+on quit:
+   if {WHITELISTMODE} is not set:
+      set quit message to "&7(&c-&7) &e%player%"
+      stop
+   if {WHITELIST.%player%} is set:
+      set quit message to "&7(&c-&7) &e%player%"
+   else:
+      set quit message to ""
+
+on respawn:
+   teleport player to {Spawn}
+on death:
+   teleport player to {Spawn}
+
+on region enter:
+   wait 1 ticks
+   if "%region at player%" contains "dukoclub_scaffold":
+      wait 2 ticks
+      set slot 4 of player to 64 gold block named "{@Duck} &eGold Block"
+on region leave:
+   wait 1 ticks
+   if "%region at player%" contains "dukoclub_map":
+      wait 2 ticks
+      remove 64 gold block from player
+
+on place:
+   wait 3 second
+   player's gamemode is Adventure or survival
+   set event-block to air
+   if "%region at player%" contains "dukoclub_scaffold":
+      wait 2 ticks
+      set slot 4 of player to 64 gold block named "{@Duck} &eGold Block"
+
+command /ping:
+   trigger:
+      if {DUCK::%player%::CALC} is not set:
+         send "{@Duck} &7Calculation..."
+         set {DUCK::%player%::CALC} to true
+         wait 2.5 seconds
+         send "{@Duck} &7Your ping: &e%player's ping%"
+         delete {DUCK::%player%::CALC}
+      else:
+         send "{@Duck} &cAlready calcuating please wait !"
+on world change:
+   wait 1 second
+   player's world is "world"
+   wipe player's sidebar
+   set slot 0 of player to air
+   set slot 1 of player to air
+   set slot 2 of player to air
+   set slot 3 of player to air
+   set slot 4 of player to air
+   set slot 6 of player to air
+   set slot 7 of player to air
+   make server execute command "/give %player% wooden_sword 1 unbreakable:true name:&e&lDu&6&lko_&8»&7_&eWooden_Sword lore:&cUse_carefuly_!"
+on join:
+   wait 1 second
+   wipe player's sidebar
+   set slot 0 of player to air
+   set slot 1 of player to air
+   set slot 2 of player to air
+   set slot 3 of player to air
+   set slot 4 of player to air
+   set slot 6 of player to air
+   set slot 7 of player to air
+   make server execute command "/give %player% wooden_sword 1 unbreakable:true name:&e&lDu&6&lko_&8»&7_&eWooden_Sword lore:&cUse_carefuly_!"
+on inventory click:
+   if event-item is gold block or wooden sword:
+      cancel event
+
+on chat:
+   player doesn't have permission "chat.bypass"
+   set {_cd} to difference between {lastchat.%player%} and now
+   if {_cd} < 1 second:
+      send "{@Duck} &cYour talking too fast !"
+      cancel event
+      stop
+   set {lastchat.%player%} to now
+
+command /setspawn:
+   permission: DUKO.ADMIN
+   trigger:
+      set {Spawn} to player's location 
+
+command /spawn:
+   trigger:
+      teleport player to {Spawn}
+      send "{@Duck} You were teleported to spawn !"
+
+on craft:
+   cancel event
+
+on chat:
+   set {_m} to message
+   replace all " " in {_m} with ""
+   replace all ")" in {_m} with ""
+   replace all "(" in {_m} with ""
+   replace all "&" in {_m} with ""
+   replace all "é" in {_m} with ""
+   replace all "'" in {_m} with ""
+   replace all "-" in {_m} with ""
+   replace all "è" in {_m} with ""
+   replace all "_" in {_m} with ""
+   replace all "ç" in {_m} with ""
+   replace all "à" in {_m} with ""
+   replace all "~" in {_m} with ""
+   replace all "##" in {_m} with ""
+   replace all "{" in {_m} with ""
+   replace all "[" in {_m} with ""
+   replace all "|" in {_m} with ""
+   replace all "`" in {_m} with ""
+   replace all "\" in {_m} with ""
+   replace all "/" in {_m} with ""
+   replace all "^" in {_m} with ""
+   replace all "°" in {_m} with ""
+   replace all "@" in {_m} with ""
+   replace all "]" in {_m} with ""
+   replace all "}" in {_m} with ""
+   replace all "+" in {_m} with ""
+   replace all "=" in {_m} with ""
+   replace all "1" in {_m} with ""
+   replace all "2" in {_m} with ""
+   replace all "3" in {_m} with ""
+   replace all "4" in {_m} with ""
+   replace all "5" in {_m} with ""
+   replace all "6" in {_m} with ""
+   replace all "7" in {_m} with ""
+   replace all "8" in {_m} with ""
+   replace all "9" in {_m} with ""
+   replace all "0" in {_m} with ""
+   replace all "." in {_m} with ""
+   replace all "?" in {_m} with ""
+   replace all "!" in {_m} with ""
+   replace all ";" in {_m} with ""
+   replace all "," in {_m} with ""
+   replace all "!" in {_m} with ""
+   replace all "§" in {_m} with ""
+   replace all "%%" in {_m} with ""
+   replace all "ù" in {_m} with ""
+   replace all "*" in {_m} with ""
+   replace all "µ" in {_m} with ""
+   replace all "$" in {_m} with ""
+   replace all "£" in {_m} with ""
+   replace all "¤" in {_m} with ""
+   replace all "^" in {_m} with ""
+   replace all "¨" in {_m} with ""
+   replace all "<" in {_m} with ""
+   replace all ">" in {_m} with ""
+   replace all ":" in {_m} with ""
+   replace all " " in {_m} with ""
+   if {_m} contains "cum" or "sperm" or "fuck" or "fuc" or "fuk" or "suck" or "sex" or "shut" or "shit" or "bitch" or "nig" or "stfu":
+      cancel event
+      send "{@Duck} Please be nice !"
+
+on death:
+   if attacker is set:
+      set death message to "{@Duck} &c%victim% &7got killed by &c%attacker%"
+   else:
+      set death message to "{@Duck} &c%victim% &7died &o(somehow?)"
+
+command /kick [<player>] [<text>]:
+   permission: DUKO.ADMIN
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            kick arg 1 due to "{@Duck} You were kicked !"
+            broadcast "{@Duck} &c%arg 1% &7has been kicked by &6%player%&7 !"
+            stop
+         else:
+            kick arg 1 due to "{@Duck} You were kicked, reason &e'%arg 2%&e' !"
+            broadcast "{@Duck} &c%arg 1% &7has been kicked by &6%player%&7 reason &e'%arg 2%&e' !"
+            stop
+
+command /unban [<offline player>]:
+   permission: DUKO.ADMIN
+   trigger:
+      if arg 1 is set:
+         delete {DUKO::%arg 1%::BANNED}
+         delete {DUKO::%arg 1%::BANTIME}
+         delete {DUKO::%arg 1%::BANREASON}
+         broadcast "{@Duck} &c%arg 1% &7has been unbanned by &6%player%&7 !"
+         stop
+
+command /apply:
+   permission: DUKO.ADMIN
+   trigger:
+      make server execute command "/effect give @e[type=villager] slowness 999999 120"
+      make server execute command "/effect give @e[type=villager] resistance 999999 120"
+  
+      make server execute command "/effect give @e[type=zombie] slowness 999999 120"
+      make server execute command "/effect give @e[type=zombie] resistance 999999 120"
+
+command /discord:
+   trigger:
+      send "{@Duck} &7Discord: &8https://discord.gg/MjBtaRHbU3"
+
+on join:
+   set {-GUARD::%player%::ALERTS} to true
+
+command /items:
+   trigger:
+      wait 1 tick
+      open chest with 3 rows named "&7Items" to player
+      format slot 0 of player with diamond sword to run [make server execute command "/give %player% diamondsword 1 unbreakable:true"]
+      format slot 1 of player with golden apple to run [make server execute command "/give %player% goldenapple 64"]
+      format slot 2 of player with arrow to run [make server execute command "/give %player% arrow 32"]
+      format slot 3 of player with bow to run [make server execute command "/give %player% bow 1 unbreakable:true"]
+
+command /poskb:
+   permission: DUKO.ADMIN
+   trigger:
+      loop all entities:
+         set {poskb.%loop-entity%} to location of loop-entity
+
+
+on break:
+   if event-block is any bed:
+      cancel event
+      send "You broke the bed" to player
+   if event-block is cake:
+      cancel event
+      send "You ate the cake" to player
+   if event-block is dragon egg:
+      cancel event
+      send "You clicked the dragon egg" to player
+
+on right click:
+   if event-block is any bed:
+      cancel event
+      send "You broke the bed" to player
+   if event-block is cake:
+      cancel event
+      send "You ate the cake" to player
+   if event-block is dragon egg:
+      cancel event
+      send "You clicked the dragon egg" to player
+      
+on leftclick:
+   if event-block is any bed:
+      cancel event
+      send "You broke the bed" to player
+   if event-block is cake:
+      cancel event
+      send "You ate the cake" to player
+   if event-block is dragon egg:
+      cancel event
+      send "You clicked the dragon egg" to player
+      

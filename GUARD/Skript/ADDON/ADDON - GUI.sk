@@ -1,0 +1,264 @@
+command /§vgui1: 
+  trigger:
+    close player's inventory
+    wait 5 ticks
+    open chest with 6 rows named "&3&lGUARD &8» &3&lGUI &8» &3&lChecks" to player
+    format slot 0 of player with lime wool named "&3Aim &7(A-1)" to run [make player execute command "/flagtoggle Aim A-1"] if {GUARD.CHECK.AIM.A-1} is not set
+    format slot 0 of player with gray wool named "&3Aim &7(A-1)" to run [make player execute command "/flagtoggle Aim A-1"] if {GUARD.CHECK.AIM.A-1} is set
+    format slot 1 of player with lime wool named "&3Aim &7(A-2)" to run [make player execute command "/flagtoggle Aim A-2"] if {GUARD.CHECK.AIM.A-2} is not set
+    format slot 1 of player with gray wool named "&3Aim &7(A-2)" to run [make player execute command "/flagtoggle Aim A-2"] if {GUARD.CHECK.AIM.A-2} is set
+    format slot 2 of player with lime wool named "&3Aim &7(A-3)" to run [make player execute command "/flagtoggle Aim A-3"] if {GUARD.CHECK.AIM.A-3} is not set
+    format slot 2 of player with gray wool named "&3Aim &7(A-3)" to run [make player execute command "/flagtoggle Aim A-3"] if {GUARD.CHECK.AIM.A-3} is set
+    format slot 3 of player with lime wool named "&3Aim &7(A-4)" to run [make player execute command "/flagtoggle Aim A-4"] if {GUARD.CHECK.AIM.A-4} is not set
+    format slot 3 of player with gray wool named "&3Aim &7(A-4)" to run [make player execute command "/flagtoggle Aim A-4"] if {GUARD.CHECK.AIM.A-4} is set
+    format slot 4 of player with lime wool named "&3Aim &7(A-5)" to run [make player execute command "/flagtoggle Aim A-5"] if {GUARD.CHECK.AIM.A-5} is not set
+    format slot 4 of player with gray wool named "&3Aim &7(A-5)" to run [make player execute command "/flagtoggle Aim A-5"] if {GUARD.CHECK.AIM.A-5} is set
+    format slot 5 of player with lime wool named "&3KillAura &7(A)" to run [make player execute command "/flagtoggle KillAura A"] if {GUARD.CHECK.KILLAURA.A} is not set
+    format slot 5 of player with gray wool named "&3KillAura &7(A)" to run [make player execute command "/flagtoggle KillAura A"] if {GUARD.CHECK.KILLAURA.A} is set
+    format slot 6 of player with lime wool named "&3KillAura &7(B)" to run [make player execute command "/flagtoggle KillAura B"] if {GUARD.CHECK.KILLAURA.B} is not set
+    format slot 6 of player with lime wool named "&3KillAura &7(B)" to run [make player execute command "/flagtoggle KillAura B"] if {GUARD.CHECK.KILLAURA.B} is set
+    format slot 7 of player with lime wool named "&3KillAura &7(C)" to run [make player execute command "/flagtoggle KillAura C"] if {GUARD.CHECK.KILLAURA.c} is set
+    format slot 7 of player with gray wool named "&3KillAura &7(C)" to run [make player execute command "/flagtoggle KillAura C"] if {GUARD.CHECK.KILLAURA.c} is not set
+    format slot 8 of player with lime wool named "&3Reach &7(A)" to run [make player execute command "/flagtoggle Reach A"] if {GUARD.CHECK.REACH.A} is not set
+    format slot 8 of player with gray wool named "&3Reach &7(A)" to run [make player execute command "/flagtoggle Reach A"] if {GUARD.CHECK.REACH.A} is set
+    format slot 9 of player with lime wool named "&3Reach &7(B)" to run [make player execute command "/flagtoggle Reach B"] if {GUARD.CHECK.REACH.B} is not set
+    format slot 9 of player with gray wool named "&3Reach &7(B)" to run [make player execute command "/flagtoggle Reach B"] if {GUARD.CHECK.REACH.B} is set
+    format slot 10 of player with lime wool named "&3Reach &7(C)" to run [make player execute command "/flagtoggle Reach C"] if {GUARD.CHECK.REACH.C} is not set
+    format slot 10 of player with gray wool named "&3Reach &7(C)" to run [make player execute command "/flagtoggle Reach C"] if {GUARD.CHECK.REACH.C} is set
+    format slot 11 of player with lime wool named "&3AutoClicker &7(A)" to run [make player execute command "/flagtoggle AUTOCLICKER A"] if {GUARD.CHECK.AUTOCLICKER.A} is not set
+    format slot 11 of player with gray wool named "&3AutoClicker &7(A)" to run [make player execute command "/flagtoggle AUTOCLICKER A"] if {GUARD.CHECK.AUTOCLICKER.A} is set
+    format slot 12 of player with lime wool named "&3AutoClicker &7(B)" to run [make player execute command "/flagtoggle AUTOCLICKER B"] if {GUARD.CHECK.AUTOCLICKER.B} is not set
+    format slot 12 of player with gray wool named "&3AutoClicker &7(B)" to run [make player execute command "/flagtoggle AUTOCLICKER B"] if {GUARD.CHECK.AUTOCLICKER.B} is set
+    format slot 13 of player with lime wool named "&3FastClimb &7(A)" to run [make player execute command "/flagtoggle FastClimb A"] if {GUARD.CHECK.FASTCLIMB.A} is not set
+    format slot 13 of player with gray wool named "&3FastClimb &7(A)" to run [make player execute command "/flagtoggle FastClimb A"] if {GUARD.CHECK.FASTCLIMB.A} is set
+    format slot 14 of player with lime wool named "&3Motion &7(A-1)" to run [make player execute command "/flagtoggle Motion A-1"] if {GUARD.CHECK.MOTION.A-1} is not set
+    format slot 14 of player with gray wool named "&3Motion &7(A-1)" to run [make player execute command "/flagtoggle Motion A-1"] if {GUARD.CHECK.MOTION.A-1} is set
+    format slot 15 of player with lime wool named "&3Motion &7(A-2)" to run [make player execute command "/flagtoggle Motion A-2"] if {GUARD.CHECK.MOTION.A-2} is not set
+    format slot 15 of player with gray wool named "&3Motion &7(A-2)" to run [make player execute command "/flagtoggle Motion A-2"] if {GUARD.CHECK.MOTION.A-2} is set
+    format slot 16 of player with lime wool named "&3Motion &7(A-3)" to run [make player execute command "/flagtoggle Motion A-3"] if {GUARD.CHECK.MOTION.A-3} is not set
+    format slot 16 of player with gray wool named "&3Motion &7(A-3)" to run [make player execute command "/flagtoggle Motion A-3"] if {GUARD.CHECK.MOTION.A-3} is set
+    format slot 17 of player with lime wool named "&3Motion &7(A-4)" to run [make player execute command "/flagtoggle Motion A-4"] if {GUARD.CHECK.MOTION.A-4} is not set
+    format slot 17 of player with gray wool named "&3Motion &7(A-4)" to run [make player execute command "/flagtoggle Motion A-4"] if {GUARD.CHECK.MOTION.A-4} is set 
+    format slot 18 of player with lime wool named "&3Motion &7(A-5)" to run [make player execute command "/flagtoggle Motion A-5"] if {GUARD.CHECK.MOTION.A-5} is not set
+    format slot 18 of player with gray wool named "&3Motion &7(A-5)" to run [make player execute command "/flagtoggle Motion A-5"] if {GUARD.CHECK.MOTION.A-5} is set
+    format slot 19 of player with lime wool named "&3Motion &7(A-6)" to run [make player execute command "/flagtoggle Motion A-6"] if {GUARD.CHECK.MOTION.A-6} is not set 
+    format slot 19 of player with gray wool named "&3Motion &7(A-6)" to run [make player execute command "/flagtoggle Motion A-6"] if {GUARD.CHECK.MOTION.A-6} is set
+    format slot 20 of player with lime wool named "&3Motion &7(A-7)" to run [make player execute command "/flagtoggle Motion A-7"] if {GUARD.CHECK.MOTION.A-7} is not set
+    format slot 20 of player with gray wool named "&3Motion &7(A-7)" to run [make player execute command "/flagtoggle Motion A-7"] if {GUARD.CHECK.MOTION.A-7} is set
+    format slot 21 of player with lime wool named "&3Motion &7(A-8)" to run [make player execute command "/flagtoggle Motion A-8"] if {GUARD.CHECK.MOTION.A-8} is not set
+    format slot 21 of player with gray wool named "&3Motion &7(A-8)" to run [make player execute command "/flagtoggle Motion A-8"] if {GUARD.CHECK.MOTION.A-8} is set
+    format slot 22 of player with lime wool named "&3Motion &7(A-9)" to run [make player execute command "/flagtoggle Motion A-9"] if {GUARD.CHECK.MOTION.A-9} is not set
+    format slot 22 of player with gray wool named "&3Motion &7(A-9)" to run [make player execute command "/flagtoggle Motion A-9"] if {GUARD.CHECK.MOTION.A-9} is set
+    format slot 23 of player with lime wool named "&3Motion &7(B-1)" to run [make player execute command "/flagtoggle Motion B-1"] if {GUARD.CHECK.MOTION.B-1} is not set
+    format slot 23 of player with gray wool named "&3Motion &7(B-1)" to run [make player execute command "/flagtoggle Motion B-1"] if {GUARD.CHECK.MOTION.B-1} is set
+    format slot 24 of player with lime wool named "&3Motion &7(B-2)" to run [make player execute command "/flagtoggle Motion B-2"] if {GUARD.CHECK.MOTION.B-2} is not set
+    format slot 24 of player with gray wool named "&3Motion &7(B-2)" to run [make player execute command "/flagtoggle Motion B-2"] if {GUARD.CHECK.MOTION.B-2} is set
+    format slot 25 of player with lime wool named "&3Motion &7(B-3)" to run [make player execute command "/flagtoggle Motion B-3"] if {GUARD.CHECK.MOTION.B-3} is not set
+    format slot 25 of player with gray wool named "&3Motion &7(B-3)" to run [make player execute command "/flagtoggle Motion B-3"] if {GUARD.CHECK.MOTION.B-3} is set
+    format slot 26 of player with lime wool named "&3NoFall &7(A)" to run [make player execute command "/flagtoggle NoFall A"] if {GUARD.CHECK.NOFALL.A} is not set 
+    format slot 26 of player with gray wool named "&3NoFall &7(A)" to run [make player execute command "/flagtoggle NoFall A"] if {GUARD.CHECK.NOFALL.A} is set
+    format slot 27 of player with lime wool named "&3Inventory &7(A)" to run [make player execute command "/flagtoggle Inventory A"] if {GUARD.CHECK.INVENTORY.A} is not set
+    format slot 27 of player with gray wool named "&3Inventory &7(A)" to run [make player execute command "/flagtoggle Inventory A"] if {GUARD.CHECK.INVENTORY.A} is set
+    format slot 28 of player with lime wool named "&3Inventory &7(B)" to run [make player execute command "/flagtoggle Inventory B"] if {GUARD.CHECK.INVENTORY.B} is not set
+    format slot 28 of player with gray wool named "&3Inventory &7(B)" to run [make player execute command "/flagtoggle Inventory B"] if {GUARD.CHECK.INVENTORY.B} is set
+    format slot 29 of player with lime wool named "&3Inventory &7(C)" to run [make player execute command "/flagtoggle Inventory C"] if {GUARD.CHECK.INVENTORY.C} is not set
+    format slot 29 of player with gray wool named "&3Inventory &7(C)" to run [make player execute command "/flagtoggle Inventory C"] if {GUARD.CHECK.INVENTORY.C} is set
+    format slot 30 of player with lime wool named "&3Inventory &7(D)" to run [make player execute command "/flagtoggle Inventory D"] if {GUARD.CHECK.INVENTORY.D} is not set
+    format slot 30 of player with gray wool named "&3Inventory &7(D)" to run [make player execute command "/flagtoggle Inventory D"] if {GUARD.CHECK.INVENTORY.D} is set
+    format slot 31 of player with lime wool named "&3Jesus &7(A)" to run [make player execute command "/flagtoggle Jesus A"] if {GUARD.CHECK.JESUS.A} is not set
+    format slot 31 of player with gray wool named "&3Jesus &7(A)" to run [make player execute command "/flagtoggle Jesus A"] if {GUARD.CHECK.JESUS.A} is set
+    format slot 32 of player with lime wool named "&3Jesus &7(B)" to run [make player execute command "/flagtoggle Jesus B"] if {GUARD.CHECK.JESUS.B} is not set 
+    format slot 32 of player with gray wool named "&3Jesus &7(B)" to run [make player execute command "/flagtoggle Jesus B"] if {GUARD.CHECK.JESUS.B} is set
+    format slot 33 of player with lime wool named "&3Jesus &7(C)" to run [make player execute command "/flagtoggle Jesus C"] if {GUARD.CHECK.JESUS.C} is not set
+    format slot 33 of player with gray wool named "&3Jesus &7(C)" to run [make player execute command "/flagtoggle Jesus C"] if {GUARD.CHECK.JESUS.C} is set
+    format slot 34 of player with lime wool named "&3Speed &7(A-1)" to run [make player execute command "/flagtoggle Speed A-1"] if {GUARD.CHECK.SPEED.A-1} is not set
+    format slot 34 of player with gray wool named "&3Speed &7(A-1)" to run [make player execute command "/flagtoggle Speed A-1"] if {GUARD.CHECK.SPEED.A-1} is set
+    format slot 35 of player with lime wool named "&3Speed &7(A-2)" to run [make player execute command "/flagtoggle Speed A-2"] if {GUARD.CHECK.SPEED.A-2} is not set
+    format slot 35 of player with gray wool named "&3Speed &7(A-2)" to run [make player execute command "/flagtoggle Speed A-2"] if {GUARD.CHECK.SPEED.A-2} is set
+    format slot 36 of player with lime wool named "&3Speed &7(A-3)" to run [make player execute command "/flagtoggle Speed A-3"] if {GUARD.CHECK.SPEED.A-3} is not set
+    format slot 36 of player with gray wool named "&3Speed &7(A-3)" to run [make player execute command "/flagtoggle Speed A-3"] if {GUARD.CHECK.SPEED.A-3} is set
+    format slot 37 of player with lime wool named "&3Speed &7(B-1)" to run [make player execute command "/flagtoggle Speed B-1"] if {GUARD.CHECK.SPEED.B-1} is not set
+    format slot 37 of player with gray wool named "&3Speed &7(B-1)" to run [make player execute command "/flagtoggle Speed B-1"] if {GUARD.CHECK.SPEED.B-1} is set
+    format slot 38 of player with lime wool named "&3Speed &7(B-2)" to run [make player execute command "/flagtoggle Speed B-2"] if {GUARD.CHECK.SPEED.B-2} is not set
+    format slot 38 of player with gray wool named "&3Speed &7(B-2)" to run [make player execute command "/flagtoggle Speed B-2"] if {GUARD.CHECK.SPEED.B-2} is set
+    format slot 39 of player with lime wool named "&3Speed &7(B-3)" to run [make player execute command "/flagtoggle Speed B-3"] if {GUARD.CHECK.SPEED.B-3} is not set
+    format slot 39 of player with gray wool named "&3Speed &7(B-3)" to run [make player execute command "/flagtoggle Speed B-3"] if {GUARD.CHECK.SPEED.B-3} is set
+    format slot 40 of player with lime wool named "&3Speed &7(B-4)" to run [make player execute command "/flagtoggle Speed B-4"] if {GUARD.CHECK.SPEED.B-4} is not set
+    format slot 40 of player with gray wool named "&3Speed &7(B-4)" to run [make player execute command "/flagtoggle Speed B-4"] if {GUARD.CHECK.SPEED.B-4} is set
+    format slot 41 of player with lime wool named "&3Speed &7(B-5)" to run [make player execute command "/flagtoggle Speed B-5"] if {GUARD.CHECK.SPEED.B-5} is not set
+    format slot 41 of player with gray wool named "&3Speed &7(B-5)" to run [make player execute command "/flagtoggle Speed B-5"] if {GUARD.CHECK.SPEED.B-5} is set
+    format slot 42 of player with lime wool named "&3Speed &7(C-1)" to run [make player execute command "/flagtoggle Speed C-1"] if {GUARD.CHECK.SPEED.C-1} is not set
+    format slot 42 of player with gray wool named "&3Speed &7(C-1)" to run [make player execute command "/flagtoggle Speed C-1"] if {GUARD.CHECK.SPEED.C-1} is set
+    format slot 43 of player with lime wool named "&3Speed &7(C-2)" to run [make player execute command "/flagtoggle Speed C-2"] if {GUARD.CHECK.SPEED.C-2} is not set
+    format slot 43 of player with gray wool named "&3Speed &7(C-2)" to run [make player execute command "/flagtoggle Speed C-2"] if {GUARD.CHECK.SPEED.C-2} is set
+    format slot 44 of player with lime wool named "&3Speed &7(C-3)" to run [make player execute command "/flagtoggle Speed C-3"] if {GUARD.CHECK.SPEED.C-3} is not set
+    format slot 44 of player with gray wool named "&3Speed &7(C-3)" to run [make player execute command "/flagtoggle Speed C-3"] if {GUARD.CHECK.SPEED.C-3} is set
+    format slot 45 of player with lime wool named "&3Speed &7(D-1)" to run [make player execute command "/flagtoggle Speed D-1"] if {GUARD.CHECK.SPEED.D-1} is not set
+    format slot 45 of player with gray wool named "&3Speed &7(D-1)" to run [make player execute command "/flagtoggle Speed D-1"] if {GUARD.CHECK.SPEED.D-1} is set
+    format slot 46 of player with lime wool named "&3Speed &7(D-2)" to run [make player execute command "/flagtoggle Speed D-2"] if {GUARD.CHECK.SPEED.D-2} is not set
+    format slot 46 of player with gray wool named "&3Speed &7(D-2)" to run [make player execute command "/flagtoggle Speed D-2"] if {GUARD.CHECK.SPEED.D-2} is set
+    format slot 47 of player with lime wool named "&3Speed &7(D-3)" to run [make player execute command "/flagtoggle Speed D-3"] if {GUARD.CHECK.SPEED.D-3} is not set
+    format slot 47 of player with gray wool named "&3Speed &7(D-3)" to run [make player execute command "/flagtoggle Speed D-3"] if {GUARD.CHECK.SPEED.D-3} is set
+    format slot 48 of player with lime wool named "&3Interact &7(A)" to run [make player execute command "/flagtoggle Interact A"] if {GUARD.CHECK.INTERACT.A} is not set
+    format slot 48 of player with gray wool named "&3Interact &7(A)" to run [make player execute command "/flagtoggle Interact A"] if {GUARD.CHECK.INTERACT.A} is set
+    format slot 49 of player with lime wool named "&3Interact &7(B)" to run [make player execute command "/flagtoggle Interact B"] if {GUARD.CHECK.INTERACT.B} is not set
+    format slot 49 of player with gray wool named "&3Interact &7(B)" to run [make player execute command "/flagtoggle Interact B"] if {GUARD.CHECK.INTERACT.B} is set
+    format slot 50 of player with lime wool named "&3Interact &7(C)" to run [make player execute command "/flagtoggle Interact C"] if {GUARD.CHECK.INTERACT.C} is not set
+    format slot 50 of player with gray wool named "&3Interact &7(C)" to run [make player execute command "/flagtoggle Interact C"] if {GUARD.CHECK.INTERACT.C} is set
+    format slot 51 of player with lime wool named "&3NoSlow &7(A)" to run [make player execute command "/flagtoggle NoSlow A"] if {GUARD.CHECK.NOSLOW.A} is not set
+    format slot 51 of player with gray wool named "&3NoSlow &7(A)" to run [make player execute command "/flagtoggle NoSlow A"] if {GUARD.CHECK.NOSLOW.A} is set
+    format slot 52 of player with lime wool named "&3NoWeb &7(A)" to run [make player execute command "/flagtoggle NoWeb A"] if {GUARD.CHECK.NOWEB.A} is not set
+    format slot 52 of player with gray wool named "&3NoWeb &7(A)" to run [make player execute command "/flagtoggle NoWeb A"] if {GUARD.CHECK.NOWEB.A} is set
+    format slot 53 of player with paper named "&7&oNext page" to run [make player execute command "/§vgui12"]
+command /§vgui12: 
+  trigger:
+    close player's inventory
+    wait 1 ticks
+    open chest with 6 rows named "&3&lGUARD &8» &3&lGUI &8» &3&lChecks" to player
+    format slot 0 of player with lime wool named "&3Timer &7(A)" to run [make player execute command "/flagtoggle Timer A"] if {GUARD.CHECK.TIMER.A} is not set
+    format slot 0 of player with gray wool named "&3Timer &7(A)" to run [make player execute command "/flagtoggle Timer A"] if {GUARD.CHECK.TIMER.A} is set
+    format slot 1 of player with lime wool named "&3Velocity &7(A)" to run [make player execute command "/flagtoggle Velocity A"] if {GUARD.CHECK.VELOCITY.A} is not set
+    format slot 1 of player with gray wool named "&3Velocity &7(A)" to run [make player execute command "/flagtoggle Velocity A"] if {GUARD.CHECK.VELOCITY.A} is set
+    format slot 45 of player with paper named "&7&oPrevious page" to run [make player execute command "/§vgui1"]
+command /flagtoggle [<text>] [<text>]:
+   permission: {@MainPermission}
+   trigger:
+      if {GUARD.CHECK.%arg 1%.%arg 2%} is not set:
+         set {GUARD.CHECK.%arg 1%.%arg 2%} to true
+         make player execute command "/§vgui1"
+         stop
+      if {GUARD.CHECK.%arg 1%.%arg 2%} is set:
+         delete {GUARD.CHECK.%arg 1%.%arg 2%}
+         make player execute command "/§vgui1"
+command /§vgui2: 
+  trigger:
+    close player's inventory
+    wait 1 ticks
+    open chest with 6 rows named "&3&lGUARD &8» &3&lGUI &8» &3&lAutoPunishements" to player
+    format slot 0 of player with lime wool named "&3Aim &7(A-1)" to run [make player execute command "/§vautopunishtoggle Aim A-1"] if {GUARD.CHECK.AIM.A-1} is not set
+    format slot 0 of player with gray wool named "&3Aim &7(A-1)" to run [make player execute command "/§vautopunishtoggle Aim A-1"] if {GUARD.CHECK.AIM.A-1} is set
+    format slot 1 of player with lime wool named "&3Aim &7(A-2)" to run [make player execute command "/§vautopunishtoggle Aim A-2"] if {GUARD.CHECK.AIM.A-2} is not set
+    format slot 1 of player with gray wool named "&3Aim &7(A-2)" to run [make player execute command "/§vautopunishtoggle Aim A-2"] if {GUARD.CHECK.AIM.A-2} is set
+    format slot 2 of player with lime wool named "&3Aim &7(A-3)" to run [make player execute command "/§vautopunishtoggle Aim A-3"] if {GUARD.CHECK.AIM.A-3} is not set
+    format slot 2 of player with gray wool named "&3Aim &7(A-3)" to run [make player execute command "/§vautopunishtoggle Aim A-3"] if {GUARD.CHECK.AIM.A-3} is set
+    format slot 3 of player with lime wool named "&3Aim &7(A-4)" to run [make player execute command "/§vautopunishtoggle Aim A-4"] if {GUARD.CHECK.AIM.A-4} is not set
+    format slot 3 of player with gray wool named "&3Aim &7(A-4)" to run [make player execute command "/§vautopunishtoggle Aim A-4"] if {GUARD.CHECK.AIM.A-4} is set
+    format slot 4 of player with lime wool named "&3Aim &7(A-5)" to run [make player execute command "/§vautopunishtoggle Aim A-5"] if {GUARD.CHECK.AIM.A-5} is not set
+    format slot 4 of player with gray wool named "&3Aim &7(A-5)" to run [make player execute command "/§vautopunishtoggle Aim A-5"] if {GUARD.CHECK.AIM.A-5} is set
+    format slot 5 of player with lime wool named "&3KillAura &7(A)" to run [make player execute command "/§vautopunishtoggle KillAura A"] if {GUARD.CHECK.KILLAURA.A} is not set
+    format slot 5 of player with gray wool named "&3KillAura &7(A)" to run [make player execute command "/§vautopunishtoggle KillAura A"] if {GUARD.CHECK.KILLAURA.A} is set
+    format slot 6 of player with lime wool named "&3KillAura &7(B)" to run [make player execute command "/§vautopunishtoggle KillAura B"] if {GUARD.CHECK.KILLAURA.B} is not set
+    format slot 6 of player with lime wool named "&3KillAura &7(B)" to run [make player execute command "/§vautopunishtoggle KillAura B"] if {GUARD.CHECK.KILLAURA.B} is set
+    format slot 7 of player with lime wool named "&3KillAura &7(C)" to run [make player execute command "/§vautopunishtoggle KillAura C"] if {GUARD.CHECK.KILLAURA.c} is set
+    format slot 7 of player with gray wool named "&3KillAura &7(C)" to run [make player execute command "/§vautopunishtoggle KillAura C"] if {GUARD.CHECK.KILLAURA.c} is not set
+    format slot 8 of player with lime wool named "&3Reach &7(A)" to run [make player execute command "/§vautopunishtoggle Reach A"] if {GUARD.CHECK.REACH.A} is not set
+    format slot 8 of player with gray wool named "&3Reach &7(A)" to run [make player execute command "/§vautopunishtoggle Reach A"] if {GUARD.CHECK.REACH.A} is set
+    format slot 9 of player with lime wool named "&3Reach &7(B)" to run [make player execute command "/§vautopunishtoggle Reach B"] if {GUARD.CHECK.REACH.B} is not set
+    format slot 9 of player with gray wool named "&3Reach &7(B)" to run [make player execute command "/§vautopunishtoggle Reach B"] if {GUARD.CHECK.REACH.B} is set
+    format slot 10 of player with lime wool named "&3Reach &7(C)" to run [make player execute command "/§vautopunishtoggle Reach C"] if {GUARD.CHECK.REACH.C} is not set
+    format slot 10 of player with gray wool named "&3Reach &7(C)" to run [make player execute command "/§vautopunishtoggle Reach C"] if {GUARD.CHECK.REACH.C} is set
+    format slot 11 of player with lime wool named "&3AutoClicker &7(A)" to run [make player execute command "/§vautopunishtoggle AUTOCLICKER A"] if {GUARD.CHECK.AUTOCLICKER.A} is not set
+    format slot 11 of player with gray wool named "&3AutoClicker &7(A)" to run [make player execute command "/§vautopunishtoggle AUTOCLICKER A"] if {GUARD.CHECK.AUTOCLICKER.A} is set
+    format slot 12 of player with lime wool named "&3AutoClicker &7(B)" to run [make player execute command "/§vautopunishtoggle AUTOCLICKER B"] if {GUARD.CHECK.AUTOCLICKER.B} is not set
+    format slot 12 of player with gray wool named "&3AutoClicker &7(B)" to run [make player execute command "/§vautopunishtoggle AUTOCLICKER B"] if {GUARD.CHECK.AUTOCLICKER.B} is set
+    format slot 13 of player with lime wool named "&3FastClimb &7(A)" to run [make player execute command "/§vautopunishtoggle FastClimb A"] if {GUARD.CHECK.FASTCLIMB.A} is not set
+    format slot 13 of player with gray wool named "&3FastClimb &7(A)" to run [make player execute command "/§vautopunishtoggle FastClimb A"] if {GUARD.CHECK.FASTCLIMB.A} is set
+    format slot 14 of player with lime wool named "&3Motion &7(A-1)" to run [make player execute command "/§vautopunishtoggle Motion A-1"] if {GUARD.CHECK.MOTION.A-1} is not set
+    format slot 14 of player with gray wool named "&3Motion &7(A-1)" to run [make player execute command "/§vautopunishtoggle Motion A-1"] if {GUARD.CHECK.MOTION.A-1} is set
+    format slot 15 of player with lime wool named "&3Motion &7(A-2)" to run [make player execute command "/§vautopunishtoggle Motion A-2"] if {GUARD.CHECK.MOTION.A-2} is not set
+    format slot 15 of player with gray wool named "&3Motion &7(A-2)" to run [make player execute command "/§vautopunishtoggle Motion A-2"] if {GUARD.CHECK.MOTION.A-2} is set
+    format slot 16 of player with lime wool named "&3Motion &7(A-3)" to run [make player execute command "/§vautopunishtoggle Motion A-3"] if {GUARD.CHECK.MOTION.A-3} is not set
+    format slot 16 of player with gray wool named "&3Motion &7(A-3)" to run [make player execute command "/§vautopunishtoggle Motion A-3"] if {GUARD.CHECK.MOTION.A-3} is set
+    format slot 17 of player with lime wool named "&3Motion &7(A-4)" to run [make player execute command "/§vautopunishtoggle Motion A-4"] if {GUARD.CHECK.MOTION.A-4} is not set
+    format slot 17 of player with gray wool named "&3Motion &7(A-4)" to run [make player execute command "/§vautopunishtoggle Motion A-4"] if {GUARD.CHECK.MOTION.A-4} is set 
+    format slot 18 of player with lime wool named "&3Motion &7(A-5)" to run [make player execute command "/§vautopunishtoggle Motion A-5"] if {GUARD.CHECK.MOTION.A-5} is not set
+    format slot 18 of player with gray wool named "&3Motion &7(A-5)" to run [make player execute command "/§vautopunishtoggle Motion A-5"] if {GUARD.CHECK.MOTION.A-5} is set
+    format slot 19 of player with lime wool named "&3Motion &7(A-6)" to run [make player execute command "/§vautopunishtoggle Motion A-6"] if {GUARD.CHECK.MOTION.A-6} is not set 
+    format slot 19 of player with gray wool named "&3Motion &7(A-6)" to run [make player execute command "/§vautopunishtoggle Motion A-6"] if {GUARD.CHECK.MOTION.A-6} is set
+    format slot 20 of player with lime wool named "&3Motion &7(A-7)" to run [make player execute command "/§vautopunishtoggle Motion A-7"] if {GUARD.CHECK.MOTION.A-7} is not set
+    format slot 20 of player with gray wool named "&3Motion &7(A-7)" to run [make player execute command "/§vautopunishtoggle Motion A-7"] if {GUARD.CHECK.MOTION.A-7} is set
+    format slot 21 of player with lime wool named "&3Motion &7(A-8)" to run [make player execute command "/§vautopunishtoggle Motion A-8"] if {GUARD.CHECK.MOTION.A-8} is not set
+    format slot 21 of player with gray wool named "&3Motion &7(A-8)" to run [make player execute command "/§vautopunishtoggle Motion A-8"] if {GUARD.CHECK.MOTION.A-8} is set
+    format slot 22 of player with lime wool named "&3Motion &7(A-9)" to run [make player execute command "/§vautopunishtoggle Motion A-9"] if {GUARD.CHECK.MOTION.A-9} is not set
+    format slot 22 of player with gray wool named "&3Motion &7(A-9)" to run [make player execute command "/§vautopunishtoggle Motion A-9"] if {GUARD.CHECK.MOTION.A-9} is set
+    format slot 23 of player with lime wool named "&3Motion &7(B-1)" to run [make player execute command "/§vautopunishtoggle Motion B-1"] if {GUARD.CHECK.MOTION.B-1} is not set
+    format slot 23 of player with gray wool named "&3Motion &7(B-1)" to run [make player execute command "/§vautopunishtoggle Motion B-1"] if {GUARD.CHECK.MOTION.B-1} is set
+    format slot 24 of player with lime wool named "&3Motion &7(B-2)" to run [make player execute command "/§vautopunishtoggle Motion B-2"] if {GUARD.CHECK.MOTION.B-2} is not set
+    format slot 24 of player with gray wool named "&3Motion &7(B-2)" to run [make player execute command "/§vautopunishtoggle Motion B-2"] if {GUARD.CHECK.MOTION.B-2} is set
+    format slot 25 of player with lime wool named "&3Motion &7(B-3)" to run [make player execute command "/§vautopunishtoggle Motion B-3"] if {GUARD.CHECK.MOTION.B-3} is not set
+    format slot 25 of player with gray wool named "&3Motion &7(B-3)" to run [make player execute command "/§vautopunishtoggle Motion B-3"] if {GUARD.CHECK.MOTION.B-3} is set
+    format slot 26 of player with lime wool named "&3NoFall &7(A)" to run [make player execute command "/§vautopunishtoggle NoFall A"] if {GUARD.CHECK.NOFALL.A} is not set 
+    format slot 26 of player with gray wool named "&3NoFall &7(A)" to run [make player execute command "/§vautopunishtoggle NoFall A"] if {GUARD.CHECK.NOFALL.A} is set
+    format slot 27 of player with lime wool named "&3Inventory &7(A)" to run [make player execute command "/§vautopunishtoggle Inventory A"] if {GUARD.CHECK.INVENTORY.A} is not set
+    format slot 27 of player with gray wool named "&3Inventory &7(A)" to run [make player execute command "/§vautopunishtoggle Inventory A"] if {GUARD.CHECK.INVENTORY.A} is set
+    format slot 28 of player with lime wool named "&3Inventory &7(B)" to run [make player execute command "/§vautopunishtoggle Inventory B"] if {GUARD.CHECK.INVENTORY.B} is not set
+    format slot 28 of player with gray wool named "&3Inventory &7(B)" to run [make player execute command "/§vautopunishtoggle Inventory B"] if {GUARD.CHECK.INVENTORY.B} is set
+    format slot 29 of player with lime wool named "&3Inventory &7(C)" to run [make player execute command "/§vautopunishtoggle Inventory C"] if {GUARD.CHECK.INVENTORY.C} is not set
+    format slot 29 of player with gray wool named "&3Inventory &7(C)" to run [make player execute command "/§vautopunishtoggle Inventory C"] if {GUARD.CHECK.INVENTORY.C} is set
+    format slot 30 of player with lime wool named "&3Inventory &7(D)" to run [make player execute command "/§vautopunishtoggle Inventory D"] if {GUARD.CHECK.INVENTORY.D} is not set
+    format slot 30 of player with gray wool named "&3Inventory &7(D)" to run [make player execute command "/§vautopunishtoggle Inventory D"] if {GUARD.CHECK.INVENTORY.D} is set
+    format slot 31 of player with lime wool named "&3Jesus &7(A)" to run [make player execute command "/§vautopunishtoggle Jesus A"] if {GUARD.CHECK.JESUS.A} is not set
+    format slot 31 of player with gray wool named "&3Jesus &7(A)" to run [make player execute command "/§vautopunishtoggle Jesus A"] if {GUARD.CHECK.JESUS.A} is set
+    format slot 32 of player with lime wool named "&3Jesus &7(B)" to run [make player execute command "/§vautopunishtoggle Jesus B"] if {GUARD.CHECK.JESUS.B} is not set 
+    format slot 32 of player with gray wool named "&3Jesus &7(B)" to run [make player execute command "/§vautopunishtoggle Jesus B"] if {GUARD.CHECK.JESUS.B} is set
+    format slot 33 of player with lime wool named "&3Jesus &7(C)" to run [make player execute command "/§vautopunishtoggle Jesus C"] if {GUARD.CHECK.JESUS.C} is not set
+    format slot 33 of player with gray wool named "&3Jesus &7(C)" to run [make player execute command "/§vautopunishtoggle Jesus C"] if {GUARD.CHECK.JESUS.C} is set
+    format slot 34 of player with lime wool named "&3Speed &7(A-1)" to run [make player execute command "/§vautopunishtoggle Speed A-1"] if {GUARD.CHECK.SPEED.A-1} is not set
+    format slot 34 of player with gray wool named "&3Speed &7(A-1)" to run [make player execute command "/§vautopunishtoggle Speed A-1"] if {GUARD.CHECK.SPEED.A-1} is set
+    format slot 35 of player with lime wool named "&3Speed &7(A-2)" to run [make player execute command "/§vautopunishtoggle Speed A-2"] if {GUARD.CHECK.SPEED.A-2} is not set
+    format slot 35 of player with gray wool named "&3Speed &7(A-2)" to run [make player execute command "/§vautopunishtoggle Speed A-2"] if {GUARD.CHECK.SPEED.A-2} is set
+    format slot 36 of player with lime wool named "&3Speed &7(A-3)" to run [make player execute command "/§vautopunishtoggle Speed A-3"] if {GUARD.CHECK.SPEED.A-3} is not set
+    format slot 36 of player with gray wool named "&3Speed &7(A-3)" to run [make player execute command "/§vautopunishtoggle Speed A-3"] if {GUARD.CHECK.SPEED.A-3} is set
+    format slot 37 of player with lime wool named "&3Speed &7(B-1)" to run [make player execute command "/§vautopunishtoggle Speed B-1"] if {GUARD.CHECK.SPEED.B-1} is not set
+    format slot 37 of player with gray wool named "&3Speed &7(B-1)" to run [make player execute command "/§vautopunishtoggle Speed B-1"] if {GUARD.CHECK.SPEED.B-1} is set
+    format slot 38 of player with lime wool named "&3Speed &7(B-2)" to run [make player execute command "/§vautopunishtoggle Speed B-2"] if {GUARD.CHECK.SPEED.B-2} is not set
+    format slot 38 of player with gray wool named "&3Speed &7(B-2)" to run [make player execute command "/§vautopunishtoggle Speed B-2"] if {GUARD.CHECK.SPEED.B-2} is set
+    format slot 39 of player with lime wool named "&3Speed &7(B-3)" to run [make player execute command "/§vautopunishtoggle Speed B-3"] if {GUARD.CHECK.SPEED.B-3} is not set
+    format slot 39 of player with gray wool named "&3Speed &7(B-3)" to run [make player execute command "/§vautopunishtoggle Speed B-3"] if {GUARD.CHECK.SPEED.B-3} is set
+    format slot 40 of player with lime wool named "&3Speed &7(B-4)" to run [make player execute command "/§vautopunishtoggle Speed B-4"] if {GUARD.CHECK.SPEED.B-4} is not set
+    format slot 40 of player with gray wool named "&3Speed &7(B-4)" to run [make player execute command "/§vautopunishtoggle Speed B-4"] if {GUARD.CHECK.SPEED.B-4} is set
+    format slot 41 of player with lime wool named "&3Speed &7(B-5)" to run [make player execute command "/§vautopunishtoggle Speed B-5"] if {GUARD.CHECK.SPEED.B-5} is not set
+    format slot 41 of player with gray wool named "&3Speed &7(B-5)" to run [make player execute command "/§vautopunishtoggle Speed B-5"] if {GUARD.CHECK.SPEED.B-5} is set
+    format slot 42 of player with lime wool named "&3Speed &7(C-1)" to run [make player execute command "/§vautopunishtoggle Speed C-1"] if {GUARD.CHECK.SPEED.C-1} is not set
+    format slot 42 of player with gray wool named "&3Speed &7(C-1)" to run [make player execute command "/§vautopunishtoggle Speed C-1"] if {GUARD.CHECK.SPEED.C-1} is set
+    format slot 43 of player with lime wool named "&3Speed &7(C-2)" to run [make player execute command "/§vautopunishtoggle Speed C-2"] if {GUARD.CHECK.SPEED.C-2} is not set
+    format slot 43 of player with gray wool named "&3Speed &7(C-2)" to run [make player execute command "/§vautopunishtoggle Speed C-2"] if {GUARD.CHECK.SPEED.C-2} is set
+    format slot 44 of player with lime wool named "&3Speed &7(C-3)" to run [make player execute command "/§vautopunishtoggle Speed C-3"] if {GUARD.CHECK.SPEED.C-3} is not set
+    format slot 44 of player with gray wool named "&3Speed &7(C-3)" to run [make player execute command "/§vautopunishtoggle Speed C-3"] if {GUARD.CHECK.SPEED.C-3} is set
+    format slot 45 of player with lime wool named "&3Speed &7(D-1)" to run [make player execute command "/§vautopunishtoggle Speed D-1"] if {GUARD.CHECK.SPEED.D-1} is not set
+    format slot 45 of player with gray wool named "&3Speed &7(D-1)" to run [make player execute command "/§vautopunishtoggle Speed D-1"] if {GUARD.CHECK.SPEED.D-1} is set
+    format slot 46 of player with lime wool named "&3Speed &7(D-2)" to run [make player execute command "/§vautopunishtoggle Speed D-2"] if {GUARD.CHECK.SPEED.D-2} is not set
+    format slot 46 of player with gray wool named "&3Speed &7(D-2)" to run [make player execute command "/§vautopunishtoggle Speed D-2"] if {GUARD.CHECK.SPEED.D-2} is set
+    format slot 47 of player with lime wool named "&3Speed &7(D-3)" to run [make player execute command "/§vautopunishtoggle Speed D-3"] if {GUARD.CHECK.SPEED.D-3} is not set
+    format slot 47 of player with gray wool named "&3Speed &7(D-3)" to run [make player execute command "/§vautopunishtoggle Speed D-3"] if {GUARD.CHECK.SPEED.D-3} is set
+    format slot 48 of player with lime wool named "&3Interact &7(A)" to run [make player execute command "/§vautopunishtoggle Interact A"] if {GUARD.CHECK.INTERACT.A} is not set
+    format slot 48 of player with gray wool named "&3Interact &7(A)" to run [make player execute command "/§vautopunishtoggle Interact A"] if {GUARD.CHECK.INTERACT.A} is set
+    format slot 49 of player with lime wool named "&3Interact &7(B)" to run [make player execute command "/§vautopunishtoggle Interact B"] if {GUARD.CHECK.INTERACT.B} is not set
+    format slot 49 of player with gray wool named "&3Interact &7(B)" to run [make player execute command "/§vautopunishtoggle Interact B"] if {GUARD.CHECK.INTERACT.B} is set
+    format slot 50 of player with lime wool named "&3Interact &7(C)" to run [make player execute command "/§vautopunishtoggle Interact C"] if {GUARD.CHECK.INTERACT.C} is not set
+    format slot 50 of player with gray wool named "&3Interact &7(C)" to run [make player execute command "/§vautopunishtoggle Interact C"] if {GUARD.CHECK.INTERACT.C} is set
+    format slot 51 of player with lime wool named "&3NoSlow &7(A)" to run [make player execute command "/§vautopunishtoggle NoSlow A"] if {GUARD.CHECK.NOSLOW.A} is not set
+    format slot 51 of player with gray wool named "&3NoSlow &7(A)" to run [make player execute command "/§vautopunishtoggle NoSlow A"] if {GUARD.CHECK.NOSLOW.A} is set
+    format slot 52 of player with lime wool named "&3NoWeb &7(A)" to run [make player execute command "/§vautopunishtoggle NoWeb A"] if {GUARD.CHECK.NOWEB.A} is not set
+    format slot 52 of player with gray wool named "&3NoWeb &7(A)" to run [make player execute command "/§vautopunishtoggle NoWeb A"] if {GUARD.CHECK.NOWEB.A} is set
+    format slot 53 of player with paper named "&7&oNext page" to run [make player execute command "/§vgui22"]
+command /§vgui22: 
+  trigger:
+    close player's inventory
+    wait 1 ticks
+    open chest with 6 rows named "&3&lGUARD &8» &3&lGUI &8» &3&lAutoPunishements" to player
+    format slot 0 of player with lime wool named "&3Timer &7(A)" to run [make player execute command "/§vautopunishtoggle Timer A"] if {GUARD.CHECK.TIMER.A} is not set
+    format slot 0 of player with gray wool named "&3Timer &7(A)" to run [make player execute command "/§vautopunishtoggle Timer A"] if {GUARD.CHECK.TIMER.A} is set
+    format slot 1 of player with lime wool named "&3Velocity &7(A)" to run [make player execute command "/§vautopunishtoggle Velocity A"] if {GUARD.CHECK.VELOCITY.A} is not set
+    format slot 1 of player with gray wool named "&3Velocity &7(A)" to run [make player execute command "/§vautopunishtoggle Velocity A"] if {GUARD.CHECK.VELOCITY.A} is set
+    format slot 45 of player with paper named "&7&oPrevious page" to run [make player execute command "/§vgui2"]
+command /§vautopunishtoggle [<text>] [<text>]:
+   permission: {@MainPermission}
+   trigger:
+      if {GUARD.PUNISH.%arg 1%.%arg 2%} is not set:
+         set {GUARD.PUNISH.%arg 1%.%arg 2%} to true
+         make player execute command "/§vgui2"
+         stop
+      if {GUARD.PUNISH.%arg 1%.%arg 2%} is set:
+         delete {GUARD.PUNISH.%arg 1%.%arg 2%}
+         make player execute command "/§vgui2"

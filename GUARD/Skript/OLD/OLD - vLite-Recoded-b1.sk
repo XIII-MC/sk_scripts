@@ -1,0 +1,608 @@
+#-------------------------------------------
+#                G U A R D
+#            A N T I C H E A T
+#              R E C O D E D
+#             A U T H O R : XIII___
+#-------------------------------------------
+
+options:
+   guard: &9&lGUARD &8»&f
+   Version: Lite-Recoded-b1
+   Ban: false #IF KICK IS TRUE MAKE BAN FALSE !
+   BanMsg: &c%arg 2%&f has been removed for &cUnfair Advantage
+   Kick: false #IF BAN IS TRUE MAKE KICK FALSE !
+   KickMsg: &c%arg 2%&f has been removed for &cUnfair Advantage
+   LagBackInstant: true 
+   LagBack: true
+   LagBackVL: 3
+   PunishVL: 25
+   DoubleCheck: true
+   MainPermission: GUARD.commands
+
+#--------------------------------------------------------
+#
+#           A N T I   J E S U S (WaterWalk)
+#
+#--------------------------------------------------------
+
+
+
+#--------------------------------------------------------
+#
+#               A N T I   F L I G H T
+#
+#--------------------------------------------------------
+
+on any move:
+  set {_loc} to player's location
+  set {GUARD::%player%::LAGBACK} to player's location
+  {%player%::JUMP} is not true
+  player's chestplate is not an elytra
+  gamemode of player is not spectator or creative
+  player's flight mode is false
+  block at player is not cobweb
+  block above player is not cobweb
+  block under player is not cobweb
+  player is not riding
+  set {_find} to player's location
+  set {_count} to 255 - y coordinate of player
+  loop 255 times:
+    if block at {_find} is slime block:
+      stop
+    else:
+      remove 1 from y coordinate of {_find}
+  set {_y} to player's y coordinate
+  set {_y2} to y location of player
+  wait 5 ticks
+  set {_y} to player's y coordinate - {_y}
+  set {_ysave} to difference between {_y2} and y location of player
+  set {_y} to floor({_y})
+  set {_diffy} to difference between y location of player and {yloc::%player%}
+  set {yloc::%player%} to y location of player
+  if {_diffy} != 0:
+    {GUARD.CHECK.FLY.A} is true
+    if "%{_diffy}%" = "%{lasposy::%player%}%":
+      if "%{_diffy}%" != "0.16":
+        {vl16::%player%} is set
+        delete {vl16::%player%}
+      if "%{_diffy}%" != "0.42":
+        {vl42::%player%} is set
+        delete {vl42::%player%}
+      
+      if "%{_diffy}%" != "0.23":
+        {vl23::%player%} is set
+        delete {vl23::%player%}
+      if "%{_diffy}%" != "0.65":
+        {vl65::%player%} is set
+        delete {vl65::%player%}
+      if "%{_diffy}%" != "0.12":
+        {vl12::%player%} is set
+        delete {vl12::%player%}
+      if "%{_diffy}%" != "0.4":
+        {vl04::%player%} is set
+        delete {vl04::%player%}
+      player's gamemode is not creative
+      if block at player is ladder or vines:
+        stop
+      if player's chestplate is an elytra:
+        stop
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or stairs or ladder or slab or 165
+        delete {vlsame::%player%}
+        stop
+      wait 3 ticks
+      if {cooldown::%player%} is set:
+        difference between {cooldown::%player%} and now < 0.3 seconds
+        delete {vlsame::%player%}
+        stop
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+        set {_cooldown} to true
+      if "%{_diffy}%" = "0.42":
+        
+        add 1 to {vl42::%player%}
+        {vl42::%player%} > 2
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+        set {_cooldown} to true
+      if "%{_diffy}%" = "0.23":
+        
+        add 1 to {vl23::%player%}
+        {vl23::%player%} > 2
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+        set {_cooldown} to true
+      if "%{_diffy}%" = "0.12":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          set {lasypos::%player%} to {_diffy}
+          stop
+        add 1 to {vl12::%player%}
+        {vl12::%player%} > 2
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+        set {_cooldown} to true
+      if "%{_diffy}%" = "0.4":
+        set {_pos} to block 1 north 1 west of block 2 above player
+        set {_pos2} to block 1 south 1 east of block above player
+        loop blocks within {_pos} to {_pos2}:
+          loop-block is not air
+          stop
+        add 1 to {vl04::%player%}
+        {vl04::%player%} > 2
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+        set {_cooldown} to true
+      if "%{_diffy}%" = "0.65":
+        
+        add 1 to {vl65::%player%}
+        {vl65::%player%} > 2
+        {_cooldown} is not set 
+        clearly(player, "Fly", "A")
+      if "%{_diffy}%" = "0.42" or "0.23" or "0.12" or "0.65" or "0.16" or "0.4":
+        stop
+      add 1 to {vlsame::%player%}
+      if {_diffy} >= 0.8:
+        set {_maxvl} to 1
+      else:
+        set {_maxvl} to 3
+      {vlsame::%player%} > {_maxvl}
+      {_cooldown} is not set 
+      clearly(player, "Fly", "A")
+      set {_cooldown} to true
+      loop blocks in radius 3 around player:
+        loop-block is snow layer or carpet or water or lava or cobweb or anvil or vines or ladder or stairs or slab or 165
+        delete {vlsame::%player%}
+        stop
+    else:
+      set {lasposy::%player%} to {_diffy}
+      delete {vlsame::%player%}
+  if {_ysave} is between 0.001 and 0.9:
+    {GUARD.CHECK.FLY.B} is true
+    block under player is not any stairs or any slabs or slime:
+      block under player is air
+      block at player is air
+      player is not on ground
+      loop all blocks in radius 2 around player:
+        if loop-block is not air:
+          stop
+      add 1 to {GUARD::FLY.B::%player%}
+      if {GUARD::FLY.B::%player%} > 10:
+        {%player%::JUMP} is not true
+        {_cooldown} is not set 
+        clearly(player, "Fly", "B")
+        set {_cooldown} to true
+  if player's y coordinate is y coordinate of {_loc}:
+    {GUARD.CHECK.FLY.C} is true
+    block under player is air
+    {%player%::JUMP} is not set
+    player is not on ground
+    block under player is air
+    block at player is air
+    block under player is not any stairs or any slabs or slime:
+      loop all blocks in radius 3 around player:
+        if loop-block is not cobweb:
+          {_cooldown} is not set 
+          clearly(player, "Fly", "C")
+          set {_cooldown} to true
+  {GUARD.CHECK.FLY.D} is true
+  player's flight mode is false
+  block under player is air
+  player's chestplate is not an elytra
+  player doesn't have jump boost
+  set {_y} to player's y coordinate
+  wait 10 ticks
+  if block under player is air:
+    set {_y} to player's y coordinate - {_y}
+    if {_y} >= 2:
+      player's targeted block is not ladder
+      block at player is not water
+      loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+          stop
+        if loop-block is slabs:
+          stop
+      block under player is air
+      player is not on ground
+      {_cooldown} is not set 
+      clearly(player, "Fly", "D")
+      set {_cooldown} to true
+    if {_y} = 0:
+      block under player is air
+      player is not on ground
+      loop all blocks in radius 3 around player:
+        if loop-block is stairs:
+          stop
+        if loop-block is slabs:
+          stop
+      {_cooldown} is not set 
+      clearly(player, "Fly", "D")
+      set {_cooldown} to true
+
+#--------------------------------------------------------
+#
+#             A N T I  N O F A L L
+#
+#--------------------------------------------------------
+
+on any move:
+  {GUARD.CHECK.NOFALL.A} is true
+  {_cooldown} is not set
+  {time::%player%} is not set
+  player's gamemode is Adventure or Survival
+  player is on ground
+  block at player is air
+  block under player is air
+  set {_nofallcount} to 0
+  loop all blocks in radius 3 around player:
+    if loop-block is stairs:
+      stop
+    if loop-block is slab:
+      stop
+    if loop-block is not air:
+      add 1 to {_nofallcount}
+  if {_nofallcount} < 1:
+    {_cooldown} is not set
+    clearly(player, "NoFall", "A")
+    set {_cooldown} to true
+    if {@LagBack} is true:
+      damage player by 2 heart
+  if {_nofallcount} > 0:
+    stop
+
+#--------------------------------------------------------
+#
+#         A N T I  H I G H J U M P + L O W J U M P 
+#
+#--------------------------------------------------------
+
+on jump:
+   {GUARD.CHECK.HIGHJUMP.A} is true
+   set {_loc} to player's location
+   player doesn't have jump boost
+   player's fly mode is false
+   player's gamemode is not creative or spectator
+   player is on ground
+   block under player is not air
+   loop all blocks in radius 3 around player:
+      if loop-block is stairs:
+         stop
+      if loop-block is slabs:
+         stop
+   set {_find} to player's location
+   set {_count} to 255 - y coordinate of player
+   loop 255 times:
+      if block at {_find} is slime block:
+         stop
+      else:
+         remove 1 from y coordinate of {_find}
+   set {_h1} to y location of player
+   wait 5 ticks
+   set {_h2} to y location of player
+   set {_h} to difference between {_h1} and {_h2}
+   {GUARD::%player%::DAMAGE} is not set
+   if {_h} > 1.25:
+      add 1 to {GUARD::%player%::HIGHJUMP.A}
+      if {GUARD::%player%::HIGHJUMP.A} > 2:
+         clearly(player, "HighJump", "A")
+         if {@LagBackInstant} is true:
+            teleport player to {_loc}
+   else:
+      delete {GUARD::%player%::HIGHJUMP.A}
+   if {_h} > 2:
+      clearly(player, "HighJump", "A")
+      if {@LagBackInstant} is true:
+         teleport player to {_loc}
+
+on jump:
+   {GUARD.CHECK.LOWJUMP.A} is true
+   set {_loc} to player's location
+   player's fly mode is false
+   player's gamemode is not creative or spectator
+   player is on ground
+   block under player is not air
+   block 2 above player is air 
+   block at player is air
+   loop all blocks in radius 3 around player:
+      if loop-block is stairs:
+         stop
+      if loop-block is slabs:
+         stop
+   set {_find} to player's location
+   set {_count} to 255 - y coordinate of player
+   loop 255 times:
+      if block at {_find} is slime block:
+         stop
+      else:
+         remove 1 from y coordinate of {_find}
+   set {_h1} to y location of player
+   wait 5 ticks
+   set {_h2} to y location of player
+   set {_h} to difference between {_h1} and {_h2}
+   {GUARD::%player%::DAMAGE} is not set
+   if {_h} < 1.2:
+      add 1 to {GUARD::%player%::LOWJUMP.A}
+      if {GUARD::%player%::LOWJUMP.A} > 4:
+         clearly(player, "LowJump", "A")
+         delete {GUARD::%player%::LOWJUMP.A}
+         if {@LagBackInstant} is true:
+            teleport player to {_loc}
+   else:
+      delete {GUARD::%player%::LOWJUMP.A}
+
+#--------------------------------------------------------
+#
+#            A N T I  S P E E D
+#
+#--------------------------------------------------------
+
+on any move:
+  set {_loc} to player's location
+  set {_x} to x coordinate of player
+  set {_z} to z coordinate of player
+  set {_bap} to block above player
+  set {_bap2} to block above player
+  set {_y} to y location of player 
+  wait 5 ticks
+  set {_x1} to x coordinate of player
+  set {_z1} to z coordinate of player
+  set {_x} to difference between {_x1} and {_x}
+  set {_z} to difference between {_z1} and {_z}
+  replace all "-" with "" in {_x}
+  replace all "-" with "" in {_z}
+  if {_x} > {_z}:
+    set {_speed} to {_x}
+  if {_z} > {_x}:
+    set {_speed} to {_z}
+  if {_x} = {_z}:
+    set {_speed} to {_x}
+  if player doesn't have speed:
+    if {_speed} > 2.3:
+      if player's ping > 300:
+        teleport player to {_loc}
+        stop
+      player is not riding
+      player's fly mode is false
+      block under player is not air or ice or packed ice or slab or stairs:
+        block 2 under player is not air or ice or packed ice or slab or stairs:
+          {GUARD::%player%::SPEEDSTOP} is not set
+          {GUARD::%player%::DAMAGE} is not set
+          {_cooldown} is not set
+          {GUARD.CHECK.SPEED.A} is true
+          clearly(player, "Speed", "A")
+          set {_cooldown} to true
+      block under player is air:
+        block under player is not stairs or slabs or slime:
+          {GUARD::%player%::SPEEDSTOP} is not set
+          {GUARD::%player%::DAMAGE} is not set
+          {_cooldown} is not set
+          {GUARD.CHECK.SPEED.B} is true
+          clearly(player, "Speed", "B")
+          set {_cooldown} to true
+  else:
+    if {_speed} is greater than 2.7:
+      if player's ping > 300:
+        teleport player to {_loc}
+        stop
+      player is not riding
+      player's fly mode is false
+      block under player is not air or ice or packed ice or stairs or slabs:
+        block 2 under under player is not air or ice or packed ice or stairs or slabs:
+          {GUARD::%player%::SPEEDSTOP} is not set
+          {GUARD::%player%::DAMAGE} is not set
+          {_cooldown} is not set
+          {GUARD.CHECK.SPEED.C} is true
+          clearly(player, "Speed", "C")
+          set {_cooldown} to true
+      if block under player is air:
+        block under player is not any stairs or any slabs or slime:
+          {GUARD::%player%::SPEEDSTOP} is not set
+          {GUARD::%player%::DAMAGE} is not set
+          {_cooldown} is not set
+          {GUARD.CHECK.SPEED.D} is true
+          clearly(player, "Speed", "D")
+          set {_cooldown} to true
+
+#---------------------------------------------------------------------------------------------------------------------------#
+
+function Reload(text: text):
+  set {GUARD.CHECK.FLY.A} to true
+  set {GUARD.CHECK.FLY.B} to true
+  set {GUARD.CHECK.FLY.C} to true
+  set {GUARD.CHECK.FLY.D} to true
+  set {GUARD.CHECK.SPEED.A} to true
+  set {GUARD.CHECK.SPEED.B} to true
+  set {GUARD.CHECK.SPEED.C} to true
+  set {GUARD.CHECK.SPEED.D} to true
+  set {GUARD.CHECK.NOFALL.A} to true
+  set {GUARD.CHECK.HIGHJUMP.A} to true
+  set {GUARD.CHECK.LOWJUMP.A} to true
+
+on join:
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "{@guard} &cYour are banned for &e%{tempban.time::%player%}%&c from this server !"
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+on quit:
+    if {tempban.time::%player%} is set:
+        set quit message to ""
+
+function clearly(p: player, cheat: text, type: text):
+  if {@DoubleCheck} is true:
+    add 1 to {GUARD::%{_p}%::DOUBLE::%{_cheat}%}
+    add 1 to {GUARD::%{_p}%::DOUBLEVL}
+  {GUARD::%{_p}%::DOUBLE::%{_cheat}%} > 1
+  delete {GUARD::%{_p}%::DOUBLE::%{_cheat}%}
+  add 1 to {GUARD::%{_p}%::VL::%{_cheat}%}
+  add 1 to {GUARD::%{_p}%::VLGLOBAL}
+  if {@LagBack} is true:
+    if {GUARD::%{_p}%::VL::%{_cheat}%} >= {@LagBackVL}:
+      block under {_p} is air 
+      remove 0.5 from y location of {GUARD::%{_p}%::LAGBACK}
+      loop 5 times:
+        teleport {_p} to {GUARD::%{_p}%::LAGBACK}
+  loop all players:
+    if {GUARD::%loop-player%::ALERTS} is true:
+      send "{@guard} %{_p}%&7 failed &f%{_cheat}% &7(%{_type}%&7) VL[&9%{GUARD::%{_p}%::VL::%{_cheat}%}%&7/&9{@PunishVL}&7]" to loop-player
+  if {GUARD::%{_p}%::VL::%{_cheat}%} >= {@PunishVL}:
+    if {@Kick} is true:
+      make server execute command "/guard kick %{_p}%"
+      stop
+    if {@Ban} is true:
+      make server execute command "/guard ban %{_p}% 7 day"
+
+command /guard [<text>] [<text>] [<text>] [<timespan>]:
+   permission: {@MainPermission}
+   trigger:
+      if arg 1 is not set:
+         send "           &9&lGUARD"
+         send ""
+         send "&7/guard &8| &fShow this pop up"
+         send "&7/guard version &8| &fShow GUARD version"
+         send "&7/guard notify &8| &fToggle GUARD alerts"
+         send "&7/guard kick &8| &fKick someone for 'Cheating'"
+         send "&7/guard ban &8| &fBan someone for 'Cheatin'"
+         send "&7/guard unban &8| &fUnban someone from GUARD"
+         send "&7/guard toggle &8| &fToggle GUARD checks manually"
+         send ""
+         stop
+      if arg 1 is "toggle":
+         if arg 2 is set:
+            if arg 3 is set:
+               if {GUARD.CHECK.%arg 2%.%arg 3%} is true:
+                  set {GUARD.CHECK.%arg 2%.%arg 3%} to false
+                  send "{@guard} Check &e&l%arg 2% &7(%arg 3%&7) &f has been &cdisabled."
+                  stop
+               if {GUARD.CHECK.%arg 2%.%arg 3%} is false:
+                  set {GUARD.CHECK.%arg 2%.%arg 3%} to true
+                  send "{@guard} Check &e&l%arg 2% &7(%arg 3%&7) &f has been &aenabled."
+                  stop
+      if arg 1 is "kick":
+         if arg 2 is set:
+            set {_player} to arg 2 parsed as player
+            {GUARD::%{_player}%::KICKING} is not set
+            set {GUARD::%{_player}%::KICKING} to true
+            strike lightning effect at {_player}
+            kick {_player} due to "{@guard} &fYou were caught hacking by Guard (Anti-Cheat) ! &7&o&n(ID-G%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@guard} {@KickMsg}"
+            broadcast ""
+            add 1 to {GUARD::%{_player}%::KICK}
+            delete {GUARD::%{_player}%::KICKING}
+            stop
+      if arg 1 is "info":
+         if arg 2 is set:
+            send "         {@guard}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "Kicked: &7%{GUARD::%arg 2%::KICK}% &fTimes"
+            send "Banned: &7%{GUARD::%arg 2%::BAN}% &fTimes"
+            send "Unbanned: &7%{GUARD::%arg 2%::UNBAN}% &fTimes"
+            send "Flagged: &7%{GUARD::%arg 2%::VLGLOBAL}% &fTimes"  
+            send "Double Checked: &7%{GUARD::%arg 2%::DOUBLEVL}% &fTimes"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@guard} Versions: {@Version}"
+         stop
+      if arg 1 is "reload":
+         Reload("console")
+         send "{@guard} The Anti-Cheat checks were reloaded."
+         stop
+      if arg 1 is "notify":
+         if {GUARD::%player%::ALERTS} is not set:
+            set {GUARD::%player%::ALERTS} to false
+         if {GUARD::%player%::ALERTS} is false:
+            set {GUARD::%player%::ALERTS} to true
+            send "{@guard} Notifcations enabled"
+            stop
+         if {GUARD::%player%::ALERTS} is true:
+            set {GUARD::%player%::ALERTS} to false
+            send "{@guard} Notifcations disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            set {_player} to arg 2 parsed as player
+            set {tempban.time::%{_player}%} to arg 3
+            set {tempban.%{_player}%} to true
+            set {tempban.timestamp::%{_player}%} to now
+            add 1 to {GUARD::%{_player}%::BAN}
+            kick {_player} due to "{@guard} &cYou have been banned for &e%{tempban.time::%{_player}%}% &cfrom this server !"
+            broadcast ""
+            broadcast "{@guard} {@BanMsg}"
+            broadcast ""
+            stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            delete {tempban.time::%arg 2%}
+            delete {tempban.timestamp::%arg 2%}
+            delete {tempban.%arg 2%}
+            add 1 to {GUARD::%arg 2%::UNBAN}
+            send "{@guard} %arg 2% has been unbanned."
+            stop
+every 2 minutes:
+   loop all players:
+      delete {GUARD::%loop-player%::VL::*}
+every 3 second:
+   delete {GUARD::FLY.B::*}
+on jump:
+   set {%player%::JUMP} to true
+   wait 7 ticks
+   delete {%player%::JUMP}
+on join:
+   delete {GUARD::%player%::VL::*}
+   delete {GUARD::%player%::SPEEDSTOP}
+on quit:
+   delete {GUARD::%player%::*}
+on script load:
+   send "&7&m---------------------------------------" to console
+   send "            &9&lGUARD" to console
+   send "          &9&lAntiCheat" to console
+   send "" to console
+   send "     &7&oVersion: {@Version}" to console
+   send "       &7&oAuthor: XIII___" to console
+   send "" to console
+   send "     &d&lThanks for using Guard !" to console
+   send "&7&m---------------------------------------" to console
+on death:
+   set {GUARD::%victim%::SPEEDSTOP} to true 
+on respawn:
+   wait 3 ticks
+   delete {GUARD::%player%::SPEEDSTOP}
+on teleport:
+   set {GUARD::%player%::SPEEDSTOP} to true 
+   wait 3 ticks
+   delete {GUARD::%player%::SPEEDSTOP}
+on damage:
+   if damage cause is not fall or burning or drowning or wither:
+      victim is not attacker
+      set {GUARD::%victim%::DAMAGE} to true 
+      wait 3 seconds
+      if {GUARD::%victim%::DAMAGE} is set:
+         block under victim is air 
+         victim is not on ground
+         delete {GUARD::%victim%::DAMAGE}
+on any move:
+   if player is on ground:
+      wait 3 ticks
+      if block under player is not air: 
+         delete {GUARD::%player%::DAMAGE}
+on break:
+   {GUARD.CHECK.NOFALL.A} is true
+   if {time::%player%} is not set:
+      set {time::%player%} to true
+      wait 0.5 seconds
+      delete {time::%player%}

@@ -1,0 +1,33 @@
+function DEV_Strafe_AB(p: player):
+  {DEV::%{_p}%::TEMP::AIRTICKS} > 3
+  GDA_returnTimeSpan({_p}, "DAMAGE") > 1200
+  DEV_clearly({_p}, "Strafe", "A", "&6Debugging", "%((getDeltaX({_p}, 1) + getDeltaZ({_p}, 1)) ^ 5 - ((getDeltaX({_p}, 2) + getDeltaZ({_p}, 2)) ^ 5  * 0.91))%", 1, 1) if ((getDeltaX({_p}, 1) + getDeltaZ({_p}, 1)) ^ 5 - ((getDeltaX({_p}, 2) + getDeltaZ({_p}, 2)) ^ 5  * 0.91)) is between 0.00128 and 1
+  if ((getDeltaX({_p}, 1) + getDeltaZ({_p}, 1)) ^ 5 - ((getDeltaX({_p}, 2) + getDeltaZ({_p}, 2)) ^ 5  * 0.91)) < 0.00128:
+    remove 0.25 from {DEV::%{_p}%::TEMP::VL::STRAFE.A} if {DEV::%{_p}%::TEMP::VL::STRAFE.A} >= 0.25
+#--------------------------- UTILS ---------------------------
+
+function DEV_clearly(p: player, cheat: text, type: text, state: text, value: text, bufferadd: number, buffer: number):
+  add {_bufferadd} to {DEV::%{_p}%::TEMP::VL::%{_cheat}%.%{_type}%}
+  set {DEV::%{_p}%::TEMP::VL::%{_cheat}%.%{_type}%} to 1 if {_buffer} = 0
+  {DEV::%{_p}%::TEMP::VL::%{_cheat}%.%{_type}%} > {_buffer}
+  send formatted "<tooltip:&7Check: &d%{_cheat}% &7(%{_type}%&7)%nl%&7Value: &d%{_value}% %nl%&7State: &d%{_state}%%nl%&7Buffer: &d%{DEV::%{_p}%::TEMP::VL::%{_cheat}%.%{_type}%}%&7/&d%{_buffer}%>&5&lGUARD &8» &d%{_p}%&7 failed &d%{_cheat}% &d%{_type}% &7(&6%{_value}%&7)" to all players where [input has permission "GUARD.dev.alerts"]
+on any move:
+  set {DEV::%player%::TEMP::PRELOC::2} to {DEV::%player%::TEMP::LOC::2}
+  set {DEV::%player%::TEMP::LOC::2} to {DEV::%player%::TEMP::PRELOC::1}
+  set {DEV::%player%::TEMP::PRELOC::1} to {DEV::%player%::TEMP::LOC::1}
+  set {DEV::%player%::TEMP::LOC::1} to location of player
+  add 1 to {DEV::%player%::TEMP::AIRTICKS} if player is not on ground
+  set {DEV::%player%::TEMP::AIRTICKS} to 0 if player is on ground
+
+  DEV_Strafe_AB(player)
+
+function getDeltaLoc(p: player, n: number, y: boolean) :: number:
+  set y location of {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} to y location of {DEV::%{_p}%::TEMP::LOC::%{_n}%} if {_y} is true
+  return distance between {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} and {DEV::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaZ(p: player, n: number) :: number:
+  return difference between z location of {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} and z location of {DEV::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaX(p: player, n: number) :: number:
+  return difference between x location of {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} and x location of {DEV::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaY(p: player, n: number, r: boolean) :: number:
+  return y location of {DEV::%{_p}%::TEMP::LOC::%{_n}%} - y location of {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} if {_r} is false
+  return difference between y location of {DEV::%{_p}%::TEMP::PRELOC::%{_n}%} and y location of {DEV::%{_p}%::TEMP::LOC::%{_n}%} if {_r} is true

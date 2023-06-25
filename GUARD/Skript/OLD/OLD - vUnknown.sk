@@ -1,0 +1,267 @@
+function GDC_Dev(p: player):
+   getLastBlock({_p}) > 0.2 second
+   {_p} doesn't have jump boost
+   GA_getBubble({_p}) = true
+   set {_diff} to y location of {_p} - {GUARD::%{_p}%::TEMP::Y::MOTIONA::YLOC}
+   set {GUARD::%{_p}%::TEMP::Y::MOTIONA::YLOC} to {_p}'s y location
+   if {_diff} > 0.41999998688697815:
+      GA_clearly({_p}, "Motion", "A", "Jumped too high", 5, "A1", "%{_diff}%", 1, 5)
+   add 2 to {GUARD::%{_p}%::TEMP::VL::MOTION.A1} if {_diff} > 0.8
+
+function GDC_Speed_BA(p: player):
+  GA_FlyMode({_p}) = true
+  GA_Gamemode({_p}) = true
+  getLastMount({_p}) > 0.4 second
+  set {_speed} to getDeltaLoc({_p}, 1, true)
+  set {GUARD::%{_p}%::TEMP::SPEED.DIFF} to 0 if {GUARD::%{_p}%::TEMP::SPEED.DIFF} is not set
+  set {_maxspeed} to 0.68 if getAboveTicks({_p}) < 0.6 second
+  set {_maxspeed} to 0.33844464 if getAboveTicks({_p}) > 0.6 second
+  set {_maxspeed} to 0.2868198 if getGroundTicks({_p}) > 7
+  if getLastSpeed({_p}) < 0.8 second:
+    set {GUARD::%{_p}%::TEMP::SPEEDB::TIER} to tier of potion effect speed of {_p}
+    set {_maxspeed} to 0.4 if getAboveTicks({_p}) < 0.6 second
+    if {GUARD::%{_p}%::TEMP::SPEEDB::TIER} = 1:
+      set {_maxspeed} to 0.34361233 if getAboveTicks({_p}) > 0.6 second
+    if {GUARD::%{_p}%::TEMP::SPEEDB::TIER} >= 2:
+      set {_maxspeed} to (0.17622432 * {GUARD::%{_p}%::TEMP::SPEEDB::TIER}) if getAboveTicks({_p}) > 0.6 second
+      set {_maxspeed} to (0.20044054 * {GUARD::%{_p}%::TEMP::SPEEDB::TIER}) if getGroundTicks({_p}) > 7
+  if getIceTicks({_p}) < 1.2 second:
+    set {_maxspeed} to 0.48 if getAboveTicks({_p}) > 1.6 second
+    set {_maxspeed} to 1 if getAboveTicks({_p}) < 1.6 second
+    if getIceTicks({_p}) < 0.1 second:
+      set {_maxspeed} to 0.2757 if getGroundTicks({_p}) > 22
+    if {GUARD::%{_p}%::TEMP::SPEEDB::TIER} = 1:
+      set {_maxspeed} to 0.32427 if getGroundTicks({_p}) > 7
+    if {GUARD::%{_p}%::TEMP::SPEEDB::TIER} >= 2:
+      set {_maxspeed} to 0.37831 if getGroundTicks({_p}) > 7
+  if getSlimeTicks({_p}) < 1 second:
+    getWaterTicks({_p}) = 0
+    set {_maxspeed} to 0.4 if getAboveTicks({_p}) > 0.6 second
+    set {_maxspeed} to 0.74 if getAboveTicks({_p}) < 0.6 second
+    getSlimeTicks({_p}) < 0.1 second
+    set {_maxspeed} to 0.09 if getGroundTicks({_p}) > 14
+  if getAboveTicks({_p}) > 0.6 second:
+    #teleport {_p} to {GUARD::%{_p}%::TEMP::LAGBACK} if {_speed} > 0.68
+    getLastKbDmg({_p}) > 1.2 second
+    add 5 to {GUARD::%{_p}%::TEMP::VL::SPEED.B} if {_speed} > 0.68
+  if getAboveTicks({_p}) < 0.6 second:
+    #teleport {_p} to {GUARD::%{_p}%::TEMP::LAGBACK} if {_speed} > 1.1
+    getLastKbDmg({_p}) > 1.2 second
+    add 5 to {GUARD::%{_p}%::TEMP::VL::SPEED.B} if {_speed} > 1.1
+  if getWaterTicks({_p}) > 5:
+    set {_maxspeed} to 0.13
+  if getLastBlock({_p}) < 0.3 second:
+    getLastKbDmg({_p}) > 1.2 second
+    set {_maxspeed} to 0.42
+  set {_maxspeed} to 0.8062 if block at {_p} is cobweb
+  if getClimableTicks({_p}) > 8:
+    set {_maxspeed} to 0.2
+  if getLastKbDmg({_p}) > 1.2 second:
+    getIceTicks({_p}) > 1.2 second
+    getSlimeTicks({_p}) > 1.2 second
+    GA_clearly({_p}, "Speed", "B", "Speed Limit", 5, "BB", "%{_speed}%", 1, 3) if difference between {GUARD::%{_p}%::TEMP::SPEED.DIFF} and getDeltaLoc({_p}, 1, true) > 0.68
+  set {_maxspeed} to 0.63 if getLastDamage({_p}) < 0.8 second
+  if getLastKbDmg({_p}) < 1.2 second:
+    set {_maxspeed} to {GUARD::%{_p}%::TEMP::KBENCHANT} * 0.45
+  if {_p} is swimming:
+    set {_maxspeed} to 0.19596137
+    if {_p}'s boots are enchanted with depth strider:
+      set {_tier} to enchantment level of depth strider of {_p}'s boots
+      set {_maxspeed} to 0.23625096 if {_tier} = 1 
+      set {_maxspeed} to 0.254699 if {_tier} = 2 
+      set {_maxspeed} to 0.2653481 if {_tier} = 3
+      set {_maxspeed} to 0.0683204 * {_tier} if {_tier} > 3
+  GA_clearly({_p}, "Speed", "B", "Speed Limit", 5, "B", "%{_speed}%&7/&9%{_maxspeed}%", 1, 6) if {_speed} > {_maxspeed}
+  if {GUARD::%{_p}%::TEMP::VL::SPEED.B} >= 1:
+    remove 1 from {GUARD::%{_p}%::TEMP::VL::SPEED.B} if {_speed} < {_maxspeed}
+
+function GDC_Speed_AA(p: player):
+  getLastSoulSand({_p}) > 0.6 second
+  getLastMount({_p}) > 0.6 second
+  set {_speed} to sqrt(getDeltaX({_p}, 1) ^ 2 + getDeltaZ({_p}, 1) ^ 2)
+  set {_speed} to round({_speed} * 10^ 7) / 10^ 7 * 10000000
+  {_speed} > 980000
+  {_speed} != 1500000 or 2806000
+  {_speed} / 100 = round({_speed} / 100)
+  GA_clearly({_p}, "Speed", "A", "Rounded Speed", 5, "AA", "%{_speed}%", 1, 8)
+
+function GDC_Speed_AB(p: player):
+  getAirTicks({_p}) > 4
+  getLastSpeed({_p}) > 0.4 second
+  GA_Gamemode({_p}) = true 
+  GA_FlyMode({_p}) = true
+  getLastUnsafeDamage({_p}) > 0.5 second
+  getSlimeTicks({_p}) > 1.8 second 
+  getIceTicks({_p}) > 1.8 second
+  set {_D1} to getDeltaLoc({_p}, 1, false)
+  set {_diff} to ({_D1} * getDeltaLoc({_p}, 2, false))
+  set {_pred} to {_diff} * 0.91
+  set {_diff} to getDeltaLoc({_p}, 1, false) - {_pred}
+  GA_clearly({_p}, "Speed", "A", "Invalid Speed", 5, "AB", "%{_diff}%", 0, 0) if {_diff} > 0.2286826
+  if {GUARD::%{_p}%::TEMP::SPEED.AB} >= 0.05:
+    remove 0.05 from {GUARD::%{_p}%::TEMP::SPEED.AB} if {_diff} < 0.2286826
+
+function GDC_Jesus_A(p: player):
+  GA_Requirements({_p}) = true
+  getOnWaterTicks({_p}) > 7
+  if {_p} is on ground:
+    GA_clearly({_p}, "Jesus", "A", "Sending onground state while on water", 3, "AB", "%getOnWaterTicks({_p})%", 0, 0) if {_p} is not swimming   
+  GA_clearly({_p}, "Jesus", "A", "Walking on water", 3, "A", "%getOnWaterTicks({_p})%", 0, 0)
+
+on any move:
+  GA_clearly(player, "Timer", "A", "Sped up time", 20, "A", "%{GUARD::%player%::TIMER.A}%", 1, 22)
+  GA_clearly(player, "Timer", "B", "Sped up time", 20, "B", "%{GUARD::%player%::TIMER.A}%", 1, 101)
+
+
+############################################################
+
+function GCD_Flight_A(p: player):
+  GA_Requirements({_p}) = true
+  GA_FlyMode({_p}) = true
+  getLastUnsafeDamage({_p}) > 0.5 second
+  getLastCobweb({_p}) > 0.5 second
+  set {GUARD::%{_p}%::TEMP::FLIGHTA::YPOS} to {_p}'s y location
+  set {GUARD::%{_p}%::TEMP::MOTIONPREDICTION} to ({GUARD::%{_p}%::TEMP::FLIGHTA::Y} - 0.08) * 0.9800000190734863
+  set {GUARD::%{_p}%::TEMP::FLIGHTA::Y} to {GUARD::%{_p}%::TEMP::FLIGHTA::YPOS} - {GUARD::%{_p}%::TEMP::FLIGHTA::YPOS2}
+  add 1 to {_spidertick} if {GUARD::%{_p}%::TEMP::FLIGHTA::Y} > 0.05
+  if {_spidertick} >= 1:
+    getLastBlock({_p}) > 0.2 second 
+    getLastPlace({_p}) > 0.5 second
+    GA_getBubble({_p}) = true
+    getWaterTicks({_p}) = 0
+    GA_clearly({_p}, "Flight", "A", "Prediction Spider", 5, "A5", "%{GUARD::%{_p}%::TEMP::FLIGHTA::Y}%", 0.5, 4)
+  if GA_InAirSemi({_p}) = true:
+    GA_clearly({_p}, "Flight", "A", "Prediction Fly", 5, "A4", "%{GUARD::%{_p}%::TEMP::FLIGHTA::Y}% / %{GUARD::%{_p}%::TEMP::MOTIONPREDICTION}%", 1, 4) if {GUARD::%{_p}%::TEMP::FLIGHTA::Y} != {GUARD::%{_p}%::TEMP::MOTIONPREDICTION}
+    GA_clearly({_p}, "Flight", "A", "Prediction Fly", 5, "A1", "%{GUARD::%{_p}%::TEMP::FLIGHTA::Y}%", 1, 4) if {GUARD::%{_p}%::TEMP::FLIGHTA::Y} > 0.09
+    GA_clearly({_p}, "Flight", "A", "Prediction Fly", 5, "A2", "%{GUARD::%{_p}%::TEMP::MOTIONPREDICTION}%", 1, 2) if {GUARD::%{_p}%::TEMP::FLIGHTA::Y} > {GUARD::%{_p}%::TEMP::MOTIONPREDICTION}
+    GA_clearly({_p}, "Flight", "A", "Prediction Fly", 5, "A3", "%abs({GUARD::%{_p}%::TEMP::FLIGHTA::Y} - {GUARD::%{_p}%::TEMP::MOTIONPREDICTION})%", 1, 2) if abs({GUARD::%{_p}%::TEMP::FLIGHTA::Y} - {GUARD::%{_p}%::TEMP::MOTIONPREDICTION}) > 0.784000015258789
+  else:
+    delete {GUARD::%{_p}%::TEMP::VL::FLIGHT.A3}
+    delete {GUARD::%{_p}%::TEMP::VL::FLIGHT.A2}
+    delete {GUARD::%{_p}%::TEMP::VL::FLIGHT.A1}
+    delete {GUARD::%{_p}%::TEMP::VL::FLIGHT.A4}
+  if {GUARD::%{_p}%::TEMP::VL::FLIGHT.A5} >= 1:
+    remove 1 from {GUARD::%{_p}%::TEMP::VL::FLIGHT.A5} if {GUARD::%{_p}%::TEMP::FLIGHTA::Y} < 0.05
+  set {GUARD::%{_p}%::TEMP::FLIGHTA::YPOS2} to {_p}'s y location
+
+function GDC_Nofall_A(p: player):
+  GA_InAirSemi({_p}) = true
+  GA_InAirFull({_p}) = true
+  getAtAir({_p}) = true
+  block at {_p} is not trapdoor or iron trapdoor
+  set {GUARD::%{_p}%::TEMP::NOFALL.GROUND} to now if {_p} is on ground
+  set {GUARD::%{_p}%::TEMP::NOFALL.OFFGROUND} to now if {_p} is not on ground 
+  GA_clearly({_p}, "Invalid", "A", "Switched ground state too fast", 3, "A", "%difference between {GUARD::%{_p}%::TEMP::NOFALL.GROUND} and now%", 1, 1) if difference between {GUARD::%{_p}%::TEMP::NOFALL.GROUND} and now is between 0.001 second and 0.15 second
+  GA_clearly({_p}, "Invalid", "A", "Switched ground state too fast", 3, "A", "%difference between {GUARD::%{_p}%::TEMP::NOFALL.OFFGROUND} and now%", 1, 1) if difference between {GUARD::%{_p}%::TEMP::NOFALL.OFFGROUND} and now > 0.2 second
+  GA_clearly({_p}, "NoFall", "A", "Spoofed ground while in air", 3, "A", "NaN", 1, 1) if getGroundTicks({_p}) > 1
+
+on inventory click:
+  set {GUARD::%player%::TEMP::INVOPEN} to now 
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sprinting", 3, "A", "NaN", 0, 0) if player is sprinting
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sneaking", 3, "A", "NaN", 0, 0) if player is sneaking
+on sprint toggle:
+  if {GUARD::%player%::TEMP::INVOPEN} is set:
+    GA_clearly(player, "Inventory", "A", "Clicked inventory while sprint toggle", 3, "A", "NaN", 0, 0) if difference between {GUARD::%player%::TEMP::INVOPEN} and now > 0.5 second
+on inventory close:
+  delete {GUARD::%player%::TEMP::INVOPEN}
+function GDC_Inventory_A(p: player):
+  GA_Requirements({_p}) = true
+  getIceTicks({_p}) > 1.2 second 
+  getSlimeTicks({_p}) > 0.6 second
+  {GUARD::%{_p}%::TEMP::INVOPEN} is set
+  GA_clearly({_p}, "Inventory", "A", "Moving while having inventory open", 3, "A", "NaN", 0, 0) if difference between {GUARD::%{_p}%::TEMP::INVOPEN} and now > 0.4 second
+
+function GDC_Invalid_E(p: player):
+  {_p} is not on ground
+  GA_Requirements({_p}) = true 
+  GA_FlyMode({_p}) = true
+  {_p} is not riding
+  getLastMount({_p}) > 0.6 second
+  getLastUnsafeDamage({_p}) > 0.6 second
+  getAboveTicks({_p}) > 0.6 second
+  getLastSlime({_p}) > 0.6 second
+  getLastCobweb({_p}) > 0.6 second
+  getWaterTicks({_p}) = 0
+  GA_getBubble({_p}) = true
+  set {_y} to difference between y location of {_p} and {GUARD::%{_p}%::TEMP::INVALID.E::YLOC}
+  set {GUARD::%{_p}%::TEMP::INVALID.E::YLOC} to y location of {_p}
+  GA_clearly({_p}, "Invalid", "E", "Spoofed Ground", 5, "E", "%{_y}%", 0.5, 1) if {_y} = 0
+  delete {GUARD::%{_p}%::TEMP::VL::INVALID.E} if {_y} != 0
+
+function GDC_Invalid_B(p: player):
+  set {GUARD::%{_p}%::TEMP::NOFALLY} to {_p}'s y location
+  set {GUARD::%{_p}%::TEMP::NOFALLY3} to {GUARD::%{_p}%::TEMP::NOFALLY} - {GUARD::%{_p}%::TEMP::NOFALLY2}
+  set {GUARD::%{_p}%::TEMP::NOFALLY4} to {_p}'s y location if {GUARD::%{_p}%::TEMP::NOFALLY3} > 0
+  if {GUARD::%{_p}%::TEMP::NOFALLY3} < 0:
+    set {GUARD::%{_p}%::TEMP::NOFALLY5} to {_p}'s y location
+    GA_InAirFull({_p}) = true
+    GA_InAirSemi({_p}) = true
+    getAirTicks({_p}) > 4
+    GA_Requirements({_p}) = true
+    GA_FlyMode({_p}) = true
+    getLastCobweb({_p}) > 0.5 second
+    getLastPlace({_p}) > 0.5 second
+    GA_clearly({_p}, "Invalid", "B", "Invalid fall distance", 3, "B", "%difference between round({GUARD::%{_p}%::TEMP::NOFALLY4} - {GUARD::%{_p}%::TEMP::NOFALLY5}) and round({_p}'s fall distance)%", 0, 0) if difference between round({GUARD::%{_p}%::TEMP::NOFALLY4} - {GUARD::%{_p}%::TEMP::NOFALLY5}) and round({_p}'s fall distance) != 0
+  set {GUARD::%{_p}%::TEMP::NOFALLY4} to {_p}'s y location if {GUARD::%{_p}%::TEMP::NOFALLY3} = 0
+  set {GUARD::%{_p}%::TEMP::NOFALLY2} to {_p}'s y location
+  delete {GUARD::%{_p}%::TEMP::VL::NOFALL.A} if difference between round({GUARD::%{_p}%::TEMP::NOFALLY4} - {GUARD::%{_p}%::TEMP::NOFALLY5}) and round({_p}'s fall distance) = 0
+
+function GDC_Invalid_D(p: player):
+  GA_Requirements({_p}) = true
+  getWaterTicks({_p}) = 0
+  getLastBlock({_p}) > 0.2 second
+  getLastCobweb({_p}) > 0.5 second
+  GA_getBubble({_p}) = true
+  getClimableTicks({_p}) = 0
+  set {_diffy} to difference between y location of {_p} and {GUARD::%{_p}%::TEMP::YLOC}
+  set {GUARD::%{_p}%::TEMP::YLOC} to y location of {_p}
+  delete {GUARD::%{_p}%::TEMP::VL::INVALID.D} if "%{_diffy}%" != "%{GUARD::%{_p}%::TEMP::LASTYPOS}%"
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{GUARD::%{_p}%::TEMP::LASTYPOS}%":
+      GA_clearly({_p}, "Invalid", "D", "Invalid y motion", 5, "D", "%{_diffy}%", 1, 4) if "%{_diffy}%" != "0.08"
+    else:
+      set {GUARD::%{_p}%::TEMP::LASTYPOS} to {_diffy}
+
+function GDC_Invalid_C(p: player):
+   GA_Requirements({_p}) = true
+   GA_FlyMode({_p}) = true
+   getLastBlock({_p}) > 0.2 second
+   getWaterTicks({_p}) = 0
+   getOnWaterTicks({_p}) = 0
+   getSlimeTicks({_p}) > 1.8 second
+   GA_getBubble({_p}) = true
+   getClimableTicks({_p}) <= 0
+   add 1 to {GUARD::%{_p}%::TEMP::INVALIDC::AIRTICKS} if getDeltaY({_p}, 2) > 0
+   delete {GUARD::%{_p}%::TEMP::INVALIDC::AIRTICKS} if getDeltaY({_p}, 2) <= 0
+   if getLastJB({_p}) < 0.8 second:
+      set {GUARD::%{_p}%::TEMP::INVALIDC::TIER} to tier of potion effect jump boost of {_p}
+      set {_maxairticks} to {GUARD::%{_p}%::TEMP::INVALIDC::TIER} + 1
+   add 2 to {_maxairticks} if getLastUnsafeDamage({_p}) < 0.8 second
+   add 6 to {_maxairticks}
+   if {GUARD::%{_p}%::TEMP::INVALIDC::AIRTICKS} > {_maxairticks}:
+      GA_clearly({_p}, "Invalid", "C", "Added AirTicks", 3, "C", "%{GUARD::%{_p}%::TEMP::INVALIDC::AIRTICKS}%", 0, 0)
+
+function GDC_Motion_A1(p: player):
+  GA_Requirements({_p}) = true 
+  getLastUnsafeDamage({_p}) > 0.8 second
+  getLastBlock({_p}) > 0.5 second
+  getAboveTicks({_p}) > 0.5 second
+  getLastPlace({_p}) > 0.3 second
+  getWaterTicks({_p}) = 0
+  getLastLowBlock({_p}) > 0.6 second
+  GA_getBubble({_p}) = true
+  getClimableTicks({_p}) <= 0
+  getWaterTicks({_p}) = 0
+  set {GUARD::%{_p}%::TEMP::YLOCHOP} to {_p}'s y location
+  set {GUARD::%{_p}%::TEMP::YHOPMOTION} to {GUARD::%{_p}%::TEMP::YLOCHOP} - {GUARD::%{_p}%::TEMP::YLOCHOP2}
+  if {GUARD::%{_p}%::TEMP::YHOPMOTION} > 0:
+    set {GUARD::%{_p}%::TEMP::TICKSTEP} to {GUARD::%{_p}%::TEMP::TICKSTEP} + 1
+    if {GUARD::%{_p}%::TEMP::TICKSTEP} = 1:
+      if {GUARD::%{_p}%::TEMP::YHOPMOTION} > 0:
+        GA_clearly({_p}, "Motion", "A", "Jumped too low", 5, "A2", "%{GUARD::%{_p}%::TEMP::YHOPMOTION}%", 1, 2) if {GUARD::%{_p}%::TEMP::YHOPMOTION} != 0.41999998688697815
+  set {GUARD::%{_p}%::TEMP::TICKSTEP} to 0 if {GUARD::%{_p}%::TEMP::YHOPMOTION} <= 0
+  set {GUARD::%{_p}%::TEMP::YLOCHOP2} to {_p}'s y location
+
+function GDC_Invalid_F(p: player):
+  if {_p} is riding:
+    GA_clearly({_p}, "Invalid", "F", "Impossible Riding", 1, "F", "NaN", 0, 0) if {GUARD::%{_p}%::TEMP::MOUNTSTATE} is not set

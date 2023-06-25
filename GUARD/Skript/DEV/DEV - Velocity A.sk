@@ -1,0 +1,6 @@
+#Velocity A
+  if difference between now and {-GUARD::%player%::TEMP::TIMESPAN::DAMAGE} < 0.6 second:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::VELOCITY::A} and now > 0.6 second
+    GA_clearly(player, "Velocity", "A", "Reduced Y Velocity", 0, "A", "%difference between {-GUARD::%player%::TEMP::VELOLOC} and player's y location%", 1, 30, 0) if difference between {-GUARD::%player%::TEMP::VELOLOC} and player's y location < 0.36075
+    delete {-GUARD::%player%::TEMP::VL::VELOCITY::A} if difference between {-GUARD::%player%::TEMP::VELOLOC} and player's y location >= 0.36075
+    set {-GUARD::%player%::TEMP::VELOLOC} to player's y location

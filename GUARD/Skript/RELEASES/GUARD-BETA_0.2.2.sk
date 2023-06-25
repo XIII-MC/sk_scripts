@@ -1,0 +1,859 @@
+options:
+   version: BETA-0.2.2
+   TestServer: false
+   OnlyForOps: false
+   
+   #Made by XIII___ with :heart:
+   #ONLY FOR MINEHUT!
+   IgnoreBedrock: true 
+   
+   #Auto kick haCKers
+   AutoPunish: false
+
+   #Permissions
+   AlertsPermission: guard.command.alerts
+   KickPermission: guard.command.kick
+   ClearCachePermission: guard.command.clearcache
+   ClearVlsCachePermission: guard.command.clearvls
+   VersionPermission: guard.command.version
+   BypassPermission: guard.command.bypass
+
+
+
+
+
+#---- Checks ----
+on any move:
+  difference between {-GUARD::RELOAD} and now > 1 second
+  set {-GUARD::%player%::TEMP::PRELOC::2} to {-GUARD::%player%::TEMP::LOC::2}
+  set {-GUARD::%player%::TEMP::LOC::2} to {-GUARD::%player%::TEMP::PRELOC::1}
+  set {-GUARD::%player%::TEMP::PRELOC::1} to {-GUARD::%player%::TEMP::LOC::1}
+  set {-GUARD::%player%::TEMP::LOC::1} to location of player
+  set {-GUARD::%player%::TEMP::LAGBACK} to player's location if GDA_getLastBlock(player, air, 0.05) = false
+  GDAR_getLastAirAbove(player, 2.5, "ABOVETICKS")
+  GDAR_getLastAirAbove(player, 1, "ABOVEAT")
+  GDAR_getLowBlock(player)
+  GDAR_SlimeHandler(player)
+  set {-GUARD::%player%::TEMP::TIMESPAN::MOUNT} to now if player is riding
+  if player have jump boost:
+    set {-GUARD::%player%::TEMP::JUMPBOOST} to tier of potion effect jump boost of player
+    set {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} to now
+    set {-GUARD::%player%::TEMP::HASJUMPBOOST} to true
+  else: 
+    if player is not on ground:
+      if {-GUARD::%player%::TEMP::HASJUMPBOOST} is true:
+        set {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} to now
+    else:
+      delete {-GUARD::%player%::TEMP::HASJUMPBOOST}
+  set {_FlightAPrediction} to ({-GUARD::%player%::TEMP::FLIGHTA::Y} - 0.08) * 0.9800000190734863
+  set {-GUARD::%player%::TEMP::FLIGHTA::Y} to GDA_getDeltaY(player, 1, false)
+  set {-GUARD::%player%::TEMP::TIMESPAN::WATER} to now if block at or under or above player is water or lava
+  set {-GUARD::%player%::TEMP::SPEEDPOT} to tier of potion effect speed of player if player has speed
+  set {-GUARD::%player%::TEMP::TIMESPAN::SPEEDPOT} to now if player has speed
+  set {-GUARD::%player%::TEMP::TIMESPAN::SOULSAND} to now if block under player is soul sand
+  set {-GUARD::%player%::TEMP::TIMESPAN::ICE} to now if block under player is ice or packed ice or blue ice
+  set {-GUARD::%player%::TEMP::TIMESPAN::SLIME} to now if block under player is slime block
+  set {-GUARD::%player%::TEMP::TIMESPAN::FLY} to now if player is flying
+  set {-GUARD::%player%::TEMP::TIMESPAN::GAMEMODE} to now if player's gamemode is spectator or creative
+  add 1 to {-GUARD::%player%::TEMP::AIRTICKS} if player is not on ground
+  set {-GUARD::%player%::TEMP::AIRTICKS} to 0 if player is on ground
+  add 1 to {-GUARD::%player%::TEMP::GROUNDTICKS} if player is on ground
+  set {-GUARD::%player%::TEMP::GROUNDTICKS} to 0 if player is not on ground
+  set {-GUARD::%player%::TEMP::TIMESPAN::CLIMABLETICKS} to now if block at player is vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+  add 1 to {-GUARD::%player%::TEMP::CLIMABLETICKS} if block at player is vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+  set {-GUARD::%player%::TEMP::CLIMABLETICKS} to 0 if block at player is not vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+
+  if GDA_returnValue(player, "AIRTICKS") > 3:
+    player is not riding
+    GDA_returnTimeSpan(player, "MOUNT") > 1.5 second
+    GDA_returnTimeSpan(player, "PLACE") > 1.2 second
+    set {_MinStrafe} to -0.3 if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 1.2 second
+    if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 0.8 second:
+      GA_clearly(player, "Strafe", "A", "Strafing in air", 3, "A", "%((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 8 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 8  * 0.91))%", 1, 2, 2) if ((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 8 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 8  * 0.91)) > 0.000086
+    if {-GUARD::%player%::TEMP::VL::STRAFE.A} >= 0.05:
+      remove 0.05 from {-GUARD::%player%::TEMP::VL::STRAFE.A} if ((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 8 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 8  * 0.91)) < {_MaxStrafe} + 0.000086
+    GA_clearly(player, "Strafe", "B", "Strafing in air", 1, "B", "%((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 2 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 2 * 0.91))%", 1, 10, 0) if ((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 2 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 2 * 0.91)) is not between ({_MinStrafe} + -0.06) and 0.02
+    if {-GUARD::%player%::TEMP::VL::STRAFE.B} >= 0.5:
+      remove 0.5 from {-GUARD::%player%::TEMP::VL::STRAFE.B} if ((GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)) ^ 2 - ((GDA_getDeltaX(player, 2) + GDA_getDeltaZ(player, 2)) ^ 2 * 0.91)) is between ({_MinStrafe} + -0.06) and 0.02
+  if player is on ground:
+    GDA_getLastAtAir(player, false) = true
+    GDA_getLastBlock(player, air, 1) = true
+    add 1 to {-GUARD::%player%::TEMP::VL::GHOSTBLOCK}
+    {-GUARD::%player%::TEMP::VL::GHOSTBLOCK} > 1
+    GDA_Teleport(player) if GDA_getLastBlock(player, air, 0.05) = true
+  delete {-GUARD::%player%::TEMP::VL::GHOSTBLOCK} if GDA_getLastBlock(player, air, 0.05) = false
+  if player is not on ground:
+    player is not riding
+    GDA_returnTimeSpan(player, "MOUNT") > 1 second
+    GDA_returnTimeSpan(player, "ABOVEAT") > 1 second
+    GDA_returnTimeSpan(player, "ABOVETICKS") > 1 second
+    GDA_returnTimeSpan(player, "DAMAGE") > 0.6 seconds
+    block at player is not cobweb
+    player is not swimming
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+    GA_clearly(player, "Ground", "A", "Spoofed Ground", 3, "A", "%{_y}%", 1, 4, 2) if GDA_getDeltaY(player, 1, false) = 0
+    delete {-GUARD::%player%::TEMP::VL::GROUND.A} if GDA_getDeltaY(player, 1, false) != 0
+  if (GDA_getDeltaY(player, 1, false) + GDA_getDeltaY(player, 1, false) * 8) ^ 1 > 3:
+    GDA_returnTimeSpan(player, "BUBBLE") > 0.6 second
+    GDA_getLastBlock(player, water, 1) = false
+    GDA_getLastBlock(player, lava, 1) = false
+    GDA_getLastAtAir(player, true) = false
+    GDA_returnTimeSpan(player, "MOUNT") > 0.6 second
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 0.6 second
+    GDA_returnTimeSpan(player, "JUMPBOOST") > 1.2 second
+    GDA_returnTimeSpan(player, "PLACE") > 1.2 second
+    GDA_returnTimeSpan(player, "DAMAGE") > 1.2 second
+    GDA_returnTimeSpan(player, "WATER") > 1.2 second
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 0.6 second
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+    GA_clearly(player, "Motion", "B", "Impossible y motion", 3, "B", "%(GDA_getDeltaY(player, 1, false) + GDA_getDeltaY(player, 1, false) * 8) ^ 1%", 1, 3, 2) if {-GUARD::%player%::TEMP::TP} is not set
+  else:
+    remove 0.25 from {-GUARD::%player%::TEMP::VL::MOTION.B} if {-GUARD::%player%::TEMP::VL::MOTION.B} >= 0.25
+  if player is not on ground:
+    GDA_returnTimeSpan(player, "CLIMABLETICKS") > 1.2 second
+    GDA_returnTimeSpan(player, "BUBBLE") > 0.6 second
+    GDA_getLastBlock(player, water, 1) = false
+    GDA_getLastBlock(player, lava, 1) = false
+    GDA_getLastAtAir(player, true) = false
+    GDA_returnTimeSpan(player, "WATER") > 1.2 second
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 0.6 second
+    block at player is not vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+    block above player is not vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+    block under player is not vines or ladders or Weeping vine or Weeping Vine block or twisting vine block or twisting vine
+    add ({-GUARD::%player%::TEMP::JUMPBOOST}) to {_maxairticks} if GDA_returnTimeSpan(player, "JUMPBOOST") < 0.6 second
+    add 3 to {_maxairticks} if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 1.5 second
+    add 10 to {_maxairticks}
+    GA_clearly(player, "Motion", "C", "Added AirTicks", 5, "C", "%{-GUARD::%player%::TEMP::MOTIONC::AIRTICKS}%", 1, {_maxairticks}, 1) if GDA_getDeltaY(player, 1, false) > 0
+    delete {-GUARD::%player%::TEMP::VL::MOTION.C} if GDA_getDeltaY(player, 1, false) <= 0
+  if GDA_getDeltaY(player, 1, true) != 0:
+    if "%GDA_getDeltaY(player, 1, true)%" = "%{-GUARD::%player%::TEMP::LASTYPOS}%":
+      GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+      GDA_returnTimeSpan(player, "BUBBLE") > 0.6 second
+      GDA_getLastAtAir(player, true) = false
+      GDA_returnTimeSpan(player, "DAMAGE") > 1.2 second
+      GDA_returnTimeSpan(player, "CLIMABLETICKS") > 1.2 second
+      block at player is not cobweb
+      if {-GUARD::%player%::TEMP::TP} is not set:
+        GA_clearly(player, "Motion", "A", "Invalid y motion", 1, "A", "%GDA_getDeltaY(player, 1, true)%", 1, 4, 2) if "%GDA_getDeltaY(player, 1, true)%" != "0.08"
+    else:
+      set {-GUARD::%player%::TEMP::LASTYPOS} to GDA_getDeltaY(player, 1, true)
+  if "%GDA_getDeltaY(player, 1, true)%" != "%{-GUARD::%player%::TEMP::LASTYPOS}%":
+    delete {-GUARD::%player%::TEMP::VL::MOTION.A}
+  if GDA_getDeltaY(player, 1, false) > 0.05:
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 0.6 second
+    GDA_returnTimeSpan(player, "JUMPBOOST") > 0.6 second
+    GDA_returnTimeSpan(player, "PLACE") > 0.5 second
+    GDA_getLastBlock(player, water, 1) = false
+    GDA_getLastBlock(player, lava, 1) = false
+    GDA_returnTimeSpan(player, "CLIMABLETICKS") > 1.2 second
+    GDA_returnTimeSpan(player, "WATER") > 1.2 second
+    GA_clearly(player, "Flight", "A", "Prediction Spider", 5, "A5", "%GDA_getDeltaY(player, 1, false)%", 0.5, ({_buffer} + 5.5), 1) #if GDA_returnTimeSpan(player, "BUBBLE") > 0.6 second
+  if player is not on ground:
+    player is not riding
+    GDA_returnTimeSpan(player, "MOUNT") > 1.5 second
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 0.6 second
+    GDA_getLastBlock(player, water, 1) = false
+    GDA_getLastAtAir(player, true) = false
+    GDA_getLastBlock(player, lava, 1) = false
+    GDA_returnTimeSpan(player, "CLIMABLETICKS") > 1.2 second
+    GDA_returnTimeSpan(player, "ENDERPEARL") > 1 second
+    add {-GUARD::%player%::TEMP::JUMPBOOST} + 1 to {_FA1} if GDA_returnTimeSpan(player, "JUMPBOOST") < 1.2 second
+    add 9 to {_FA1} if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 1.2 second
+    add 5 to {_FA3} if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 1.2 second
+    add 2 to {_FA2} if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 1.2 second
+    if GDA_returnTimeSpan(player, "ENDERPEARL") > 1.2 seconds:
+      GA_clearly(player, "Flight", "A", "Prediction Fly", 5, "A1", "%{-GUARD::%player%::TEMP::FLIGHTA::Y}%", 1, ({_FA1} + 7), 1) if {-GUARD::%player%::TEMP::FLIGHTA::Y} > 0
+    GA_clearly(player, "Flight", "A", "Prediction Fly", 5, "A2", "%{_FlightAPrediction}%", 1, ({_FA2} + 3), 1) if {-GUARD::%player%::TEMP::FLIGHTA::Y} > {_FlightAPrediction}
+    GA_clearly(player, "Flight", "A", "Prediction Fly", 5, "A3", "%abs({-GUARD::%player%::TEMP::FLIGHTA::Y} - {_FlightAPrediction})%", 1, ({_FA3} + 5), 1) if abs({-GUARD::%player%::TEMP::FLIGHTA::Y} - {_FlightAPrediction}) > 0
+    GA_clearly(player, "Flight", "A", "Prediction Fly", 5, "A4", "%{-GUARD::%player%::TEMP::FLIGHTA::Y}% / %{_FlightAPrediction}%", 1, ({_FA3} + 5), 1) if {-GUARD::%player%::TEMP::FLIGHTA::Y} != {_FlightAPrediction}
+  if player is on ground:
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A3}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A2}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A1}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A4}
+  if GDA_getLastBlock(player, air, 0.25) = false:
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A3}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A2}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A1}
+    delete {-GUARD::%player%::TEMP::VL::FLIGHT.A4}
+  if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") < 0.3 second:
+    remove 1 from {-GUARD::%player%::TEMP::VL::FLIGHT.A4} if {-GUARD::%player%::TEMP::VL::FLIGHT.A4} >= 1
+    remove 1 from {-GUARD::%player%::TEMP::VL::FLIGHT.A3} if {-GUARD::%player%::TEMP::VL::FLIGHT.A3} >= 1
+    remove 1 from {-GUARD::%player%::TEMP::VL::FLIGHT.A2} if {-GUARD::%player%::TEMP::VL::FLIGHT.A2} >= 1
+  if {-GUARD::%player%::TEMP::VL::FLIGHT.A5} >= 0.5:
+    remove 0.5 from {-GUARD::%player%::TEMP::VL::FLIGHT.A5} if GDA_getDeltaY(player, 1, false) < 0.05
+  if GDA_getLastBlock(player, water, 0.01) = true:
+    GDA_returnTimeSpan(player, "ABOVETICKS") > 0.6 second
+    GDA_returnTimeSpan(player, "BUBBLE") > 0.6 second
+    player is not swimming
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+    GA_clearly(player, "Jesus", "B", "Walking On Water", 5, "B", "%GDA_getDeltaY(player, 1, true)%", 1, 3, 2) if GDA_getDeltaY(player, 1, true) = 0
+    GA_clearly(player, "Jesus", "A", "Walking On Water", 5, "A", "NaN", 0, 0, 2) if block at player is air
+  else:
+    delete {-GUARD::%player%::TEMP::VL::JESUS.B} 
+    delete {-GUARD::%player%::TEMP::VL::JESUS.A} 
+  if GDA_getLastBlock(player, lava, 0.01) = true:
+    GDA_returnTimeSpan(player, "ABOVETICKS") > 0.6 second
+    GDA_returnTimeSpan(player, "ABOVEAT") > 0.6 second
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+    GA_clearly(player, "Jesus", "D", "Walking On Lava", 5, "D", "%GDA_getDeltaY(player, 1, true)%", 1, 3, 2) if GDA_getDeltaY(player, 1, true) = 0
+    GA_clearly(player, "Jesus", "C", "Walking On Lava", 5, "C", "NaN", 0, 0, 2) if block at player is air
+  else:
+    delete {-GUARD::%player%::TEMP::VL::JESUS.D} 
+    delete {-GUARD::%player%::TEMP::VL::JESUS.C} 
+  if player is riding:
+    GA_clearly(player, "BadPacket", "A", "Impossible Riding", 1, "A", "NaN", 1, 0, 2) if {-GUARD::%player%::TEMP::MOUNTSTATE} is not set
+  if player's hunger level <= 3:
+    GA_clearly(player, "BadPacket", "B", "Impossible Sprinting", 1, "B", "NaN", 1, 3, 2) if player is sprinting
+  else:
+    delete {-GUARD::%player%::TEMP::VL::BADPACKET.B} if player is sprinting
+  set {_height} to 0.7532
+  add ({-GUARD::%player%::TEMP::JUMPBOOST} * 0.157) to {_height} if GDA_returnTimeSpan(player, "JUMPBOOST") < 0.6 second
+  if GDA_getDeltaY(player, 1, false) > {_height}:
+    GDA_returnTimeSpan(player, "FLY") > 2 second
+    GDA_returnTimeSpan(player, "SLIMESTOP") > 3 second
+    player is not riding
+    GDA_returnTimeSpan(player, "MOUNT") > 1.5 second
+    if {-GUARD::%player%::TEMP::TP} is not set:
+      GA_clearly(player, "BadPacket", "F", "Teleported Up", 3, "F", "%GDA_getDeltaY(player, 1, false)%", 0, 0, 2) if GDA_returnTimeSpan(player, "SLIME") > 0.6 second
+  else if GDA_getDeltaY(player, 1, false) < {_height}: 
+    remove 0.05 from {-GUARD::%player%::TEMP::VL::BADPACKET.F} if {-GUARD::%player%::TEMP::VL::BADPACKET.F} >= 0.05
+  if GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1) > 0.9:
+    GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 1.2 second
+    GDA_returnTimeSpan(player, "ICE") > 1.2 second
+    GDA_returnTimeSpan(player, "SLIME") > 1.2 second
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 1.2 second
+    GA_clearly(player, "BadPacket", "G", "Impossible Teleport", 3, "G", "%GDA_getDeltaX(player, 1) + GDA_getDeltaZ(player, 1)%", 0, 0, 2) if {-GUARD::%player%::TEMP::TP} is not set
+  if GDA_getDeltaLoc(player, 1, true) > 0.75:
+    GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 1.2 second
+    GDA_returnTimeSpan(player, "ICE") > 1.2 second
+    GDA_returnTimeSpan(player, "SLIME") > 1.2 second
+    GDA_returnTimeSpan(player, "LOWBLOCK") > 1.2 second
+    GA_clearly(player, "BadPacket", "H", "Impossible Teleport", 3, "H", "%GDA_getDeltaLoc(player, 1, false)%", 0, 0, 2) if {-GUARD::%player%::TEMP::TP} is not set
+  if GDA_getDeltaY(player, 1, false) > 0:
+    set {-GUARD::%player%::TEMP::TICKSTEP} to {-GUARD::%player%::TEMP::TICKSTEP} + 1
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 1:
+      GDA_getDeltaY(player, 1, false) != 0.41999998688697815
+      GDA_returnTimeSpan(player, "ABOVETICKS") > 0.6 seconds
+      GDA_returnTimeSpan(player, "ABOVEAT") > 0.6 seconds
+      GDA_returnTimeSpan(player, "SLIMESTOP") > 1 second
+      player is not riding
+      GDA_returnTimeSpan(player, "MOUNT") > 1.5 second
+      block at player is not cobweb
+      GDA_getLastBlock(player, water, 0.01) = false
+      GDA_getLastBlock(player, lava, 0.01) = false
+      GDA_returnTimeSpan(player, "WATER") > 1.2 second
+      GDA_returnTimeSpan(player, "JUMPBOOST") > 0.6 second
+      GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 0.25 second
+      GDA_returnTimeSpan(player, "PLACE") > 0.6 second
+      GDA_returnTimeSpan(player, "LOWBLOCK") > 0.6 second
+      GDA_returnTimeSpan(player, "SLIME") > 0.6 second
+      if {-GUARD::%player%::TEMP::TP} is not set:
+        GA_clearly(player, "Motion", "D", "Invalid y movement", 3, "D", "%GDA_getDeltaY(player, 1, false)%", 0.5, 1.5, 1) if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 1.2 second
+      else if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 1.2 second:
+        if {-GUARD::%player%::TEMP::TP} is not set:
+          GA_clearly(player, "Motion", "D", "Invalid y movement", 3, "A", "%GDA_getDeltaY(player, 1, false)%", 0.5, 1.5, 1) if GDA_getDeltaY(player, 1, false) != 0.41999998688697815 or 0.275125 or 0.4 or 0.5
+  if GDA_getDeltaY(player, 1, false) <= 0:
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 2:
+      GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 0.6 second
+      GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+      GDA_returnTimeSpan(player, "ABOVETICKS") > 0.6 second
+      GDA_returnTimeSpan(player, "ABOVEAT") > 0.6 second
+      GA_clearly(player, "Motion", "E", "Impossible Motion", 3, "E", "%GDA_getDeltaY(player, 1, false)%", 0.5, 1, 1) if {-GUARD::%player%::TEMP::TP} is not set
+      set {-GUARD::%player%::TEMP::TICKSTEP} to 0 
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 3:
+      GDA_returnTimeSpan(player, "LAGBACK") > 0.3 second
+      GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+      GA_clearly(player, "Motion", "F", "Impossible Motion", 3, "F", "%GDA_getDeltaY(player, 1, false)%", 0.5, 1, 2) if GDA_returnTimeSpan(player, "UNSAFEDAMAGE") > 1.2 second
+      set {-GUARD::%player%::TEMP::TICKSTEP} to 0
+    set {-GUARD::%player%::TEMP::TICKSTEP} to 0
+  if {-GUARD::%player%::TEMP::VL::MOTION.E} >= 0.05:
+    remove 0.05 from {-GUARD::%player%::TEMP::VL::MOTION.E} if GDA_getDeltaY(player, 1, false) > 0
+  if {-GUARD::%player%::TEMP::VL::MOTION.F} >= 0.05:
+    remove 0.05 from {-GUARD::%player%::TEMP::VL::MOTION.F} if GDA_getDeltaY(player, 1, false) > 0
+  if {-GUARD::%player%::TEMP::VL::MOTION.D} >= 0.5:
+    remove 0.5 from {-GUARD::%player%::TEMP::VL::MOTION.D} if GDA_getDeltaY(player, 1, false) = 0.41999998688697815
+  if GDA_returnTimeSpan(player, "MOUNT") > 1.2 second:
+    set {_speed} to GDA_getDeltaLoc(player, 1, true)
+    if GDA_returnValue(player, "GROUNDTICKS") > 8:
+      set {_maxspeed} to 0.2868198
+    else:
+      set {_maxspeed} to 0.333
+    if GDA_returnTimeSpan(player, "ABOVEAT") < 1.2 second:
+      set {_maxspeed} to 0.5
+    if GDA_returnTimeSpan(player, "ABOVETICKS") < 1.2 second:
+      set {_maxspeed} to 0.4
+    if GDA_returnTimeSpan(player, "ICE") < 1.2 second:
+      if GDA_returnValue(player, "GROUNDTICKS") > 22:
+        set {_maxspeed} to 0.2757 if GDA_returnTimeSpan(player, "ICE") < 0.05 second
+      else:
+        set {_maxspeed} to 0.48
+        if GDA_returnTimeSpan(player, "ABOVETICKS") < 1.2 second:
+          set {_maxspeed} to 0.78
+        if GDA_returnTimeSpan(player, "ABOVEAT") < 1.2 second:
+          set {_maxspeed} to 0.9
+    if GDA_returnTimeSpan(player, "SLIME") < 1.2 second:
+      if GDA_returnValue(player, "GROUNDTICKS") > 14:
+        GDA_returnTimeSpan(player, "SLIME") < 0.05 second
+        set {_maxspeed} to 0.09 if GDA_returnTimeSpan(player, "LOWBLOCK") > 0.25 seconds
+      else:
+        set {_maxspeed} to 0.48
+        if GDA_returnTimeSpan(player, "ABOVETICKS") < 1.2 second:
+          set {_maxspeed} to 0.74
+        if GDA_returnTimeSpan(player, "ABOVEAT") < 1.2 seconds:
+          set {_maxspeed} to 0.44
+    if block at player is cobweb:
+      if GDA_returnValue(player, "GROUNDTICKS") > 2:
+        set {_maxspeed} to 0.1
+      else:
+        set {_maxspeed} to 0.1004
+        if GDA_returnTimeSpan(player, "ABOVETICKS") < 1.2 seconds:
+          set {_maxspeed} to 0.108
+        if GDA_returnTimeSpan(player, "ABOVEAT") < 1.2 seconds:
+          set {_maxspeed} to 0.108
+    if GDA_returnTimeSpan(player, "SPEEDPOT") < 3 second:
+      if GDA_returnValue(player, "GROUNDTICKS") > 2:
+        set {_maxspeed} to 0.34361233 if {-GUARD::%player%::TEMP::SPEEDPOT} = 1
+        set {_maxspeed} to (0.20544054 * {-GUARD::%player%::TEMP::SPEEDPOT}) if {-GUARD::%player%::TEMP::SPEEDPOT} >= 2
+      else:
+        set {_maxspeed} to (0.37 * {-GUARD::%player%::TEMP::SPEEDPOT})
+    if player is swimming:
+      set {_maxspeed} to 0.28
+      if player's boots are enchanted with depth strider:
+        set {_tier} to enchantment level of depth strider of player's boots
+        set {_maxspeed} to 0.23625096 if {_tier} = 1 
+        set {_maxspeed} to 0.254699 if {_tier} = 2 
+        set {_maxspeed} to 0.2653481 if {_tier} = 3
+        set {_maxspeed} to (0.0683204 * {_tier}) if {_tier} > 3
+    set {_maxspeed} to 0.63 if GDA_returnTimeSpan(player, "DAMAGE") < 1.2 second
+    set {_maxspeed} to {-GUARD::%player%::TEMP::KBENCHANT} * 0.95 if GDA_returnTimeSpan(player, "KBDAMAGE") < 1.5 second
+    if difference between {-GUARD::%player%::TEMP::SPEED.DIFF} and GDA_getDeltaLoc(player, 1, true) > 1:
+      GDA_returnTimeSpan(player, "KBDAMAGE") > 1.5 second
+      GDA_returnTimeSpan(player, "ICE") > 1.5 second
+      GDA_returnTimeSpan(player, "SLIME") > 1.5 second
+      if {-GUARD::%player%::TEMP::TP} is not set:
+        GA_clearly(player, "Speed", "B", "Speed Limit", 3, "B", "%{_speed}%", 0, 0, 2)
+        #cancel event if difference between {-GUARD::%player%::TEMP::SPEED.DIFF} and GDA_getDeltaLoc(player, 1, true) > 0.72
+    GA_clearly(player, "Speed", "A", "Speed Limit", 5, "A", "%{_speed}%&7/&9%{_maxspeed}%", 1, 6, 1) if {_speed} > {_maxspeed}
+    if {-GUARD::%player%::TEMP::VL::SPEED.A} >= 1:
+      if {_maxspeed} != 0.2868198:
+        remove 1 from {-GUARD::%player%::TEMP::VL::SPEED.A} if {_speed} < {_maxspeed}
+    if {-GUARD::%player%::TEMP::VL::SPEED.B} >= 0.05:
+      remove 0.05 from {-GUARD::%player%::TEMP::VL::SPEED.B} if difference between {-GUARD::%player%::TEMP::SPEED.DIFF} and GDA_getDeltaLoc(player, 1, true) < 0.68
+  set {_speed} to sqrt(GDA_getDeltaX(player, 1) ^ 2 + GDA_getDeltaZ(player, 1) ^ 2)
+  set {_speed} to roundTo({_speed}, 7) * 10000000
+  if {_speed} != 980000:
+    if "%{_speed}%" doesn't contain ".":
+      if {-GUARD::%player%::TEMP::TP} is not set: 
+        block at player is not cobweb
+        GDA_returnValue(player, "CLIMABLETICKS") <= 0
+        GDA_returnTimeSpan(player, "SOULSAND") > 0.8 second
+        GA_clearly(player, "Speed", "C", "Rounded Speed", 3, "C", "%{_speed}%", 1, 2, 2) if "%{_speed}%" contains "000"
+  delete {-GUARD::%player%::TEMP::VL::SPEED.C} if "%{_speed}%" doesn't contain "000"
+  set {-GUARD::%player%::TEMP::POSLOC} to player's y location
+  delete {-GUARD::%player%::TEMP::TP} if {-GUARD::%player%::TEMP::CONFIRMTP} is true
+on right click:
+  set {_RTIME2} to {-GUARD::%player%::TEMP::TIMESPAN::RTIME}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIME} to now
+  set {_RTIME3} to "%difference between {_RTIME2} and now%"
+  replace all " seconds" or " second" or " minute" or " minutes" or " hour" or " hours" or " days" or " day" in {_RTIME3} with ""
+  set {_RTIME5} to {-GUARD::%player%::TEMP::TIMESPAN::RTIME4}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} to {_RTIME3} parsed as number
+  set {_RTIMELASTCHECKED} to difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} to difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} if {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} = 0
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} to difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} < {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} to difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} > {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH}
+  GA_clearly(player, "AutoClicker", "D", "Clicking Patterns", 12, "D", "%difference between {-GUARD::%player%::TEMP::RTIMELOW} and {-GUARD::%player%::TEMP::RTIMEHIGH}%", 1, 8, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} = {_RTIMELASTCHECKED}
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER.D} if difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} != {_RTIMELASTCHECKED}
+  GA_clearly(player, "AutoClicker", "A", "Clicking Patterns", 12, "a", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 7, 1) if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} < 0.005
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER.A} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} > 0.005
+
+on chat:
+  GA_clearly(player, "BadPacket", "C", "Impossible Character", 1, "C", "%message%", 0, 0, 2) if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+  cancel event if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+
+on left click:
+  set {_LTIME2} to {-GUARD::%player%::TEMP::TIMESPAN::LTIME}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIME} to now
+  set {_LTIME3} to "%difference between {_LTIME2} and now%"
+  replace all " seconds" or " second" or " minute" or " minutes" or " hour" or " hours" or " days" or " day" in {_LTIME3} with ""
+  set {_LTIME5} to {-GUARD::%player%::TEMP::TIMESPAN::LTIME4}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} to {_LTIME3} parsed as number
+  set {_LLASTTIMECHECKED} to difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} to difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} if {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} = 0
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} to difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} < {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} to difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} > {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH}
+  GA_clearly(player, "AutoClicker", "C", "Clicking Patterns", 12, "C", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 8, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} = {_LLASTTIMECHECKED}
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER.C} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} != {_LLASTTIMECHECKED}
+  GA_clearly(player, "AutoClicker", "B", "Clicking Patterns", 12, "B", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 7, 1) if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} < 0.005
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER.B} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} > 0.005
+on damage:
+  attacker is a player
+  projectile does not exist
+  if {-GUARD::%attacker%::TEMP::ARM} is not set:
+    cancel event
+    GA_clearly(attacker, "BadPacket", "E", "No Swing", 0, "E", "NaN", 0, 0, 0)
+  cancel event if difference between {-GUARD::%attacker%::TEMP::TIMESPAN::LASTATTACK} and now < 0.03 second
+  set {-GUARD::%attacker%::TEMP::TIMESPAN::LASTATTACK} to now
+  delete {-GUARD::%attacker%::TEMP::ARM}
+on damage:  
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  set {_distance} to distance between location of attacker and location of victim
+  remove ((ping of attacker * 0.0035) + (ping of victim * 0.0035) + 0.2) from {_distance}
+  remove 0.42 from {_distance} if attacker is sprinting
+  remove 0.83 from {_distance} if victim is sprinting
+  if {_distance} > 3.01:
+    set {_increase} to 1
+    set {_increase} to 0.75 if {_distance} < (3.01 + 0.85)
+    GA_clearly(attacker, "Reach", "A", "Hit further", 3, "A", "%{_distance}%", {_increase}, 2, 2)
+  else:
+    remove 1 from {-GUARD::%attacker%::TEMP::VL::REACH.A} if {-GUARD::%attacker%::TEMP::VL::REACH.A} >= 1
+on place:
+  if y coordinate of event-block < y coordinate of player:
+    block under event-block is air or void air
+    player's gamemode is not creative or spectator
+    set {_pitch} to player's pitch
+    set {_dist} to {_DistX} if {_DistX} > {_DistZ}
+    set {_dist} to {_DistZ} if {_DistZ} > {_DistX}
+    set {_predictedPitch} to {_pitch} if {_dist} < 1.2
+    set {_predictedPitch} to {_pitch} if ({_dist} + 1.4) > 1.2
+    GA_clearly(player, "Scaffold", "A", "Impossible Placement", 3, "A", "%{_predictedPitch}%", 0.5, 1, 2) if {_predictedPitch} is between 90 and 88.75
+    if player is sprinting:
+      GA_clearly(player, "Scaffold", "B", "Impossible Sprinting", 5, "B", "%{_predictedPitch}%", 0, 0, 1) if {_predictedPitch} is between 73 and 90
+    GA_clearly(player, "Scaffold", "C", "Impossible Placement", 3, "C", "NaN", 0.5, 2, 2) if event-block is not player's targeted block 
+    if {-GUARD::%player%::TEMP::VL::SCAFFOLD.A} >= 0.25:
+      remove 0.25 from {-GUARD::%player%::TEMP::VL::SCAFFOLD.A} if {_predictedPitch} is not between 90 and 88.75
+    if {-GUARD::%player%::TEMP::VL::SCAFFOLD.C} >= 0.25:
+      remove 0.25 from {-GUARD::%player%::TEMP::VL::SCAFFOLD.C} if event-block is player's targeted block 
+function GA_clearly(p: player, cheat: text, type: text, dev: text, vl: number, tpvl: text, v: text, bufferadd: number, buffer: number, punish: number):
+  {_p}'s gamemode is not creative or spectator
+  {-GUARD::%{_p}%::BYPASSED} is not set
+  if {_p}'s name contains "*":
+    stop if {@IgnoreBedrock} is true
+  fly mode of {_p} is false
+  {-GUARD::CHECK::%{_cheat}%.%{_tpvl}%} is not set
+  add {_bufferadd} to {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%}
+  set {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%} to 1 if {_buffer} = 0
+  {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%} > {_buffer}
+  add 1 to {-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%}
+  send formatted "<tooltip:&7Check: %{GUARD::THEME::COLOR::MAIN}%%{_cheat}% &7(%{_tpvl}%&7)%nl%&7Value: %{GUARD::THEME::COLOR::MAIN}%%{_v}% %nl%&7Informations: %{GUARD::THEME::COLOR::MAIN}%%{_dev}%%nl%&7Buffer: %{GUARD::THEME::COLOR::MAIN}%%{-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%}%&7/%{GUARD::THEME::COLOR::MAIN}%%{_buffer}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_p}%>%{GUARD::THEME::COLOR::MAIN}%&lGUARD &8» %{GUARD::THEME::COLOR::SECOND}%%{_p}%&7 failed %{GUARD::THEME::COLOR::SECOND}%%{_cheat}% %{_type}% &7(%{GUARD::THEME::COLOR::MAIN}%x%{-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%}%&7)" to all players where [{-GUARD::%input%::ALERTS} is true]
+  if {@TestServer} = true:
+    if {@OnlyForOps} = true:
+      stop if {_p} doesn't have permission "GUARD.op"
+    if {-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%} >= {_vl}:
+      {_vl} != 0
+      send title "&cYou would be kicked by now." with subtitle "%{GUARD::THEME::PREFIX}% &fUnfair Advantage" to {_p}
+      stop
+  if {@AutoPunish} is true:
+    {_vl} != 0
+    {-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%} >= {_vl} 
+    kick {_p} due to "%{GUARD::THEME::PREFIX}% &fUnfair Advtange." if {_punish} = 1
+    if {_punish} = 2:
+      make server execute command "/ban %{_p}% perm Cheating -s"
+      broadcast ""
+      broadcast "%{GUARD::THEME::PREFIX}% &c%{_p}% &fhas been removed for &cUnfair Advantage"
+      broadcast ""
+      strike lightning at location of {_p}
+      create a fake explosion at location of {_p}
+    make server execute command "/mute %{_p}% 1h -s" if {_punish} = 3
+function GDAR_getLastAirAbove(p: player, h: number, v: text):
+  if block {_h} above north {_p} is air or void air:
+    if block {_h} above south {_p} is air or void air:
+      if block {_h} above west {_p} is air or void air:
+        if block {_h} above east {_p} is air or void air:
+          if block {_h} above {_p} is air or void air:
+            if block {_h} above north east {_p} is air or void air:
+              if block {_h} above north west {_p} is air or void air:
+                if block {_h} above south east {_p} is air or void air:
+                  if block {_h} above south west {_p} is air or void air:
+                    stop
+  set {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_v}%} to now
+function GDAR_getLastAt(p: player, b: item type, v: text) :: time span:
+  block above north {_p} is not {_b}:
+    block above south {_p} is not {_b}:
+      block above west {_p} is not {_b}:
+        block above east {_p} is not {_b}:
+          block above {_p} is not {_b}:
+            block above north east {_p} is not {_b}:
+              block above north west {_p} is not {_b}:
+                block above south east {_p} is not {_b}:
+                  block above south west {_p} is not {_b}:
+                    set {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_v}%} to now
+                    return difference between {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_v}%} and now
+
+function GDA_getLastAtAir(p: player, t: boolean) :: boolean:
+  set {_b} to {_p}'s location
+  if {_t} = true:
+    return true if block at {_b} is water or lava
+  block at {_b} is air or water or lava:
+    add 1 to z location of {_b}
+    if {_t} = true:
+      return true if block at {_b} is water or lava
+    block at {_b} is air or water or lava:
+      remove 2 from z location of {_b}
+      if {_t} = true:
+        return true if block at {_b} is water or lava
+      block at {_b} is air or water or lava:
+        add 1 to z location of {_b}
+        add 1 to x location of {_b}
+        if {_t} = true:
+          return true if block at {_b} is water or lava
+        block at {_b} is air or water or lava:
+          remove 2 from x location of {_b}
+          if {_t} = true:
+            return true if block at {_b} is water or lava
+          block at {_b} is air or water or lava:
+            add 1 to z location of {_b}
+            if {_t} = true:
+              return true if block at {_b} is water or lava
+            block at {_b} is air or water or lava:
+              remove 2 from z location of {_b}
+              if {_t} = true:
+                return true if block at {_b} is water or lava
+              block at {_b} is air or water or lava:
+                add 2 to x location of {_b}
+                if {_t} = true:
+                  return true if block at {_b} is water or lava
+                block at {_b} is air or water or lava:
+                  add 2 to z location of {_b}
+                  if {_t} = true:
+                    return true if block at {_b} is water or lava
+                  block at {_b} is air or water or lava:
+                    if {_t} = true:
+                      return true if block at {_b} is water or lava
+                    return true if {_t} = false
+  return false if {_t} = false
+  return false if {_t} = true
+function GDAR_getLowBlock(p: player):
+  if block 0.75 or 1 or 0.5 or 0.05 below {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+    if block 0.75 or 1 or 0.5 or 0.05 below north {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+      if block 0.75 or 1 or 0.5 or 0.05 below south {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+        if block 0.75 or 1 or 0.5 or 0.05 below west {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+          if block 0.75 or 1 or 0.5 or 0.05 below east {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+            if block 0.75 or 1 or 0.5 or 0.05 below north east {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+              if block 0.75 or 1 or 0.5 or 0.05 below north west {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+                if block 0.75 or 1 or 0.5 or 0.05 below south east {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+                  if block 0.75 or 1 or 0.5 or 0.05 below south west {_p} is not flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers:
+                    stop
+  set {-GUARD::%{_p}%::TEMP::TIMESPAN::LOWBLOCK} to now
+on teleport:
+  delete {-GUARD::%event-player%::TEMP::CONFIRMTP}
+  set {-GUARD::%event-player%::TEMP::TP} to true
+  wait 8 ticks
+  set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true
+on quit:
+  delete {-GUARD::%player%::*}
+function GDA_getLastBlock(p: player, b: item type, h: number) :: boolean:
+  if block {_h} below {_p} is {_b}:
+    if block {_h} below north {_p} is {_b}:
+      if block {_h} below south {_p} is {_b}:
+        if block {_h} below west {_p} is {_b}:
+          if block {_h} below east {_p} is {_b}:
+            if block {_h} below north east {_p} is {_b}:
+              if block {_h} below north west {_p} is {_b}:
+                if block {_h} below south east {_p} is {_b}:
+                  if block {_h} below south west {_p} is {_b}:
+                    return true
+  return false
+function GDA_Teleport(p: player):
+  teleport {_p} to {-GUARD::%{_p}%::TEMP::LAGBACK} if difference between now and {-GUARD::%{_p}%::TEMP::TIMESPAN::LAGBACK} > 0.6 second
+  set {-GUARD::%{_p}%::TEMP::TIMESPAN::LAGBACK} to now
+function roundTo(n: number, r: number) :: number:
+  return round({_n} * 10^ {_r}) / 10^ {_r}
+function GDA_getLastBlockReversed(p: player, b: item type, v: text, h: number) :: time span:
+  if block {_h} below {_p} is not {_b}:
+    if block {_h} below north {_p} is not {_b}:
+      if block {_h} below south {_p} is not {_b}:
+        if block {_h} below west {_p} is not {_b}:
+          if block {_h} below east {_p} is not {_b}:
+            if block {_h} below north east {_p} is not {_b}:
+              if block {_h} below north west {_p} is not {_b}:
+                if block {_h} below south east {_p} is not {_b}:
+                  if block {_h} below south west {_p} is not {_b}:
+                    stop
+  set {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_v}%} to now
+  return difference between {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_v}%} and now
+on load:
+  set {GUARD::THEME::NAME} to "&3Cyan" if {GUARD::THEME::COLOR} is not set 
+  set {GUARD::THEME::COLOR::MAIN} to "&3" if {GUARD::THEME::COLOR::MAIN} is not set
+  set {GUARD::THEME::COLOR::SECOND} to "&f" if {GUARD::THEME::COLOR::SECOND} is not set
+  set {GUARD::THEME::PREFIX} to "&3&lGUARD &8»" if {GUARD::THEME::PREFIX} is not set
+  set {-GUARD::RELOAD} to now
+on skript start:
+  delete {-GUARD::*}
+  set {-GUARD::RELOAD} to now
+on skript stop:
+  delete {-GUARD::*}
+on join:
+   while player is online:
+      delete {-GUARD::%player%::VL::*}
+      wait 2 minutes
+function GDAR_SlimeHandler(p: player):
+  set {-GUARD::%{_p}%::TEMP::SLIME} to true if GDA_getLastBlockReversed({_p}, slime block, "SLIME", 1) < 0.2 second
+  delete {-GUARD::%{_p}%::TEMP::SLIME} if block under {_p} is not air or slime block or water or lava
+  {-GUARD::%{_p}%::TEMP::SLIME} is set
+  set {_Time} to "%(fall distance of {_p} / 2)% seconds" parsed as a time span if block under {_p} is air
+  set {-GUARD::%{_p}%::TEMP::TIMESPAN::SLIMESTOP} to now if {_Time} = 0 seconds
+on shoot:
+  set {-GUARD::%shooter%::TEMP::TIMESPAN::ENDERPEARL} to now if projectile is enderpearl
+  set {-GUARD::%shooter%::TEMP::PUNCHBOW} to true if tool of the shooter is enchanted with punch
+  set {-GUARD::%shooter%::TEMP::PUNCHBOWLEVEL} to enchantment level of punch of shooter's tool
+on damage:
+   set {-GUARD::%victim%::TEMP::TIMESPAN::UNSAFEDAMAGE} to now
+   if {-GUARD::%attacker%::TEMP::PUNCHBOW} is true:
+      set {-GUARD::%victim%::TEMP::KBENCHANT} to {-GUARD::%attacker%::TEMP::PUNCHBOWLEVEL}
+      set {-GUARD::%victim%::TEMP::TIMESPAN::KBDAMAGE} to now
+      delete {-GUARD::%attacker%::TEMP::PUNCHBOW}
+   if tool of the attacker is enchanted with knockback:
+      set {-GUARD::%victim%::TEMP::KBENCHANT} to enchantment level of knockback of attacker's tool
+      set {-GUARD::%victim%::TEMP::TIMESPAN::KBDAMAGE} to now
+   "%damage cause%" contains "ATTACK"
+   set {-GUARD::%victim%::TEMP::TIMESPAN::DAMAGE} to now if attacker is not victim
+function GDA_getDeltaLoc(p: player, n: number, y: boolean) :: number:
+  set y location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} to y location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%} if {_y} is true
+  return distance between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function GDA_getDeltaZ(p: player, n: number) :: number:
+  return difference between z location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and z location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function GDA_getDeltaX(p: player, n: number) :: number:
+  return difference between x location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and x location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function GDA_getDeltaPitch(p: player, n: number) :: number:
+  return difference between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}'s pitch and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}'s pitch
+function GDA_getDeltaYaw(p: player, n: number) :: number:
+  return difference between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}'s yaw and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}'s yaw
+function GDA_getDeltaY(p: player, n: number, r: boolean) :: number:
+  return y location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%} - y location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} if {_r} is false
+  return difference between y location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and y location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%} if {_r} is true
+function GDA_returnTimeSpan(p: player, t: text) :: time span:
+  return difference between {-GUARD::%{_p}%::TEMP::TIMESPAN::%{_t}%} and now
+function GDA_returnValue(p: player, t: text) :: number:
+  return {-GUARD::%{_p}%::TEMP::%{_t}%}
+on mount:
+  set {-GUARD::%player%::TEMP::MOUNTSTATE} to true
+on dismount:
+  delete {-GUARD::%player%::TEMP::MOUNTSTATE}
+on place:
+  set {-GUARD::%player%::TEMP::TIMESPAN::PLACE} to now
+every 2 seconds:
+  loop all players:
+    set {-GUARD::%loop-player%::TEMP::TIMESPAN::LTIMELOW} to 0
+    set {-GUARD::%loop-player%::TEMP::TIMESPAN::LTIMEHIGH} to 0
+    set {-GUARD::%loop-player%::TEMP::TIMESPAN::RTIMELOW} to 0
+    set {-GUARD::%loop-player%::TEMP::TIMESPAN::RTIMEHIGH} to 0
+on arm swing:
+  set {-GUARD::%player%::TEMP::ARM} to true
+on join:
+   set {-GUARD::%player%::ALERTS} to true if player has permission "guard.alerts.auto"
+   send "%{GUARD::THEME::PREFIX}% &fAlers output &aenabled" to player if player has permission "guard.alerts.auto"
+   set {-GUARD::%player%::TEMP::TIMESPAN::PLACE} to now
+   delete {-GUARD::%player%::TEMP::MOUNTSTATE}
+   set {-GUARD::%player%::TEMP::TIMESPAN::UNSAFEDAMAGE} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::DAMAGE} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::KBDAMAGE} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::SLIMESTOP} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::WATER} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::FLY} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::BUBBLE} to now 
+   set {-GUARD::%player%::TEMP::TIMESPAN::MOUNT} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::CLIMABLETICKS} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::SLIME} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::ENDERPEARL} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::ICE} to now
+   set {-GUARD::%player%::TEMP::TIMESPAN::LAGBACK} to now
+   set {-GUARD::%player%::TEMP::LASTTP} to now
+   set {-GUARD::%player%::TEMP::SPEED.DIFF} to 0
+on respawn:
+  set {-GUARD::%player%::TEMP::TP} to true
+  wait 5 ticks
+  set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true
+on join:
+  set {-GUARD::%player%::TEMP::TP} to true
+  wait 5 ticks
+  set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true
+command /guard [<text>] [<offline player>]:
+  trigger:
+    if arg 1 is not set:
+      send "&7&m--------------------------------------"
+      send "&f/guard alerts &7- &fToggles Alerts"
+      send "&f/guard kick [PLAYER] &7- &fKick a player using GUARD"
+      send "&f/guard version &7- &fReturns GUARD's version"
+      send "&f/guard clearcache &7- &fClear GUARD's cache &4⚠"
+      send "&f/guard clearvls &7- &fClear buffers and violations"
+      send "&f/guard bypass [PLAYER] &7- &fMakes a player exempt from GUARD"
+      send "&f/guard theme [LIST,COLOR] &7- &fSwitches GUARD's theme"
+      send "&7&m--------------------------------------"
+    if arg 1 is "theme":
+      if arg 2 is "list":
+        send "&7&m--------------------------------------"
+        send ""
+        send "&7Currently: %{GUARD::THEME::NAME}% &8| %{GUARD::THEME::PREFIX}%"
+        send ""
+        send "&7(&6Gold&7) &6&lGUARD &8» &e%player% &7failed &eFlight A &7(&6x69&7)"
+        send ""
+        send "&7(&3Cyan&7) &3&lGUARD &8» &f%player% &7failed &fMotion B &7(&3x69&7)"
+        send ""
+        send "&7(&9Blue&7) &9&lGUARD &8» &f%player% &7failed &fAim C &7(&9x69&7)"
+        send ""
+        send "&7(&bAqua&7) &b&lGUARD &8» &b%player% &7failed &bKillAura D &7(&bx69&7)"
+        send ""
+        send "&7(&cRed&7) &c&lGUARD &8» &c%player% &7failed &cStep F &7(&cx69&7)"
+        send ""
+        send "&7(&4Blood&7) &4&lGUARD &8» &c%player% &7failed &cStrafe G &7(&4x69&7)"
+        send ""
+        send "&7(&eYellow&7) &e&lGUARD &8» &f%player% &7failed &fVelocity H &7(&ex69&7)"
+        send ""
+        send "&7(&5Purple&7) &5&lGUARD &8» &d%player% &7failed &dReach I &7(&5x69&7)"
+        send ""
+        send "&7(&dPink&7) &d&lGUARD &8» &f%player% &7failed &fGround J &7(&dx69&7)"
+        send ""
+        send "&7(&aLime&7) &a&lGUARD &8» &f%player% &7failed &fBadPacket K &7(&ax69&7)"
+        send ""
+        send "&7(&2Green&7) &2&lGUARD &8» &a%player% &7failed &aScaffold L &7(&2x69&7)"
+        send ""
+        send "&7(&0Black&7) &0&lGUARD &8» %player% &7failed &8Speed M &7(&0x69&7)"
+        send ""
+        send "&7(&fWhite&7) &f&lGUARD &8» &f%player% &7failed &fAutoClicker N &7(&fx69&7)"
+        send "&7&m--------------------------------------"
+      if arg 2 is "gold":
+        set {GUARD::THEME::NAME} to "&6Gold"
+        set {GUARD::THEME::PREFIX} to "&6&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&6"
+        set {GUARD::THEME::COLOR::SECOND} to "&e"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &6Gold"
+      if arg 2 is "cyan":
+        set {GUARD::THEME::NAME} to "&3Cyan"
+        set {GUARD::THEME::PREFIX} to "&3&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&3"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &3Cyan"
+      if arg 2 is "blue":
+        set {GUARD::THEME::NAME} to "&9Blue"
+        set {GUARD::THEME::PREFIX} to "&9&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&9"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &9Blue"
+      if arg 2 is "aqua":
+        set {GUARD::THEME::NAME} to "&bAqua"
+        set {GUARD::THEME::PREFIX} to "&b&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&b"
+        set {GUARD::THEME::COLOR::SECOND} to "&b"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &bAqua"
+      if arg 2 is "red":
+        set {GUARD::THEME::NAME} to "&cRed"
+        set {GUARD::THEME::PREFIX} to "&c&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&c"
+        set {GUARD::THEME::COLOR::SECOND} to "&c"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &cRed"
+      if arg 2 is "blood":
+        set {GUARD::THEME::NAME} to "&4Blood"
+        set {GUARD::THEME::PREFIX} to "&4&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&4"
+        set {GUARD::THEME::COLOR::SECOND} to "&c"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &4Blood"
+      if arg 2 is "yellow":
+        set {GUARD::THEME::NAME} to "&eYellow"
+        set {GUARD::THEME::PREFIX} to "&e&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&e"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &eYellow"
+      if arg 2 is "purple":
+        set {GUARD::THEME::NAME} to "&5Purple"
+        set {GUARD::THEME::PREFIX} to "&5&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&5"
+        set {GUARD::THEME::COLOR::SECOND} to "&d"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &5Purple"
+      if arg 2 is "pink":
+        set {GUARD::THEME::NAME} to "&dPink"
+        set {GUARD::THEME::PREFIX} to "&d&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&d"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &dPink"
+      if arg 2 is "lime":
+        set {GUARD::THEME::NAME} to "&aLime"
+        set {GUARD::THEME::PREFIX} to "&a&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&a"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to Lime"
+      if arg 2 is "green":
+        set {GUARD::THEME::NAME} to "&2Green"
+        set {GUARD::THEME::PREFIX} to "&2&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&2"
+        set {GUARD::THEME::COLOR::SECOND} to "&a"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &2Green"
+      if arg 2 is "black":
+        set {GUARD::THEME::NAME} to "&0Black"
+        set {GUARD::THEME::PREFIX} to "&0&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&0"
+        set {GUARD::THEME::COLOR::SECOND} to "&8"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &0Black"
+      if arg 2 is "white":
+        set {GUARD::THEME::NAME} to "White"
+        set {GUARD::THEME::PREFIX} to "&f&lGUARD &8»"
+        set {GUARD::THEME::COLOR::MAIN} to "&f"
+        set {GUARD::THEME::COLOR::SECOND} to "&f"
+        send "%{GUARD::THEME::PREFIX}% &aTheme set to &fWhite"
+    if arg 1 is "alerts":
+      if player doesn't have permission "{@AlertsPermission}":
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."
+        stop
+      set {-GUARD::%player%::ALERTS} to true if {-GUARD::%player%::ALERTS} is not set
+      if {-GUARD::%player%::ALERTS} is false:
+        set {-GUARD::%player%::ALERTS} to true
+        send "%{GUARD::THEME::PREFIX}% &fAlerts output &aenabled" 
+        stop 
+      if {-GUARD::%player%::ALERTS} is true:
+        set {-GUARD::%player%::ALERTS} to false 
+        send "%{GUARD::THEME::PREFIX}% &fAlerts output &cdisabled"
+        stop
+    if arg 1 is "version":
+      if player doesn't have permission "{@VersionPermission}":
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."
+        stop
+      send "%{GUARD::THEME::PREFIX}% &fRunning &7{@version}"
+    if arg 1 is "kick":
+      if player doesn't have permission "{@KickPermission}":
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."
+        stop
+      send "%{GUARD::THEME::PREFIX}% &cUsage: /guard kick [PLAYER]" if arg 2 is not set
+      if arg 2 is set:
+        kick arg 2 due to "%{GUARD::THEME::PREFIX}% &fUnfair Advantage"
+        send "%{GUARD::THEME::PREFIX}% &c%arg 2% has been kicked." to player
+    if arg 1 is "clearcache":
+      if player doesn't have permission "{@ClearCachePermission}":
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."
+        stop
+      if {-GUARD::%player%::TEMP::CACHECMD} is not set:
+        send "%{GUARD::THEME::PREFIX}% &4⚠ &cWarning! Are you sure to do this action ? It's irreversible. To confirm retype the command."
+        set {-GUARD::%player%::TEMP::CACHECMD} to now
+        wait 10 second
+        send "%{GUARD::THEME::PREFIX}% &fCache clear command has expired." to player if difference between {-GUARD::%player%::TEMP::CACHECMD} and now > 9.9 seconds
+        delete {-GUARD::%player%::TEMP::CACHECMD}
+        stop
+      if {-GUARD::%player%::TEMP::CACHECMD} is set:
+        delete {-GUARD::%player%::TEMP::CACHECMD}
+        send "%{GUARD::THEME::PREFIX}% &6Clearing cache..."
+        delete {-GUARD::*}
+        send "%{GUARD::THEME::PREFIX}% &aCache cleared ✔"
+        stop
+    if arg 1 is "clearvls":
+      if player doesn't have permission "{@ClearVlsCachePermission}":
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."
+        stop
+      delete {-GUARD::%player%::TEMP::VL::*}
+      delete {-GUARD::%player%::VL::*}
+      send "%{GUARD::THEME::PREFIX}% &aBuffers and violations reseted ✔"
+    if arg 1 is "bypass":
+      if player has Permission "{@BypassPermission}":
+        if arg 2 is set:
+          if {-GUARD::%arg 2%::BYPASSED} is not set:
+            set {-GUARD::%arg 2%::BYPASSED} to true
+            send "%{GUARD::THEME::PREFIX}% &f'&e%arg 2%&f' is now exempt."
+          else:
+            delete {-GUARD::%arg 2%::BYPASSED}
+            send "%{GUARD::THEME::PREFIX}% &f'&e%arg 2%&f' is no longer exempt."
+      else:
+        send "%{GUARD::THEME::PREFIX}% &cMissing Permission."

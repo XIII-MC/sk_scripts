@@ -1,0 +1,81 @@
+command /math [<number>] [<text>] [<number>]:
+  trigger:
+    send "%arg 1 - arg 3%" if arg 2 is "-"
+    send "%arg 1 + arg 3%" if arg 2 is "+"
+    send "%arg 1 * arg 3%" if arg 2 is "*"
+    send "%arg 1 / arg 3%" if arg 2 is "/" 
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  set {_anx} to (difference between victim's x location and attacker's x location - 0.40009001) if difference between victim's y location and attacker's y location <= 0
+  set {_anz} to (difference between victim's z location and attacker's z location - 0.40009001) if difference between victim's y location and attacker's y location <= 0
+  set {_ans} to (distance between victim's location and attacker's location - 0.54188401) if difference between victim's y location and attacker's y location <= 0
+  set {_anx} to (difference between victim's x location and attacker's x location - 1.80009001) if difference between victim's y location and attacker's y location > 0.5
+  set {_anz} to (difference between victim's z location and attacker's z location - 1.80009001) if difference between victim's y location and attacker's y location > 0.5
+  set {_ans} to (distance between victim's location and attacker's location - 1.83588401) if difference between victim's y location and attacker's y location > 0.5
+  GA_clearly(attacker, "Reach", "A", "Hit further", 0, "A", "%{_anx}%", 1, 6) if {_anx} > 3
+  GA_clearly(attacker, "Reach", "A", "Hit further", 0, "A", "%{_anz}%", 1, 6) if {_anz} > 3
+  if {_anx} or {_anz} < 3:
+    remove 0.5 from {GUARD::%attacker%::TEMP::VL::REACH.A} if {GUARD::%attacker%::TEMP::VL::REACH.A} >= 0.5
+
+on place:
+  if y coordinate of event-block < y coordinate of player:
+    if getDeltaY(player, 1) = 0:
+      if getDeltaY(player, 2) = 0:
+        if block 1 below event-block is air:
+          set {_start} to true
+
+  {_start} = true
+
+  set {_DistX} to difference between x coords of player's target block and x location of player
+  set {_DistZ} to difference between z coords of player's target block and z location of player
+
+  set {_dist} to {_DistX} if {_DistX} > {_DistZ}
+  set {_dist} to {_DistZ} if {_DistZ} > {_DistX}
+
+  set {_pitch} to player's pitch
+
+  set {_predictedPitch} to {_pitch} if {_dist} < 1.2
+  set {_predictedPitch} to {_pitch} if ({_dist} + 1.4) > 1.2
+
+  if {_predictedPitch} is not between 73 and 83.455:
+    send "&cCheating Scaffold A | %player's pitch%"
+  if {_predictedPitch} is between 73 and 83.455:
+    if player is sprinting:
+      send "&cCheating Scaffold C"
+  if {_dist} > 0.67:
+    send "&cCheating Scaffold B"
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  set {_anx} to (difference between victim's x location and attacker's x location - 0.40009001) if difference between victim's y location and attacker's y location <= 0
+  set {_anz} to (difference between victim's z location and attacker's z location - 0.40009001) if difference between victim's y location and attacker's y location <= 0
+  set {_ans} to (distance between victim's location and attacker's location - 0.54188401) if difference between victim's y location and attacker's y location <= 0
+  set {_anx} to (difference between victim's x location and attacker's x location - 1.80009001) if difference between victim's y location and attacker's y location > 0.5
+  set {_anz} to (difference between victim's z location and attacker's z location - 1.80009001) if difference between victim's y location and attacker's y location > 0.5
+  set {_ans} to (distance between victim's location and attacker's location - 1.83588401) if difference between victim's y location and attacker's y location > 0.5
+  GA_clearly(attacker, "Range", "A", "Hit further", {@RangeA_PunishVL}, "A", "%{_anx}%", {@RangeA_BufferAdd}, {@RangeA_Buffer}) if {_anx} > {@RangeA_Range}
+  GA_clearly(attacker, "Range", "A", "Hit further", {@RangeA_PunishVL}, "A", "%{_anz}%", {@RangeA_BufferAdd}, {@RangeA_Buffer}) if {_anz} > {@RangeA_Range}
+  GA_clearly(attacker, "Range", "A", "Impossible Hit", {@RangeA_PunishVL}, "A", "%{_anx}%", 0, 0) if {_anz} > {@RangeA_Range} + 2.7
+  GA_clearly(attacker, "Range", "A", "Impossible Hit", {@RangeA_PunishVL}, "A", "%{_anz}%", 0, 0) if {_anz} > {@RangeA_Range} + 2.7
+  delete {GUARD::%attacker%::TEMP::Range.A} if {_anz} < 3
+  GA_clearly(attacker, "Range", "B", "Hit further", {@RangeB_PunishVL}, "B", "%{_ans}%", {@RangeB_BufferAdd}, {@RangeB_Buffer}) if {_ans} > {@RangeB_Range}
+  GA_clearly(attacker, "Range", "B", "Impossible Hit", {@RangeB_PunishVL}, "B", "%{_ans}%", 0, 0) if {_ans} > {@RangeB_Range} + 2.7
+  delete {GUARD::%attacker%::TEMP::Range.C} if {_ans} < 3
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  GA_clearly(attacker, "Aura", "A", "Attacked %victim% without looking at it", {@AuraA_PunishVL}, "A", "%{GUARD::%attacker%::TEMP::AURA.A}%", {@AuraA_BufferAdd}, {@AuraA_Buffer}) if attacker's targeted entity is not set
+  delete {GUARD::%attacker%::TEMP::AUURA.A} if attacker's targeted entity is set
+  if attacker's targeted block is not a flower, skeleton skull, water, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+    distance between attacker and victim > distance between attacker and attacker's targeted block
+    GA_clearly(attacker, "Aura", "B", "Attcked %victim% througth blocks", {@AuraB_PunishVL}, "B", "%attacker's target block%", {@AuraB_BufferAdd}, {@AuraB_Buffer}) if attacker's targeted block is not block under victim
+  delete {GUARD::%attacker%::TEMP::AURA.B} if distance between attacker and victim < distance between attacker and attacker's targeted block

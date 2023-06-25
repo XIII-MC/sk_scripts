@@ -1,0 +1,43 @@
+on teleport:
+    set {-GUARD::%event-player%::TEMP::TIMESPAN::LASTTP} to now
+    set {-GUARD::%event-player%::TEMP::TP} to true 
+    delete {-GUARD::%event-player%::TEMP::VL::JUMP::*}
+    delete {-GUARD::%event-player%::TEMP::VL::FLY::C}
+    delete {-GUARD::%event-player%::TEMP::VL::STEP::A}
+    wait 8 tick
+    set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true if difference between {-GUARD::%event-player%::TEMP::TIMESPAN::LASTTP} and now > 0.25 second
+
+on load:
+  wait 1 seconds
+  send "[Guard] &7Checking Loader..." to console
+  send "[Guard] &7Checking Version..." to console
+  send "[Guard] &eUpdate found, please update Guard." to console if text from "https://pastebin.com/raw/0c5FwkSn" doesn't contain "001"
+  set {-GUARD::LOADER::UPDATE} to true if text from "https://pastebin.com/raw/0c5FwkSn" doesn't contain "001"
+  send "[Guard] &7Checking Guard..." to console
+  send "[Guard] &7Checking Files..." to console
+  send "[Guard] &cConfig not found." to console if file "plugins/Skript/scripts/Guard_Config.sk" doesn't exist
+  send "[Guard] &7Self fix attempt..." to console if file "plugins/Skript/scripts/Guard_Config.sk" doesn't exist
+  enable script file "Guard_Config.sk" if file "plugins/Skript/scripts/Guard_Config.sk" doesn't exist
+  send "[Guard] &cExiting Loader... (E000)" to console if file "plugins/Skript/scripts/Guard_Config.sk" doesn't exist
+  stop if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  send "[Guard] &cGuard not found." to console if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  send "[Guard] &7Self fix attempt..." to console if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  disable script file "Guard.sk" if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  send "[Guard] &cExiting Loader... (E001)" to console if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  stop if file "plugins/Skript/scripts/-Guard.sk" doesn't exist
+  send "[Guard] &7Loading Guard..." to console
+  reload script file "Guard_Config.sk"
+  enable script file "Guard.sk"
+  send "[Guard] &7Finished (E004)." to console
+on unload:
+  send "[Guard] &7Checking Guard..." to console
+  send "[Guard] &7Checking Status..." to console
+  send "[Guard] &cGuard is not running." to console if script "Guard.sk" is not loaded
+  send "[Guard] &cExiting Loader... (E002)" to console if script "Guard.sk" is not loaded
+  stop if script "Guard.sk" is not loaded
+  send "[Guard] &7Checking Files..." to console
+  disable script file "Guard.sk"
+  send "[Guard] &7Finished (E004)." to console
+on join:
+  {-GUARD::LOADER::UPDATE} = true
+  send "&9&lGUARD &8» &cPlease update Guard now! New update found." to player if player has permission "guard.update"

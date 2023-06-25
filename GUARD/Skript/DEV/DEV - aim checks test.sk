@@ -1,0 +1,19 @@
+on any move:
+    set {lastyawhacc.%player%} to {yawhacc.%player%}
+    set {yawhacc.%player%} to player's yaw
+    set {yawdiffhacc.%player%} to {yawhacc.%player%} - {lastyawhacc.%player%}
+    if length of "%abs({yawdiffhacc.%player%})%" is less than 5: 
+        if abs({yawdiffhacc.%player%}) != 0:
+            add 1 to {haccbuffer.%player%}
+            if {haccbuffer.%player%} > 2:
+                broadcast "&4&l&nFLAG &8| &c%player% &7failed &cAim AA"
+        else:
+            if {haccbuffer.%player%} > 0.75:
+                remove 0.75 from {haccbuffer.%player%}
+				
+on damage:
+    damage cause is not thorns
+    attacker is a player
+    if length of "%abs(attacker's pitch)%" is less than 5:
+        if abs(attacker's pitch) != 90:
+            broadcast "&4&l&nFLAG &8| &c%attacker% &7failed &cAim AB"

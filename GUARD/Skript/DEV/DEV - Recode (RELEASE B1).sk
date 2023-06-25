@@ -1,0 +1,696 @@
+#Main Run Event
+on any move:
+  stop if difference between {-GUARD::RELOAD} and now < 5 second
+
+  set {-GUARD::%player%::TEMP::PRELOC::2} to {-GUARD::%player%::TEMP::LOC::2}
+  set {-GUARD::%player%::TEMP::LOC::2} to {-GUARD::%player%::TEMP::PRELOC::1}
+  set {-GUARD::%player%::TEMP::PRELOC::1} to {-GUARD::%player%::TEMP::LOC::1}
+  set {-GUARD::%player%::TEMP::LOC::1} to location of player
+
+  set {-GUARD::%player%::TEMP::TIMESPAN::ICE} to now if block 0.75 or 1 under player is ice or packed ice or blue ice
+  set {-GUARD::%player%::TEMP::TIMESPAN::SLIME} to now if block 0.75 or 1 under player is slime block
+  set {_GUARD::%player%::TEMP::SPEED.DIFF} to 0
+  set {-GUARD::%player%::TEMP::TIMESPAN::MOUNT} to now if player is riding
+  set {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} to now if player has jump boost
+  set {_GUARD::%player%::TEMP::JUMPBOOST} to 0 if difference between {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} and now > 1.2 second
+  set {_GUARD::%player%::TEMP::JUMPBOOST} to tier of potion effect jump boost of player
+  set {_GUARD::%player%::TEMP::SPEEDPOT} to tier of potion effect speed of player if player has speed
+  set {-GUARD::%player%::TEMP::TIMESPAN::SPEEDPOT} to now if player has speed
+  set {-GUARD::%player%::TEMP::TIMESPAN::FLY::A} to now if block at player is water or lava
+  HC_Executor_Low(player)
+  HC_Executor_High(player, 2.5)
+  HC_Executor_High(player, 1)
+
+  add 1 to {-GUARD::%player%::TEMP::TICKSTEP} if ACH_Executor_DeltaY(player, 1, false) > 0
+  add 1 to {-GUARD::%player%::TEMP::AIRTICKS} if player is not on ground
+  delete {-GUARD::%player%::TEMP::AIRTICKS} if player is on ground
+  add 1 to {-GUARD::%player%::TEMP::GROUNDTICKS} if player is on ground
+  delete {-GUARD::%player%::TEMP::GROUNDTICKS} if player is not on ground
+
+  #Checks
+
+  #Jesus A-B
+  if HC_Executor_Down(player, water, 0.01) = true:
+    if HC_Executor_Above(player, water, 0) = false:
+      flag(player, "Jesus", "A", "Walked On Water", 12, "A", "%ACH_Executor_DeltaY(player, 1, false)%", 1, 3, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::JESUS::A} and now > 0.6 second
+    delete {-GUARD::%player%::TEMP::VL::JESUS::A} if HC_Executor_Down(player, water, 0.01) = false
+    delete {-GUARD::%player%::TEMP::VL::JESUS::A} if HC_Executor_Above(player, water, 0) = true
+    if HC_Executor_Above(player, water, 0) = true:
+      ACH_Executor_DeltaY(player, 1, false) is between 0 and 0.0025
+      player is not swimming
+      flag(player, "Jesus", "B", "Same DeltaY", 12, "B", "%ACH_Executor_DeltaY(player, 1, false)%", 1, 3, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::JESUS::B} and now > 0.6 second
+    delete {-GUARD::%player%::TEMP::VL::JESUS::B} if ACH_Executor_DeltaY(player, 1, false) isn't between 0 and 0.0025
+
+  #Jesus C-D
+  if HC_Executor_Down(player, lava, 0.01) = true:
+    if HC_Executor_Above(player, lava, 0) = false:
+      flag(player, "Jesus", "C", "Walked On Water", 12, "C", "%ACH_Executor_DeltaY(player, 1, false)%", 0, 0, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::JESUS::A} and now > 0.6 second
+    else:
+      HC_Executor_Down(player, lava, 0.15) = true
+      ACH_Executor_DeltaY(player, 1, false) is between 0 and 0.0025
+      flag(player, "Jesus", "D", "Same DeltaY", 12, "D", "%ACH_Executor_DeltaY(player, 1, false)%", 0, 0, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::JESUS::B} and now > 0.6 second
+
+  #Jump A-E
+  if ACH_Executor_DeltaY(player, 1, false) > 0:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::JUMP::A} and now > 0.6 second
+    HC_Executor_Above(player, water, 0) = false
+    set {_FallPrediction} to ({-GUARD::%player%::TEMP::FLYA::Y} - 0.08) * 0.9800000190734863
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 1:
+      HC_Executor_Above(player, sweet berry, 0) = false
+      flag(player, "Jump", "A", "Invalid Jump", 5, "A", "%{_FallPrediction}%", 1, 3, 1) if {_FallPrediction} != -0.0784000015258789 or -0.1803987740422309 or -0.1972709075678434 or -0.23729859722492808
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 2:
+      flag(player, "Jump", "B", "Invalid Jump", 5, "B", "%{_FallPrediction}%", 1, 3, 1) if {_FallPrediction} != 0.33319999363422365
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 3:
+      flag(player, "Jump", "C", "Invalid Jump", 5, "C", "%{_FallPrediction}%", 1, 3, 1) if {_FallPrediction} != 0.24813599859094573
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 4:
+      flag(player, "Jump", "D", "Invalid Jump", 5, "D", "%{_FallPrediction}%", 1, 3, 1) if {_FallPrediction} != 0.16477328182606646
+    if {-GUARD::%player%::TEMP::TICKSTEP} = 5:
+      flag(player, "Jump", "E", "Invalid Jump", 5, "E", "%{_FallPrediction}%", 1, 3, 1) if {_FallPrediction} != 0.08307781780646703
+    if {-GUARD::%player%::TEMP::VL::JUMP::A} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::JUMP::A} if {_FallPrediction} = -0.0784000015258789 or -0.1803987740422309 or -0.1972709075678434 or -0.23729859722492808
+    if {-GUARD::%player%::TEMP::VL::JUMP::B} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::JUMP::B} if {_FallPrediction} = 0.33319999363422365
+    if {-GUARD::%player%::TEMP::VL::JUMP::C} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::JUMP::C} if {_FallPrediction} = 0.24813599859094573
+    if {-GUARD::%player%::TEMP::VL::JUMP::D} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::JUMP::D} if {_FallPrediction} = 0.16477328182606646
+    if {-GUARD::%player%::TEMP::VL::JUMP::E} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::JUMP::E} if {_FallPrediction} = 0.08307781780646703
+  delete {-GUARD::%player%::TEMP::VL::JUMP::A} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LOWBLOCK} and now < 0.8 second
+
+  #Step A
+  if {-GUARD::%player%::TEMP::TICKSTEP} = 0:
+    if {-GUARD::%player%::TEMP::LASTTICKSTEP} != 0 or 5:
+      if {-GUARD::%player%::TEMP::TICKSTEP} < 5:
+        flag(player, "Step", "A", "Missing AirTicks", 5, "A", "%{-GUARD::%player%::TEMP::TICKSTEP}%", 1, 2, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::STEP::A} and now > 0.6 second 
+  delete {-GUARD::%player%::TEMP::VL::STEP::A} if {-GUARD::%player%::TEMP::LASTTICKSTEP} >= 5
+  set {-GUARD::%player%::TEMP::LASTTICKSTEP} to {-GUARD::%player%::TEMP::TICKSTEP}
+  delete {-GUARD::%player%::TEMP::VL::STEP::A} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LOWBLOCK} and now < 0.8 second
+
+  if {-GUARD::%player%::TEMP::TICKSTEP} > 5:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::MOTION::C} and now > 0.6 second
+    HC_Executor_Down(player, water, 0.75) = false
+    HC_Executor_Above(player, water, 0) = false
+    HC_Executor_Above(player, water, 1) = false
+    HC_Executor_Above(player, water, 2.5) = false
+    HC_Executor_Down(player, lava, 0.75) = false
+    HC_Executor_Above(player, lava, 0) = false
+    HC_Executor_Above(player, lava, 1) = false
+    HC_Executor_Above(player, lava, 2.5) = false
+    flag(player, "Motion", "C", "Added AirTicks", 5, "C", "%{-GUARD::%player%::TEMP::TICKSTEP}%", 1, 6, 1) if {-GUARD::%player%::TEMP::TICKSTEP} >= 5
+  delete {-GUARD::%player%::TEMP::VL::MOTION::C} if {-GUARD::%player%::TEMP::TICKSTEP} <= 5
+  set {-GUARD::%player%::TEMP::TICKSTEP} to 0 if ACH_Executor_DeltaY(player, 1, false) <= 0
+
+  #Motion A
+  if ACH_Executor_DeltaY(player, 1, true) != 0:
+    if "%ACH_Executor_DeltaY(player, 1, true)%" = "%{-GUARD::%player%::TEMP::POSLOC}%":
+      difference between {-GUARD::%player%::TEMP::TIMESPAN::MOTION::A} and now > 0.6 second
+      HC_Executor_Down(player, cobweb, 0.75) = false
+      HC_Executor_Above(player, cobweb, 0) = false
+      HC_Executor_Above(player, cobweb, 1) = false
+      HC_Executor_Above(player, cobweb, 2.5) = false
+      HC_Executor_Down(player, water, 0.75) = false
+      HC_Executor_Above(player, water, 0) = false
+      HC_Executor_Above(player, water, 1) = false
+      HC_Executor_Above(player, water, 2.5) = false
+      HC_Executor_Above(player, sweet berry, 0) = false
+      flag(player, "Motion", "A", "Invalid y motion", 5, "A", "%ACH_Executor_DeltaY(player, 1, true)%", 1, 8, 2)
+    set {-GUARD::%player%::TEMP::POSLOC} to ACH_Executor_DeltaY(player, 1, true) if "%ACH_Executor_DeltaY(player, 1, true)%" != "%{-GUARD::%player%::TEMP::POSLOC}%"
+  delete {-GUARD::%player%::TEMP::VL::MOTION::A} if "%ACH_Executor_DeltaY(player, 1, true)%" != "%{-GUARD::%player%::TEMP::POSLOC}%"
+
+  #Motion B
+  if (ACH_Executor_DeltaY(player, 1, false) + ACH_Executor_DeltaY(player, 1, false) * 8) ^ 1 > 3:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::MOTION::B} and now > 0.6 second
+    add ({_GUARD::%player%::TEMP::JUMPBOOST}) to {_MotionB}
+    player is not swimming
+    add 0.5 to {_MotionB} if difference between {-GUARD::%player%::TEMP::TIMESPAN::UNSAFEDAMAGE} and now < 0.6 second
+    flag(player, "Motion", "B", "YPort Motion", 5, "B", "%(ACH_Executor_DeltaY(player, 1, false) + ACH_Executor_DeltaY(player, 1, false) * 8) ^ 1%", 0.5, ({_MotionB} + 1), 2) if {-GUARD::%player%::TEMP::TP} is not set
+  else:
+    remove 0.10 from {-GUARD::%player%::TEMP::VL::MOTION::B} if {-GUARD::%player%::TEMP::VL::MOTION::B} >= 0.10
+
+  #Strafe A
+  if {-GUARD::%player%::TEMP::AIRTICKS} > 3:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::STRAFE::A} and now > 0.6 second
+    flag(player, "Strafe", "A", "Strafing In Air", 5, "A", "%(ACH_Executor_DeltaXZ(player, 1) ^ 8 - ACH_Executor_DeltaXZ(player, 2) ^ 8 * 0.91)%", 1, 4, 2) if (ACH_Executor_DeltaXZ(player, 1) ^ 8 - ACH_Executor_DeltaXZ(player, 2) ^ 8 * 0.91) > 0.000086
+    if {-GUARD::%player%::TEMP::VL::STRAFE::A} >= 0.05:
+      remove 0.05 from {-GUARD::%player%::TEMP::VL::STRAFE::A} if (ACH_Executor_DeltaXZ(player, 1) ^ 8 - ACH_Executor_DeltaXZ(player, 2) ^ 8 * 0.91) < 0.000086
+  
+  #Fly A-D
+  if player is not on ground:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::FLY::A} and now > 0.6 second
+    HC_Executor_Above(player, water, 0) = false
+    HC_Executor_Above(player, water, 1) = false
+    HC_Executor_Above(player, water, 2.5) = false
+    set {_FlightAPrediction} to ({-GUARD::%player%::TEMP::FLYA::Y} - 0.08) * 0.9800000190734863
+    set {-GUARD::%player%::TEMP::FLYA::Y} to ACH_Executor_DeltaY(player, 1, false)
+    add {_GUARD::%player%::TEMP::JUMPBOOST} + 1 to {_FA1} if difference between {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} and now < 1.2 second
+    add 9 to {_FA1} if difference between {-GUARD::%player%::TEMP::TIMESPAN::UNSAFEDAMAGE} and now < 1.2 second
+    add 5 to {_FA3} if difference between {-GUARD::%player%::TEMP::TIMESPAN::UNSAFEDAMAGE} and now < 1.2 second
+    if difference between {-GUARD::%player%::TEMP::TIMESPAN::FLY::PA} and now > 0.6 second:
+      flag(player, "Fly", "A", "Prediction Fly", 5, "A", "%{-GUARD::%player%::TEMP::FLYA::Y}%", 1, ({_FA1} + 6), 2) if {-GUARD::%player%::TEMP::FLYA::Y} > 0.05
+    flag(player, "Fly", "B", "Prediction Fly", 5, "B", "%{_FlightAPrediction}%", 1, 4, 2) if {-GUARD::%player%::TEMP::FLYA::Y} > {_FlightAPrediction}
+    flag(player, "Fly", "C", "Prediction Fly", 5, "C", "%abs({-GUARD::%player%::TEMP::FLYA::Y} - {_FlightAPrediction})%", 2, ({_FA3} + 8), 1) if abs({-GUARD::%player%::TEMP::FLYA::Y} - {_FlightAPrediction}) > 0
+  else:
+    delete {-GUARD::%player%::TEMP::VL::FLY::*}
+  delete {-GUARD::%player%::TEMP::VL::FLY::*} if block 0.02 under player is not air
+
+  #Invalid A
+  if {-GUARD::%event-player%::TEMP::TP} is not set:
+    add ({_GUARD::%player%::TEMP::JUMPBOOST} * 0.157) to {_height} if difference between {-GUARD::%player%::TEMP::TIMESPAN::JUMPBOOST} and now < 1.2 second
+    flag(player, "Invalid", "A", "Teleported Up", 1, "A", "%ACH_Executor_DeltaY(player, 1, false)%", 0, 0, 1) if ACH_Executor_DeltaY(player, 1, false) > {_height} + 0.84
+
+  #Invalid B
+  add 0.10 to {_InvalidB} if difference between {-GUARD::%player%::TEMP::TIMESPAN::ICE} and now < 0.6 second
+  add 0.40 to {_InvalidB} if difference between {-GUARD::%player%::TEMP::TIMESPAN::DAMAGE} and now < 0.6 second
+  if ACH_Executor_DeltaXZ(player, 1) > ({-GUARD::%player%::TEMP::KBENCHANT} + 1.3) + {_InvalidB}:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::INVALID::B} and now > 1.2 second
+    flag(player, "Invalid", "B", "Impossible Teleport", 1, "B", "%ACH_Executor_DeltaXZ(player, 1)%", 0, 0, 0) if {-GUARD::%player%::TEMP::TP} is not set
+  
+  #Invalid C
+  add 0.25 to {_InvalidC} if difference between {-GUARD::%player%::TEMP::TIMESPAN::ICE} and now < 0.6 second
+  add 0.45 to {_InvalidC} if difference between {-GUARD::%player%::TEMP::TIMESPAN::DAMAGE} and now < 0.6 second
+  if ACH_Executor_DeltaLoc(player, 1, true) > ({-GUARD::%player%::TEMP::KBENCHANT} + 0.83) + {_InvalidC}:
+    difference between {-GUARD::%player%::TEMP::TIMESPAN::INVALID::C} and now > 1.2 second
+    flag(player, "Invalid", "C", "Impossible Teleport", 1, "C", "%ACH_Executor_DeltaLoc(player, 1, false)%", 0, 0, 0) if {-GUARD::%player%::TEMP::TP} is not set
+  
+  #BadPacket A
+  if player is riding:
+    flag(player, "BadPacket", "A", "Impossible Riding", 1, "A", "NaN", 1, 0, 2) if {-GUARD::%player%::TEMP::MOUNTSTATE} is not set
+  
+  #BadPacket B
+  if player's hunger level <= 3:
+    flag(player, "BadPacket", "B", "Impossible Sprinting", 5, "B", "NaN", 1, 3, 1) if player is sprinting
+  else:
+    delete {-GUARD::%player%::TEMP::VL::BADPACKET::B} if player is sprinting
+
+  #Speed A-B
+  if difference between {-GUARD::%player%::TEMP::TIMESPAN::MOUNT} and now > 1.2 second:
+    player is not riding
+    set {_maxspeed} to 1
+    set {_speed} to ACH_Executor_DeltaLoc(player, 1, true)
+    if {-GUARD::%player%::TEMP::GROUNDTICKS} > 12:
+      set {_maxspeed} to 0.2868198
+    else:
+      set {_maxspeed} to 0.338
+    if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::A-HAT} and now < 1.2 second:
+      set {_maxspeed} to 0.5
+    if difference between {-GUARD::%player%::TEMP::TIMESPAN::ICE} and now < 1.2 second:
+      if {-GUARD::%player%::TEMP::GROUNDTICKS} > 22:
+        set {_maxspeed} to 0.2757 if difference between {-GUARD::%player%::TEMP::TIMESPAN::ICE} and now < 0.05 second
+      else:
+        set {_maxspeed} to 0.48
+        if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::A-HAT} and now < 1.2 second:
+          set {_maxspeed} to 0.9
+    if difference between {-GUARD::%player%::TEMP::TIMESPAN::SLIME} and now < 1.2 second:
+      if {-GUARD::%player%::TEMP::GROUNDTICKS} > 14:
+        difference between {-GUARD::%player%::TEMP::TIMESPAN::SLIME} and now < 0.05 second
+        set {_maxspeed} to 0.09 if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::A-HLB} and now > 0.25 seconds
+      else:
+        set {_maxspeed} to 0.45
+        if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::A-HAT} and now < 1.2 second:
+          set {_maxspeed} to 0.74
+    if block at player is cobweb:
+      if {-GUARD::%player%::TEMP::GROUNDTICKS} > 2:
+        set {_maxspeed} to 0.1
+      else:
+        set {_maxspeed} to 0.1004
+        if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::A-HAT} and now < 1.2 seconds:
+          set {_maxspeed} to 0.108
+    if difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEEDPOT} and now < 3 second:
+      if {-GUARD::%player%::TEMP::GROUNDTICKS} > 2:
+        set {_maxspeed} to 0.34361233 if {_GUARD::%player%::TEMP::SPEEDPOT} = 1
+        set {_maxspeed} to (0.20544054 * {_GUARD::%player%::TEMP::SPEEDPOT}) if {_GUARD::%player%::TEMP::SPEEDPOT} >= 2
+      else:
+        set {_maxspeed} to (0.37 * {_GUARD::%player%::TEMP::SPEEDPOT})
+    if player is swimming:
+      set {_maxspeed} to 0.28
+      if player's boots are enchanted with depth strider:
+        set {_maxspeed} to 0.24 if enchantment level of depth strider of player's boots = 1 
+        set {_maxspeed} to 0.26 if enchantment level of depth strider of player's boots = 2 
+        set {_maxspeed} to 0.27 if enchantment level of depth strider of player's boots = 3
+        set {_maxspeed} to (0.07 * enchantment level of depth strider of player's boots) if enchantment level of depth strider of player's boots > 3
+    set {_maxspeed} to 0.6 if difference between {-GUARD::%player%::TEMP::TIMESPAN::DAMAGE} and now < 1.2 second
+    set {_maxspeed} to {-GUARD::%player%::TEMP::KBENCHANT} * 0.95 if difference between {-GUARD::%player%::TEMP::TIMESPAN::KBDAMAGE} and now < 1.5 second
+    if difference between {_GUARD::%player%::TEMP::SPEED.DIFF} and ACH_Executor_DeltaLoc(player, 1, true) > 1:
+      difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::B} and now > 1.2 second
+      flag(player, "Speed", "B", "Speed Limit", 3, "B", "%{_speed}%", 0, 0, 1) if {-GUARD::%player%::TEMP::TP} is not set
+    set {_maxspeed} to 1 if {_maxspeed} = 0
+    flag(player, "Speed", "A", "Speed Limit", 15, "A", "&9%{_speed}%&7/&9%{_maxspeed}%", 1, 6, 2) if {_speed} > {_maxspeed}
+    if {-GUARD::%player%::TEMP::VL::SPEED::A} >= 1:
+      remove 1 from {-GUARD::%player%::TEMP::VL::SPEED::A} if {_speed} < {_maxspeed}
+
+  set {_speed} to sqrt(ACH_Executor_DeltaXZ(player, 1) ^ 2)
+  set {_speed} to roundTo({_speed}, 7) * 10000000
+  if {_speed} != 980000:
+    if "%{_speed}%" doesn't contain ".":
+      if {-GUARD::%player%::TEMP::TP} is not set:
+        difference between {-GUARD::%player%::TEMP::TIMESPAN::SPEED::C} and now > 0.6 second
+        HC_Executor_Down(player, cobweb, 0.75) = false
+        HC_Executor_Above(player, cobweb, 0) = false
+        HC_Executor_Above(player, cobweb, 1) = false
+        HC_Executor_Above(player, cobweb, 2.5) = false
+        flag(player, "Speed", "C", "Rounded Speed", 15, "C", "%{_speed}%", 1, 12, 2) if "%{_speed}%" contains "000"
+  delete {-GUARD::%player%::TEMP::VL::SPEED::C} if "%{_speed}%" doesn't contain "000"
+  
+  #Aim A-D
+  if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTATTACK} and now < 0.1 second:
+    ACH_Executor_DeltaPitch(player, 1) > 0.1:
+      set {_AimA2} to getGCD(ACH_Executor_DeltaPitch(player, 1) * 16777216, ACH_Executor_DeltaPitch(player, 2) * 16777216)
+      set {_AimA1} to getDev(abs(ACH_Executor_DeltaPitch(player, 1)), abs(ACH_Executor_DeltaPitch(player, 2)))
+      set {_Aim} to getDev(abs(ACH_Executor_DeltaPitch(player, 1)), abs(ACH_Executor_DeltaPitch(player, 2)))
+      flag(player, "Aim", "A", "Impossible Pitch Rotation", 15, "A", "%{_AimA1}%", 1, 4, 2) if {_AimA1} < 0.054
+      flag(player, "Aim", "B", "Not Following GCD", 15, "B", "%{_AimA2}%", 1, 3, 2) if {_AimA2} is between 0.000001 and 300000
+      #flag(player, "Aim", "D", "Impossible Pitch Rotation", 6, "D", "%{_Aim}%", 0, 0, 2) if {_Aim} < 0.053
+      delete {-GUARD::%player%::TEMP::VL::AIM::A} if {_AimA1} >= 0.054
+      delete {-GUARD::%player%::TEMP::VL::AIM::B} if {_AimA2} is not between 0.000001 and 300000
+
+  loop all blocks in radius 1.5 around player:
+    loop "JUMP::A" and "STEP::A" and "MOTION::A":
+      set {-GUARD::%player%::TEMP::TIMESPAN::%loop-value-2%} to now if "%loop-block%" contains "sweet"
+
+  if player is on ground:
+    loop all blocks in radius 1.35 around player:
+      stop if loop-block is not air
+    block under player is air
+    block at player is air
+    make player see block under player as air
+    cancel event
+  delete {-GUARD::%player%::TEMP::TP} if {-GUARD::%player%::TEMP::CONFIRMTP} is true
+
+#Timer A
+on any move:
+  set {_LASTTIME} to {-GUARD::%player%::TEMP::TIMEBALANCE}
+  set {-GUARD::%player%::TEMP::TIMEBALANCE} to now
+  set {_DIFF} to "%difference between {_LASTTIME} and now%"
+  replace all " seconds" and " second" and " minute" and " minutes" and " hour" and " hours" and " days" and " day" in {_DIFF} with ""
+  set {_DIFF} to {_DIFF} parsed as number
+  set {_DIFF} to roundTo({_DIFF}, 17) * 100
+  if {_DIFF} < 3.8:
+    "%{_DIFF}%" contains "999" or "000"
+    flag(player, "Timer", "A", "Sent too many packets", 25, "A", "%{_DIFF}%", 1, 1, 1)
+  else:
+    remove 0.5 from {-GUARD::%player%::TEMP::VL::TIMER::A} if {-GUARD::%player%::TEMP::VL::TIMER::A} >= 0.5
+
+on right click:
+  set {_RTIME2} to {-GUARD::%player%::TEMP::TIMESPAN::RTIME}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIME} to now
+  set {_RTIME3} to "%difference between {_RTIME2} and now%"
+  replace all " seconds" or " second" or " minute" or " minutes" or " hour" or " hours" or " days" or " day" in {_RTIME3} with ""
+  set {_RTIME5} to {-GUARD::%player%::TEMP::TIMESPAN::RTIME4}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} to {_RTIME3} parsed as number
+  set {_RTIMELASTCHECKED} to difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} to difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} if {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} = 0
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} to difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} < {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} to difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} > {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH}
+  flag(player, "AutoClicker", "D", "Clicking Patterns", 15, "D", "%difference between {-GUARD::%player%::TEMP::RTIMELOW} and {-GUARD::%player%::TEMP::RTIMEHIGH}%", 1, 5, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} = {_RTIMELASTCHECKED}
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER::D} if difference between {-GUARD::%player%::TEMP::TIMESPAN::RTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::RTIMELOW} != {_RTIMELASTCHECKED}
+  flag(player, "AutoClicker", "A", "Clicking Patterns", 15, "A", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 5, 0) if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} < 0.005
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER::A} if difference between {_RTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::RTIME4} > 0.005
+
+on left click:
+  set {_LTIME2} to {-GUARD::%player%::TEMP::TIMESPAN::LTIME}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIME} to now
+  set {_LTIME3} to "%difference between {_LTIME2} and now%"
+  replace all " seconds" or " second" or " minute" or " minutes" or " hour" or " hours" or " days" or " day" in {_LTIME3} with ""
+  set {_LTIME5} to {-GUARD::%player%::TEMP::TIMESPAN::LTIME4}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} to {_LTIME3} parsed as number
+  set {_LLASTTIMECHECKED} to difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} to difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} if {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} = 0
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} to difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} < {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW}
+  set {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} to difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} > {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH}
+  flag(player, "AutoClicker", "C", "Clicking Patterns", 15, "C", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 5, 1) if difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} = {_LLASTTIMECHECKED}
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER::C} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LTIMEHIGH} and {-GUARD::%player%::TEMP::TIMESPAN::LTIMELOW} != {_LLASTTIMECHECKED}
+  flag(player, "AutoClicker", "B", "Clicking Patterns", 15, "B", "%{-GUARD::%player%::TEMP::LTIMEHIGH} and {-GUARD::%player%::TEMP::LTIMELOW}%", 1, 5, 1) if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} < 0.005
+  delete {-GUARD::%player%::TEMP::VL::AUTOCLICKER::B} if difference between {_LTIME5} and {-GUARD::%player%::TEMP::TIMESPAN::LTIME4} > 0.005
+
+#AutoFish A-C
+on fishing:
+  set {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} to now if fishing state is "BITE":
+  if fishing state is "CAUGHT_FISH":
+    flag(player, "AutoFish", "A", "AutoFishing", 3, "A", "%difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now %", 1, 4, 2) if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now < 0.06 second
+    flag(player, "AutoFish", "B", "NoSwing", 3, "B", "NaN", 0, 0, 2) if {-GUARD::%player%::TEMP::FISHARM} != true
+    flag(player, "AutoFish", "C", "Fishing Pattern", 6, "C", "%{-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH}%", 0, 0, 2) if {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} < 0.01 second
+    delete {-GUARD::%player%::TEMP::VL::AUTOFISH::A} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now > 0.06 second
+    set {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} to difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now
+    delete {-GUARD::%player%::TEMP::FISHARM}
+
+#Scaffold A-C
+on place:
+  if y coordinate of event-block < y coordinate of player:
+    block under event-block is air or void air
+    player's gamemode is not creative or spectator
+    flag(player, "Scaffold", "C", "Impossible Placement", 5, "C", "%player's pitch%", 0.5, 1, 2) if player's pitch > 82.5
+    flag(player, "Scaffold", "A", "Invalid Placement", 5, "A", "NaN", 0, 0, 2) if event-block is not player's targeted block 
+    if {-GUARD::%player%::TEMP::VL::SCAFFOLD.C} >= 0.25:
+      remove 0.25 from {-GUARD::%player%::TEMP::VL::SCAFFOLD::C} if event-block is player's targeted block 
+
+#BadPacket C
+on chat:
+  flag(player, "BadPacket", "C", "Invalid Character", 1, "C", "NaN", 0, 0, 2) if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+  cancel event if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+
+on left click:
+   set {-GUARD::%player%::TEMP::ARM} to true
+on arm swing:
+   set {-GUARD::%player%::TEMP::ARM} to true
+   set {-GUARD::%player%::TEMP::FISHARM} to true if player's tool is fishing rod
+
+#BadPacket D - Aim C
+on damage:
+  add 1 to {-GUARD::%attacker%::TEMP::MULTIAURA}
+  attacker is a player
+  projectile does not exist
+  if {-GUARD::%attacker%::TEMP::ARM} is not set:
+    cancel event if {-GUARD::%attacker%::TEMP::MULTIAURA} < 2
+    flag(attacker, "BadPacket", "D", "No Swing", 12, "D", "NaN", 1, 1, 0) if {-GUARD::%attacker%::TEMP::MULTIAURA} < 2
+  flag(attacker, "Aim", "C", "Invalid Pitch", 1, "C", "%((attacker's pitch / (attacker's pitch * 8)) ^ 1)%", 0, 0, 2) if ((attacker's pitch / (attacker's pitch * 8)) ^ 1) != 0.125
+  delete {-GUARD::%attacker%::TEMP::ARM}
+  delete {-GUARD::%attacker%::TEMP::VL::BADPACKET::D} if {-GUARD::%attacker%::TEMP::ARM} is true
+
+#Reach A
+on damage:  
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  set {_distance} to distance between location of attacker and location of victim
+  remove ((ping of attacker * 0.0035) + (ping of victim * 0.0035) + 0.2) from {_distance}
+  remove 0.42 from {_distance} if attacker is sprinting
+  remove 0.83 from {_distance} if victim is sprinting
+  if {_distance} > 3.01:
+    flag(attacker, "Reach", "A", "Hit further", 12, "A", "%{_distance}%", 1, 5, 2)
+  else:
+    remove 1 from {-GUARD::%attacker%::TEMP::VL::REACH::A} if {-GUARD::%attacker%::TEMP::VL::REACH.A} >= 1
+
+#Alert System
+function flag(Player: player, Cheat: text, CheatType: text, Info: text, PunishVL: number, CheatTypeExact: text, Debug: text, BufferAdd: number, BufferMax: number, PunishType: number):
+  {_Player}'s gamemode is not creative or spectator
+  fly mode of {_Player} is false
+  if {_Player}'s name contains ".":
+    stop if {@IgnoreBedrock} is true
+  add {_BufferAdd} to {-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%}
+  set {-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%} to 1 if {_BufferMax} = 0
+  {-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%} > {_BufferMax}
+  add 1 to {-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%}
+  send formatted "<tooltip:&7Check: {@MainColor}%{_Cheat}% &7(%{_CheatTypeExact}%&7)%nl%&7Value: {@MainColor}%{_Debug}% %nl%&7Informations: {@MainColor}%{_Info}%%nl%&7Buffer: {@MainColor}%{-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7/{@MainColor}%{_BufferMax}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_Player}%>{@Prefix} {@SecondColor}%{_Player}%&7 failed {@SecondColor}%{_Cheat}% %{_CheatType}% &7({@MainColor}x%{-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7)" to all players where [{-GUARD::%input%::ALERTS} is true] if {@ThemePreset} = 0
+  send formatted "<tooltip:&7Check: &b%{_Cheat}% &7(%{_CheatTypeExact}%&7)%nl%&7Value: &b%{_Debug}% %nl%&7Informations: &b%{_Info}%%nl%&7Buffer: &b%{-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7/&b%{_BufferMax}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_Player}%>&7[&b&lAnti&5&lFisher&7] %{_Player}%&f failed %{_Cheat}% &7(T: %{_CheatType}%&7) &f(VL: &b%{-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&f)" to all players where [{-GUARD::%input%::ALERTS} is true] if {@ThemePreset} = 1
+  send formatted "<tooltip:&7Check: &9%{_Cheat}% &7(%{_CheatTypeExact}%&7)%nl%&7Value: &9%{_Debug}% %nl%&7Informations: &9%{_Info}%%nl%&7Buffer: &9%{-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7/&9%{_BufferMax}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_Player}%>&9&lGUARD &8» &f%{_Player}%&7 failed &f%{_Cheat}% %{_CheatType}% &7(&9x%{-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7)" to all players where [{-GUARD::%input%::ALERTS} is true] if {@ThemePreset} = 2
+  send formatted "<tooltip:&7Check: &3%{_Cheat}% &7(%{_CheatTypeExact}%&7)%nl%&7Value: &3%{_Debug}% %nl%&7Informations: &3%{_Info}%%nl%&7Buffer: &3%{-GUARD::%{_Player}%::TEMP::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7/&3%{_BufferMax}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_Player}%>&3&lGUARD &8» &f%{_Player}%&7 failed &f%{_Cheat}% %{_CheatType}% &7(&3x%{-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%}%&7)" to all players where [{-GUARD::%input%::ALERTS} is true] if {@ThemePreset} = 3
+  if {@AutoPunish} is true:
+    {-GUARD::%{_Player}%::VL::%{_Cheat}%::%{_CheatTypeExact}%} >= {_PunishVL}
+    if {@AutoKickAllowed} = true: 
+      make server execute command "{@KickCommand}" if {@AutoBanAllowed} = false
+    if {@AutoBanAllowed} = true:
+      make server execute command "{@BanCommand}" if {@AutoKickAllowed} = false
+    if {_PunishType} > 0:
+      strike lightning effect at {_Player} if {@StrikeOnPunish} = true
+      broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+      if {@ThemePreset} = 0:
+        broadcast "&c✘ {@PrefixUsage} &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+      if {@ThemePreset} = 1:
+        broadcast "&c✘ &7[&b&lAnti&5&lFisher&7] &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+      if {@ThemePreset} = 2:
+        broadcast "&c✘ &9&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+      if {@ThemePreset} = 3:
+        broadcast "&c✘ &3&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+      broadcast "&c✘ &fReason &8» &cUnfair Advantage" if {@BroadcastPunishment} = true
+      broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+    if {_PunishType} = 1:
+      make server execute command "{@KickCommand}" if {@AutoKickAllowed} = true
+    if {_PunishType} = 2:
+      make server execute command "{@BanCommand}" if {@AutoBanAllowed} = true
+    if {_PunishType} = 3:
+      make server execute command "{@MuteCommand}" if {@AutoMuteAllowed} = true
+function HC_Executor_Low(Player: player):
+  if block 0.75 or 1 or 0.5 or 0.05 below {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+    if block 0.75 or 1 or 0.5 or 0.05 below north {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+      if block 0.75 or 1 or 0.5 or 0.05 below south {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+        if block 0.75 or 1 or 0.5 or 0.05 below west {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+          if block 0.75 or 1 or 0.5 or 0.05 below east {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+            if block 0.75 or 1 or 0.5 or 0.05 below north east {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+              if block 0.75 or 1 or 0.5 or 0.05 below north west {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+                if block 0.75 or 1 or 0.5 or 0.05 below south east {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry:
+                  stop if block 0.75 or 1 or 0.5 or 0.05 below south west {_Player} is not flower pot or any carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest or anvil or iron trapdoor or trapdoor or farmland or daylight detector or player head or hopper or sweet berry
+  loop "JUMP::A" and "FLY::D" and "MOTION::A" and "MOTION::B" and "SPEED::A-HLB" and "STEP::A" and "FLY::PA", "MOTION::C", "LOWBLOCK":
+    set {-GUARD::%{_Player}%::TEMP::TIMESPAN::%loop-value%} to now
+function HC_Executor_High(Player: player, Height: number):
+  if block {_Height} above north {_Player} is air or void air:
+    if block {_Height} above south {_Player} is air or void air:
+      if block {_Height} above west {_Player} is air or void air:
+        if block {_Height} above east {_Player} is air or void air:
+          if block {_Height} above {_Player} is air or void air:
+            if block {_Height} above north east {_Player} is air or void air:
+              if block {_Height} above north west {_Player} is air or void air:
+                if block {_Height} above south east {_Player} is air or void air:
+                  stop if block {_Height} above south west {_Player} is air or void air
+  if ACH_Executor_DeltaY({_Player}, 1, false) = 0.01250004768363766 or 0.20000004768363056 or 0.12026406704560344 or 0.2800000607966524 or 0.011164068571488883 or 0.033890786745502055 or 0.19866406857115493 or 0:
+    loop "JUMP::A" and "SPEED::A-HAT" and "MOTION::A" and "STEP::A":
+      set {-GUARD::%{_Player}%::TEMP::TIMESPAN::%loop-value%} to now
+function HC_Executor_Down(Player: player, Block: item type, Height: number) :: boolean:
+  if block {_Height} under {_Player} is {_Block}:
+    if block {_Height} under north {_Player} is {_Block}:
+      if block {_Height} under south {_Player} is {_Block}:
+        if block {_Height} under west {_Player} is {_Block}:
+          if block {_Height} under east {_Player} is {_Block}:
+            if block {_Height} under north east {_Player} is {_Block}:
+              if block {_Height} under north west {_Player} is {_Block}:
+                if block {_Height} under south east {_Player} is {_Block}:
+                  return true if block {_Height} under south west {_Player} is {_Block}
+  return false
+function HC_Executor_Above(Player: player, Block: item type, Height: number) :: boolean:
+  if block {_Height} above {_Player} is not {_Block}:
+    if block {_Height} above north {_Player} is not {_Block}:
+      if block {_Height} above south {_Player} is not {_Block}:
+        if block {_Height} above west {_Player} is not {_Block}:
+          if block {_Height} above east {_Player} is not {_Block}:
+            if block {_Height} above north east {_Player} is not {_Block}:
+              if block {_Height} above north west {_Player} is not {_Block}:
+                if block {_Height} above south east {_Player} is not {_Block}:
+                  return false if block {_Height} above south west {_Player} is not {_Block}
+  return true
+on join:
+  if {@AutoKickBedrock} = true:
+    kick player due to "Unable to join server." if player contains "."
+    stop if player contains "."
+  set {-GUARD::%player%::TEMP::TP} to true
+  wait 8 ticks
+  set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true
+  set {-GUARD::%player%::ALERTS} to true if player has permission "{@AutoAlertsPermission}"
+  if {@ThemePreset} = 0:
+    send "{@Prefix} &fAlers output &aenabled" to player if player has permission "{@AutoAlertsPermission}"
+  if {@ThemePreset} = 1:
+    send "&7[&b&lAnti&5&lFisher&7] &fAlers output &aenabled" to player if player has permission "{@AutoAlertsPermission}"
+  if {@ThemePreset} = 2:
+    send "&9&lGUARD &8» &fAlers output &aenabled" to player if player has permission "{@AutoAlertsPermission}"
+  if {@ThemePreset} = 3:
+    send "&3&lGUARD &8» &fAlers output &aenabled" to player if player has permission "{@AutoAlertsPermission}"
+  loop "FLY::D" and "JUMP::A" and "STRAFE::A" and "MOTION::B" and "MOTION::A" and "FLY::A" and "SPEED::A-HAT" and "SPEED::A-HLB" and "SPEED::C" and "SPEED::B" and "INVALID::B" and "INVALID::C" and "MOUNT" and "ICE" and "SLIME" and "DAMAGE" and "UNSAFEDAMAGE" and "SPEEDPOT" and "JUMPBOOST" and "KBDAMAGE" and "STEP::A" and "JESUS::A" and "JESUS::B" and "FLY::PA" and "VELOCITY::A" and "MOTION::C" and "LASTTP":
+    wait 3 ticks
+    set {-GUARD::%player%::TEMP::TIMESPAN::%loop-value%} to now
+  while player is online:
+    delete {-GUARD::%player%::VL::*}
+    wait 3 minutes
+  while player is online:
+    delete {-GUARD::%player%::TEMP::MULTIAURA}
+    wait 1 second
+on respawn:
+  set {-GUARD::%player%::TEMP::TP} to true
+  wait 2 ticks
+  set {-GUARD::%event-player%::TEMP::CONFIRMTP} to true
+on quit:
+  delete {-GUARD::%player%::*}
+on load:
+  set {-GUARD::RELOAD} to now
+  while true:
+    delete {-GUARD::%all players%::TEMP::VL::*}
+    wait 3 minutes
+on unload:
+  delete {-GUARD::*}
+on place:
+  delete {-GUARD::%player%::TEMP::VL::FLY::C}
+  loop "FLY::D" and "FLY::A" and "JUMP::A", "MOTION::C":
+    set {-GUARD::%player%::TEMP::TIMESPAN::%loop-value%} to now
+on damage:
+  remove 1 from {-GUARD::%victim%::TEMP::VL::FLY::B} if {-GUARD::%victim%::TEMP::VL::FLY::B} >= 1
+  remove 1 from {-GUARD::%victim%::TEMP::VL::FLY::C} if {-GUARD::%victim%::TEMP::VL::FLY::C} >= 1
+  remove 1 from {-GUARD::%victim%::TEMP::VL::FLY::D} if {-GUARD::%victim%::TEMP::VL::FLY::D} >= 1
+  loop "JUMP::A" and "FLY::A" and "STRAFE::A" and "STEP::A" and "STEP::C":
+    set {-GUARD::%victim%::TEMP::TIMESPAN::%loop-value%} to now
+    set {-GUARD::%victim%::TEMP::TIMESPAN::UNSAFEDAMAGE} to now
+    if "%damage cause%" contains "ATTACK":
+      set {-GUARD::%victim%::TEMP::TIMESPAN::%loop-value%} to now if attacker is not victim
+      set {-GUARD::%victim%::TEMP::TIMESPAN::DAMAGE} to now if attacker is not victim
+  if {-GUARD::%attacker%::TEMP::PUNCHBOW} is true:
+    set {-GUARD::%victim%::TEMP::KBENCHANT} to {-GUARD::%attacker%::TEMP::PUNCHBOWLEVEL}
+    set {-GUARD::%victim%::TEMP::TIMESPAN::KBDAMAGE} to now
+    delete {-GUARD::%attacker%::TEMP::PUNCHBOW}
+  if tool of the attacker is enchanted with knockback:
+    set {-GUARD::%victim%::TEMP::KBENCHANT} to enchantment level of knockback of attacker's tool
+    set {-GUARD::%victim%::TEMP::TIMESPAN::KBDAMAGE} to now
+  set {-GUARD::%attacker%::TEMP::TIMESPAN::LASTATTACK} to now if attacker is player
+on shoot:
+  set {-GUARD::%shooter%::TEMP::PUNCHBOW} to true if tool of the shooter is enchanted with punch
+  set {-GUARD::%shooter%::TEMP::PUNCHBOWLEVEL} to enchantment level of punch of shooter's tool
+function getDev(a: number, b: number) :: number: 
+  return getDev({_b}, {_a}) if {_a} < {_b}
+  return {_a} if abs({_b}) < 0.001
+  return getDev({_b}, {_a} - floor({_a} / {_b}) * {_b}) if abs({_b}) > 0.001
+function getGCD(current: number, previous: number) :: number:
+    return {_current} if {_previous} <= 16384
+    return getGCD({_previous}, mod({_current}, {_previous})) if {_previous} > 16384
+function roundTo(n: number, r: number) :: number:
+  return round({_n} * 10^ {_r}) / 10^ {_r}
+function ACH_Executor_DeltaLoc(Player: player, n: number, y: boolean) :: number:
+  set y location of {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} to y location of {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%} if {_y} is true
+  return distance between {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} and {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%}
+function ACH_Executor_DeltaPitch(Player: player, n: number) :: number:
+  return difference between {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%}'s pitch and {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%}'s pitch
+function ACH_Executor_DeltaYaw(Player: player, n: number) :: number:
+  return difference between {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%}'s yaw and {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%}'s yaw
+function ACH_Executor_DeltaY(Player: player, n: number, r: boolean) :: number:
+  return y location of {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%} - y location of {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} if {_r} is false
+  return difference between y location of {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} and y location of {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%} if {_r} is true
+function ACH_Executor_DeltaXZ(Player: player, n: number) :: number:
+  return difference between x location of {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} and x location of {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%} + difference between z location of {-GUARD::%{_Player}%::TEMP::PRELOC::%{_n}%} and z location of {-GUARD::%{_Player}%::TEMP::LOC::%{_n}%}
+command /guard [<text>] [<offline player>] [<text>]:
+  permission: {@MainPermission}
+  permission message: {@PermissionMessage}
+  trigger:
+    set {_Player} to arg 2
+    if arg 1 is "alerts" or "kick" or "ban" or "mute" or "help":
+      if arg 1 is "alerts":
+        if player doesn't have permission "{@AlertsPermission}":
+          send "{@PermissionMessage}"
+          stop
+        if {-GUARD::%player%::ALERTS} is not set:
+          set {-GUARD::%player%::ALERTS} to true
+          send "{@Prefix} &fAlert output &aenabled&f." if {@ThemePreset} = 0
+          send "&7[&b&lAnti&5&lFisher&7] &fAlert output &aenabled&f." if {@ThemePreset} = 1
+          send "&9&lGUARD &8» &fAlert output &aenabled&f." if {@ThemePreset} = 2
+          send "&3&lGUARD &8» &fAlert output &aenabled&f." if {@ThemePreset} = 3
+        else:
+          delete {-GUARD::%player%::ALERTS}
+          send "{@Prefix} &fAlert output &cdisabled&f." if {@ThemePreset} = 0
+          send "&7[&b&lAnti&5&lFisher&7] &fAlert output &cdisabled&f." if {@ThemePreset} = 1
+          send "&9&lGUARD &8» &fAlert output &cdisabled&f." if {@ThemePreset} = 2
+          send "&3&lGUARD &8» &fAlert output &cdisabled&f." if {@ThemePreset} = 3
+      if arg 1 is "help":
+        if player doesn't have permission "{@HelpPermission}":
+          send "{@PermissionMessage}"
+          stop
+        send ""
+        send "&fHelp Page &71/1:"
+        send ""
+        send "&7&o-s will not broadcast any messages"
+        send "&7&o<> is mandatory, () is optional"
+        send ""
+        send "&f/guard ban <PLAYER> (-s) &8| &fBans a player" if player has permission "{@BanPermission}"
+        send "&f/guard kick <PLAYER> (-s) &8| &fKicks a player" if player has permission "{@KickPermission}"
+        send "&f/guard mute <PLAYER> (-s) &8| &fMutes a player" if player has permission "{@MutePermission}"
+        send "&f/guard alerts &8| &fToggle alerts" if player has permission "{@AlertsPermission}"
+        send "&f/guard help &8| &fDisplay this page" if player has permission "{@HelpPermission}"
+        send ""
+      if arg 1 is "mute":
+        if player doesn't have permission "{@MutePermission}":
+          send "{@PermissionMessage}"
+          stop
+        if arg 2 is online:
+          if arg 3 is not set:
+            make server execute command "{@MuteCommand}"
+            send "{@Prefix} &c%arg 2%&f has been muted." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been muted." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been muted." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been muted." if {@ThemePreset} = 3
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 0:
+              broadcast "&c✘ {@PrefixUsage} &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 1:
+              broadcast "&c✘ &7[&b&lAnti&5&lFisher&7] &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 2:
+              broadcast "&c✘ &9&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 3:
+              broadcast "&c✘ &3&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            broadcast "&c✘ &fReason &8» &cUnfair Advantage" if {@BroadcastPunishment} = true
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+          else if arg 3 contains "-s":
+            make server execute command "{@MuteCommand}"
+            send "{@Prefix} &c%arg 2%&f has been muted." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been muted." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been muted." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been muted." if {@ThemePreset} = 3
+        else:
+          send "{@Prefix} &cE001! Player is not online." if {@ThemePreset} = 0
+          send "&7[&b&lAnti&5&lFisher&7] &cE001! Player is not online." if {@ThemePreset} = 1
+          send "&9&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 2
+          send "&3&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 3
+      if arg 1 is "ban":
+        if player doesn't have permission "{@BanPermission}":
+          send "{@PermissionMessage}"
+          stop
+        if arg 2 is online:
+          if arg 3 is not set:
+            make server execute command "{@BanCommand}"
+            send "{@Prefix} &c%arg 2%&f has been banned." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been banned." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been banned." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been banned." if {@ThemePreset} = 3
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 0:
+              broadcast "&c✘ {@PrefixUsage} &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 1:
+              broadcast "&c✘ &7[&b&lAnti&5&lFisher&7] &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 2:
+              broadcast "&c✘ &9&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 3:
+              broadcast "&c✘ &3&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            broadcast "&c✘ &fReason &8» &cUnfair Advantage" if {@BroadcastPunishment} = true
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+          else if arg 3 contains "-s":
+            make server execute command "{@BanCommand}"
+            send "{@Prefix} &c%arg 2%&f has been banned." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been banned." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been banned." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been banned." if {@ThemePreset} = 3
+        else:
+          send "{@Prefix} &cE001! Player is not online." if {@ThemePreset} = 0
+          send "&7[&b&lAnti&5&lFisher&7] &cE001! Player is not online." if {@ThemePreset} = 1
+          send "&9&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 2
+          send "&3&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 3
+      if arg 1 is "kick":
+        if player doesn't have permission "{@KickPermission}":
+          send "{@PermissionMessage}"
+          stop
+        if arg 2 is online:
+          if arg 3 is not set:
+            make server execute command "{@KickCommand}"
+            send "{@Prefix} &c%arg 2%&f has been kicked." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been kicked." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been kicked." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been kicked." if {@ThemePreset} = 3
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 0:
+              broadcast "&c✘ {@PrefixUsage} &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 1:
+              broadcast "&c✘ &7[&b&lAnti&5&lFisher&7] &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 2:
+              broadcast "&c✘ &9&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            if {@ThemePreset} = 3:
+              broadcast "&c✘ &3&lGUARD &fremoved &c%{_Player}%&f from the server." if {@BroadcastPunishment} = true
+            broadcast "&c✘ &fReason &8» &cUnfair Advantage" if {@BroadcastPunishment} = true
+            broadcast "&8&m-------------------------------" if {@BroadcastPunishment} = true
+          else if arg 3 contains "-s":
+            make server execute command "{@KickCommand}"
+            send "{@Prefix} &c%arg 2%&f has been kicked." if {@ThemePreset} = 0
+            send "&7[&b&lAnti&5&lFisher&7] &c%arg 2%&f has been kicked." if {@ThemePreset} = 1
+            send "&9&lGUARD &8» &c%arg 2%&f has been kicked." if {@ThemePreset} = 2
+            send "&3&lGUARD &8» &c%arg 2%&f has been kicked." if {@ThemePreset} = 3
+        else:
+          send "{@Prefix} &cE001! Player is not online." if {@ThemePreset} = 0
+          send "&7[&b&lAnti&5&lFisher&7] &cE001! Player is not online." if {@ThemePreset} = 1
+          send "&9&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 2
+          send "&3&lGUARD &8» &cE001! Player is not online." if {@ThemePreset} = 3
+    else:
+      send "{@Prefix} &cE002! Command does not exist." if {@ThemePreset} = 0
+      send "&7[&b&lAnti&5&lFisher&7] &cE002! Command does not exist." if {@ThemePreset} = 1
+      send "&9&lGUARD &8» &cE002! Command does not exist." if {@ThemePreset} = 2
+      send "&3&lGUARD &8» &cE002! Command does not exist." if {@ThemePreset} = 3

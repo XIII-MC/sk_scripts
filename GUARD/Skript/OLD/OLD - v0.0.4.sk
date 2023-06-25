@@ -1,0 +1,1362 @@
+options:
+
+#Main Options 
+
+   #Anticheat prefix
+   guard: &3&lGUARD &8»&f
+
+   #Guard Version !DO NOT TOUCH!#
+   Version: v0.4
+
+   #Discord Logging !
+   DiscordLogging: true 
+   BotToken: ODcyODc4MDIxODQ0MDI1Mzk2.YQwRAQ.DA1Mk7FO0RTHcfhsNOAmfdfowVU 
+   BotName: GUARD
+   ChannelLoggingID: 872878745889935390
+
+#Punishements
+
+   #Auto-Ban
+   Ban: false #This will autoban the player with the command "/guard ban %player% 7 day"
+   BanMsg: &c%arg 2%&f has been removed for &cUnfair Advantage #The message that will be broadcasted on the server chat when a player gets banned by GUARD
+
+   #Auto-Kick
+   Kick: false #This will autokick the player with the command "/guard kick %player%"
+   KickMsg: &c%arg 2%&f has been removed for &cUnfair Advantage #The message that will be broadcasted on the server chat when a player gets kicked by GUARD
+
+#LagBack options
+
+   #LagBack / TeleportBack
+   LagBackInstant: false #This is for lowjump / highjump checks, they will teleport back the player even before sending an alert
+   LagBack: false #This will lagback / teleport back the player whenever the player flags the anticheat
+
+#Misc
+
+   #Disabled Worlds 
+   Whitelisted_Worlds: example_world #Here you can put your worlds where you want the anticheat to be disabled, like your lobby if you have launch pads
+
+   #TestMode
+   TestMode: true #This is for tests or test servers only , you don't need it on your production server
+
+#Permissions
+
+   MainPermission: GUARD.commands #Permissions for /guard
+   GUARDNotifyPermission: GUARD.alerts #Permissions to recive alerts
+
+   #You can give your self the perm "GUARD.*" to have the 2 permissions
+
+#AutoClicker Checks
+
+   #AutoClicker A (Left):
+   MaxLeftCPS: 15 #The "CPS" counter is cleared around every 3 seconds
+   AutoClickerLeft_Status: &aWorking 
+   AutoClickerLeft_PunishVL: 10 
+   AutoClickerLeft_Buffer: 0
+   AutoClickerLeft_BufferAdd: 0
+
+   #AutoClicker B (Right):
+   MaxRightCPS: 15 #The "CPS" counter is cleared around every 3 seconds
+   AutoClickerRight_Status: &aWorking
+   AutoClickerRight_PunishVL: 10 
+   AutoClickerRight_Buffer: 0
+   AutoClickerRight_BufferAdd: 0
+
+#Reach Check 
+   
+   #Reach A
+   ReachA_Status: &aWorking
+   ReachA_PunishVL: 3
+   ReachA_BufferAdd: 1
+   ReachA_Buffer: 2
+   MaxReachA: 3
+
+   #Reach B
+   ReachB_Status: &aWorking
+   ReachB_PunishVL: 3
+   ReachB_BufferAdd: 0
+   ReachB_Buffer: 0
+   MaxReachB: -3
+
+   #Reach C
+   ReachC_Status: &aWorking
+   ReachC_PunishVL: 3
+   ReachC_BufferAdd: 1
+   ReachC_Buffer: 2
+   MaxReachC: 3
+
+#Aim Checks
+
+   #Aim A
+   AimA_Status: &aWorking 
+   AimA_PunishVL: 4
+   AimA_Buffer: 7
+   AimA_BufferAdd: 1
+
+   #Aim B
+   AimB_Status: &aWorking 
+   AimB_PunishVL: 4
+   AimB_Buffer: 8
+   AimB_BufferAdd: 1
+
+#Criticals Checks
+
+   #Critical A
+   CriticalA_Status: &aWorking
+   CriticalA_PunishVL: 3
+   CriticalA_Buffer: 1
+   CriticalA_BufferAdd: 1
+
+#KillAura Checks
+
+   #KillAura A:
+   KillAuraA_Buffer: 9 #How many hits can the player deal without looking at his target (4/6 is recommanded)
+   KillAuraA_BufferAdd: 1
+   KillAuraA_Status: &aWorking
+   KillAuraA_PunishVL: 3
+
+   #KillAura B
+   KillAuraB_Status: &aWorking
+   KillAuraB_PunishVL: 3
+   KillAuraB_Buffer: 2
+   KillAuraB_BufferAdd: 1
+
+   #KillAura C:
+   KillAuraC_Buffer: 12 #How many hits can the player deal in 1 second 
+   KillAuraC_BufferAdd: 1
+   KillAuraC_Status: &aWorking
+   KillAuraC_PunishVL: 5
+
+#Inventory Checks
+
+   #Inventory A
+   InventoryA_Status: &aWorking
+   InventoryA_PunishVL: 5
+   InventoryA_BufferAdd: 0
+   InventoryA_Buffer: 0
+
+   #Inventory B
+   InventoryB_Status: &aWorking
+   InventoryB_PunishVL: 1
+   InventoryB_BufferAdd: 0
+   InventoryB_Buffer: 0
+
+   #Inventory C
+   InventoryC_Status: &aWorking
+   InventoryC_PunishVL: 1
+   InventoryC_BufferAdd: 0
+   InventoryC_Buffer: 0
+
+   #Inventory D
+   InventoryD_Status: &aWorking
+   InventoryD_PunishVL: 1
+   InventoryD_BufferAdd: 0
+   InventoryD_Buffer: 0
+
+#Scaffold Checks
+
+   #Scaffold A 
+   ScaffoldA_Status: &aWorking 
+   ScaffoldA_PunishVL: 1
+   ScaffoldA_Buffer: 2
+   ScaffoldA_BufferAdd: 1
+
+   #Scaffold B
+   ScaffoldB_Status: &aWorking
+   ScaffoldB_PunishVL: 3
+   ScaffoldB_Buffer: 2
+   ScaffoldB_BufferAdd: 1
+
+   #Scaffold C 
+   ScaffoldC_Status: &aWorking
+   ScaffoldC_PunishVL: 1
+   ScaffoldC_Buffer: 0
+   ScaffoldC_BufferAdd: 0
+
+   #Scaffold D
+   ScaffoldD_Status: &aWorking
+   ScaffoldD_PunishVL: 8
+   ScaffoldD_Buffer: 4
+   ScaffoldD_BufferAdd: 1
+
+   #Scaffold E
+   ScaffoldE_Status: &aWorking
+   ScaffoldE_PunishVL: 4
+   ScaffoldE_Buffer: 0
+   ScaffoldE_BufferAdd: 0
+
+#Interact Checks
+   
+   #Interact A
+   InteractA_Status: &aWorking
+   InteractA_PunishVL: 1
+   InteractA_Buffer: 0
+   InteractA_BufferAdd: 0
+
+   #Interact B 
+   InteractB_Status: &aWorking 
+   InteractB_PunishVL: 1
+   InteractB_Buffer: 0
+   InteractB_BufferAdd: 0
+
+   #Interact C 
+   InteractC_Status: &aWorking 
+   InteractC_PunishVL: 1
+   InteractC_Buffer: 0
+   InteractC_BufferAdd: 0
+
+#Speed Checks
+
+   #Speed A1 
+   SpeedA1_Status: &aWorking
+   SpeedA1_PunishVL: 5
+   SpeedA1_BufferAdd: 0.5
+   SpeedA1_Buffer: 5.5
+
+   #Speed A2 
+   SpeedA2_Status: &aWorking 
+   SpeedA2_PunishVL: 5
+   SpeedA2_BufferAdd: 0.5
+   SpeedA2_Buffer: 2
+
+   #Speed A3
+   SpeedA3_Status: &aWorking 
+   SpeedA3_PunishVL: 5
+   SpeedA3_BufferAdd: 0.5
+   SpeedA3_Buffer: 5.5
+
+   #Speed B1 
+   SpeedB1_Status: &aWorking 
+   SpeedB1_PunishVL: 5 
+   SpeedB1_BufferAdd: 0.5
+   SpeedB1_Buffer: 2
+
+   #Speed B2 
+   SpeedB2_Status: &aWorking 
+   SpeedB2_PunishVL: 5
+   SpeedB2_BufferAdd: 0.5
+   SpeedB2_Buffer: 3
+
+   #Speed B3 
+   SpeedB3_Status: &aWorking
+   SpeedB3_PunishVL: 5
+   SpeedB3_BufferAdd: 0.5
+   SpeedB3_Buffer: 2.5
+
+   #Speed B4
+   SpeedB4_Status: &aWorking 
+   SpeedB4_PunishVL: 5
+   SpeedB4_Buffer: 3
+   SpeedB4_BufferAdd: 1
+
+   #Speed B5 
+   SpeedB5_Status: &aWorking 
+   SpeedB5_PunishVL: 5
+   SpeedB5_Buffer: 0.5
+   SpeedB5_BufferAdd: 0.5
+
+   #Speed C1 
+   SpeedC1_Status: &aWorking
+   SpeedC1_PunishVL: 5
+   SpeedC1_BufferAdd: 0.5
+   SpeedC1_Buffer: 3
+
+   #Speed C2 
+   SpeedC2_Status: &aWorking 
+   SpeedC2_PunishVL: 5
+   SpeedC2_BufferAdd: 0.5
+   SpeedC2_Buffer: 3.5
+
+   #Speed C3
+   SpeedC3_Status: &aWorking 
+   SpeedC3_PunishVL: 5
+   SpeedC3_BufferAdd: 0.5
+   SpeedC3_Buffer: 3.5
+
+   #Speed D1 
+   SpeedD1_Status: &aWorking 
+   SpeedD1_PunishVL: 5 
+   SpeedD1_BufferAdd: 1
+   SpeedD1_Buffer: 6
+
+   #Speed D2 
+   SpeedD2_Status: &aWorking 
+   SpeedD2_PunishVL: 5
+   SpeedD2_BufferAdd: 1
+   SpeedD2_Buffer: 9
+
+   #Speed D3 
+   SpeedD3_Status: &aWorking
+   SpeedD3_PunishVL: 5
+   SpeedD3_BufferAdd: 1
+   SpeedD3_Buffer: 6
+
+   #Speed E1
+   SpeedE1_Status: &aWorking
+   SpeedE1_PunishVL: 5
+   SpeedE1_BufferAdd: 0
+   SpeedE1_Buffer: 0
+
+   #Speed E2
+   SpeedE2_Status: &aWorking
+   SpeedE2_PunishVL: 5
+   SpeedE2_BufferAdd: 0
+   SpeedE2_Buffer: 0
+
+   #Speed F1
+   SpeedF1_Status: &aWorking
+   SpeedF1_PunishVL: 5
+   SpeedF1_BufferAdd: 1
+   SpeedF1_Buffer: 4
+
+   #Speed F2
+   SpeedF2_Status: &aWorking
+   SpeedF2_PunishVL: 5
+   SpeedF2_BufferAdd: 1
+   SpeedF2_Buffer: 4
+
+#Nofall Check 
+   
+   #Nofall A 
+   NofallA_Status: &aWorking 
+   NofallA_PunishVL: 3
+   NofallA_Buffer: 1
+   NofallA_BufferAdd: 1
+
+   #Nofall B 
+   NofallB_Status: &aWorking 
+   NofallB_PunishVL: 3
+   NofallB_Buffer: 1
+   NofallB_BufferAdd: 1
+
+#Jesus Checks
+
+   #Jesus A 
+   JesusA_Status: &aWorking
+   JesusA_PunishVL: 5
+   JesusA_BufferAdd: 1
+   JesusA_Buffer: 13
+   
+   #Jesus B 
+   JesusB_Status: &aWorking
+   JesusB_PunishVL: 5
+   JesusB_BufferAdd: 0
+   JesusB_Buffer: 0
+
+   #Jesus C 
+   JesusC_Status: &aWorking
+   JesusC_PunishVL: 3
+   JesusC_BufferAdd: 0.5
+   JesusC_Buffer: 2
+
+#Motion Checks 
+
+   #Motion A1 
+   MotionA1_Status: &aWorking 
+   MotionA1_PunishVL: 1 
+   MotionA1_BufferAdd: 0
+   MotionA1_Buffer: 0
+
+   #Motion A2 
+   MotionA2_Status: &aWorking
+   MotionA2_PunishVL: 5
+   MotionA2_BufferAdd: 0.5
+   MotionA2_Buffer: 3.5
+
+   #Motion A3
+   MotionA3_Status: &aWorking 
+   MotionA3_PunishVL: 3
+   MotionA3_BufferAdd: 0.5
+   MotionA3_Buffer: 2
+
+   #Motion A4
+   MotionA4_Status: &aWorking
+   MotionA4_PunishVL: 5
+   MotionA4_BufferAdd: 0.5
+   MotionA4_Buffer: 5.5
+
+   #Motion A5
+   MotionA5_Status: &aWorking 
+   MotionA5_PunishVL: 3
+   MotionA5_Buffer: 2
+   MotionA5_BufferAdd: 1
+
+   #Motion A6 
+   MotionA6_Status: &aWorking
+   MotionA6_PunishVL: 5
+   MotionA6_Buffer: 6
+   MotionA6_BufferAdd: 0.5
+
+   #Motion A7 
+   MotionA7_Status: &aWorking 
+   MotionA7_PunishVL: 5
+   MotionA7_Buffer: 6
+   MotionA7_BufferAdd: 1
+
+   #Motion A8
+   MotionA8_Status: &aWorking 
+   MotionA8_PunishVL: 5
+   MotionA8_Buffer: 14
+   MotionA8_BufferAdd: 1
+
+   #Motion A9 
+   MotionA9_Status: &aWorking
+   MotionA9_PunishVL: 10
+   MotionA9_Buffer: 6
+   MotionA9_BufferAdd: 1
+
+   #Motion B1 
+   MotionB1_Status: &aWorking
+   MotionB1_PunishVL: 3
+   MotionB1_Buffer: 2
+   MotionB1_BufferAdd: 1
+
+   #Motion B2
+   MotionB2_Status: &aWorking 
+   MotionB2_PunishVL: 3
+   MotionB2_BufferAdd: 1
+   MotionB2_Buffer: 5
+
+   #Motion B3 
+   MotionB3_Status: &aWorking
+   MotionB3_PunishVL: 3
+   MotionB3_Buffer: 0
+   MotionB3_BufferAdd: 0
+
+   #Motion B4 
+   MotionB4_Status: &aWorking
+   MotionB4_PunishVL: 3
+   MotionB4_Buffer: 0
+   MotionB4_BufferAdd: 0
+
+   #Motion B5
+   MotionB5_Status: &aWorking
+   MotionB5_PunishVL: 3
+   MotionB5_Buffer: 0
+   MotionB5_BufferAdd: 0
+
+   #Motion B6
+   MotionB6_Status: &aWorking
+   MotionB6_PunishVL: 3
+   MotionB6_Buffer: 2
+   MotionB6_BufferAdd: 1
+
+   #Motion B7
+   MotionB7_Status: &aWorking
+   MotionB7_PunishVL: 3
+   MotionB7_Buffer: 2
+   MotionB7_BufferAdd: 1
+
+#FastClimb Check
+   
+   #FastClimb A
+   FastClimbA_PunishVL: 3
+   FastClimbA_Status: &aWorking
+   FastClimbA_Buffer: 2
+   FastClimbA_BufferAdd: 1
+
+#NoSlow Check
+
+   #NoSlow A
+   NoSlowA_Status: &aWorking
+   NoSlowA_PunishVL: 3
+   NoSlowA_BufferAdd: 0.5
+   NoSlowA_Buffer: 1
+
+#NoWeb Checks
+
+   #NoWeb A
+   NoWebA_Status: &aWorking 
+   NoWebA_PunishVL: 5 
+   NoWebA_Buffer: 1
+   NoWebA_BufferAdd: 1
+
+#Timer Check 
+
+   #Timer A
+   TimerA_Status: &aWorking
+   TimerA_Buffer: 22
+   TimerA_BufferAdd: 1
+   TimerA_PunishVL: 20
+
+   #Timer B
+   TimerB_Status: &aWorking
+   TimerB_Buffer: 101
+   TimerB_BufferAdd: 1
+   TimerB_PunishVL: 20
+
+#Velocity Check 
+
+   #Velocity A 
+   VelocityA_Status: &6Testing
+   VelocityA_PunishVL: 3
+   VelocityA_BufferAdd: 1
+   VelocityA_Buffer: 16
+
+#BadPacket Checks
+
+   #BadPacket A 
+   BadPacketA_Status: &aWorking
+   BadPacketA_PunishVL: 1
+   BadPacketA_BufferAdd: 0
+   BadPacketA_Buffer: 0
+
+   #BadPacket B 
+   BadPacketB_Status: &aWorking
+   BadPacketB_PunishVL: 1
+   BadPacketB_BufferAdd: 0
+   BadPacketB_Buffer: 0
+
+on break:
+   remove 1 from {GUARD::%player%::CPS.L}
+on leftclick:
+  add 1 to {GUARD::%player%::CPS.L}
+  GA_clearly(player, "Click", "A", "{@AutoClickerLeft_Status}", {@AutoClickerLeft_PunishVL}, 1 ,"%{GUARD::%player%::CPS.L}%", {@AutoClickerLeft_BufferAdd}, {@AutoClickerLeft_Buffer}) if {GUARD::%player%::CPS.L} >= {@MaxLeftCPS}
+on rightclick:
+  add 1 to {GUARD::%player%::CPS.R}
+  GA_clearly(player, "Click", "B", "{@AutoClickerRight_Status}", {@AutoClickerRight_PunishVL}, 1, "%{GUARD::%player%::CPS.R}%", {@AutoClickerLeft_BufferAdd}, {@AutoClickerLeft_Buffer}) if {GUARD::%player%::CPS.R} >= {@MaxRightCPS}
+
+on join:
+  set {GUARD::%player%::SWINGSTATE} to true
+on arm swing:
+  set {GUARD::%player%::SWINGSTATE} to true
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  GA_clearly(attacker, "BadPacket", "B", "{@BadPacketB_Status}", {@BadPacketB_PunishVL}, 1, "NaN", {@BadPacketB_BufferAdd}, {@BadPacketB_Buffer} ) if {GUARD::%attacker%::SWINGSTATE} is false
+  set {GUARD::%attacker%::SWINGSTATE} to false
+on place:
+  GA_clearly(player, "BadPacket", "C", "{@BadPacketB_Status}", {@BadPacketB_PunishVL}, 1, "NaN", {@BadPacketB_BufferAdd}, {@BadPacketB_Buffer} ) if {GUARD::%player%::SWINGSTATE} is false
+  set {GUARD::%player%::SWINGSTATE} to false
+
+
+on any move:
+    set {lastpitch.%player%} to {pitch.%player%}
+    set {pitch.%player%} to player's pitch
+    set {lastpitchdiff.%player%} to {pitchdiff.%player%}
+    set {pitchdiff.%player%} to {pitch.%player%} - {lastpitch.%player%}
+    set {pitchdiffdiff.%player%} to {pitchdiff.%player%} - {lastpitchdiff.%player%}
+    set {gcd.%player%} to getGcd(round({pitchdiff.%player%}), round({pitchdiffdiff.%player%}))
+    difference between {GUARD::%player%::TEMP::ATTACK} and now < 0.3 second:
+        
+        if {gcd.%player%} != 1:
+            
+            if getLastGCD(player) < 9 seconds:
+                broadcast "%player%: &8flagged &4Aim &cA (%{gcd.%player%}%&c)"
+            set {gcdtime.%player%} to now
+            
+        else:
+            set {gcdflags.%player%} to 0
+    set {attacked.%player%} to false
+ 
+function getLastGCD(p: player) :: time span:
+  return difference between {gcdtime.%{_p}%} and now
+
+function isgudnumber(n: number, n2: number) :: number:
+    set {_ns} to {_n} / {_n2}
+    if {_ns} - round({_ns}) = 0:
+        return 0
+        stop
+    else:
+        return 1
+        stop
+
+function getGcd(c: number, p: number) :: number:
+    set {cock} to min({_c}, {_p}) / 2
+    
+    while {cock} >= 2:
+        set {cock} to {cock} - 1
+        if isgudnumber({_c}, {cock}) = 0:
+            if isgudnumber({_p}, {cock}) = 0:
+                return {cock}
+                stop
+    return 1
+
+on damage:
+  delete {GUARD::%victim%::TEMP::INVOPEN}
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  set {GUARD::%attacker%::TEMP::ATTACK} to now
+  set {_yans} to distance between victim's location and attacker's location
+  set {_yanx} to difference between victim's x location and attacker's x location
+  set {_yanz} to difference between victim's z location and attacker's z location
+  set {_yany} to difference between victim's y location and attacker's y location
+  if {_yany} <= 0:
+    set {_anx} to ({_yanx} - 0.40009001)
+    set {_anz} to ({_yanz} - 0.40009001)
+    set {_ans} to ({_yans} - 0.54188401)
+  if {_yany} > 0.5:
+    set {_anx} to ({_yanx} - 1.80009001)
+    set {_anz} to ({_yanz} - 1.80009001)
+    set {_ans} to ({_yans} - 1.83588401)
+  GA_clearly(attacker, "Reach", "A", "{@ReachA_Status}", {@ReachA_PunishVL}, 1, "%{_anx}%", {@ReachA_BufferAdd}, {@ReachA_Buffer}) if {_anx} > 3
+  GA_clearly(attacker, "Reach", "A", "{@ReachA_Status}", {@ReachA_PunishVL}, 1, "%{_anz}%", {@ReachA_BufferAdd}, {@ReachA_Buffer}) if {_anz} > 3
+  GA_clearly(attacker, "Reach", "A", "{@ReachA_Status}", {@ReachA_PunishVL}, 1, "%{_anx}%", 0.1, {@ReachA_Buffer}) if {_anz} > {@MaxReachA} + 2.7
+  GA_clearly(attacker, "Reach", "A", "{@ReachA_Status}", {@ReachA_PunishVL}, 1, "%{_anz}%", 0.1, {@ReachA_Buffer}) if {_anz} > {@MaxReachA} + 2.7
+  delete {GUARD::%attacker%::REACH.A} if {_anz} < 3
+  GA_clearly(attacker, "Reach", "C", "{@ReachC_Status}", {@ReachC_PunishVL}, 1, "%{_ans}%", {@ReachC_BufferAdd}, {@ReachC_Buffer}) if {_ans} > {@MaxReachC}
+  GA_clearly(attacker, "Reach", "C", "{@ReachC_Status}", {@ReachC_PunishVL}, 1, "%{_ans}%", 0.1, {@ReachC_Buffer}) if {_ans} > {@MaxReachC} + 2.7
+  delete {GUARD::%attacker%::REACH.C} if {_ans} < 3
+  GA_clearly(attacker, "Reach", "B", "{@ReachB_Status}", {@ReachB_PunishVL}, 1, "%{_anx}%", {@ReachB_BufferAdd}, {@ReachB_Buffer}) if {_anx} < {@MaxReachB}
+  GA_clearly(attacker, "Reach", "B", "{@ReachB_Status}", {@ReachB_PunishVL}, 1, "%{_anz}%", {@ReachB_BufferAdd}, {@ReachB_Buffer}) if {_anz} < {@MaxReachB}
+  delete {GUARD::%attacker%::REACH.B} if {_anx} or {_anz} > 3
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  GA_clearly(attacker, "KillAura", "A", "{@KillAuraA_Status}", {@KillAuraA_PunishVL}, 1, "%{GUARD::%attacker%::KILLAURA.A}%", {@KillAuraA_BufferAdd}, {@KillAuraA_Buffer}) if attacker's targeted entity is not set
+  delete {GUARD::%attacker%::KILLAURA.A} if attacker's targeted entity is set
+  if attacker's targeted block is not a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+    attacker's targeted block is not water or lava
+    attacker's targeted block is not block under victim
+    GA_clearly(attacker, "KillAura", "B", "{@KillAuraB_Status}", {@KillAuraB_PunishVL}, 1, "%attacker's target block%", {@KillAuraB_BufferAdd}, {@KillAuraB_Buffer}) if distance between attacker and victim > distance between attacker and attacker's targeted block
+  delete {GUARD::%attacker%::KILLAURA.B} if distance between attacker and victim < distance between attacker and attacker's targeted block
+  GA_clearly(attacker, "KillAura", "C", "{@KillAuraC_Status}", {@KillAuraC_PunishVL}, 1, "NaN", {@KillAuraC_BufferAdd}, {@KillAuraC_Buffer}) 
+
+on inventory click:
+  GA_Requirements(player) = true
+  set {GUARD::%player%::TEMP::INVOPEN} to now 
+  GA_clearly(player, "Inventory", "A", "{@InventoryA_Status}", {@InventoryA_PunishVL}, 1, "NaN", {@InventoryA_BufferAdd}, {@InventoryA_Buffer}) if player is sprinting
+  GA_clearly(player, "Inventory", "B", "{@InventoryB_Status}", {@InventoryB_PunishVL}, 1, "NaN", {@InventoryB_BufferAdd}, {@InventoryB_Buffer}) if player is sneaking
+on sprint toggle:
+  if {GUARD::%player%::TEMP::INVOPEN} is set:
+    GA_clearly(player, "Inventory", "C", "{@InventoryC_Status}", {@InventoryC_PunishVL}, 1, "NaN", {@InventoryC_BufferAdd}, {@InventoryC_Buffer}) if difference between {GUARD::%player%::TEMP::INVOPEN} and now > 0.5 second
+on inventory close:
+  clear {GUARD::%player%::TEMP::INVOPEN}
+on any move:
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true
+  GA_Ice(player) > 1.3 second 
+  GA_Slime(player) > 0.4 second
+  {GUARD::%player%::TEMP::INVOPEN} is set
+  GA_clearly(player, "Inventory", "D", "{@InventoryD_Status}", {@InventoryD_PunishVL}, 1, "NaN", {@InventoryD_BufferAdd}, {@InventoryD_Buffer}) if difference between {GUARD::%player%::TEMP::INVOPEN} and now > 0.4 second
+
+on block place:
+  set {GUARD::%player%::TEMP::BLOCKPLACE.TIME} to now
+  block under event-block is air or void air
+  player's gamemode is not creative or spectator
+  if y coordinate of event-block < y coordinate of player:
+    set {_Pitch} to getDeltaPitch(player, 2)
+    GA_clearly(player, "Scaffold", "E", "{@ScaffoldE_Status}", {@ScaffoldE_PunishVL}, 1, "%getDeltaYaw(player, 2)%", {@ScaffoldE_BufferAdd}, {@ScaffoldE_BufferAdd}) if getDeltaYaw(player, 2) > 18
+    delete {GUARD::%player%::SCAFFOLD.D} if getDeltaYaw(player, 2) < 18
+    GA_clearly(player, "Scaffold", "D", "{@ScaffoldD_Status}", {@ScaffoldD_PunishVL}, 1, "%{_Pitch}%", {@ScaffoldD_BufferAdd}, {@ScaffoldD_BufferAdd}) if {_Pitch} > 2
+    delete {GUARD::%player%::SCAFFOLD.D} if {_Pitch} < 2
+    block above event-block is air:
+      GA_clearly(player, "Scaffold", "A", "{@ScaffoldA_Status}", {@ScaffoldA_PunishVL}, 1, "%player's pitch%", {@ScaffoldA_BufferAdd}, {@ScaffoldA_BufferAdd}) if player's pitch is between 90 and 88.75
+      delete {GUARD::%player%::SCAFFOLD.A} if player's pitch < 88.75
+    GA_clearly(player, "Scaffold", "B", "{@ScaffoldB_Status}", {@ScaffoldB_PunishVL}, 1, "NaN", {@ScaffoldB_BufferAdd}, {@ScaffoldB_BufferAdd}) if event-block is not player's targeted block
+    delete {GUARD::%player%::SCAFFOLD.B} if event-block is player's targeted block
+    if player is sprinting:
+      GA_clearly(player, "Scaffold", "C", "{@ScaffoldC_Status}", {@ScaffoldC_PunishVL}, 1, "%player's pitch%", {@ScaffoldC_BufferAdd}, {@ScaffoldC_BufferAdd}) if player's pitch is between 90 and 80
+      delete {GUARD::%player%::SCAFFOLD.C} if player's pitch < 80
+
+on break:
+  player's targeted block is not a flower, grass, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+  GA_clearly(player, "Interact", "A", "{@InteractA_Status}", {@InteractA_PunishVL}, 1, "NaN", {@InteractA_BufferAdd}, {@InteractA_Buffer}) if "%event-block%" is not "%targeted block%"
+on left click:
+  event-block is cake or any bed or dragon egg
+  player's targeted block is not a flower, grass, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+  GA_clearly(player, "Interact", "B", "{@InteractB_Status}", {@InteractB_PunishVL}, 1, "NaN", {@InteractB_BufferAdd}, {@InteractB_Buffer}) if clicked block is not targeted block
+on right click:
+  event-block is cake or any bed or dragon egg
+  player's targeted block is not a flower, grass, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+  GA_clearly(player, "Interact", "C", "{@InteractC_Status}", {@InteractC_PunishVL}, 1, "NaN", {@InteractC_BufferAdd}, {@InteractC_Buffer}) if clicked block is not targeted block
+
+
+
+on any move:
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true
+  set {GUARD::%player%::TEMP::NOFALLY} to player's y location
+  set {GUARD::%player%::TEMP::NOFALLY3} to {GUARD::%player%::TEMP::NOFALLY} - {GUARD::%player%::TEMP::NOFALLY2}
+  if {GUARD::%player%::TEMP::NOFALLY3} > 0:
+    set {GUARD::%player%::TEMP::NOFALLY4} to player's y location
+  if {GUARD::%player%::TEMP::NOFALLY3} < 0:
+    set {GUARD::%player%::TEMP::NOFALLY5} to player's y location
+    GA_InAirFull(player) = true
+    loop all blocks in radius 2 around player:
+      stop if loop-block is not air
+    GA_clearly(player, "NoFall", "A", "{@NofallA_Status}", {@NofallA_PunishVL}, 1, "NaN", {@NofallA_Buffer}, {@NofallA_BufferAdd}) if difference between round({GUARD::%player%::TEMP::NOFALLY4} - {GUARD::%player%::TEMP::NOFALLY5}) and round(player's fall distance) != 0
+  if {GUARD::%player%::TEMP::NOFALLY3} = 0:
+    set {GUARD::%player%::TEMP::NOFALLY4} to player's y location
+  set {GUARD::%player%::TEMP::NOFALLY2} to player's y location
+  delete {GUARD::%player%::NOFALL.A} if difference between round({GUARD::%player%::TEMP::NOFALLY4} - {GUARD::%player%::TEMP::NOFALLY5}) and round(player's fall distance) = 0
+
+on any move:
+  loop all blocks in radius 2 around player:
+    stop if loop-block is not air
+  GA_clearly(player, "NoFall", "B", "{@NofallB_Status}", {@NofallB_PunishVL}, 1, "NaN", {@NofallB_Buffer}, {@NofallB_BufferAdd}) if player is on ground
+  delete {GUARD::%player%::NOFALL.B} if player is not on ground
+
+on any move:
+  GA_Requirements(player) = true
+  GA_OnLiquid(player) = true
+  GA_OnLiquidFull(player) = true
+  if player is on ground:
+    player is not swimming
+    GA_clearly(player, "Jesus", "B", "{@JesusB_Status}", {@JesusB_PunishVL}, 1, "NaN", {@JesusB_BufferAdd}, {@JesusB_Buffer})  
+  delete {GUARD::%player%::JESUS.B} if player is not on ground   
+  block at player is air   
+  GA_clearly(player, "Jesus", "A", "{@JesusA_Status}", {@JesusA_PunishVL}, 1, "NaN", {@JesusA_BufferAdd}, {@JesusA_Buffer})
+
+on any move:
+  GA_Requirements(player) = true
+  GA_OnLiquid(player) = true
+  GA_OnLiquidFull(player) = true
+  if {GUARD::%player%::TEMP::WATERPOS} = y location of player:
+    "%y location of player%" contains "."
+    "%y location of player%" does not contain ".06"
+    GA_clearly(player, "Jesus", "C", "{@JesusC_Status}", {@JesusC_PunishVL}, 1, "NaN", {@JesusC_BufferAdd}, {@JesusC_Buffer}) if player is not swimming
+    stop
+  set {GUARD::%player%::TEMP::WATERPOS} to y location of player
+  delete {GUARD::%player%::JESUS.C} if {GUARD::%player%::TEMP::WATERPOS} != y location of player
+
+on any move:
+  GA_Requirements(player) = true
+  GA_EffectsRequirements(player) = true
+  getLastDamage(player) > 0.4 second
+  GA_Block(player) > 0.3 second
+  GA_Slime(player) > 4 second
+  GA_InLiquid(player) > 0.4 second
+  GA_Gamemode(player) > 0.4 second
+  GA_InLiquid(player) > 0.4 second
+  GA_Block2(player) > 0.3 second
+  set {_y} to getDeltaY2(player, 2)
+  if "%{_y}%" contains ".":
+    GA_clearly(player, "Motion", "B-1", "{@MotionB1_Status}", {@MotionB1_PunishVL}, 1, "%{_y}%", {@MotionB1_BufferAdd}, {@MotionB1_Buffer}) if {_y} > 0.42
+    GA_clearly(player, "Motion", "B-1", "{@MotionB1_Status}", {@MotionB1_PunishVL}, 1, "%{_y}%", 0.1, {@MotionB1_Buffer}) if {_y} > 0.75
+  if GA_Climb(player) < 0.2 second:
+    climbing(player) = true
+    block 2 under player is ladder or vines or twisting vines
+    block above or at or below player is ladder or vines or twisting vines
+    GA_clearly(player, "FastClimb", "A", "{@FastClimbA_Status}", {@FastClimbA_PunishVL}, 1, "%{_y}%", {@FastClimbA_BufferAdd}, {@FastClimbA_Buffer}) if {_y} > 0.117600002289
+    if GA_Climb(player) > 0.4 second:
+      GA_clearly(player, "Motion", "A-6", "{@MotionA6_Status}", {@MotionA6_PunishVL}, 1, "%{_y}%", {@MotionA6_BufferAdd}, {@MotionA6_Buffer}) if {_y} > 0
+  delete {GUARD::%player%::MOTION.A-6} if {_y} < 0
+  delete {GUARD::%player%::FASTCLIMB.A} if {_y} < 0.1177 
+
+on any move:
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true
+  getLastDamage(player) > 0.4 second
+  GA_InLiquid(player) > 0.4 second
+  set {_y} to (getDeltaY2(player, 2) * 20)
+  GA_InAirFull(player) = true
+  {_y} < 0    
+  GA_clearly(player, "Motion", "A-8", "{@MotionA8_Status}", {@MotionA8_PunishVL}, 1, "%{_y}%", {@MotionA8_BufferAdd}, {@MotionA8_Buffer}) if {_y} > -20
+  delete {GUARD::%player%::MOTION.A-8} if {_y} < -20
+
+on any move:
+  GA_Requirements(player) = true
+  GA_InLiquid(player) > 0.4 second
+  GA_Slime(player) > 0.4 second
+  GA_Block(player) > 0.1 second
+  getLastDamage(player) > 0.4 second
+  player's walk speed < 0.21
+  GA_AirAbove(player) > 0.5 second
+  player is not on ground
+  player is not riding
+  block at player is air
+  GA_clearly(player, "Motion", "A-7", "{@MotionA7_Status}", {@MotionA7_PunishVL}, 3, "0", {@MotionA7_BufferAdd}, {@MotionA7_Buffer}) if getDeltaY(player, 2) = 0
+  delete {GUARD::%player%::MOTION.A-7} if getDeltaY(player, 2) != 0
+
+on any move:
+  GA_Requirements(player) = true
+  GA_EffectsRequirements(player) = true
+  GA_Block(player) > 0.1 second 
+  GA_InLiquid(player) > 0.4 second
+  GA_Block2(player) > 0.4 second
+  GA_Climb(player) > 0.4 second
+  GA_Block3(player) > 0.4 second
+  getLastDamage(player) > 0.4 second
+  set {_diffy} to difference between y location of player and {GUARD::%player%::TEMP::YLOC}
+  set {GUARD::%player%::TEMP::YLOC} to y location of player
+  delete {GUARD::%player%::MOTION.A-5} if "%{_diffy}%" != "%{GUARD::%player%::TEMP::LASTYPOS}%"
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{GUARD::%player%::TEMP::LASTYPOS}%":
+      GA_clearly(player, "Motion", "A-5", "{@MotionA5_Status}", {@MotionA5_PunishVL}, 1, "%{_diffy}%", {@MotionA5_BufferAdd}, {@MotionA5_Buffer}) if "%{_diffy}%" != "0.08" 
+    else:
+      set {GUARD::%player%::TEMP::LASTYPOS} to {_diffy}
+
+on any move:
+  GA_Requirements(player) = true
+  GA_Block(player) > 0.1 second
+  GA_Place(player) > 2 second
+  GA_Slime(player) > 4 second
+  GA_InLiquid(player) > 0.4 second
+  set {GUARD::%player%::TEMP::SPIDERTHREE} to {GUARD::%player%::TEMP::SPIDERTWO}
+  set {GUARD::%player%::TEMP::SPIDERTWO} to {GUARD::%player%::TEMP::SPIDERONE}
+  set {GUARD::%player%::TEMP::SPIDERONE} to spider(player)
+  set {GUARD::%player%::TEMP::SPIDER1} to player's y location
+  set {GUARD::%player%::TEMP::SPIDER2} to ({GUARD::%player%::TEMP::SPIDERY} - 0.08) * 0.9800000190734863
+  set {GUARD::%player%::TEMP::SPIDERY} to {GUARD::%player%::TEMP::SPIDER1} - {GUARD::%player%::TEMP::SPIDER3}
+  if {GUARD::%player%::TEMP::SPIDERONE} is true:
+    if {GUARD::%player%::TEMP::SPIDERTWO} is true:
+      if {GUARD::%player%::TEMP::SPIDERTHREE} is true: 
+        if {GUARD::%player%::TEMP::SPIDERY} > 0:
+          GA_clearly(player, "Motion", "A-9", "{@MotionA9_Status}", {@MotionA9_PunishVL}, 1, "%{GUARD::%player%::TEMP::SPIDERY}%", {@MotionA9_BufferAdd}, {@MotionA9_Buffer}) if {GUARD::%player%::TEMP::SPIDERY} > 0
+  if {GUARD::%player%::MOTION.A-9} >= 1:
+    remove 1 from {GUARD::%player%::MOTION.A-9} if {GUARD::%player%::TEMP::SPIDERY} < 0
+  set {GUARD::%player%::TEMP::SPIDER3} to player's y location 
+
+on any move:
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true
+  climbing(player) = false
+  GA_Block(player) > 0.8 seconds
+  GA_Slime(player) > 4 second
+  GA_Place(player) > 2 second
+  GA_Block3(player) > 0.5 second
+  set {GUARD::%player%::TEMP::MOTIONATHREE} to {GUARD::%player%::TEMP::MOTIONATWO}
+  set {GUARD::%player%::TEMP::MOTIONATWO} to {GUARD::%player%::TEMP::MOTIONAONE}
+  set {GUARD::%player%::TEMP::MOTIONAONE} to GA_InAirFull(player)
+  set {GUARD::%player%::TEMP::MOTIONAYPOS} to player's y location
+  set {GUARD::%player%::TEMP::MOTIONPREDICTION} to ({GUARD::%player%::TEMP::MOTIONAY} - 0.08) * 0.9800000190734863
+  set {GUARD::%player%::TEMP::MOTIONAY} to {GUARD::%player%::TEMP::MOTIONAYPOS} - {GUARD::%player%::TEMP::MOTIONAYPOS2}
+  if {GUARD::%player%::TEMP::MOTIONAONE} is true:
+    if {GUARD::%player%::TEMP::MOTIONATWO} is true:
+      if {GUARD::%player%::TEMP::MOTIONATHREE} is true: 
+        GA_clearly(player, "Motion", "A-1", "{@MotionA1_Status}", {@MotionA1_PunishVL}, 1, "%{GUARD::%player%::TEMP::MOTIONAYPOS}%", {@MotionA1_BufferAdd}, {@MotionA1_Buffer}) if {GUARD::%player%::TEMP::MOTIONAYPOS} = 0
+        if {GUARD::%player%::TEMP::MOTIONAY} < 0.42:
+          GA_clearly(player, "Motion", "A-2", "{@MotionA2_Status}", {@MotionA2_PunishVL}, 1, "%{GUARD::%player%::TEMP::MOTIONAY}%", {@MotionA2_BufferAdd}, {@MotionA2_Buffer}) if {GUARD::%player%::TEMP::MOTIONAY} > 0
+        GA_clearly(player, "Motion", "A-3", "{@MotionA3_Status}", {@MotionA3_PunishVL}, 1, "%{GUARD::%player%::TEMP::MOTIONAY}%", {@MotionA3_BufferAdd}, {@MotionA3_Buffer}) if {GUARD::%player%::TEMP::MOTIONAY} > {GUARD::%player%::TEMP::MOTIONPREDICTION}
+        GA_clearly(player, "Motion", "A-4", "{@MotionA4_Status}", {@MotionA4_PunishVL}, 1, "%{GUARD::%player%::TEMP::MOTIONAY}%", {@MotionA4_BufferAdd}, {@MotionA4_Buffer}) if abs({GUARD::%player%::TEMP::MOTIONAY} - {GUARD::%player%::TEMP::MOTIONPREDICTION}) > 0.001
+  else:
+    delete {GUARD::%player%::MOTION.A-2}
+    delete {GUARD::%player%::MOTION.A-3}
+    delete {GUARD::%player%::MOTION.A-4}
+  set {GUARD::%player%::TEMP::MOTIONAYPOS2} to player's y location 
+
+on any move:
+  set {GUARD::%player%::TEMP::YLOCHOP} to player's y location
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true 
+  getLastDamageunsafe(player) > 0.4 second
+  GA_Block(player) > 0.3 second
+  GA_Block2(player) > 0.3 second
+  GA_Slime(player) > 0.6 second
+  GA_InLiquid(player) > 0.8 second
+  GA_Place(player) > 0.3 second
+  climbing(player) = false
+  GA_AirAbove(player) > 0.5 second
+  set {GUARD::%player%::TEMP::YHOPMOTION} to {GUARD::%player%::TEMP::YLOCHOP} - {GUARD::%player%::TEMP::YLOCHOP2}
+  if {GUARD::%player%::TEMP::YHOPMOTION} > 0:
+    set {GUARD::%player%::TEMP::TICKSTEP} to {GUARD::%player%::TEMP::TICKSTEP} + 1
+    if {GUARD::%player%::TEMP::TICKSTEP} = 1:
+      if {GUARD::%player%::TEMP::YHOPMOTION} > 0:
+        if {GUARD::%player%::TEMP::YHOPMOTION} < 0.42:
+          GA_clearly(player, "Motion", "B-7", "{@MotionB7_Status}", {@MotionB7_PunishVL}, 1, "%{GUARD::%player%::TEMP::YHOPMOTION}%", {@MotionB7_BufferAdd}, {@MotionB7_Buffer}) if {GUARD::%player%::TEMP::YHOPMOTION} != 0.41999998688697815
+  set {GUARD::%player%::TEMP::TICKSTEP} to 0 if {GUARD::%player%::TEMP::YHOPMOTION} <= 0
+  set {GUARD::%player%::TEMP::YLOCHOP2} to player's y location
+
+on any move:
+  set {GUARD::%player%::TEMP::YSTEPMOTON} to player's y location   
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true 
+  getLastDamageunsafe(player) > 0.4 second
+  GA_Slime(player) > 0.4 second
+  climbing(player) = false
+  GA_Climb(player) > 0.4 second
+  #GA_AirAbove(player) > 0.5 second
+  GA_Block2(player) > 0.4 second
+  set {GUARD::%player%::TEMP::YSTEPMOTION} to {GUARD::%player%::TEMP::YSTEPMOTON} - {GUARD::%player%::TEMP::YSTEPMOTON2}
+  GA_clearly(player, "Motion", "B-6", "{@MotionB6_Status}", {@MotionB6_PunishVL}, 1, "%{GUARD::%player%::TEMP::YSTEPMOTION}%", {@MotionB6_BufferAdd}, {@MotionB6_Buffer}) if {GUARD::%player%::TEMP::YSTEPMOTION} > 0.419999986887
+  GA_clearly(player, "Motion", "B-6", "{@MotionB6_Status}", {@MotionB6_PunishVL}, 1, "%{GUARD::%player%::TEMP::YSTEPMOTION}%", 0.1, {@MotionB6_Buffer}) if {GUARD::%player%::TEMP::YSTEPMOTION} >= 1
+  if {GUARD::%player%::TEMP::YSTEPMOTION} > 0:
+    set {GUARD::%player%::TEMP::STEPTICK} to {GUARD::%player%::TEMP::STEPTICK} + 1
+    if {GUARD::%player%::TEMP::STEPTICK} = 1:
+      set {GUARD::%player%::TEMP::YSTEPSTOP} to true if {GUARD::%player%::TEMP::YSTEPMOTION} = 0.5
+      delete {GUARD::%player%::TEMP::YSTEPSTOP} if {GUARD::%player%::TEMP::YSTEPMOTION} != 0.5
+      if {GUARD::%player%::TEMP::YSTEPMOTION} > 0.399 and {GUARD::%player%::TEMP::YSTEPMOTION} < 0.42:
+        GA_clearly(player, "Motion", "B-3", "{@MotionB3_Status}", {@MotionB3_PunishVL}, 1, "%{GUARD::%player%::TEMP::YSTEPMOTION}%", {@MotionB3_BufferAdd}, {@MotionB3_Buffer}) if {GUARD::%player%::TEMP::YSTEPMOTION} != 0.41999998688697815
+  if {GUARD::%player%::TEMP::YSTEPMOTION} <= 0:
+    {GUARD::%player%::TEMP::YSTEPSTOP} != true
+    GA_clearly(player, "Motion", "B-4", "{@MotionB4_Status}", {@MotionB4_PunishVL}, 1, "%{GUARD::%player%::TEMP::YSTEPMOTION}%", {@MotionB4_BufferAdd}, {@MotionB4_Buffer}) if {GUARD::%player%::TEMP::STEPTICK} = 2
+    GA_clearly(player, "Motion", "B-5", "{@MotionB5_Status}", {@MotionB5_PunishVL}, 1, "%{GUARD::%player%::TEMP::YSTEPMOTION}%", {@MotionB5_BufferAdd}, {@MotionB5_Buffer}) if {GUARD::%player%::TEMP::STEPTICK} = 3
+    set {GUARD::%player%::TEMP::STEPTICK} to 0 if {GUARD::%player%::TEMP::STEPTICK} = 2 or 3
+  set {GUARD::%player%::TEMP::YSTEPMOTON2} to player's y location
+
+on mount:
+  set {GUARD::%player%::TEMP::MOUNT} to now 
+  set {GUARD::%player%::TEMP::MOUNTSTATE} to true
+on dismount:
+  delete {GUARD::%player%::TEMP::MOUNTSTATE}
+on any move:
+  if player is riding:
+    GA_clearly(player, "Disabler", "A", "&aWorking", 1, 1, "NaN", 0, 0) if {GUARD::%player%::TEMP::MOUNTSTATE} is not set
+
+on any move:
+  GA_Requirements(player) = true 
+  GA_Block3(player) < 0.5 second
+  block at or above or under player is cobweb
+  set {_speed} to getDeltaLoc(player, 2, false)
+  set {_y} to getDeltaY(player, 2)
+  GA_clearly(player, "NoWeb", "A", "{@NoWebA_Status}", {@NoWebA_PunishVL}, 1, "%{_speed}%", {@NoWebA_BufferAdd}, {@NoWebA_Buffer}) if {_speed} > 0.098
+  delete {GUARD::%player%::NOWEB.A} if {_speed} < 0.08
+  block under player is cobweb 
+  block at player is air
+  GA_clearly(player, "NoWeb", "A", "{@NoWebA_Status}", {@NoWebA_PunishVL}, 1, "%{_speed}%", {@NoWebA_BufferAdd}, {@NoWebA_Buffer}) if {_y} >= 0
+
+on any move:
+  GA_LastReload("console") > 3 second 
+  GA_clearly(player, "Timer", "A", "{@TimerA_Status}", {@TimerA_PunishVL}, 5, "%{GUARD::%player%::TIMER.A}%", {@TimerA_BufferAdd}, {@TimerA_Buffer})
+  GA_clearly(player, "Timer", "B", "{@TimerB_Status}", {@TimerB_PunishVL}, 5, "%{GUARD::%player%::TIMER.A}%", {@TimerB_BufferAdd}, {@TimerB_Buffer})
+
+on right click:
+  set {GUARD::%player%::TEMP::LRPS} to GetX(player, 1) 
+  add GetZ(player, 1) to {GUARD::%player%::TEMP::LRPS}
+on consume:
+  set {_x} to GetX(player, 1)
+  set {_z} to GetZ(player, 1)
+  set {_distance} to difference between {_x} + {_z} and {GUARD::%player%::TEMP::LRPS}
+  set {GUARD::%player%::TEMP::LRPS} to 0
+  GA_clearly(player, "NoSlow", "A", "{@NoSlowA_Status}", {@NoSlowA_PunishVL}, 1, "%{_distance}%", {@NoSlowA_BufferAdd}, {@NoSlowA_Buffer}) if {_distance} > 5.5
+  delete {GUARD::%player%::NOSLOW.A} if {_distance} < 3
+
+on jump:
+  difference between {GUARD::%player%::TEMP::ATTACK} and now < 0.5 seconds
+  getDeltaY2(player, 2) != 0
+  block at or above player is air
+  GA_AirAbove(player) > 0.5 second
+  getLastDamage(player) > 0.3 second
+  GA_Slime(player) > 0.4 second
+  GA_clearly(player, "Criticals", "A", "{@CriticalA_Status}", {@CriticalA_PunishVL}, 1, "NaN", {@CriticalA_BufferAdd}, {@CriticalA_Buffer}) if getDeltaY(player, 5) < 0.16477
+  GA_Block(player) > 0.4 second
+  delete {GUARD::%player%::CRITICALS.A} if getDeltaY2(player, 2) >= 0.16477
+
+
+on any move:
+  GA_Requirements(player) = true 
+  GA_EffectsRequirements(player) = true
+  GA_Slime(player) > 0.4 second 
+  GA_InLiquid(player) > 0.4 second
+  getLastDamage(player) > 0.4 second
+  GA_Place(player) > 0.4 second
+  set {_y} to getDeltaY2(player, 5)
+  GA_Gamemode(player) > 0.4 second
+  GA_clearly(player, "Motion", "B-2", "{@MotionB2_Status}", {@MotionB2_PunishVL}, 1, "%{_y}%", {@MotionB2_BufferAdd}, {@MotionB2_Buffer}) if {_y} is between 0.3332 and 0.419
+  GA_clearly(player, "Motion", "B-2", "{@MotionB2_Status}", {@MotionB2_PunishVL}, 1, "%{_y}%", {@MotionB2_BufferAdd}, {@MotionB2_Buffer}) if {_y} is between 0.3332 and 0.24814
+  delete {GUARD::%player%::MOTION.B-2} if {_y} > 0.4199
+
+on any move:
+  player's walk speed < 0.21
+  GA_Requirements(player) = true
+  GA_Block(player) > 0.1 second
+  getLastDamage(player) > 0.4 second
+  GA_Slime(player) > 1.3 second
+  set {_x} to getDeltaX(player, 1)
+  set {_z} to getDeltaZ(player, 1)
+  set {_speedloc} to getDeltaLoc(player, 1, true)
+  if {_x} > {_z}:
+    set {_speed} to {_x}
+  if {_z} > {_x}:
+    set {_speed} to {_z}
+  if {_x} = {_z}:
+    set {_speed} to {_x}
+  set {_speed20} to ({_speed} * 20)
+  GA_AirAbove(player) > 0.5 second
+  GA_Ice(player) > 1.3 second
+  GA_Riding(player) > 0.2 second
+  GA_clearly(player, "Speed", "B-5", "{@SpeedB5_Status}", {@SpeedB5_PunishVL}, 1, "%{_speed}%", {@SpeedB5_BufferAdd}, {@SpeedB5_Buffer}) if {_speed} > 0.675366
+  if player doesn't have speed:
+    difference between {GUARD::%player%::TEMP::SPEEDEFFECT} and now > 0.4 second
+    GA_clearly(player, "Speed", "B-1", "{@SpeedB1_Status}", {@SpeedB1_PunishVL}, 1, "%{_speed}%", {@SpeedB1_BufferAdd}, {@SpeedB1_Buffer}) if {_speed} > 0.35
+    if {GUARD::%player%::SPEED.B-1} >= 1:
+      remove 1 from {GUARD::%player%::SPEED.B-1} if {_speed} < 0.35
+    GA_clearly(player, "Speed", "B-2", "{@SpeedB2_Status}", {@SpeedB2_PunishVL}, 1, "%{_speed20}%", {@SpeedB2_BufferAdd}, {@SpeedB2_Buffer}) if {_speed20} > 6.81
+    if {GUARD::%player%::SPEED.B-2} >= 1:
+      remove 1 from {GUARD::%player%::SPEED.B-2} if {_speed20} < 6.81
+    GA_clearly(player, "Speed", "B-3", "{@SpeedB3_Status}", {@SpeedB3_PunishVL}, 1, "%{_speedloc}%", {@SpeedB3_BufferAdd}, {@SpeedB3_Buffer}) if {_speedloc} > 0.34
+    if {GUARD::%player%::SPEED.B-3} >= 1:
+      remove 1 from {GUARD::%player%::SPEED.B-3} if {_speedloc} < 0.351
+    if block 0.1 under player is not air or void air:
+      GA_clearly(player, "Speed", "A-1", "{@SpeedA1_Status}", {@SpeedA1_PunishVL}, 1, "%{_speed}%", {@SpeedA1_BufferAdd}, {@SpeedA1_Buffer}) if {_speed} > 0.29
+      delete {GUARD::%player%::SPEED.A-1} if {_speed} < 0.3
+      GA_clearly(player, "Speed", "A-2", "{@SpeedA2_Status}", {@SpeedA2_PunishVL}, 1, "%{_speed20}%", {@SpeedA2_BufferAdd}, {@SpeedA2_Buffer}) if {_speed20} > 6.82
+      delete {GUARD::%player%::SPEED.A-2} if {_speed20} < 5.512233
+      GA_clearly(player, "Speed", "A-3", "{@SpeedA3_Status}", {@SpeedA3_PunishVL}, 1, "%{_speedloc}%", {@SpeedA3_BufferAdd}, {@SpeedA3_Buffer}) if {_speedloc} > 0.29
+      delete {GUARD::%player%::SPEED.A-3} if {_speedloc} < 0.3
+    else:
+      delete {GUARD::%player%::SPEED.A-1}
+      delete {GUARD::%player%::SPEED.A-2}
+      delete {GUARD::%player%::SPEED.A-3}
+
+function GA_clearly(p: player, cheat: text, type: text, dev: text, vl: number, tpvl: number, v: text, bufferadd: number, buffer: number):
+  difference between {GUARD::%{_p}%::TEMP::JOIN} and now > 5 second
+  {GUARD.CHECK.%{_type}%.%{_type}%} is not set
+  add {_bufferadd} to {GUARD::%{_p}%::%{_cheat}%.%{_type}%} if {_bufferadd} > 0
+  set {GUARD::%{_p}%::%{_cheat}%.%{_type}%} to 0.1 if {_buffer} = 0
+  {GUARD::%{_p}%::%{_cheat}%.%{_type}%} > {_buffer}
+  delete {GUARD::%{_p}%::%{_cheat}%.%{_type}%} if {GUARD::%{_p}%::%{_cheat}%.%{_type}%} = 0.1
+  add 1 to {GUARD::%{_p}%::VL::%{_cheat}%}
+  loop all players:
+    send formatted "<tooltip:&8» &fCheck: &7%{_cheat}% %nl%  &8» &fCheck Type: &7%{_type}% %nl%  &8» &fValue: &7%{_v}% %nl%  &8» &fCheck State: &7%{_dev}% %nl%%nl%&8» &fPlayer: &7%{_p}% %nl%  &8» &fPlayer's VL: &7%{GUARD::%{_p}%::VL::%{_cheat}%}%&8/&7%{_vl}% %nl%  &8» &fPlayer's Ping: &7%{_p}'s ping%  >{@guard} %{_p}%&7 failed &f%{_cheat}% &7(&3x%{GUARD::%{_p}%::VL::%{_cheat}%}%&7)" to loop-player if {GUARD::%loop-player%::ALERTS} is true
+  set {cheat} to {_cheat}
+  set {type} to {_type}
+  make embed:
+    set title of embed to title with text "%{_p}% *(%{_p}'s ping%ms)*"
+    set description of embed to "Failed: %{cheat}% (%{type}%)"
+    set color of embed to cyan
+    set footer of embed to footer with text "TPS: %tps from last minute%"
+    set the thumbnail of embed to "https://mc-heads.net/Avatar/%{_p}%/128.pnj"
+    set the timestamp of embed to now
+    send last embed to channel with id "{@ChannelLoggingID}" with "{@BotName}" if {@DiscordLogging} is true
+  if {_vl} - {GUARD::%{_p}%::VL::%{_cheat}%} <= 0:
+    {GUARD.PUNISH.%{_type}%.%{_type}%} is not set
+    make server execute command "/guard kick %{_p}%" if {@Kick} is true 
+    make server execute command "/ban %{_p}% {@guard} Unfair Advantage" if {@Ban} is true
+function GetX(p: player, n: number) :: number:
+  set {_x} to x location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_x}
+function GetZ(p: player, n: number) :: number:
+  set {_z} to z location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_z}
+function GA_InAirFull(p: player) :: boolean:
+  block below {_p} is air:
+    block below 0.3 east of {_p} is air:
+      block below 0.3 west of {_p} is air:
+        block below 0.3 south of {_p} is air:
+          block below 0.3 north of {_p} is air:
+            block below 0.3 south 0.3 east of {_p} is air:
+              block below 0.3 north 0.3 east of {_p} is air:
+                block below 0.3 south 0.3 west of {_p} is air:
+                  block below 0.3 north 0.3 west of {_p} is air:
+                    return true
+  return false
+function GA_InAirSemi(p: player) :: boolean:
+    if block 0.1 north below {_p} is air or void air:
+        if block 0.1 west below {_p} is air or void air:
+            if block 0.1 east below {_p} is air or void air:
+                if block 0.1 south below {_p} is air or void air:
+                    if block 0.1 north 0.1 east below {_p} is air or void air:
+                        if block 0.1 north 0.1 west below {_p} is air or void air:
+                            if block 0.1 south 0.1 east below {_p} is air or void air:
+                                if block 0.1 south 0.3 west below {_p} is air or void air:
+                                    if block below {_p} is air or void air:
+                                        return true
+                                        stop
+    return false
+function GA_OnLiquid(p: player) :: boolean:
+  block 0.3 below {_p} is water or lava:
+    block 0.3 below 0.3 east of {_p} is water or lava:
+      block 0.3 below 0.3 west of {_p} is water or lava:
+        block 0.3 below 0.3 south of {_p} is water or lava:
+          block 0.3 below 0.3 north of {_p} is water or lava:
+            block 0.3 below 0.3 south 0.3 east of {_p} is water or lava:
+              block 0.3 below 0.3 north 0.3 east of {_p} is water or lava:
+                block 0.3 below 0.3 south 0.3 west of {_p} is water or lava:
+                  block 0.3 below 0.3 north 0.3 west of {_p} is water or lava:
+                    return true
+  return false
+function GA_OnLiquidFull(p: player) :: boolean:
+  block below {_p} is water or lava:
+    block below 0.3 east of {_p} is water or lava:
+      block below 0.3 west of {_p} is water or lava:
+        block below 0.3 south of {_p} is water or lava:
+          block below 0.3 north of {_p} is water or lava:
+            block below 0.3 south 0.3 east of {_p} is water or lava:
+              block below 0.3 north 0.3 east of {_p} is water or lava:
+                block below 0.3 south 0.3 west of {_p} is water or lava:
+                  block below 0.3 north 0.3 west of {_p} is water or lava:
+                    return true
+  return false
+function GA_Requirements(p: player) :: boolean:
+  if {_p}'s chestplate is an elytra:
+    return false
+  if {_p} is flying:
+    return false 
+  if {_p}'s gamemode is spectator or creative:
+    return false
+  return true
+function GA_EffectsRequirements(p: player) :: boolean:
+  if {_p} has levitation or slow falling:
+    return false 
+  return true
+function GA_Above(p: player) :: time span:
+  block 2.5 above north {_p} is air or void air:
+    block 2.5 above south {_p} is air or void air:
+      block 2.5 above west {_p} is air or void air:
+        block 2.5 above east {_p} is air or void air:
+          block 2.5 above {_p} is air or void air:
+            stop
+  set {GUARD::%{_p}%::TEMP::AIRABOVE} to now
+function GA_AirAbove(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::AIRABOVE} and now
+  return {_diff}
+function GA_Riding(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::MOUNT} and now
+  return {_diff}
+on step on ice or packed ice or blue ice:
+  set {GUARD::%player%::TEMP::ICE} to now 
+on any move:
+  block at or above player is water or lava:
+    set {GUARD::%player%::TEMP::LIQUID} to now
+  block under player is cobweb:
+    set {GUARD::%player%::TEMP::COBWEB} to now
+  block above player is cobweb:
+    set {GUARD::%player%::TEMP::COBWEB} to now
+  block at player is cobweb:
+    set {GUARD::%player%::TEMP::COBWEB} to now
+  block 0.3 under or at player is player head or wither skeleton head or skeleton head or zombie head or creeper head or brewing stands or cobweb:
+    set {GUARD::%player%::TEMP::BHANDLER} to now
+  if block 0.01 under or at or above player is ladder or vines or twisting vines or scaffolding:
+    set {GUARD::%player%::TEMP::CLIMB} to now
+function GA_InLiquid(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::LIQUID} and now
+  return {_diff}
+function GA_Place(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::BLOCKPLACE.TIME} and now
+  return {_diff}
+function GA_Climb(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::CLIMB} and now
+  return {_diff}
+function GA_Gamemode(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::GAMEMODE} and now
+  return {_diff}
+on step on cake or any bed:
+  set {GUARD::%player%::TEMP::BLOCK} to now 
+on step on slime block:
+  set {GUARD::%player%::TEMP::SLIME} to now 
+function GA_Slime(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::SLIME} and now
+  return {_diff}
+function GA_Ice(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::ICE} and now
+  return {_diff}
+on jump:
+  set {GUARD::%player%::TEMP::LASTJUMP} to now
+function GA_Jump(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::LASTJUMP} and now
+  return {_diff}
+function GA_BlockCheck(p: player):
+  loop all blocks in radius 2 around {_p}:
+    if loop-block is carpet or any bed or cake or cobweb or flower pot or brewing stand or stairs or slabs or snow layer or player head or skeleton head or zombie head or wither skeleton head or creeper head:
+      set {GUARD::%{_p}%::TEMP::BLOCK} to now
+function GA_BlockCheck2(p: player):
+  loop all blocks in radius 2 around {_p}:
+    if loop-block is fence or fence gate:
+      set {GUARD::%{_p}%::TEMP::FENCE} to now
+function GA_BlockCheck3(p: player):
+  loop all blocks in radius 2 around {_p}:
+    if loop-block is cobweb:
+      set {GUARD::%{_p}%::TEMP::COBWEB} to now
+function GA_BlockCheck4(p: player):
+  loop all blocks in radius 1 around {_p}:
+    if loop-block is water or lava:
+      set {GUARD::%{_p}%::TEMP::LIQUID} to now
+function GA_Block(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::BLOCK} and now
+  return {_diff}
+function GA_Block2(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::FENCE} and now
+  return {_diff}
+function GA_Block3(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::COBWEB} and now
+  return {_diff}
+function roundTo(n: number, r: number) :: number:
+  return round({_n} * 10^ {_r}) / 10^ {_r}
+on damage:
+  "%damage cause%" = "ATTACK"
+  victim is not attacker
+  set {GUARD::%victim%::TEMP::DAMAGE} to now
+on damage:
+  set {GUARD::%victim%::TEMP::DAMAGEUNSAFE} to now
+function getLastDamage(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::DAMAGE} and now
+  return {_diff}
+function getLastDamageunsafe(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::DAMAGEUNSAFE} and now
+  return {_diff}
+function climbing(p: player) :: boolean:
+    loop all blocks in radius 1 around {_p}:
+        if loop-block is ladder or vines or twisting vines:
+            return true
+            stop
+    return false
+function GA_Calc(p: player):
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::10} to {GUARD::LOCATION::%{_p}%::TEMP::10}
+  set {GUARD::LOCATION::%{_p}%::TEMP::10} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::9}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::9} to {GUARD::LOCATION::%{_p}%::TEMP::9}
+  set {GUARD::LOCATION::%{_p}%::TEMP::9} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::8}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::8} to {GUARD::LOCATION::%{_p}%::TEMP::8}
+  set {GUARD::LOCATION::%{_p}%::TEMP::8} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::7}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::7} to {GUARD::LOCATION::%{_p}%::TEMP::7}
+  set {GUARD::LOCATION::%{_p}%::TEMP::7} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::6}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::6} to {GUARD::LOCATION::%{_p}%::TEMP::6}
+  set {GUARD::LOCATION::%{_p}%::TEMP::6} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::5}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::5} to {GUARD::LOCATION::%{_p}%::TEMP::5}
+  set {GUARD::LOCATION::%{_p}%::TEMP::5} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::4}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::4} to {GUARD::LOCATION::%{_p}%::TEMP::4}
+  set {GUARD::LOCATION::%{_p}%::TEMP::4} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::3}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::3} to {GUARD::LOCATION::%{_p}%::TEMP::3}
+  set {GUARD::LOCATION::%{_p}%::TEMP::3} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::2}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::2} to {GUARD::LOCATION::%{_p}%::TEMP::2}
+  set {GUARD::LOCATION::%{_p}%::TEMP::2} to {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::1}
+  set {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::1} to {GUARD::LOCATION::%{_p}%::TEMP::1}
+  set {GUARD::LOCATION::%{_p}%::TEMP::1} to location of {_p}
+function getDeltaX(p: player, n: number) :: number:
+  set {_diff} to difference between x location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} and x location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_diff}
+function getDeltaY(p: player, n: number) :: number:
+  set {_diff} to difference between y location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} and y location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_diff}
+function getDeltaY2(p: player, n: number) :: number:
+  set {_diff} to y location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%} - y location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_diff}
+function getDeltaY3(p: player, n: number) :: number:
+  set {_diff} to y location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} - y location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_diff}
+function getDeltaZ(p: player, n: number) :: number:
+  return difference between z location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} and z location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+function getDeltaLoc(p: player, n: number, y: boolean) :: number:
+  set y location of {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} to y location of {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%} if {_y} is true
+  set {_diff} to distance between {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%} and {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}
+  return {_diff}
+function getDeltaPitch(p: player, n: number) :: number:
+  set {_diff} to difference between {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%}'s pitch and {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}'s pitch
+  return {_diff}
+function getDeltaYaw(p: player, n: number) :: number:
+  set {_diff} to difference between {GUARD::PREVIUSLOCATION::%{_p}%::TEMP::%{_n}%}'s yaw and {GUARD::LOCATION::%{_p}%::TEMP::%{_n}%}'s yaw
+  return {_diff}
+function GA_HighJumpCheck(p: player):
+  if {_p} has jump boost:
+    set {GUARD::%{_p}%::TEMP::HIGHJUMP} to now 
+function GA_Highjump(p: player) :: time span:
+  set {_diff} to difference between {GUARD::%{_p}%::TEMP::HIGHJUMP} and now
+  return {_diff}
+function spider(p: player) :: boolean:
+    set {_b} to {_p}'s location
+    remove 1 from y location of {_b}
+    block at {_b} is air or void air:
+        {_p}'s target block is not air
+        add 3 to y location of {_b}
+        block at {_b} is air or void air 
+        return true 
+    return false
+function GA_Gamecheck(p: player):
+  if {_p}'s gamemode is spectator or creative:
+    set {GUARD::%{_p}%::TEMP::GAMEMODE} to now
+  if {_p}'s fly mode is true:
+    set {GUARD::%{_p}%::TEMP::GAMEMODE} to now
+on quit:
+  delete {GUARD::%player%::TEMP::*}
+on script load:
+  set {GUARD::RELOAD} to now 
+  login to "{@BotToken}" with the name "{@BotName}" if {@DiscordLogging} is true
+function GA_LastReload(c: text) :: time span:
+  set {_diff} to difference between {GUARD::RELOAD} and now
+  return {_diff}
+on any move:
+  set {GUARD::%player%::TEMP::MOVETIME} to now 
+  set {GUARD::%player%::TEMP::LASTMOVE} to player's location
+  GA_Calc(player)
+  GA_BlockCheck(player)
+  GA_BlockCheck2(player)
+  GA_BlockCheck3(player)
+  GA_Above(player)
+  GA_Gamecheck(player)
+  GA_BlockCheck4(player)
+  GA_HighJumpCheck(player)
+on join:
+   wait 3 second
+   player is online
+   send "{@guard} %player% &7joined the server using &3Minecraft&f,&3 Java" to all players where [input has permission "GUARD.alerts"] if "%player%" doesn't contain "*"
+   send "{@guard} %player% &7joined the server using &3Minecraft&f,&3 Bedrock" to all players where [input has permission "GUARD.alerts"] if "%player%" contain "*"
+on join:
+   set {GUARD::%player%::TEMP::JOIN} to now
+   set {GUARD::%player%::TEMP::ICE} to now
+   set {GUARD::%player%::TEMP::BLOCK} to now
+   set {GUARD::%player%::TEMP::LIQUID} to now
+   set {GUARD::%player%::TEMP::AIRABOVE} to now 
+   set {GUARD::%player%::TEMP::CLIMB} to now
+   set {GUARD::%player%::TEMP::BLOCKPLACE.TIME} to now
+   set {GUARD::%player%::TEMP::DAMAGE} to now
+   set {GUARD::%player%::TEMP::LASTJUMP} to now 
+   set {GUARD::%player%::TEMP::COBWEB} to now 
+   set {GUARD::%player%::TEMP::SLIME} to now
+   set {GUARD::%player%::TEMP::SPEEDEFFECT} to now
+   set {GUARD::%player%::TEMP::FENCE} to now
+   set {GUARD::%player%::TEMP::BHANDLER} to now
+   set {GUARD::%player%::TEMP::MOUNT} to now
+   set {GUARD::%player%::TEMP::LASTMOVE} to now
+   set {GUARD::%player%::TEMP::HIGHJUMP} to now
+   set {GUARD::%player%::TEMP::DAMAGEUNSAFE} to now
+   while player is online:
+      delete {GUARD::%player%::CPS.L}
+      delete {GUARD::%player%::CPS.R}
+      delete {GUARD::%player%::KILLAURA.C}
+      delete {GUARD::%player%::JESUS.A}
+      delete {GUARD::%player%::MOTION.A-8}
+      delete {GUARD::%player%::TIMER.A}
+      wait 1 second
+on join:
+   while player is online:
+      delete {GUARD::%player%::MOTION.B-2}
+      wait 3 second
+on join:
+   while player is online:
+      delete {GUARD::%player%::MOTION.B-1}
+      delete {GUARD::%player%::SPEED.B-5}
+      delete {GUARD::%player%::TIMER.B}
+      delete {GUARD::%player%::SPEED.B-4}
+      delete {GUARD::%player%::NOFALL.A}
+      delete {GUARD::%player%::MOTION.B-3}
+      delete {GUARD::%player%::MOTION.B-4}
+      delete {GUARD::%player%::MOTION.B-5}
+      delete {GUARD::%player%::MOTION.B-6}
+      delete {GUARD::%player%::MOTION.B-7}
+      wait 5 second
+on join:
+   while player is online:
+      delete {GUARD::%player%::VL::*}
+      wait 1 minute
+command /guard [<text>] [<player>] [<time span>]:
+   permission: {@MainPermission}
+   trigger:
+      if arg 1 is not set:
+         send ""
+         send "                    &3&lGUARD"
+         send "                 &3Help Center"
+         send ""
+         send "&7Command Permission: &3{@MainPermission}"
+         send "&7Alert Status: &3%{GUARD::%player%::ALERTS}%"
+         send ""
+         send "                         &3Commands List"
+         send "         &7&oSignications: () = optional, [] = required"
+         send ""
+         send "&7/guard kick [player] &8| &3Will kick [player] for 'Unfair Advantage'"
+         send "&7/guard alerts (player) &8| &3Will toggle alerts for [player]"
+         send "&7/guard clearvl (player) &8| &3Well clear your or [player] VLs"
+         send "&7/guard gui &8| &3Will make the GUI appear" 
+      if arg 1 is "gui":
+         GA_GUI(player)
+      if arg 1 is "kick":
+         kick arg 2 due to "{@guard} Unfair Advantage"
+         broadcast ""
+         broadcast "{@guard} {@KickMsg}"
+         broadcast ""
+         stop
+      if arg 1 is "clearvl":
+         delete {GUARD::%player%::VL::*} if arg 2 is not set 
+         delete {GUARD::%arg 2%::VL::*} if arg 2 is set 
+         stop
+      if arg 1 is "alerts":
+         if arg 2 is not set:
+            set {GUARD::%player%::ALERTS} to true if {GUARD::%player%::ALERTS} is not set 
+            send "{@guard} Alerts disabled." if {GUARD::%player%::ALERTS} is true
+            set {_no} to true if {GUARD::%player%::ALERTS} is true
+            set {GUARD::%player%::ALERTS} to false if {GUARD::%player%::ALERTS} is true  
+            stop if {_no} is set
+            send "{@guard} Alerts enabled." if {GUARD::%player%::ALERTS} is false
+            set {GUARD::%player%::ALERTS} to true if {GUARD::%player%::ALERTS} is false  
+         else:
+            set {GUARD::%arg 2%::ALERTS} to true if {GUARD::%arg 2%::ALERTS} is not set 
+            send "{@guard} Alerts disabled." to arg 2 if {GUARD::%arg 2%::ALERTS} is true
+            set {_no} to true if {GUARD::%arg 2%::ALERTS} is true
+            set {GUARD::%arg 2%::ALERTS} to false if {GUARD::%arg 2%::ALERTS} is true  
+            stop if {_no} is set
+            send "{@guard} Alerts enabled." to arg 2 if {GUARD::%arg 2%::ALERTS} is false
+            set {GUARD::%arg 2%::ALERTS} to true if {GUARD::%arg 2%::ALERTS} is false  

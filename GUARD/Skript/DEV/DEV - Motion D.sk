@@ -1,0 +1,21 @@
+function GDC_Motion_D(p: player):
+  GDA_returnTimeSpan({_p}, "LOWBLOCK") > 0.2
+  GDA_returnTimeSpan({_p}, "SOULSAND") > 600
+  GDA_returnTimeSpan({_p}, "SLIME") > 800
+  GDA_returnTimeSpan({_p}, "ABOVETICKS") > 600
+  GDA_returnTimeSpan({_p}, "MOUNT") > 600
+  GDA_returnTimeSpan({_p}, "ATLIQUID") > 600
+  GDAR_getLastAt({_p}, lava, "LIQUIDAT") >= 0
+  GDAR_getLastAt({_p}, water, "LIQUIDAT") >= 0
+  GDA_returnTimeSpan({_p}, "UNSAFEDAMAGE") > 1200
+  GDA_returnTimeSpan({_p}, "SLIMESTOP") > 600
+  GDA_returnTimeSpan({_p}, "ABOVEAT") > 600
+  GDA_returnTimeSpan({_p}, "JUMPBOOST") > 600
+  GDA_returnTimeSpan({_p}, "PLACE") > 800
+  if GDA_getDeltaY({_p}, 1, false) > 0:
+    set {GUARD::%{_p}%::TEMP::MOTION.D::TICK} to {GUARD::%{_p}%::TEMP::MOTION.D::TICK} + 1
+    if {GUARD::%{_p}%::TEMP::MOTION.D::TICK} = 1:
+      if GDA_getDeltaY({_p}, 1, false) > 0:
+        GA_clearly({_p}, "Motion", "D", "Jumped too low", 3, "D", "%GDA_getDeltaY({_p}, 1, false)%", 1, 8) if GDA_getDeltaY({_p}, 1, false) != 0.41999998688697815
+  set {GUARD::%{_p}%::TEMP::MOTION.D::TICK} to 0 if GDA_getDeltaY({_p}, 1, false) <= 0
+  delete {GUARD::%{_p}%::TEMP::VL::MOTION.D} if GDA_getDeltaY({_p}, 1, false) = 0.41999998688697815

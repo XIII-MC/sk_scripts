@@ -1,0 +1,11 @@
+on fishing:
+  set {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} to now if fish state is BITE
+  if fish state is CAUGHT_FISH:
+    flag(player, "AutoFish", "A", "AutoFishing", 3, "A", "%difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now %", 1, 4, 2) if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now < 0.06 second
+    flag(player, "AutoFish", "B", "NoSwing", 3, "B", "NaN", 0, 0, 2) if {-GUARD::%player%::TEMP::FISHARM} != true
+    flag(player, "AutoFish", "C", "Fishing Pattern", 6, "C", "%{-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH}%", 0, 0, 2) if {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} < 0.01 second
+    delete {-GUARD::%player%::TEMP::VL::AUTOFISH::A} if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} and difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now > 0.06 second
+    set {-GUARD::%player%::TEMP::TIMESPAN::LASTDIFFAUTOFISH} to difference between {-GUARD::%player%::TEMP::TIMESPAN::AUTOFISH} and now
+    delete {-GUARD::%player%::TEMP::FISHARM}
+on arm swing:
+  set {-GUARD::%player%::TEMP::FISHARM} to true if player's tool is fishing rod

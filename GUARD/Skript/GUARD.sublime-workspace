@@ -1,0 +1,477 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"G",
+				"GGL"
+			],
+			[
+				"set",
+				"setback"
+			],
+			[
+				"I",
+				"INVACTIONS"
+			],
+			[
+				"D",
+				"D"
+			],
+			[
+				"C",
+				"C"
+			],
+			[
+				"B",
+				"B"
+			],
+			[
+				"J",
+				"J"
+			],
+			[
+				"yaw",
+				"yaw"
+			],
+			[
+				"LEFTCLICK",
+				"LEFTCLICK"
+			],
+			[
+				"E",
+				"E"
+			],
+			[
+				"F",
+				"F"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 157.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/D/Bureau/WORKSPACE/Guard/Skript/DEV/DEV - Speed A.sk",
+		"/D/Bureau/WORKSPACE/Guard/Skript/DEV/DEV - GUARD-BETA-0.0.1.sk",
+		"/D/Bureau/Skripting/core.sk",
+		"/D/Bureau/GUARD/DEV/DEV - Aura, Reach, Scaffold.sk",
+		"/D/Bureau/GUARD/OLD/OLD - v0.3.9_PreReleaseTest_6 (2).sk",
+		"/D/Bureau/GUARD/DEV/DEV - Speed A.sk",
+		"/D/Bureau/GUARD/OLD/OLD - ALPHAv0.0.4.sk",
+		"/D/Bureau/GUARD/DEV/DEV - Motion D.sk",
+		"/D/Bureau/Skripting/ARUWOSCB.sk",
+		"/D/Bureau/GUARD/DEV/DEV - Aim A1-7 ~ A-B ~ A-E.sk",
+		"/D/Bureau/GUARD/OLD/OLD - vUnknown.sk",
+		"/D/Bureau/GUARD/OLD/OLD - DevBuild.sk",
+		"/D/Bureau/sTuFF/Server MH/Anticheat/WATCHCAT.SK",
+		"/D/Bureau/GUARD/OLD/OLD - v0.3.9_PreReleaseTest_6.sk",
+		"/D/Bureau/GUARD/OLD/OLD - v0.0.4.sk",
+		"/D/Bureau/GUARD/OLD/OLD - v0.0.3.sk",
+		"/D/Bureau/Skripting/wc.sk",
+		"/D/Bureau/Skripting/GUARD OWO/gold.sk",
+		"/D/Bureau/GUARD/GUARD-BETA-0.0.1.sk",
+		"/D/Bureau/Skripting/GUARD OWO/INFO - To Fix Notes.txt",
+		"/D/Bureau/Skripting/GUARD OWO/devbuild.sk",
+		"/D/Bureau/Skripting/GUARD OWO/DEV - AutoClicker A-D.sk",
+		"/D/Bureau/Skripting/GUARD OWO/reach + aura.sk",
+		"/D/Bureau/Skripting/GUARD OWO/OldGuardKnockiFFA",
+		"/D/Bureau/Skripting/GUARD OWO/OLD_Guard.sk",
+		"/D/Bureau/Skripting/GUARD OWO/DEV ~ OLD -.sk",
+		"/D/Bureau/Skripting/GUARD OWO/GUI.sk",
+		"/D/Bureau/Skripting/GUARD OWO/GuardLiteNotes",
+		"/D/Bureau/Skripting/GUARD OWO/Guard_OLD",
+		"/D/Bureau/Skripting/GUARD OWO/OLD -.sk",
+		"/D/Bureau/Skripting/GUARD OWO/guard_free.sk",
+		"/D/Bureau/Skripting/GUARD OWO/guard_dev_checks.sk",
+		"/D/Bureau/Skripting/GUARD OWO/GUARD Notes",
+		"/D/Bureau/Skripting/GUARD OWO/GA_GUI.sk",
+		"/D/Bureau/Skripting/GUARD OWO/GA_GB.sk",
+		"/D/Bureau/Skripting/GUARD OWO/DEV.sk",
+		"/D/Bureau/Skripting/GUARD OWO/g.sk",
+		"/D/Bureau/Skripting/GUARD OWO/FixNotes.txt",
+		"/D/Bureau/GUARD/DEV - GUARD-ALPHA_0.0.4.sk",
+		"/D/Bureau/Skripting/GUARD OWO/FixNotes",
+		"/D/Bureau/Skripting/GUARD OWO/GA_Aim.sk",
+		"/D/Bureau/Skripting/AntiSex.sk",
+		"/D/Bureau/.minecraft/Rise/settings.txt",
+		"/D/Bureau/Skripting/GUARD OWO/ATC.sk",
+		"/D/Bureau/Skripting/GUARD OWO/Anayo",
+		"/D/Bureau/Skripting/GUARD OWO/FlightB_Chekc.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/AntiInvMove-_MoreCarry.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/AntiSpamPackets.sk",
+		"/D/XIII REMAKE/[RePack] Full version Game - by FGrL [4,8 GB Compressed]/Password and Instructions.txt",
+		"/D/Bureau/sTuFF/Videos/Downloads/message.txt",
+		"/D/Bureau/.minecraft/crash-reports/crash-2021-10-04_18.23.40-client.txt",
+		"/D/Bureau/sTuFF/Videos/Downloads/CAC-FreeV2-1 (1).sk",
+		"/D/Bureau/GUARD/GUARD-BETA_0.0.1.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/PacketListenerNMSK.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/CAC-FreeV2-1.sk",
+		"/D/Bureau/NFSU2Meg_Pack/readme.txt",
+		"/D/Bureau/NFSU2 FIX/READ ME BRO.txt",
+		"/D/Bureau/Need For Speed Underground 2/CREDITS/FRENCH.TXT",
+		"/D/Bureau/GUARD-ALPHA_0.0.4.sk",
+		"/D/Bureau/Need for speed Carbon/NFO.txt",
+		"/D/Bureau/Need.for.Speed.Carbon.MULTi12/README.txt",
+		"/D/Bureau/sTuFF/Videos/Downloads/bish.txt",
+		"/D/Bureau/GUARD OWO/GUARD-V0.0.4.sk",
+		"/D/Bureau/GUARD OWO/FixNotes",
+		"/D/Bureau/GUARD OWO/devbuild.sk",
+		"/D/Bureau/GUARD OWO/OLD_Guard.sk",
+		"/D/Bureau/GUARD OWO/guard_free.sk",
+		"/D/Bureau/GUARD OWO/Guard_OLD",
+		"/D/Bureau/LibertyCity Server Dev/plugins/Skript/scripts/LCORE.sk",
+		"/D/Bureau/sTuFF/Server MH/RushFFA/CORE.SK",
+		"/D/Bureau/GUARD OWO/OldGuardKnockiFFA",
+		"/D/Bureau/GUARD OWO/Anayo",
+		"/D/Bureau/GUARD OWO/reach + aura.sk",
+		"/D/Bureau/GUARD OWO/LIBERTYCITY_IDS.sk",
+		"/D/Bureau/sTuFF/Server MH/LiberCity/libercity.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/MDAC.sk",
+		"/D/Bureau/HWID",
+		"/C/Users/Cyril/AppData/Roaming/.minecraft/clientId.txt",
+		"/C/Users/Cyril/AppData/Roaming/.minecraft/crash-reports/crash-2021-08-25_23.48.18-client.txt",
+		"/C/Users/Cyril/AppData/Roaming/.minecraft/versions/Crispy/Crispy.json",
+		"/D/Bureau/.minecraft/crash-reports/crash-2021-08-25_23.30.06-client.txt",
+		"/D/Bureau/New_Text_Document_2 (2).txt",
+		"/D/Bureau/New_Text_Document_2.txt",
+		"/D/Bureau/sTuFF/Videos/Downloads/omgthisissobad.txt",
+		"/D/Bureau/LibertyCity Server Dev/plugins/Skript/scripts/-vanilla gui.sk",
+		"/D/Bureau/LibertyCity Server Dev/mohist-config/mohist.yml",
+		"/D/Bureau/LibertyCity Server Dev/plugins/Skript/aliases.sk",
+		"/D/Bureau/LibertyCity Server Dev/bukkit.yml",
+		"/D/Bureau/sTuFF/Videos/Downloads/mute.sk",
+		"/D/Bureau/sTuFF/Server MH/LiberCity/IDs",
+		"/D/Bureau/GUARD OWO/GUI.sk",
+		"/D/Bureau/LibertyCity Server Dev/plugins/Skript/config.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/ATM.sk.txt",
+		"/C/Users/Cyril/intentlauncher/Rise/settings.txt",
+		"/D/Bureau/SystemAnalyzer.txt",
+		"/D/Bureau/readme.txt",
+		"/D/Bureau/GA_Aim.sk",
+		"/Z/Cyril/FastAvast 1.1/Devloppment Documents/Dev Avast/WordWork.txt",
+		"/Z/Cyril/FastAvast 1.1/Devloppment Documents/Dev Avast/SecuredStart.txt",
+		"/D/Bureau/LibertyCity Server Dev/server.properties",
+		"/D/Bureau/LibertyCity Server Dev/eula.txt",
+		"/D/Bureau/LibertyCity Server Dev/usercache.json",
+		"/D/Bureau/LibertyCity Server Dev/spigot.yml",
+		"/D/Bureau/sTuFF/Server MH/spigot.yml",
+		"/D/Bureau/LibertyCity Server Dev/paper.yml",
+		"/D/Bureau/OLD_Guard.sk",
+		"/D/Bureau/Rise 5.21 (Cracked by Paolo V.)/Rise/Rise.json",
+		"/D/Bureau/core.sk",
+		"/C/Users/Cyril/AppData/Roaming/.minecraft/versions/Rise b5.11/Rise.json",
+		"/D/Bureau/GUARD-V0.0.4.sk",
+		"/D/Bureau/GA_GUI.sk",
+		"/D/Bureau/ARUWOSCB.sk",
+		"/D/Bureau/ARUWO.sk",
+		"/D/Bureau/GUARD_hotfix.sk",
+		"/D/Bureau/sTuFF/Videos/Downloads/Functions",
+		"/D/Bureau/GA_GB.sk",
+		"/D/Bureau/Anayo-PREMUIM-B10.sk",
+		"/D/Bureau/sTuFF/dev/WAROUSP - AntiCheat [1.4]/§BUNGEE VERSION 0.1/API-WAROUSP.sk",
+		"/D/Bureau/sTuFF/Server MH/bukkit.yml",
+		"/D/Bureau/sTuFF/Server MH/paper.yml",
+		"/D/Bureau/OwO-AC/OwO-AC/velo.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/reach.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/movement.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/longjump.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/fly.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/killaura.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/jesus.sk",
+		"/D/Bureau/OwO-AC/OwO-AC/core.sk"
+	],
+	"find":
+	{
+		"height": 41.0
+	},
+	"find_in_files":
+	{
+		"height": 107.0,
+		"where_history":
+		[
+			"D:\\Bureau\\sTuFF\\Server MH,<project filters>",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Clip",
+			"permission: op",
+			"permission: OP",
+			"permission: op",
+			"permis",
+			"permission: op ",
+			"banned",
+			"GDA_returnTimeSpan({_p}, \"SLIMESTOP\") > 0.2 seconds",
+			"is",
+			"player",
+			"\"SLIME\"",
+			"\"Ground",
+			"[<player>]",
+			"0.1188",
+			"683",
+			" 0.116",
+			"> 0.116",
+			"(GDA_getDeltaX({_p}, 1)^2 + GDA_getDeltaZ({_p}, 1)^2 - (GDA_getDeltaX({_p}, 2)^1 + GDA_getDeltaZ({_p}, 2)^1 * 0.91)) - 0.026",
+			"-0.16",
+			"0.02",
+			" 0.02",
+			"-0.05",
+			"teleport",
+			"{DUKO::JAILPOSITION}",
+			"GDC_Flight_A",
+			"tick",
+			"on join",
+			"groun",
+			"GDA_returnTimeSpan({_p}, \"SLIMESTOP\") = 0",
+			"GDA_returnTimeSpan({_p}, \"SLIMESTOP\")",
+			"slime",
+			"0.05",
+			"SLIMEHANDLER",
+			"0.003",
+			"or below or above",
+			"GDA_returnTimeSpan",
+			"GDA_LagBackPlayer",
+			"metadata value \"GUARD-TEMP-LOC-1\" of player",
+			"metadata value \"GUARD-TEMP-PRELOC-1\" of player",
+			"metadata value \"GUARD-TEMP-LOC-2\" of player",
+			"metadata value \"GUARD-TEMP-PRELOC-2\" of player",
+			"metadata value \"GUARD-TEMP-LOC-%{_n}%\" of {_p}",
+			"metadata value \"GUARD-TEMP-PRELOC-%{_n}%\" of {_p}",
+			"PRELOC",
+			"\"Ground\", \"D",
+			"metadata value \"GUARD-TEMP-LOC-1\" of player",
+			"metadata value \"GUARD-TEMP-PRELOC-1\" of player",
+			"metadata value \"GUARD-TEMP-LOC-2\" of player",
+			"metadata value \"GUARD-TEMP-PRELOC-2\" of player",
+			"on any move",
+			"metadata value \"GUARD-TEMP-PRELOC-%{_n}%\" of {_p}",
+			"metadata value \"GUARD-TEMP-LOC-%{_n}%\" of {_p}",
+			"\"PLACE",
+			"on place",
+			"83.455",
+			"\"Scaffold",
+			"0.25",
+			"15",
+			"send \"",
+			"0.05",
+			"\"BadPacket",
+			"LagBack",
+			"{GUARD::%{_p}%::TEMP::LOC::%{_n}%}",
+			"{GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}",
+			"of {_p}",
+			"metadata",
+			"2.5",
+			"\"LIQUIDAT\") is not set",
+			"on any move:",
+			"2.5",
+			"{_h}",
+			"block",
+			"GDAR_getLastAirAbove",
+			"ABOVETICKS",
+			"set {_t}",
+			"GDAR_getLastAt",
+			"GDAR_getLastAt({_p}, lava, \"LIQUIDAT\") >= 0 second",
+			"GDAR_getLastAt({_p}, water, \"LIQUIDAT\") >= 0 second",
+			"is",
+			"\"ABOVEAT\"",
+			"GDAR_getLastAt({_p}, air, \"ABOVEAT\") is not set",
+			"not",
+			"GDAR_getLastAirAbove",
+			"2.5",
+			"GDAR_getLastAt",
+			"is",
+			"GDAR_getLastAt",
+			"water",
+			">= 0 seconds",
+			"if GDA_returnTimeSpan({_p}, \"ATAIR\") > 0.6 second",
+			"ATAIR",
+			"1",
+			", 1",
+			"GDA_Lagback",
+			"at ",
+			"at",
+			"at {_p",
+			"on any move",
+			"\"Ground\", \"D",
+			"teleport {_p",
+			"at",
+			"GUARD",
+			"teleport",
+			", 0.5",
+			"GDA_getLastBlock",
+			"0.8",
+			"1",
+			"or 0.05",
+			"\"Step",
+			"25",
+			"player",
+			"22000000",
+			"15",
+			"22000000",
+			"#GDAR_getLastAt({_p}, air, \"ATAIR\") is not set",
+			"GDAR_getLastAt({_p}, air, \"ATAIR\") >= 0 second",
+			"_p",
+			"GDAR_getLastAt({_p}, air, \"ATAIR\")",
+			"GDAR_getLastAt({_p}, lava, \"LIQUIDAT\")",
+			"GDAR_getLastAt({_p}, water, \"LIQUIDAT\")",
+			"\"Flight",
+			"18000000",
+			"1604320",
+			"1000000",
+			"100000",
+			"300",
+			"player",
+			"on damage"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"folders":
+	[
+		{
+			"path": "D:\\Bureau\\sTuFF\\Server MH"
+		}
+	],
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

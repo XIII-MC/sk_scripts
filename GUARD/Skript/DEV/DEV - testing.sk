@@ -1,0 +1,71 @@
+options:
+  aimb: true
+  silent: true
+on any move:
+  set {-GUARD::%player%::TEMP::PRELOC::1} to {-GUARD::%player%::TEMP::LOC::1}
+  set {-GUARD::%player%::TEMP::LOC::1} to location of player
+  set {-lastyaw.%player%} to {-yaw.%player%}
+  set {-lastpitch.%player%} to {-pitch.%player%}
+  set {-yaw.%player%} to player's yaw
+  set {-pitch.%player%} to player's pitch
+  set {-lastdeltaYaw.%player%} to {-deltaYaw.%player%} 
+  set {-lastdeltaPitch.%player%} to {-deltaPitch.%player%} 
+  set {-deltaYaw.%player%} to {-yaw.%player%} - {-lastyaw.%player%}
+  set {-deltaPitch.%player%} to {-pitch.%player%} - {-lastpitch.%player%}
+  set {-gcd.%{_p}%} to getDev(abs({-deltaPitch.%{_p}%}), abs({-lastdeltaPitch.%{_p}%}))
+  K_AimB(player)
+function K_AimB(p: player):
+    if {@aimb} is true:
+        if length of "%{-gcd.%{_p}%}%" < 5:
+            if abs({-deltaPitch.%{_p}%} - {-lastdeltaPitch.%{_p}%}) < 4.9:
+                set {-diff} to abs({-deltaPitch.%{_p}%} - {-lastdeltaPitch.%{_p}%})
+                set {-diff} to round({-diff} * 100) / 100
+                if {-diff} > 0.4:
+                    if {-gcd.%{_p}%} != abs({-deltaPitch.%{_p}%} - {-lastdeltaPitch.%{_p}%}):
+                        if {-gcd.%{_p}%} < 1:
+                            add 1 to {-bufferaimb.%{_p}%}
+                        if {-gcd.%{_p}%} >= 3:
+                            add 1 to {-bufferaimb.%{_p}%}
+                        if length of "%abs({-deltaPitch.%{_p}%} - {-lastdeltaPitch.%{_p}%})%" = 12:
+                            add 1 to {-bufferaimb.%{_p}%}
+                            if {-bufferaimb.%{_p}%} > 1:
+                                broadcast "&4Guardian &8» &3%{_p}% &4failed &3Aim A (&4VL: &3%{-bufferaimb.%{_p}%}%&4/&34)"
+                        else:
+                            if {-bufferaimb.%{_p}%} > 0.02:
+                                remove 0.02 from {-bufferaimb.%{_p}%}
+                    else:
+                        if {-bufferaimb.%{_p}%} > 0.02:
+                            remove 0.02 from {-bufferaimb.%{_p}%}
+                else:
+                    if {-bufferaimb.%{_p}%} > 0.02:
+                        remove 0.02 from {-bufferaimb.%{_p}%}
+            else:
+                if {-bufferaimb.%{_p}%} > 0.02:
+                    remove 0.02 from {-bufferaimb.%{_p}%}
+        else:
+            if {-bufferaimb.%{_p}%} > 0.02:
+                remove 0.02 from {-bufferaimb.%{_p}%}
+function getDev(a: number, b: number) :: number: 
+  if {_a} < {_b}:
+    return getDev({_b}, {_a})
+  if abs({_b}) < 0.001:
+    return {_a}
+  else:
+    return getDev({_b}, {_a} - floor({_a} / {_b}) * {_b})
+on damage:
+  set {-GUARD::%attacker%::TEMP::TIMESPAN::LASTATTACK} to now
+  set {-GUARD::%victim%::TEMP::TIMESPAN::DAMAGE} to now
+  GA_clearly(attacker, "Aim", "3A", "Invalid Pitch", 1, "3A", "%((attacker's pitch / (attacker's pitch * 8)) ^ 1)%", 0, 0, 2) if ((attacker's pitch / (attacker's pitch * 8)) ^ 1) != 0.125
+function GDA_getDeltaLoc(p: player, n: number, y: boolean) :: number:
+  set y location of {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} to y location of {-GUARD::%{_p}%::TEMP::LOC::%{_n}%} if {_y} is true
+  return distance between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function GDA_getDeltaPitch(p: player, n: number) :: number:
+  return difference between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}'s pitch and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}'s pitch
+function GDA_getDeltaYaw(p: player, n: number) :: number:
+  return difference between {-GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}'s yaw and {-GUARD::%{_p}%::TEMP::LOC::%{_n}%}'s yaw
+function GA_clearly(p: player, cheat: text, type: text, dev: text, vl: number, tpvl: text, v: text, bufferadd: number, buffer: number, punish: number):
+  add {_bufferadd} to {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%}
+  set {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%} to 1 if {_buffer} = 0
+  {-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%} > {_buffer}
+  add 1 to {-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%}
+  send formatted "<tooltip:&7Check: &9%{_cheat}% &7(%{_tpvl}%&7)%nl%&7Value: &9%{_v}% %nl%&7Informations: &9%{_dev}%%nl%&7Buffer: &9%{-GUARD::%{_p}%::TEMP::VL::%{_cheat}%.%{_tpvl}%}%&7/&9%{_buffer}%%nl%%nl%        &7&nClick to teleport !><cmd: /tp %{_p}%>&9&lGUARD &8» &f%{_p}%&7 failed &f%{_cheat}% %{_type}% &7(&9x%{-GUARD::%{_p}%::VL::%{_cheat}%.%{_tpvl}%}%&7) (&aNICKI MINAJ&7)" to all players

@@ -1,0 +1,71 @@
+on right click:
+	set {rtime2.%player%} to {rtime.%player%}
+	set {rtime.%player%} to now
+	set {rtime3.%player%} to "%difference between {rtime2.%player%} and now%"
+	replace all " seconds" or " second" in {rtime3.%player%} with ""
+	replace all " minute" or " minutes" in {rtime3.%player%} with ""
+	replace all " hour" or " hours" in {rtime3.%player%} with ""
+	replace all " days" or " day" in {rtime3.%player%} with ""
+	set {rtime5.%player%} to {rtime4.%player%}
+	set {rtime4.%player%} to {rtime3.%player%} parsed as number
+	set {lastrtimecheck.%player%} to difference between {rtimehigh.%player%} and {rtimelow.%player%}
+	if {rtimelow.%player%} = 0:
+		set {rtimelow.%player%} to difference between {rtimehigh.%player%} and {rtimelow.%player%}
+	if difference between {rtime5.%player%} and {rtime4.%player%} < {rtimelow.%player%}:
+		set {rtimelow.%player%} to difference between {rtime5.%player%} and {rtime4.%player%}
+	if difference between {rtime5.%player%} and {rtime4.%player%} > {rtimehigh.%player%}:
+		set {rtimehigh.%player%} to difference between {rtime5.%player%} and {rtime4.%player%}
+	if difference between {rtimehigh.%player%} and {rtimelow.%player%} = {lastrtimecheck.%player%}:
+		set {rbuffer3.%player%} to {rbuffer3.%player%} + 1
+		if {rbuffer3.%player%} > 8:
+			broadcast "&f%player% &7failed &fAutoClicker D &8| &7&o%difference between {rtimehigh.%player%} and {rtimelow.%player%}%"
+	else:
+		set {rbuffer3.%player%} to 0
+	if difference between {rtime5.%player%} and {rtime4.%player%} < 0.003:
+		set {rbuffer1.%player%} to {rbuffer1.%player%} + 1
+		set {rbuffer2.%player%} to 0
+		if {rbuffer1.%player%} > 7:
+			broadcast "&f%player% &7failed &fAutoClicker A &8| &7&o%difference between {rtime5.%player%} and {rtime4.%player%}%"
+	else:
+		set {rbuffer1.%player%} to 0
+
+
+on left click:
+	set {ltime2.%player%} to {ltime.%player%}
+	set {ltime.%player%} to now
+	set {ltime3.%player%} to "%difference between {ltime2.%player%} and now%"
+	replace all " seconds" or " second" in {ltime3.%player%} with ""
+	replace all " minute" or " minutes" in {ltime3.%player%} with ""
+	replace all " hour" or " hours" in {ltime3.%player%} with ""
+	replace all " days" or " day" in {ltime3.%player%} with ""
+	set {ltime5.%player%} to {ltime4.%player%}
+	set {ltime4.%player%} to {ltime3.%player%} parsed as number
+	set {lastltimecheck.%player%} to difference between {ltimehigh.%player%} and {ltimelow.%player%}
+	if {ltimelow.%player%} = 0:
+		set {ltimelow.%player%} to difference between {ltimehigh.%player%} and {ltimelow.%player%}
+	if difference between {ltime5.%player%} and {ltime4.%player%} < {ltimelow.%player%}:
+		set {ltimelow.%player%} to difference between {ltime5.%player%} and {ltime4.%player%}
+	if difference between {ltime5.%player%} and {ltime4.%player%} > {ltimehigh.%player%}:
+		set {ltimehigh.%player%} to difference between {ltime5.%player%} and {ltime4.%player%}
+	if difference between {ltimehigh.%player%} and {ltimelow.%player%} = {lastltimecheck.%player%}:
+		set {lbuffer3.%player%} to {lbuffer3.%player%} + 1
+		if {lbuffer3.%player%} > 9:
+			broadcast "&f%player% &7failed &fAutoClicker C &8| &7&o%difference between {ltimehigh.%player%} and {ltimelow.%player%}%"
+	else:
+		set {lbuffer3.%player%} to 0
+	if difference between {ltime5.%player%} and {ltime4.%player%} < 0.003:
+		set {lbuffer1.%player%} to {lbuffer1.%player%} + 1
+		set {lbuffer2.%player%} to 0
+		if {lbuffer1.%player%} > 7:
+			broadcast "&f%player% &7failed &fAutoClicker B &8| &7&o%difference between {ltime5.%player%} and {ltime4.%player%}%"
+	else:
+		set {lbuffer1.%player%} to 0
+
+every 2 seconds:
+	loop all players:
+		set {rtimehigh.%loop-player%} to 0
+		set {rtimelow.%loop-player%} to 0
+every 1.5 seconds:
+	loop all players:
+		set {ltimelow.%loop-player%} to 0
+		set {ltimehigh.%loop-player%} to 0

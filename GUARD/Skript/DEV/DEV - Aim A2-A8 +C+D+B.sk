@@ -1,0 +1,28 @@
+if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTATTACK} and now < 0.1 second:
+    set {_GCD} to getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216)
+    GA_clearly(player, "Aim", "A", "Impossible Angle", 1, "A2", "%{_GCD}%", 1, 8, 2) if "%{_GCD}%" contains "."
+    GDA_getDeltaYaw(player, 1) != 0
+    GA_clearly(player, "Aim", "B", "Impossible Angle", 0, "B", "%getDev({_GCD}, {_GCD} - floor({_GCD} / {_GCD}) * {_GCD})%", 1, 1, 2) if getDev({_GCD}, {_GCD} - floor({_GCD} / {_GCD}) * {_GCD}) < 910936
+    set {-GUARD::%player%::TEMP::SAMPLEAIMB} to sqrt(getGCD(GDA_getDeltaYaw(player, 1) * 16777216, GDA_getDeltaYaw(player, 2) * 16777216))
+    GA_clearly(player, "Aim", "A", "Impossible Angle", 1, "A3", "%mod(GDA_getDeltaPitch(player, 2), 1)%", 1, 2, 2) if mod(GDA_getDeltaPitch(player, 2), 1) = 0.1 or 0.2 or 0.3 or 0.4 or 0.5 or 0.6 or 0.7 or 0.8 or 0.9 or 1
+    GA_clearly(player, "Aim", "A", "Impossible Angle", 1, "A4", "%sqrt(player's pitch ^ GDA_getDeltaPitch(player, 1))%", 1, 6, 2) if sqrt(player's pitch ^ GDA_getDeltaPitch(player, 1)) = 1
+    if {_GCD} > 0:
+      GA_clearly(player, "Aim", "A", "Impossible Angle", 8, "A5", "%{_GCD}%", 1, 6, 2) if {_GCD} < 400000
+    if (player's pitch - (player's pitch * 8) ^ 1) > 0:
+      GA_clearly(player, "Aim", "A", "Impossible Angle", 1, "A6", "%{_GCD}%", 1, 3, 2) if "%(player's pitch - (player's pitch * 8) ^ 1)%" doesn't contain "."
+    GA_clearly(player, "Aim", "A", "Impossible Angle", 1, "A7", "%getDev(getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216), getGCD(GDA_getDeltaYaw(player, 1) * 16777216, GDA_getDeltaYaw(player, 2) * 16777216))%", 1, 8, 2) if "%getDev(getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216), getGCD(GDA_getDeltaYaw(player, 1) * 16777216, GDA_getDeltaYaw(player, 2) * 16777216))%" contains "."
+    GA_clearly(player, "Aim", "A", "Impossible Angle", 8, "A8", "%getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216)%", 1, 3, 2) if getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216) is between 0.000001 and 300000
+    GA_clearly(player, "Aim", "C", "Impossible Angle", 0, "C", "%getDev({_GCD}, GDA_getDeltaPitch(player, 1) - floor(GDA_getDeltaPitch(player, 1) / {_GCD}) * {_GCD})%", 1, 6, 2) if getDev({_GCD}, GDA_getDeltaPitch(player, 1) - floor(GDA_getDeltaPitch(player, 1) / {_GCD}) * {_GCD}) < 1
+    GA_clearly(player, "Aim", "D", "Impossible Angle", 0, "D", "%sqrt(GDA_getDeltaYaw(player, 1) - GDA_getDeltaPitch(player, 1))%", 1, 4, 0) if sqrt(GDA_getDeltaYaw(player, 1) - GDA_getDeltaPitch(player, 1)) <= 0
+    delete {-GUARD::%player%::TEMP::VL::AIM.C} if getDev({_GCD}, GDA_getDeltaPitch(player, 1) - floor(GDA_getDeltaPitch(player, 1) / {_GCD}) * {_GCD}) > 0.05
+    delete {-GUARD::%player%::TEMP::VL::AIM.C} if sqrt(GDA_getDeltaPitch(player, 1)) > 1.6
+    if sqrt(GDA_getDeltaYaw(player, 1) - GDA_getDeltaPitch(player, 1)) > 0:
+      remove 2 from {-GUARD::%player%::TEMP::VL::AIM.D} if {-GUARD::%player%::TEMP::VL::AIM.D} >= 1  
+    delete {-GUARD::%player%::TEMP::VL::AIM.A5} if {_GCD} > 400000
+    delete {-GUARD::%player%::TEMP::VL::AIM.A4} if sqrt(player's pitch ^ GDA_getDeltaPitch(player, 1)) != 1
+    delete {-GUARD::%player%::TEMP::VL::AIM.A3} if mod(GDA_getDeltaPitch(player, 2), 1) != 0.1 or 0.2 or 0.3 or 0.4 or 0.5 or 0.6 or 0.7 or 0.8 or 0.9 or 1
+    delete {-GUARD::%player%::TEMP::VL::AIM.A6} if "%(player's pitch - (player's pitch * 8) ^ 1)%" contains "."
+    delete {-GUARD::%player%::TEMP::VL::AIM.A2} if "%{_GCD}%" doesn't contain "."
+    delete {-GUARD::%player%::TEMP::VL::AIM.A8} if getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216) > 300000
+    delete {-GUARD::%player%::TEMP::VL::AIM.A7} if "%getDev(getGCD(GDA_getDeltaPitch(player, 1) * 16777216, GDA_getDeltaPitch(player, 2) * 16777216), getGCD(GDA_getDeltaYaw(player, 1) * 16777216, GDA_getDeltaYaw(player, 2) * 16777216))%" doesn't contain "."
+    delete {-GUARD::%player%::TEMP::VL::AIM.B} if getDev({_GCD}, {_GCD} - floor({_GCD} / {_GCD}) * {_GCD}) > 910936

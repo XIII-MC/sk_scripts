@@ -1,0 +1,206 @@
+options:
+   guard: &c&lGDB &8»
+
+   SpeedA_PunishVL: 5 
+   SpeedA_BufferAdd: 1
+   SpeedA_Buffer: 6
+
+   RangeA_PunishVL: 3
+   RangeA_BufferAdd: 1
+   RangeA_Buffer: 2
+   RangeA_Range: 3
+
+   InventoryA_PunishVL: 3
+   InventoryA_BufferAdd: 0
+   InventoryA_Buffer: 0
+
+   NofallA_PunishVL: 3
+   NofallA_Buffer: 1
+   NofallA_BufferAdd: 1
+
+on join:
+   set {GUARD::%player%::TEMP::BLOCKPLACE} to now
+   set {GUARD::%player%::TEMP::MOUNT} to now
+   set {GUARD::%player%::TEMP::ICE} to now
+   set {GUARD::%player%::TEMP::SLIME} to now
+   set {GUARD::%player%::TEMP::ABOVETICKS} to now
+   while player is online:
+      delete {GUARD::%player%::TEMP::NOFALL.A}
+      wait 5 seconds
+
+function GC_Dev(p: player):
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  attacker's gamemode is not spectator or creative
+  GA_clearly(attacker, "Range", "A", "Hit further", {@RangeA_PunishVL}, 1, "%{_ans}%", {@RangeA_BufferAdd}, {@RangeA_Buffer}) if distance between victim's location and attacker's location - 0.54188401 > {@RangeA_Range}
+  GA_clearly(attacker, "Range", "A", "Hit further", {@RangeA_PunishVL}, 1, "%{_ans}%", 0, 0) if distance between victim's location and attacker's location - 0.54188401 > {@RangeA_Range} + 2.7
+  delete {GUARD::%attacker%::TEMP::RANGE.A} if distance between victim's location and attacker's location - 0.54188401 < 3
+
+on damage:
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  GA_clearly(attacker, "Aura", "A", "{@AuraA_Status}", {@AuraA_PunishVL}, 1, "%{GUARD::%attacker%::TEMP::AURA.A}%", {@AuraA_BufferAdd}, {@AuraA_Buffer}) if attacker's targeted entity is not set
+  delete {GUARD::%attacker%::TEMP::AUURA.A} if attacker's targeted entity is set
+  if attacker's targeted block is not a flower, skeleton skull, water, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+    GA_clearly(attacker, "Aura", "B", "{@AuraB_Status}", {@AuraB_PunishVL}, 1, "%attacker's target block%", {@AuraB_BufferAdd}, {@AuraB_Buffer}) if attacker's targeted block is not block under victim
+  delete {GUARD::%attacker%::TEMP::AURA.B} if attacker's targeted block is air or void air
+  GA_clearly(attacker, "Aura", "C", "{@AuraC_Status}", {@AuraC_PunishVL}, 1, "%{GUARD::%attacker%::TEMP::AURA.C}%", {@AuraC_BufferAdd}, {@AuraC_Buffer}) 
+
+on any move:
+  GC_Speed_AA(player)
+  GC_Speed_BA(player)
+  GC_Speed_AB(player)
+  GA_AirTicks(player)
+  getAirAbove(player)
+  GA_Ice(player)
+  GA_OnSlime(player)
+  GA_InWater(player)
+  GA_GroundTicks(player)
+
+on inventory click:
+  set {GUARD::%player%::TEMP::INVOPEN} to now 
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sprinting", {@InventoryA_PunishVL}, 1, "NaN", {@InventoryA_BufferAdd}, {@InventoryA_Buffer}) if player is sprinting
+  GA_clearly(player, "Inventory", "A", "Clicked inventory while sneaking", {@InventoryB_PunishVL}, 1, "NaN", {@InventoryB_BufferAdd}, {@InventoryB_Buffer}) if player is sneaking
+on sprint toggle:
+  if {GUARD::%player%::TEMP::INVOPEN} is set:
+    GA_clearly(player, "Inventory", "A", "Clicked inventory while sprint toggle", {@InventoryC_PunishVL}, 1, "NaN", {@InventoryC_BufferAdd}, {@InventoryC_Buffer}) if difference between {GUARD::%player%::TEMP::INVOPEN} and now > 0.5 second
+on inventory close:
+  delete {GUARD::%player%::TEMP::INVOPEN}
+function GC_Inventory_A(p: player):
+  GA_Requirements({_p}) = true
+  getIceTicks({_p}) > 1.2 second 
+  getSlimeTicks({_p}) > 0.6 second
+  {GUARD::%{_p}%::TEMP::INVOPEN} is set
+  GA_clearly({_p}, "Inventory", "A", "Moving while having inventory open", {@InventoryD_PunishVL}, 1, "NaN", {@InventoryD_BufferAdd}, {@InventoryD_Buffer}) if difference between {GUARD::%{_p}%::TEMP::INVOPEN} and now > 0.4 second
+
+function GC_Nofall_A(p: player):
+  block under {_p} is not air
+  GA_clearly({_p}, "NoFall", "A", "Spoofed ground while in air", {@NofallA_PunishVL}, 1, "NaN", {@NofallA_Buffer}, {@NofallA_BufferAdd}) if getGroundTicks({_p}) > 1
+
+function GC_Speed_A(p: player):
+  GA_FlyMode({_p}) = true
+  GA_Gamemode({_p}) = true
+  set {_speed} to getDeltaLoc({_p}, 1, true)
+  if {_p} doesn't have speed:
+    set {_maxspeed} to 0.6783 if getAboveTicks({_p}) < 0.6 second
+    set {_maxspeed} to 0.336543868066 if getAboveTicks({_p}) > 0.6 second
+    set {_maxspeed} to 0.2868198 if getGroundTicks({_p}) > 7
+  if getAboveTicks({_p}) > 0.6 second:
+    add 5 to {GUARD::%{_p}%::TEMP::SPEED.A} if {_speed} > 0.68
+  if getAboveTicks({_p}) < 0.6 second:
+    add 5 to {GUARD::%{_p}%::TEMP::SPEED.A} if {_speed} > 1.1
+  GA_clearly({_p}, "Speed", "A", "Speed Limit", {@SpeedA_PunishVL}, 1, "%{_speed}%", {@SpeedA_BufferAdd}, {@SpeedA_Buffer}) if {_speed} > {_maxspeed}
+  if {GUARD::%{_p}%::TEMP::SPEED.A} >= 1:
+    remove 1 from {GUARD::%{_p}%::TEMP::SPEED.A} if {_speed} < {_maxspeed}
+
+function GA_clearly(p: player, cheat: text, type: text, dev: text, vl: number, tpvl: number, v: text, bufferadd: number, buffer: number):
+  {GUARD.CHECK.%{_type}%.%{_type}%} is not set
+  add {_bufferadd} to {GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%} if {_bufferadd} > 0
+  set {GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%} to 0.1 if {_buffer} = 0
+  {GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%} > {_buffer}
+  delete {GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%} if {GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%} = 0.1
+  add 1 to {GUARD::%{_p}%::VL::%{_cheat}%}
+  loop all players:
+    send formatted "<tooltip:&f* Check: &3%{_cheat}% &7(%{_type}%&7)%nl%&f* Value: &3%{_v}% %nl%&f* Informations: &3%{_dev}%%nl%&f* Buffer: &3%{GUARD::%{_p}%::TEMP::%{_cheat}%.%{_type}%}%&7/&3%{_buffer}%>{@guard} &f%{_p}%&7 failed &f%{_cheat}% &7&o(%{_type}%&7&o)&r &3(x%{GUARD::%{_p}%::VL::%{_cheat}%}%&3)" to loop-player if {GUARD::%loop-player%::ALERTS} is true
+function GA_FlyMode(p: player) :: boolean:
+  return false if {_p}' fly mode is true
+  return true if {_p}'s fly mode is false
+function GA_Flying(p: player) :: boolean:
+  return false if {_p} is flying
+  return true if {_p} is not flying
+function GA_Gamemode(p: player) :: boolean:
+  return false if {_p}'s gamemode is spectator or creative
+  return true if {_p}'s gamemode is not spectator or creative
+function GA_Elytra(p: player) :: boolean:
+  return false if {_p} is wearing an elytra
+  return true if {_p} is not wearing an elytra
+function GA_Requirements(p: player) :: boolean:
+  return GA_Elytra({_p})
+  return GA_Gamemode({_p})
+  return GA_FlyMode({_p})
+function getLastPlace(p: player) :: time span:
+  return difference between {GUARD::%{_p}%::TEMP::BLOCKPLACE} and now
+function getLastMount(p: player) :: time span:
+  return difference between {GUARD::%{_p}%::TEMP::MOUNT} and now
+function GA_Mount(p: player) :: boolean:
+  return {GUARD::%{_p}%::TEMP::MOUNTSTATE}
+on mount:
+  set {GUARD::%player%::TEMP::MOUNT} to now
+  set {GUARD::%player%::TEMP::MOUNTSTATE} to true
+on dismount:
+  delete {GUARD::%player%::TEMP::MOUNTSTATE}
+on place:
+  set {GUARD::%player%::TEMP::BLOCKPLACE} to now
+function getDeltaYaw(p: player, n: number) :: number:
+  return difference between {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%}'s yaw and {GUARD::%{_p}%::TEMP::LOC::%{_n}%}'s yaw
+function getDeltaLoc(p: player, n: number, y: boolean) :: number:
+  set y location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} to y location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%} if {_y} is true
+  return distance between {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and {GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaXZ(p: player, n: number) :: number:
+  set {_x} to difference between x location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and x location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%} 
+  set {_z} to difference between z location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and z location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+  return abs({_x} + {_z})
+function getDeltaZ(p: player, n: number) :: number:
+  return difference between z location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and z location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaX(p: player, n: number) :: number:
+  return difference between x location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and x location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function getDeltaY(p: player, n: number) :: number:
+  return difference between y location of {GUARD::%{_p}%::TEMP::PRELOC::%{_n}%} and y location of {GUARD::%{_p}%::TEMP::LOC::%{_n}%}
+function GA_AirTicks(p: player):
+  add 1 to {GUARD::%{_p}%::TEMP::AIRTICKS} if {_p} is not on ground
+  set {GUARD::%{_p}%::TEMP::AIRTICKS} to 0 if {_p} is on ground
+function getAirTicks(p: player) :: number:
+  return {GUARD::%{_p}%::TEMP::AIRTICKS}
+function getAboveTicks(p: player) :: time span:
+  return difference between {GUARD::%{_p}%::TEMP::ABOVETICKS} and now
+function getWaterTicks(p: player) :: number:
+  return {GUARD::%{_p}%::TEMP::INWATERTICKS} 
+function getIceTicks(p: player) :: time span:
+  return difference between {GUARD::%{_p}%::TEMP::ICE} and now
+function getSlimeTicks(p: player) :: time span:
+  return difference between {GUARD::%{_p}%::TEMP::SLIME} and now
+function GA_GroundTicks(p: player):
+  add 1 to {GUARD::%{_p}%::TEMP::GROUNDTICKS} if {_p} is on ground
+  set {GUARD::%{_p}%::TEMP::GROUNDTICKS} to 0 if {_p} is not on ground
+function getGroundTicks(p: player) :: number:
+  return {GUARD::%{_p}%::TEMP::GROUNDTICKS}
+function getAirAbove(p: player):
+  block 2.5 above north {_p} is air or void air:
+    block 2.5 above south {_p} is air or void air:
+      block 2.5 above west {_p} is air or void air:
+        block 2.5 above east {_p} is air or void air:
+          block 2.5 above {_p} is air or void air:
+            stop
+  set {GUARD::%{_p}%::TEMP::ABOVETICKS} to now
+function GA_Ice(p: player):
+  set {GUARD::%{_p}%::TEMP::ICE} to now if block under {_p} is ice or packed ice or blue ice
+function GA_OnSlime(p: player):
+  set {GUARD::%{_p}%::TEMP::SLIME} to now if block under {_p} is slime block
+function GA_InWater(p: player):
+  add 1 to {GUARD::%{_p}%::TEMP::INWATERTICKS} if block 0.5 above {_p} is water
+  set {GUARD::%{_p}%::TEMP::INWATERTICKS} to 0 if block 0.5 above {_p} is not water
+on any move:
+  set {GUARD::%player%::TEMP::PRELOC::10} to {GUARD::%player%::TEMP::LOC::10}
+  set {GUARD::%player%::TEMP::LOC::10} to {GUARD::%player%::TEMP::PRELOC::9}
+  set {GUARD::%player%::TEMP::PRELOC::9} to {GUARD::%player%::TEMP::LOC::9}
+  set {GUARD::%player%::TEMP::LOC::9} to {GUARD::%player%::TEMP::PRELOC::8}
+  set {GUARD::%player%::TEMP::PRELOC::8} to {GUARD::%player%::TEMP::LOC::8}
+  set {GUARD::%player%::TEMP::LOC::8} to {GUARD::%player%::TEMP::PRELOC::7}
+  set {GUARD::%player%::TEMP::PRELOC::7} to {GUARD::%player%::TEMP::LOC::7}
+  set {GUARD::%player%::TEMP::LOC::7} to {GUARD::%player%::TEMP::PRELOC::6}
+  set {GUARD::%player%::TEMP::PRELOC::6} to {GUARD::%player%::TEMP::LOC::6}
+  set {GUARD::%player%::TEMP::LOC::6} to {GUARD::%player%::TEMP::PRELOC::5}
+  set {GUARD::%player%::TEMP::PRELOC::5} to {GUARD::%player%::TEMP::LOC::5}
+  set {GUARD::%player%::TEMP::LOC::5} to {GUARD::%player%::TEMP::PRELOC::4}
+  set {GUARD::%player%::TEMP::PRELOC::4} to {GUARD::%player%::TEMP::LOC::4}
+  set {GUARD::%player%::TEMP::LOC::4} to {GUARD::%player%::TEMP::PRELOC::3}
+  set {GUARD::%player%::TEMP::PRELOC::3} to {GUARD::%player%::TEMP::LOC::3}
+  set {GUARD::%player%::TEMP::LOC::3} to {GUARD::%player%::TEMP::PRELOC::2}
+  set {GUARD::%player%::TEMP::PRELOC::2} to {GUARD::%player%::TEMP::LOC::2}
+  set {GUARD::%player%::TEMP::LOC::2} to {GUARD::%player%::TEMP::PRELOC::1}
+  set {GUARD::%player%::TEMP::PRELOC::1} to {GUARD::%player%::TEMP::LOC::1}
+  set {GUARD::%player%::TEMP::LOC::1} to location of player

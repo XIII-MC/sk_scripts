@@ -1,0 +1,55 @@
+function GDC_Speed_A(p: player):
+  GDA_returnTimeSpan({_p}, "MOUNT") > 1200
+  set {_speed} to GDA_getDeltaLoc({_p}, 1, true)
+  set {GUARD::%{_p}%::TEMP::SPEED.DIFF} to 0 if {GUARD::%{_p}%::TEMP::SPEED.DIFF} is not set
+  set {_maxspeed} to 0.68 if GDA_returnTimeSpan({_p}, "ABOVETICKS") < 600
+  set {_maxspeed} to 0.33844464 if GDA_returnTimeSpan({_p}, "ABOVETICKS") > 600
+  set {_maxspeed} to 0.2868198 if GDA_returnValue({_p}, "GROUNDTICKS") > 7
+  if GDA_returnTimeSpan({_p}, "ICE") < 1200:
+    set {_maxspeed} to 0.48 if GDA_returnTimeSpan({_p}, "ABOVETICKS") > 1600
+    set {_maxspeed} to 1 if GDA_returnTimeSpan({_p}, "ABOVETICKS") < 1600
+    if GDA_returnTimeSpan({_p}, "ICE") < 100:
+      set {_maxspeed} to 0.2757 if GDA_returnValue({_p}, "GROUNDTICKS") > 22
+    if {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER} = 1:
+      set {_maxspeed} to 0.32427 if GDA_returnValue({_p}, "GROUNDTICKS") > 7
+    if {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER} >= 2:
+      set {_maxspeed} to 0.37831 if GDA_returnValue({_p}, "GROUNDTICKS") > 7
+  if GDA_returnTimeSpan({_p}, "SLIME") < 1000:
+    set {_maxspeed} to 0.4 if GDA_returnTimeSpan({_p}, "ABOVETICKS") > 600
+    set {_maxspeed} to 0.74 if GDA_returnTimeSpan({_p}, "ABOVETICKS") < 600
+    GDA_returnTimeSpan({_p}, "SLIME") < 100
+    set {_maxspeed} to 0.09 if GDA_returnValue({_p}, "GROUNDTICKS") > 14
+  if GDA_returnTimeSpan({_p}, "LOWBLOCK") < 300:
+    GDA_returnTimeSpan({_p}, "KBDAMAGE") > 1200
+    set {_maxspeed} to 0.42
+  set {_maxspeed} to 0.8062 if block at {_p} is cobweb
+  if GDA_returnValue({_p}, "CLIMABLETICKS") > 8:
+    set {_maxspeed} to 0.2
+  if GDA_returnTimeSpan({_p}, "SPEEDPOT") < 2200:
+    set {_maxspeed} to 0.4 if GDA_returnTimeSpan({_p}, "ABOVETICKS") < 600
+    if {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER} = 1:
+      set {_maxspeed} to 0.34361233 if GDA_returnTimeSpan({_p}, "ABOVETICKS") > 600
+    if {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER} >= 2:
+      set {_maxspeed} to (0.17622432 * {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER}) if GDA_returnTimeSpan({_p}, "ABOVETICKS") > 600
+      set {_maxspeed} to (0.20044054 * {GUARD::%{_p}%::TEMP::SPEEDPOT::TIER}) if GDA_returnValue({_p}, "GROUNDTICKS") > 7
+  if GDA_returnTimeSpan({_p}, "KBDAMAGE") > 1200:
+    GDA_returnTimeSpan({_p}, "ICE") > 1200
+    GDA_returnTimeSpan({_p}, "SLIME") > 1200
+    GDA_returnTimeSpan({_p}, "FLY") > 2000
+    GA_clearly({_p}, "Speed", "A", "Speed Limit", 5, "AA", "%{_speed}%", 1, 1) if difference between {GUARD::%{_p}%::TEMP::SPEED.DIFF} and GDA_getDeltaLoc({_p}, 1, true) > 0.68
+  set {_maxspeed} to 0.63 if GDA_returnTimeSpan({_p}, "DAMAGE") < 800
+  if GDA_returnTimeSpan({_p}, "KBDAMAGE") < 1200:
+    set {_maxspeed} to {GUARD::%{_p}%::TEMP::KBENCHANT} * 0.7
+  if {_p} is swimming:
+    set {_maxspeed} to 0.19596137
+    if {_p}'s boots are enchanted with depth strider:
+      set {_tier} to enchantment level of depth strider of {_p}'s boots
+      set {_maxspeed} to 0.23625096 if {_tier} = 1 
+      set {_maxspeed} to 0.254699 if {_tier} = 2 
+      set {_maxspeed} to 0.2653481 if {_tier} = 3
+      set {_maxspeed} to 0.0683204 * {_tier} if {_tier} > 3
+  GA_clearly({_p}, "Speed", "A", "Speed Limit", 5, "A", "%{_speed}%&7/&9%{_maxspeed}%", 1, 6) if {_speed} > {_maxspeed}
+  if {GUARD::%{_p}%::TEMP::VL::SPEED.A} >= 1:
+    remove 1 from {GUARD::%{_p}%::TEMP::VL::SPEED.A} if {_speed} < {_maxspeed}
+  if {GUARD::%{_p}%::TEMP::VL::SPEED.AA} >= 0.05:
+    remove 0.05 from {GUARD::%{_p}%::TEMP::VL::SPEED.AA} if difference between {GUARD::%{_p}%::TEMP::SPEED.DIFF} and GDA_getDeltaLoc({_p}, 1, true) < 0.68

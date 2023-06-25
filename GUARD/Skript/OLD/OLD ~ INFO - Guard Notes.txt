@@ -1,0 +1,84 @@
+GUARD Anticheat list of things:
+
+Fixed / Improved / Added:
+
+- Speed (1A) flag with lag and ice
+- HighJump (1A) with lag and slime
+- Invalid Move (1A*) lag , teleport
+- NoSlow (1A) just walking and maybe lag
+- Reach (2B) clicking fast too legit reach , lag
+- Fly (2D* 1D* 3D*) stairs , falling
+- Fly (1E) jumping in stairs , slime , lag
+- Fly (1C) jumping in stairs
+- Speed (2A) jumping in stairs
+- Falses with iron bars , fences , slime , glass panes ,cactus , damage
+- Fly (3D*) falling eadge
+- Invalid Break (1A) iron bars, fences, glass panes
+- HitBox (1A)
+- KillAura (1B) clicking fast
+- Damage setback
+- Annoying lagback like AAC5
+- Fly (1G* 2G*)
+- Strafe (1A*) falling
+- Speed (1A) falling
+- InvalidMove (1A) damage
+- Fly (1C) falling
+- Fly (1D) teleporting
+- Speed (1A) teleporting
+- Invalid Move (1A) teleporting
+- Blink (1A) teleporting
+- Speed (1A) slime
+- Invalid Move (1A) slime
+- Fly (1E 2E) jumping off the edge , falling off the edge , slime
+- Fly (G2*) slime
+- Fly (1E) edge of blocks stairs slabs
+- Fly (1F 2F 3F) slime
+- AntiBot
+- KillAura (1E)
+- HighJump (1A) jumping on slabs
+- Fly (1F) jumping on slabs
+- Invalid Motion (1A) wtf
+- HighJump (1A) damage
+- Fly (3D) cobweb
+- Fly (1F 2F 3F) cactus
+- HighJump (1A) cactus
+- Invalid Move (1A) random
+- Invalid Motion (1A) random
+- Speed (1A) teleporting
+- Fly (1E) slime edge
+- Invalid Interact (1A)
+- Sneak (1A)
+- Fly (G2*) jumping off the edge
+- Invalid Jump (lowjump) (1A)
+- FastUse (1A)
+- FastClimb (1A)
+
+To fix:
+
+
+Because of lag:
+
+- Speed (1A)
+- Timer (1A)
+- Invalid Move (1A)
+- Blink (1A)
+
+
+To add:
+
+- Velocity / Kb Modifier
+- BadPackets
+- MorePackets
+- ChestAura
+- Spider
+- BlockWalk (Cobwebs)
+- FastBreak
+- Phase
+- Downwards Vclip
+- PacketFly Fix
+- Lag proof checks
+- Strafe (not in air)
+=
+- Jesus falses on new versions , spartan and aac jesus bypass
+- Nofall (1A) packet, aac3.3.11
+- InvMove (1A) while moving , AACaditionalpro bypass

@@ -1,0 +1,2131 @@
+#-------------------------------------------
+#                G U A R D
+#            A N T I C H E A T
+#              R E C O D E D
+#             A U T H O R : XIII___
+#-------------------------------------------
+
+options:
+
+#Main Options 
+
+   #Anticheat prefix
+   guard: &9&lGUARD &8»&f
+
+   #Guard Version !DO NOT TOUCH!#
+   Version: v0.3.9_PreReleaseTest_6
+   WIPVersion: true #Do not touch !#
+
+#Punishements
+
+   #Auto-Ban
+   Ban: false #This will autoban the player with the command "/guard ban %player% 7 day"
+   BanMsg: &c%arg 2%&f has been removed for &cUnfair Advantage #The message that will be broadcasted on the server chat when a player gets banned by GUARD
+
+   #Auto-Kick
+   Kick: false #This will autokick the player with the command "/guard kick %player%"
+   KickMsg: &c%arg 2%&f has been removed for &cUnfair Advantage #The message that will be broadcasted on the server chat when a player gets kicked by GUARD
+
+#LagBack options
+
+   #LagBack / TeleportBack
+   LagBackInstant: false #This is for lowjump / highjump checks, they will teleport back the player even before sending an alert
+   LagBack: false #This will lagback / teleport back the player whenever the player flags the anticheat
+
+#Misc
+
+   #Disabled Worlds 
+   Whitelisted_Worlds: example_world #Here you can put your worlds where you want the anticheat to be disabled, like your lobby if you have launch pads
+
+   #TestMode
+   TestMode: true #This is for tests or test servers only , you don't need it on your production server
+
+#Permissions
+
+   MainPermission: GUARD.commands #Permissions for /guard
+   GUARDNotifyPermission: GUARD.alerts #Permissions to recive alerts
+
+   #You can give your self the perm "GUARD.*" to have the 2 permissions
+
+
+#Check Config right here !
+
+#Significations explainations ! 
+
+# *InsertCheckNameHere*_Buffer | That's a false prevention, this is how many time the player has to fail the check to send an alert
+
+# *InsertCheckNameHere*_Status | This is to determinate if the check is reliable or not
+   # Working = Pretty reliable, Testing = This check is probably falsing but working , Buggy = The check might work but is just falsing a lot
+
+# *InsertCheckNameHere*_PunishVL | This is how many times the player have to flag the check to get punished
+   #The higher the number is means the player would need to flag more to get punished
+
+#Some checks might have specific informations about them to make sure you understand how their settings work
+
+#AutoClicker Checks
+
+   #AutoClicker A (Left):
+   MaxLeftCPS: 35 #The "CPS" counter is cleared around every 3 seconds
+   AutoClickerLeft_Status: &aWorking 
+   AutoClickerLeft_PunishVL: 10 
+
+   #AutoClicker B (Right):
+   MaxRightCPS: 28 #The "CPS" counter is cleared around every 3 seconds
+   AutoClickerRight_Status: &aWorking
+   AutoClickerRight_PunishVL: 10 
+
+#Reach Check
+
+   #Reach A:
+   MaxReachA: 3
+   ReachA_Status: &aWorking
+   ReachA_Buffer: 0
+   ReachB_PunishVL: 3
+
+   #Reach B: 
+   MaxReachB: -3
+   ReachB_Status: &aWorking
+   ReachB_Buffer: 0
+   ReachB_PunishVL: 3
+
+   #Reach C: 
+   MaxReachC: 3
+   ReachC_Status: &6Testing
+   ReachC_Buffer: 0
+   ReachC_PunishVL: 3
+
+   #Reach D 
+   ReachD_Status: &6Testing
+   ReachD_PunishVL: 3
+   ReachD_Buffer: 1
+
+#KillAura Checks
+
+   #KillAura A:
+   KillAuraA_Buffer: 9 #How many hits can the player deal without looking at his target (4/6 is recommanded)
+   KillAuraA_Status: &aWorking
+   KillAuraA_PunishVL: 3
+
+   #KillAura B
+   KillAuraB_Status: &aWorking
+   KillAuraB_PunishVL: 3
+   KillAuraB_Buffer: 2
+
+   #KillAura C:
+   KillAuraC_Buffer: 8 #How many hits can the player deal in ~0.8/6 second 
+   KillAuraC_Status: &aWorking
+   KillAuraC_PunishVL: 5
+
+   #KillAura D 
+   KillAuraD_Status: &aWorking
+   KillAuraD_Buffer: 0
+   KillAuraD_PunishVL: 2
+
+   #Global KillAura Setting:
+   AuraMove: 0.20 #The distance needed for the player to move to trigger the aim checks
+
+   #Global KillAura setting:
+   AuraDistance: 1 #The distance needed between the attacker and victim for the KillAura checks to be triggered
+
+#FastClimb Check
+   
+   #FastClimb A
+   FastClimbA_yspeed: -0.48 #The speed a player can move up on a ladder/vine 
+   FastClimbA_PunishVL: 8
+   FastClimbA_Status: &aWorking
+   FastClimbA_Buffer: 4
+
+#Aim Checks
+
+   #Aim A1
+   AimA1_Status: &aWorking 
+   AimA1_PunishVL: 1
+   AimA1_Buffer: 3
+
+   #Aim A2
+   AimA2_Status: &aWorking
+   AimA2_PunishVL: 4
+   AimA2_Buffer: 7
+
+   #Aim A3 
+   AimA3_Status: &aWorking 
+   AimA3_PunishVL: 1 
+
+   #Aim B1
+   AimB1_Status: &aWorking 
+   AimB1_PunishVL: 4
+   AimB1_Buffer: 12
+
+   #Aim B2
+   AimB2_Status: &6Testing 
+   AimB2_PunishVL: 12
+   AimB2_Buffer: 12
+
+   #Aim C1
+   AimC1_Status: &aWorking 
+   AimC1_PunishVL: 1
+   AimC1_Buffer: 3
+
+   #Aim D1
+   AimD1_Status: &aWorking 
+   AimD1_PunishVL: 2
+   AimD1_Buffer: 12
+
+   #Aim D2
+   AimD2_Status: &aWorking
+   AimD2_PunishVL: 8
+   AimD2_Buffer: 12
+
+#Inventory Checks
+
+   #Inventory A
+   InventoryA_Status: &aWorking
+   InventoryA_PunishVL: 5
+
+   #Inventory B
+   InventoryB_Status: &aWorking
+   InventoryB_PunishVL: 1
+
+   #Inventory C
+   InventoryC_Status: &aWorking
+   InventoryC_PunishVL: 1
+
+   #Inventory D
+   InventoryD_Status: &aWorking
+   InventoryD_PunishVL: 1
+
+   #Inventory E
+   InventoryE_Status: &cBuggy
+   InventoryE_PunishVL: 100
+
+#Reach Check 
+   
+   #Reach A
+   ReachA_Status: &aWorking
+   ReachA_PunishVL: 3
+   ReachA_Buffer: 2
+
+#Jesus Checks
+
+   #Jesus A 
+   JesusA_Status: &aWorking
+   JesusA_PunishVL: 5
+   
+   #Jesus B 
+   JesusB_Status: &aWorking
+   JesusB_PunishVL: 5
+
+   #Jesus C 
+   JesusC_Status: &aWorking
+   JesusC_PunishVL: 3
+   JesusC_Buffer: 1
+
+#Scaffold Checks
+
+   #Scaffold A 
+   ScaffoldA_Status: &aWorking 
+   ScaffoldA_PunishVL: 3
+   ScaffoldA_Buffer: 1
+
+   #Scaffold B
+   ScaffoldB_Status: &aWorking
+   ScaffoldB_PunishVL: 5
+   ScaffoldB_Buffer: 1
+
+   #Scaffold C 
+   ScaffoldC_Status: &aWorking
+   ScaffoldC_PunishVL: 3
+
+   #Scaffold D
+   ScaffoldD_Status: &aWorking
+   ScaffoldD_PunishVL: 8
+   ScaffoldD_Buffer: 4
+
+#NoWeb Checks
+
+   #NoWeb A
+   NoWebA_Status: &aWorking 
+   NoWebA_PunishVL: 5 
+   NoWebA_Buffer: 2
+
+   #NoWeb B
+   NoWebB_Status: &aWorking 
+   NoWebB_PunishVL: 8
+   NoWebB_Buffer: 11
+
+   #NoWeb C
+   NoWebC_Status: &aWorking 
+   NoWebC_PunishVL: 3
+   NoWebC_Buffer: 2
+
+#Timer Check 
+
+   #Timer A
+   TimerA_Status: &cBuggy
+   TimerA_Buffer: 2 
+   TimerA_PunishVL: 200
+
+#Motion Checks 
+
+   #Motion A1 
+   MotionA1_Status: &aWorking 
+   MotionA1_PunishVL: 3 
+
+   #Motion A2 
+   MotionA2_Status: &aWorking
+   MotionA2_PunishVL: 8
+
+   #Motion A3
+   MotionA3_Status: &aWorking 
+   MotionA3_PunishVL: 8
+
+   #Motion A4
+   MotionA4_Status: &aWorking
+   MotionA4_PunishVL: 8
+
+   #Motion A5
+   MotionA5_Status: &aWorking 
+   MotionA5_PunishVL: 3
+   MotionA5_Buffer: 3
+
+   #Motion A6 
+   MotionA6_Status: &aWorking
+   MotionA6_PunishVL: 5
+   MotionA6_Buffer: 6
+
+   #Motion A7 
+   MotionA7_Status: &aWorking 
+   MotionA7_PunishVL: 8
+   MotionA7_Buffer: 6
+
+   #Motion A8
+   MotionA8_Status: &aWorking 
+   MotionA8_PunishVL: 5
+   MotionA8_Buffer: 22
+
+   #Motion A9 
+   MotionA9_Status: &aWorking
+   MotionA9_PunishVL: 10
+   MotionA9_Buffer: 12
+
+   #Motion B1 
+   MotionB1_Status: &cBuggy
+   MotionB1_PunishVL: 3
+
+   #Motion B2
+   MotionB2_Status: &aWorking 
+   MotionB2_PunishVL: 3
+
+   #Motion B3
+   MotionB3_Status: &aWorking
+   MotionB3_PunishVL: 3
+
+   #Motion B4
+   MotionB4_Status: &aWorking 
+   MotionB4_PunishVL: 3
+
+   #Motion B5
+   MotionB5_Status: &6Testing
+   MotionB5_PunishVL: 8
+
+
+#Nofall Check 
+   
+   #Nofall A 
+   NofallA_Status: &aWorking 
+   NofallA_PunishVL: 3
+   NofallA_Buffer: 1
+
+#Interact Checks
+   
+   #Interact A
+   InteractA_Status: &cBuggy
+   InteractA_PunishVL: 20
+
+   #Interact B 
+   InteractB_Status: &aWorking 
+   InteractB_PunishVL: 1
+
+   #Interact C 
+   InteractC_Status: &aWorking 
+   InteractC_PunishVL: 1
+
+#Velocity Check 
+
+   #Velocity A 
+   VelocityA_Status: &cBuggy 
+   VelocityA_PunishVL: 12
+   VelocityA_Buffer: 16
+
+#Speed Checks
+
+   #Speed A1 
+   SpeedA1_Status: &aWorking
+   SpeedA1_PunishVL: 5
+
+   #Speed A2 
+   SpeedA2_Status: &aWorking 
+   SpeedA2_PunishVL: 5
+
+   #Speed B1 
+   SpeedB1_Status: &aWorking 
+   SpeedB1_PunishVL: 5 
+
+   #Speed B2 
+   SpeedB2_Status: &aWorking 
+   SpeedB2_PunishVL: 5
+
+   #Speed B3 
+   SpeedB3_Status: &aWorking
+   SpeedB3_PunishVL: 5
+
+   #Speed B4
+   SpeedB4_Status: &6Testing
+   SpeedB4_PunishVL: 5
+
+   #Speed C1 
+   SpeedC1_Status: &aWorking 
+   SpeedC1_PunishVL: 5
+   SpeedC1_Buffer: 10
+
+   #Speed E1 
+   SpeedE1_Status: &aWorking 
+   SpeedE1_PunishVL: 5
+   SpeedE1_Buffer: 12
+
+   #Speed E2 
+   SpeedE2_Status: &aWorking 
+   SpeedE2_PunishVL: 5
+   SpeedE2_Buffer: 12
+   
+#Your done with configuration, let's try it on your server now :D 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------------------------
+#
+#           A N T I   A U T O C L I C K E R
+#
+#--------------------------------------------------------
+
+on break:
+   remove 1 from {cpsL::%player%}
+
+on leftclick:
+   if {GUARD.CHECK.AUTOCLICKER.A} is true:
+      add 1 to {cpsL::%player%}
+      if {cpsL::%player%} >= {@MaxLeftCPS}:
+         if {@LagBack} is true:
+            cancel event
+         clearly(player, "AutoClicker", "A", "{@AutoClickerLeft_Status}", "{@AutoClickerLeft_PunishVL}", "1", "%{cpsL::%player%}%")
+
+on rightclick:
+   if {GUARD.CHECK.AUTOCLICKER.B} is true:
+      add 1 to {cpsR::%player%}
+      if {cpsR::%player%} >= {@MaxRightCPS}:
+         if {@LagBack} is true:
+            cancel event
+         clearly(player, "AutoClicker", "B", "{@AutoClickerRight_Status}", "{@AutoClickerRight_PunishVL}", "1", "%{cpsR::%player%}%")
+
+#--------------------------------------------------------
+#
+#           A N T I   F A S T C L I M B
+#
+#--------------------------------------------------------
+
+on any move:
+  {GUARD.CHECK.FASTCLIMB.A} is true
+  player's target block is ladder or vine:
+    block 2 under player is ladder or vine:
+      G_GY(player)
+      set {_y} to {GUARD::%player%::YP.LOC5} - player's y location
+      if {_y} < {@FastClimbA_yspeed}:
+        add 1 to {GUARD::%player%::FASTCLIMB.A}
+        {GUARD::%player%::FASTCLIMB.A} > {@FastClimbA_Buffer}
+        clearly(player, "FastClimb", "A", "{@FastClimbA_Status}", "{@FastClimbA_PunishVL}", "1", "%{_y}%")
+      else:
+        delete {GUARD::%player%::FASTCLIMB.A}
+#--------------------------------------------------------
+#
+#           A N T I   K I L L  A U R A 
+#
+#--------------------------------------------------------
+
+on damage:
+  {GUARD.CHECK.KILLAURA.A} is true
+  damage cause is not thorns
+  attacker is a player
+  projectile doesn't exist
+  if attacker's targeted entity is not set:
+    if distance between attacker and victim > {@AuraDistance}:
+      add 1 to {InvalidEntity::%attacker%}
+      if {InvalidEntity::%attacker%} > {@KillAuraA_Buffer}:
+        if {GUARD.CHECK.KILLAURA.A} is true:
+          if {@LagBack} is true:
+            cancel event
+          clearly(attacker, "KillAura", "A", "{@KillAuraA_Status}", "{@KillAuraA_PunishVL}", "1", "%{InvalidEntity::%attacker%}%") 
+  else:
+    delete {InvalidEntity::%attacker%}
+
+on damage:
+  {GUARD.CHECK.KILLAURA.B} is true
+  attacker is a player
+  damage cause is not thorns
+  attack is not victim
+  projectile doesn't exist
+  if distance between attacker and victim > distance between attacker and attacker's targeted block:
+    if attacker's targeted block is not a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+      attacker's targeted block is not block under victim
+      attacker's targeted entity is set
+      block at victim is not water
+      block above victim is not water
+      block above attacker is not water
+      block at attacker is not water
+      if distance between victim and attacker's targeted block is greater than {@AuraDistance}:
+        if {@LagBack} is true:
+          cancel event
+        add 1 to {GUARD::%attacker%::KILLAURA.B}
+        if {GUARD::%attacker%::KILLAURA.B} > {@KillAuraB_Buffer}:
+          clearly(attacker, "KillAura", "B", "{@KillAuraB_Status}", "{@KillAuraB_PunishVL}", "1", "%attacker's targeted block%")
+      else:
+        delete {GUARD::%attacker%::KILLAURA.B}
+
+on damage:
+  {GUARD.CHECK.KILLAURA.C} is true
+  attacker is a player
+  damage cause is not thorns
+  attacker's gamemode is survival or adventure
+  add 1 to {KillAuraC_Buffer::%attacker%}
+  if {KillAuraC_Buffer::%attacker%} > {@KillAuraC_Buffer}:
+    if {@LagBack} is true:
+      cancel event
+    clearly(attacker, "KillAura", "C", "{@KillAuraC_Status}", "{@KillAuraC_PunishVL}", "1", "%{KillAuraC_Buffer::%attacker%}%")
+
+on damage:
+  {GUARD.CHECK.KILLAURA.D} is true
+  damage cause is not thorns
+  attacker is a player
+  attacker is not riding
+  block under attacker is not water
+  block at attacker is not water
+  block north of attacker is not water
+  block east of attacker is not water
+  block south of attacker is not water
+  block west of attacker is not water
+  if block under attacker is not air:
+    if block 0.05 under attacker is not air:
+      if attacker is not on ground:
+        wait 1 tick
+        block under attacker is not air
+        block 0.05 under attacker is not air
+        attacker is not on ground
+        if block at attacker is a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+          stop
+        if block under attacker is a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand:
+          stop
+        add 1 to {GUARD::%attacker%::KILLAURA.D}
+        {GUARD::%attacker%::KILLAURA.D} > {@KillAuraD_Buffer}
+        clearly(attacker, "KillAura", "D", "{@KillAuraD_Status}", "{@KillAuraD_PunishVL}", "1", "NaN")
+    else:
+      delete {GUARD::%attacker%::KILLAURA.D}
+
+function GA_GetPitch(p: player):
+  set {previusdeltapitch::%{_p}%::3} to {deltapitch::%{_p}%::3}
+  set {deltapitch::%{_p}%::3} to {previusdeltapitch::%{_p}%::2}
+  set {previusdeltapitch::%{_p}%::2} to {deltapitch::%{_p}%::2}
+  set {deltapitch::%{_p}%::2} to {previusdeltapitch::%{_p}%::1}
+  set {previusdeltapitch::%{_p}%::1} to {deltapitch::%{_p}%::1}
+  set {deltapitch::%{_p}%::1} to {_p}'s pitch
+function getDP(p: player, n: number) :: number: 
+  set {_td} to difference between {previusdeltapitch::%{_p}%::%{_n}%} and {deltapitch::%{_p}%::%{_n}%}
+  return {_td}
+function GA_GetYaw(p: player):
+  set {previusdeltayaw::%{_p}%::3} to {deltayaw::%{_p}%::3}
+  set {deltayaw::%{_p}%::3} to {previusdeltayaw::%{_p}%::2}
+  set {previusdeltayaw::%{_p}%::2} to {deltayaw::%{_p}%::2}
+  set {deltayaw::%{_p}%::2} to {previusdeltayaw::%{_p}%::1}
+  set {previusdeltayaw::%{_p}%::1} to {deltayaw::%{_p}%::1}
+  set {deltayaw::%{_p}%::1} to {_p}'s yaw
+function getDY(p: player, n: number) :: number: 
+  set {_td} to difference between {previusdeltayaw::%{_p}%::%{_n}%} and {deltayaw::%{_p}%::%{_n}%}
+  return {_td}
+
+on damage:
+   GGL(attacker)
+   set {_yaw} to getDY(attacker, 3)
+   {_yaw} > 0
+   
+   damage cause is not projectile
+
+   distance between {GUARD::%attacker%::P.LOC2} and attacker's location > 0.1
+
+   set {_gcd} to mod(attacker's pitch, getDP(attacker, 1))
+   set {_gcd} to ({_gcd} * 80000)
+   set {_idk} to sqrt(attacker's pitch ^ getDP(attacker, 1))
+   if {GUARD::%attacker%::AIM.BLOG1} is not set:
+      set {GUARD::%attacker%::AIM.ALOG1} to {_gcd}
+      set {_nogcd} to true
+   set {_lmc} to floor(attacker's pitch)
+   set {_lmcf} to floor({_lmc})
+   set {_lmc} to ({_lmc} * {_lmcf})
+   if {GUARD::%attacker%::AIM.BLOG1} is not set:
+      set {GUARD::%attacker%::AIM.BLOG1} to {_lmc}
+      set {_no} to true
+   set {_test} to GA_GCD2(attacker)
+
+
+   if {_gcd} <= 0:
+      {GUARD.CHECK.AIM.A1} is true
+      add 1 to {GUARD::%attacker%::AIM.A1}
+      {GUARD::%attacker%::AIM.A1} > {@AimA1_Buffer}
+      clearly(attacker, "Aim", "A-1", "{@AimA1_Status}", "{@AimA1_PunishVL}", "1", "%{_gcd}%")
+   else:
+      delete {GUARD::%attacker%::AIM.A1}
+
+   if {_gcd} < 10000:
+      {GUARD.CHECK.AIM.A2} is true
+      add 1 to {GUARD::%attacker%::AIM.A2}
+      {GUARD::%attacker%::AIM.A2} > {@AimA2_Buffer}
+      clearly(attacker, "Aim", "A-2", "{@AimA2_Status}", "{@AimA2_PunishVL}", "1", "%{_gcd}%")
+   else:
+      delete {GUARD::%attacker%::AIM.A2}
+
+   if {_test} != 0.125:
+      {GUARD.CHECK.AIM.A3} is true 
+      clearly(attacker, "Aim", "A-3", "{@AimA3_Status}", "{@AimA3_PunishVL}", "1", "%{_test}%")
+
+   #LMC
+
+   if {_lmc} <= 16:
+      {GUARD.CHECK.AIM.B1} is true
+      add 1 to {GUARD::%attacker%::AIM.B1}
+      {GUARD::%attacker%::AIM.B1} > {@AimB1_Buffer}
+      clearly(attacker, "Aim", "B-1", "{@AimB1_Status}", "{@AimB1_PunishVL}", "1", "%{_lmc}%")
+   else:
+      delete {GUARD::%attacker%::AIM.B1}
+
+   if {_lmc} > 100:
+      {GUARD.CHECK.AIM.B2} is true
+      difference between {GUARD::%attacker%::LASTJUMP} and now > 0.8 second
+      if {_lmc} < 300:
+         add 1 to {GUARD::%attacker%::AIM.B2}
+      else if {_lmc} > 300:
+         add 2 to {GUARD::%attacker%::AIM.B2}
+      {GUARD::%attacker%::AIM.B2} > {@AimB2_Buffer}
+      clearly(attacker, "Aim", "B-2", "{@AimB2_Status}", "{@AimB2_PunishVL}", "1", "%{_lmc}%")
+   else:
+      delete {GUARD::%attacker%::AIM.B2}
+
+   #Prediction
+
+   if {_gcd} = {GUARD::%attacker%::AIM.ALOG1}:
+      {GUARD.CHECK.AIM.C1} is true
+      {_nogcd} is not set
+      delete {GUARD::%attacker%::AIM.ALOG1}
+      add 1 to {GUARD::%attacker%::AIM.C}
+      {GUARD::%attacker%::AIM.C} > {@AimC1_Buffer}
+      clearly(attacker, "Aim", "C-1", "{@AimC1_Status}", "{@AimC1_PunishVL}"," 1", "%{_gcd}%")
+   else:
+      delete {GUARD::%attacker%::AIM.ALOG1}
+      delete {GUARD::%attacker%::AIM.C}
+
+   #idk 
+
+   if {_idk} <= 0:
+      {GUARD.CHECK.AIM.D1} is true
+      add 1 to {GUARD::%attacker%::AIM.D1}
+      {GUARD::%attacker%::AIM.D1} > {@AimD1_Buffer}
+      clearly(attacker, "Aim", "D-1", "{@AimD1_Status}", "{@AimD1_PunishVL}", "1", "%{_idk}%")
+   else:
+      delete {GUARD::%attacker%::AIM.D1}
+
+   if {_idk} < 10:
+      {GUARD.CHECK.AIM.D2} is true
+      add 1 to {GUARD::%attacker%::AIM.D1}
+      {GUARD::%attacker%::AIM.D1} > {@AimD2_Buffer}
+      clearly(attacker, "Aim", "D-2", "{@AimD2_Status}", "{@AimD2_PunishVL}", "1", "%{_idk}%")
+   else:
+      delete {GUARD::%attacker%::AIM.D1}
+
+
+on damage:
+   damage cause is not thorns, magma, unknown, contact, suffocation, fall, potion, lava, burning, fire, poison, starvation or wither
+   "%damage cause%" != "unknown"
+   block under victim is not magma block
+   victim is not burning
+   victim doesn't have poison
+   victim doesn't have wither
+   projectile doesn't exist
+   distance between attacker and victim > 0.85
+   set {GUARD::%attacker%::LASTDAMAGE} to now
+
+function GA_GCD2(p: player) :: number:
+  set {_test} to ({_p}'s pitch / ({_p}'s pitch * 8) ^ 1)
+  return {_test} 
+
+
+#--------------------------------------------------------
+#
+#           A N T I   I N V M O V E
+#
+#--------------------------------------------------------
+
+on inventory click:
+  set {_waited} to difference between {ChestStealer.%player%} and now
+  if {_waited} is less than 1 ticks:
+    if {GUARD.CHECK.INVENTORY.E} is true: 
+      player's gamemode is not creative or spectator
+      clearly(player, "Inventory", "E", "{@InventoryE_Status}", "{@InventoryE_PunishVL}", "1", "%{_waited}%")
+      if {@LagBack} is true:
+        cancel event
+      set {ChestStealer.%player%} to now
+      set {ChestStealer.amount.%player%} to {ChestStealer.amount.%player%} + 1
+  else:
+    set {ChestStealer.%player%} to now
+  player's gamemode is not creative
+  set {invop.%player%} to now 
+  if player is sprinting:
+    {GUARD.CHECK.INVENTORY.A} is true
+    clearly(player, "Inventory", "A", "{@InventoryA_Status}", "{@InventoryA_PunishVL}", "1", "NaN")
+    stop
+  if player is sneaking:
+    {GUARD.CHECK.INVENTORY.B} is true
+    clearly(player, "Inventory", "B", "{@InventoryB_Status}", "{@InventoryB_PunishVL}", "1", "NaN")
+    stop
+on sprint toggle:
+  wait 1 tick
+  if {invop.%player%} is set:
+    difference between {invop.%player%} and now > 0.5 second
+    {GUARD.CHECK.INVENTORY.C} is true
+    clearly(player, "Inventory", "C", "{@InventoryC_Status}", "{@InventoryC_PunishVL}", "1", "NaN")
+on inventory close:
+  clear {invop.%player%}
+on any move:
+  {GUARD.CHECK.INVENTORY.D} is true
+  {invop.%player%} is set:
+    difference between {invop.%player%} and now > 1 second
+    block below player is not air or water
+    loop blocks in radius 3 around player:
+      loop-block is water or ice or packed ice or Blue ice:
+        stop
+    wait 1 tick
+    {invop.%player%} is set
+    clearly(player, "Inventory", "D", "{@InventoryD_Status}", "{@InventoryD_PunishVL}", "1", "NaN")
+on damage:
+  victim is a player
+  clear {invop.%victim%} 
+
+#--------------------------------------------------------
+#
+#           A N T I   R E A C H
+#
+#--------------------------------------------------------
+
+on damage:
+  attacker is a player
+  damage cause is not thorns
+  projectile doesn't exist
+  set {_y.a} to y coord of attacker
+  set {_y.v} to y coord of victim
+  set {_ax} to attacker's x location
+  set {_vx} to victim's x location
+  set {_az} to attacker's z location
+  set {_vz} to victim's z location
+  set {_al} to attacker's location
+  set {_vl} to victim's location
+  set {_yans} to distance between {_al} and {_vl}
+  set {_yanx} to difference between {_ax} and {_vx}
+  set {_yanz} to difference between {_az} and {_vz}
+  set {_yany} to difference between {_y.a} and {_y.v}
+  if {_yany} <= 0:
+    set {_anx} to ({_yanx} - 0.40009001)
+    set {_anz} to ({_yanz} - 0.40009001)
+    set {_ans} to ({_yans} - 0.53588401)
+  if {_anx} or {_anz} > 3:
+    if {_anx} > 3:
+      clearly(attacker, "Reach", "A", "{@ReachA_Status}", "{@ReachA_PunishVL}", "1", "%{_anx}%")
+    if {_anz} > 3:
+      clearly(attacker, "Reach", "A", "{@ReachA_Status}", "{@ReachA_PunishVL}", "1", "%{_anz}%")
+
+  if {_ans} > {@MaxReachC}:
+    #{GUARD.CHECK.REACH.A} is true
+    if {@LagBack} is true:
+      cancel event
+    if {_anx} or {_anz} < 4.4:
+      add 1 to {GUARD::%ATTACKER%::REACH.C}
+      if {GUARD::%ATTACKER%::REACH.C} > {@ReachC_Buffer}:
+        clearly(attacker, "Reach", "C", "{@ReachC_Status}", "{@ReachC_PunishVL}", "1", "%{_ans}%")
+    else:
+      clearly(attacker, "Reach", "C", "{@ReachC_Status}", "{@ReachC_PunishVL}", "1", "%{_ans}%")
+  else:
+    delete {GUARD::%ATTACKER%::REACH.C}
+
+  if {_anx} or {_anz} < {@MaxReachB}:
+    {GUARD.CHECK.REACH.B} is true
+    if {@LagBack} is true:
+      cancel event
+    if {_anx} or {_anz} < 4:
+      add 1 to {GUARD::%ATTACKER%::REACH.B}
+      if {GUARD::%ATTACKER%::REACH.B} > {@ReachB_Buffer}:
+        clearly(attacker, "Reach", "B", "{@ReachB_Status}", "{@ReachB_PunishVL}", "1", "%{_anx}% &8| &7%{_anz}%")
+    else:
+      clearly(attacker, "Reach", "B", "{@ReachB_Status}", "{@ReachB_PunishVL}", "1", "%{_anx}% &8| &7%{_anz}%")
+  else:
+    delete {GUARD::%ATTACKER%::REACH.B}
+
+#--------------------------------------------------------
+#
+#               A N T I   J E S U S
+#
+#--------------------------------------------------------
+
+on any move:
+  player's gamemode is not creative or spectator
+  player is not flying
+  block below player is water or lava
+  block south below player is water or lava
+  block north below player is water or lava
+  block west below player is water or lava
+  block east below player is water or lava
+  block north east below player is water or lava
+  block north west below player is water or lava
+  block south east below player is water or lava
+  block south west below player is water or lava
+  block at player is air
+  loop all blocks in radius 3 around player:
+    loop-block is lily pad:
+      stop
+  if player is on ground:
+    if {GUARD.CHECK.JESUS.B} is true:
+      clearly(player, "Jesus", "B", "{@JesusB_Status}", "{@JesusB_PunishVL}", "1", "NaN")
+  {GUARD.CHECK.JESUS.A} is true
+  add 1 to {GUARD::JESUSCOUNT::%player%}
+  if {GUARD::JESUSCOUNT::%player%} > 25:            
+    clearly(player, "Jesus", "A", "{@JesusA_Status}", "{@JesusA_PunishVL}", "1", "NaN")
+
+on any move:
+  {GUARD.CHECK.JESUS.C} is true
+  player is not swimming
+  player is not flying
+  if {waterpos::%player%} = y location of player:
+    "%y location of player%" contains "."
+    "%y location of player%" does not contain ".06"
+    player's gamemode is survival
+    loop all blocks in radius 2 around player:
+      loop-block is lily pad or carpet or slab or snow layer or 182 or stairs or 85 or 113 or 188 or 189 or 190 or 191 or 192 or cobblestone wall or fence
+      clear {vlwater::%player%}
+      stop
+    block below player is water or lava
+    block south below player is water or lava
+    block north below player is water or lava
+    block west below player is water or lava
+    block east below player is water or lava
+    add 1 to {vlwater::%player%}
+    if {vlwater::%player%} > {@JesusC_Buffer}:
+      
+      clearly(player, "Jesus", "C", "{@JesusC_Status}", "{@JesusC_PunishVL}", "1", "NaN")
+      
+    stop
+  set {waterpos::%player%} to y location of player
+  clear {vlwater::%player%}
+
+#--------------------------------------------------------
+#
+#     A N T I   S C A F F O L D  / F A S T P L A C E
+#
+#--------------------------------------------------------
+
+on block place:
+  set {GUARD::%player%::BLOCKPLACE.TIME} to now
+
+on block place:
+  block under event-block is air or void air
+  player's gamemode is not creative or spectator
+  if y coordinate of event-block < y coordinate of player:
+    set {_Pitch} to getDP(player, 1)
+    if {_Pitch} > 2:
+      {GUARD.CHECK.SCAFFOLD.D} is true
+      add 1 to {GUARD::%player%::SCAFFOLD.D}
+      {GUARD::%player%::SCAFFOLD.D} > {@ScaffoldD_Buffer}
+      clearly(player, "Scaffold", "D", "{@ScaffoldD_Status}", "{@ScaffoldD_PunishVL}", "1", "%{_Pitch}%")
+    else:
+      delete {GUARD::%player%::SCAFFOLD.D}
+    player's pitch is between 90 and 88.75:
+      {GUARD.CHECK.SCAFFOLD.A} is true
+      block above event-block is air
+      add 1 to {GUARD::%player%::SCAFFOLD.A}
+      {GUARD::%player%::SCAFFOLD.A} > {@ScaffoldA_Buffer}
+      clearly(player, "Scaffold", "A", "{@ScaffoldA_Status}", "{@ScaffoldA_PunishVL}", "1", "%player's pitch%")
+    else:
+      delete {GUARD::%player%::SCAFFOLD.A}
+    if event-block is not player's targeted block:
+      {GUARD.CHECK.SCAFFOLD.B} is true
+      add 1 to {GUARD::%player%::SCAFFOLD.B}
+      {GUARD::%player%::SCAFFOLD.B} > {@ScaffoldB_Buffer}
+      clearly(player, "Scaffold", "B", "{@ScaffoldB_Status}", "{@ScaffoldB_PunishVL}", "1", "NaN")
+    else:
+      delete {GUARD::%player%::SCAFFOLD.B}
+    if player is sprinting:
+      {GUARD.CHECK.SCAFFOLD.C} is true
+      if player's pitch is between 90 and 80:
+        clearly(player, "Scaffold", "C", "{@ScaffoldC_Status}", "{@ScaffoldC_PunishVL}", "1", "%player's pitch%")
+#--------------------------------------------------------
+#
+#               A N T I    T I M E R + N O W E B
+#
+#--------------------------------------------------------
+
+on any move:
+  set {GUARD::%player%::P.YPRE} to {GUARD::%player%::P.YPOST}
+  set {GUARD::%player%::P.YPOST} to y location of player
+  set {_deltay} to difference between {GUARD::%player%::P.YPRE} and {GUARD::%player%::P.YPOST}
+  block at player is cobweb:
+    GGL(player)
+    set {_NWAS} to distance between {GUARD::%player%::P.LOC2} and player's location
+    if {_NWAS} > 0.11:
+      if {GUARD.CHECK.NOWEB.A} is true:
+        block at player is cobweb
+        {time::%player%} is not set
+        add 1 to {GUARD::%player%::NOWEB.A}
+        {GUARD::%player%::NOWEB.A} > {@NoWebA_Buffer}
+        
+        clearly(player, "NoWeb", "A", "{@NoWebA_Status}", "{@NoWebA_PunishVL}", "3", "%{NWAS}%")
+        
+    else:
+      delete {GUARD::%player%::NOWEB.A}
+    if {_deltay} > 0.06273:
+      if {GUARD.CHECK.NOWEB.C} is true:
+        block at player is cobweb
+        {time::%player%} is not set 
+        add 1 to {GUARD::%player%::NOWEB.C}
+        {GUARD::%player%::NOWEB.C} > {@NoWebC_Buffer}
+        
+        clearly(player, "NoWeb", "C", "{@NoWebC_Status}", "{@NoWebC_PunishVL}", "3", "%{_deltay}%")
+         
+    else:
+      delete {GUARD::%player%::NOWEB.C}
+  if block under player is cobweb or air:
+    {GUARD.CHECK.NOWEB.B} is true:
+      block above player is air or void air
+      set {_block} to player's location
+      if {_deltay} >= 0:
+        remove 1 from y location of {_block}
+        block at {_block} is cobweb:
+          add 1 to {GUARD::NOWEB.B::%player%}
+          {GUARD::NOWEB.B::%player%} > {@NoWebB_Buffer}:
+            clearly(player, "NoWeb", "B", "{@NoWebB_Status}", "{@NoWebB_PunishVL}", "3", "%{_deltay}%")
+      else:
+        delete {GUARD::NOWEB.B::%player%}
+
+on any move:
+  
+  $ thread
+
+  {GUARD.CHECK.TIMER.A} is true
+  add 1 to {GUARD::MOVEPACKET::%player%}
+  if {GUARD::MOVEPACKET::%player%} > 20:
+    add 1 to {GUARD::MOREPACKETS::%player%}
+    {GUARD::MOREPACKETS::%player%} > {@TimerA_Buffer}:
+      clearly(player, "Timer", "A", "{@TimerA_Status}", "{@TimerA_PunishVL}", "5", "%{GUARD::MOVEPACKET::%player%}%")
+  {GUARD::MOVEPACKET::%player%} > 100
+  kick player due to "You are sending too many packets!"
+        
+
+#--------------------------------------------------------
+#
+#               A N T I   F L I G H T
+#
+#--------------------------------------------------------
+
+on any move:
+
+  $ thread
+
+  player's chestplate is not an elytra
+  player's fly mode is false
+  difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second
+  set {_slime} to GA_Slime(player)
+  {_slime} is not set
+  difference between {GUARD::%player%::DAMAGE} and now > 0.55 second
+
+  set {airthree.%player%} to {airtwo.%player%}
+  set {airtwo.%player%} to {airone.%player%}
+  set {airone.%player%} to inair(player)
+  
+  set {air6.%player%} to {air5.%player%}
+  set {air5.%player%} to {air4.%player%}
+  set {air4.%player%} to inair2(player)
+
+  set {yloc.%player%} to player's y location
+  set {predy.%player%} to ({motionYs.%player%} - 0.08) * 0.9800000190734863
+  set {motionYs.%player%} to {yloc.%player%} - {yloc2.%player%}
+  if {airone.%player%} is true:
+    if {airtwo.%player%} is true:
+      if {airthree.%player%} is true: 
+        {air4.%player%} is true 
+        {air5.%player%} is true
+        {air6.%player%} is true
+        if {yloc.%player%} == 0: 
+          if {flypredticktt.%player%} > 1:
+            {GUARD.CHECK.MOTION.A1} is true
+            clearly(player, "Motion", "A-1", "{@MotionA1_Status}", "{@MotionA1_PunishVL}", "1", "%{yloc.%player%}%")
+          set {flypredticktt.%player%} to {flypredticktt.%player%} + 1
+        if {motionYs.%player%} < 0.42:
+          if {motionYs.%player%} > 0:
+            if {flypredtickt.%player%} > 9:
+              {GUARD.CHECK.MOTION.A2} is true
+              clearly(player, "Motion", "A-2", "{@MotionA2_Status}", "{@MotionA2_PunishVL}", "1", "%{motionYs.%player%}%")
+            set {flypredtickt.%player%} to {flypredtickt.%player%} + 1
+        if {motionYs.%player%} > {predy.%player%}:
+          if {flypredticks.%player%} > 9:
+            {GUARD.CHECK.MOTION.A3} is true
+            clearly(player, "Motion", "A-3", "{@MotionA3_Status}", "{@MotionA3_PunishVL}", "1", "%{motionYs.%player%}%")
+          set {flypredticks.%player%} to {flypredticks.%player%} + 1
+        if abs({motionYs.%player%} - {predy.%player%}) > 0.001:
+          if {flypredtick.%player%} > 12:
+            {GUARD.CHECK.MOTION.A4} is true
+            clearly(player, "Motion", "A-4", "{@MotionA4_Status}", "{@MotionA4_PunishVL}", "1", "%{motionYs.%player%}%")
+          set {flypredtick.%player%} to {flypredtick.%player%} + 1
+      else:
+        delete {flypredtick.%player%}
+        delete {flypredticks.%player%}
+        delete {flypredtickt.%player%}
+        delete {flypredticktt.%player%}
+    else:
+      delete {flypredtick.%player%}
+      delete {flypredticks.%player%}
+      delete {flypredtickt.%player%}
+      delete {flypredticktt.%player%}
+  else:
+    delete {flypredtick.%player%}
+    delete {flypredticks.%player%}
+    delete {flypredtickt.%player%}
+    delete {flypredticktt.%player%}
+  set {yloc2.%player%} to player's y location 
+
+on any move:
+  
+  $ thread
+
+  {GUARD.CHECK.MOTION.A9} is true
+  player's chestplate is not an elytra
+  player's fly mode is false
+  set {_slime} to GA_Slime(player)
+  {_slime} is not set
+  difference between {GUARD::%player%::DAMAGE} and now > 0.55 second
+
+  set {spiderthree.%player%} to {spidertwo.%player%}
+  set {spidertwo.%player%} to {spiderone.%player%}
+  set {spiderone.%player%} to spider(player)
+
+  set {spidery.%player%} to player's y location
+  set {spider2y.%player%} to ({spiderYs.%player%} - 0.08) * 0.9800000190734863
+  set {spiderYs.%player%} to {spidery.%player%} - {spidery2.%player%}
+  if {spiderone.%player%} is true:
+    if {spidertwo.%player%} is true:
+      if {spiderthree.%player%} is true: 
+        if {spiderYs.%player%} > 0:
+          difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second
+          difference between {GUARD::%player%::BLOCKPLACE} and now > 1.25 second
+          send "%player%: %{spiderYs.%player%}%" to ops
+          if {flyspider2tickk.%player%} > {@MotionA9_Buffer}:
+            clearly(player, "Motion", "A-9", "{@MotionA9_Status}", "{@MotionA9_PunishVL}", "1", "%{spiderYs.%player%}%")
+          set {flyspider2tickk.%player%} to {flyspider2tickk.%player%} + 1
+      else:
+        set {flyspider2tickk.%player%} to 0
+    else:
+      set {flyspider2tickk.%player%} to 0
+  else:
+    set {flyspider2tickk.%player%} to 0
+  set {spidery2.%player%} to player's y location 
+
+on any move:
+  {GUARD.CHECK.MOTION.A5} is true
+  player's chestplate is not an elytra
+  player is not flying
+  difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second
+  set {_diffy} to difference between y location of player and {yloc.%player%}
+  set {yloc.%player%} to y location of player
+  if {_diffy} != 0:
+    if "%{_diffy}%" = "%{lasposy.%player%}%":
+      if "%{_diffy}%" != "0.08":
+        player doesn't have levitation or slow falling
+        difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+        add 1 to {GUARD::%player%::MOTION.A5}
+        {GUARD::%player%::MOTION.A5} > {@MotionA5_Buffer}
+        difference between {GUARD::%player%::BLOCKSTOP2} and now > 0.8 second
+        difference between {GUARD::%player%::BLOCKPLACE} and now > 1.25 second
+        
+        clearly(player, "Motion", "A-5", "{@MotionA5_Status}", "{@MotionA5_PunishVL}", "1", "%{_diffy}%")
+        
+    else:
+      set {lasposy.%player%} to {_diffy}
+      if {GUARD::%player%::MOTION.A5} >= 1:
+        remove 1 from {GUARD::%player%::MOTION.A5}
+
+on any move:
+  {GUARD.CHECK.MOTION.A6} is true
+  player's chestplate is not an elytra
+  player is not flying
+  difference between {GUARD::%player%::BLOCKSTOP} and now > 1.25 second
+  set {_slime} to GA_Slime(player)
+  {_slime} is not set
+  G_GY(player)
+  set {_yD} to y coord of {Position::%player%} - y coord of {LastPosition::%player%}
+  if {_yD} > 0:
+    {GUARD.CHECK.MOTION.A6} is true
+    add 1 to {GUARD::%player%::MOTION.A6}
+    send "%{_yD}% | %{GUARD::%player%::MOTION.A6}%" to player if player is op
+    {GUARD::%player%::MOTION.A6} > {@MotionA6_Buffer}
+    {GUARD::%player%::TELEPORT} is not set
+    difference between {GUARD::%player%::DAMAGE} and now > 0.55 second
+    difference between {GUARD::%player%::HIGHJUMPSTOP} and now > 0.6 second
+    difference between {GUARD::%player%::BLOCKSTOP2} and now > 0.8 second
+        
+    clearly(player, "Motion", "A-6", "{@MotionA6_Status}", "{@MotionA6_PunishVL}", "3", "%{_yD}%")
+  else:
+    delete {GUARD::%player%::MOTION.A6}
+
+on damage:
+   victim is a player:
+      set {GUARD::%victim%::HIGHJUMPSTOP} to now
+
+on any move:
+  {GUARD.CHECK.MOTION.A7} is true
+  player is not riding
+  player's chestplate is not an elytra
+  player is not flying
+  difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second
+  G_GY(player)
+  if difference between {GUARD::%player%::YP.LOC5} and player's y location = 0:
+    player is not on ground:
+      block at player is air or void air:
+        add 1 to {GUARD::%player%::MOTION.A7}
+        {GUARD::%player%::MOTION.A7} > {@MotionA7_Buffer}
+        {GUARD::%player%::TELEPORT} is not set
+        
+        clearly(player, "Motion", "A-7", "{@MotionA7_Status}", "{@MotionA7_PunishVL}", "3", "0")
+        
+  else:
+    delete {GUARD::%player%::MOTION.A7}
+
+on any move:
+  {GUARD.CHECK.MOTION.A8} is true
+  player's chestplate is not an elytra
+  player's fly mode is false
+
+  set {LastPosition::%player%} to {Position::%player%}
+  set {Position::%player%} to player's location 
+  set {_yD} to y coord of {Position::%player%} - y coord of {LastPosition::%player%}
+  set {_y20} to ({_yD} * 20) 
+
+  if {_y20} > -20:
+    {_y20} < 0
+    set {_air} to inair(player)
+    {_air} is true
+    set {_air} to inair2(player)
+    {_air} is true
+    player doesn't have levitation or slow falling
+    difference between {GUARD::%player%::DAMAGE} and now > 0.55 second
+    add 1 to {GUARD::MOTION.A8::%player%}
+    {GUARD::MOTION.A8::%player%} > {@MotionA8_Buffer}
+     
+    clearly(player, "Motion", "A-8", "{@MotionA8_Status}", "{@MotionA8_PunishVL}", "1", "%{_y20}%")
+
+#--------------------------------------------------------
+#
+#             A N T I  N O F A L L
+#
+#--------------------------------------------------------
+
+on any move:
+  {GUARD.CHECK.NOFALL.A} is true
+  {time::%player%} is not set
+  player is on ground:
+    block at player is air or void air
+    block under player is air or void air
+    set {_nofallcount} to 0
+    loop all blocks in radius 2 around player:
+      if loop-block is not air:
+        add 1 to {_nofallcount}
+    if {_nofallcount} < 1:
+    
+      add 1 to {GUARD::%player%::NOFALL.A}
+      {GUARD::%player%::NOFALL.A} > {@NofallA_Buffer}
+      clearly(player, "NoFall", "A", "{@NofallA_Status}", "{@NofallA_PunishVL}", "1", "NaN")
+
+      if {@LagBack} is true:
+        damage player by 2 heart
+    if {_nofallcount} > 0:
+      stop
+
+  else:
+    delete {GUARD::%player%::NOFALL.A}
+    
+
+#--------------------------------------------------------
+#
+#             A N T I  S T E P
+#
+#--------------------------------------------------------
+
+on any move:
+  
+   $ thread
+
+   player's fly mode is false
+   set {LastJump::%player%} to {Jump::%player%}
+   set {Jump::%player%} to player's location 
+   difference between {GUARD::%player%::BLOCKSTOP} and now > 1.25 second
+   set {_temp} to GA_Slime(player)
+   {_temp} is not set
+   set {_y} to y coord of {Jump::%player%} - y coord of {LastJump::%player%}
+   if {_y} > 0.5:
+      difference between {GUARD::%player%::DAMAGE} and now > 1.5 second
+      {GUARD::%player%::TELEPORT} is not set 
+      #difference between {GUARD::%player%::BLOCKPLACE.TIME} and now > 1.5 second
+      #difference between {GUARD::%player%::SLIME} and now > 3 second
+      {GUARD::%player%::TELEPORT} is not set
+      {GUARD::%player%::WORLDCHANGE} is not set
+      {GUARD.CHECK.JUMP.A} is true
+      clearly(player, "Motion", "B-1", "{@MotionB1_Status}", "{@MotionB1_PunishVL}", "1", "%{_y}%")
+
+on any move:
+    player's chestplate is not an elytra:
+        player is not flying:
+            difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second
+            set {_slime} to GA_Slime(player)
+            {_slime} is not set
+            set {ylocstep.%player%} to player's y location
+            set {ymotionstep.%player%} to {ylocstep.%player%} - {ylocstep2.%player%}
+            if {ymotionstep.%player%} > 0:
+                set {ticksstep.%player%} to {ticksstep.%player%} + 1
+                if {ticksstep.%player%} = 1:
+                    if {ymotionstep.%player%} > 0.399 and {ymotionstep.%player%} < 0.42:
+                        if {ymotionstep.%player%} != 0.41999998688697815:
+                            {GUARD.CHECK.MOTION.B2} is true 
+                            clearly(player, "Motion", "B-2", "{@MotionB2_Status}", "{@MotionB2_PunishVL}", "1", "%{ymotionstep.%player%}%")
+            if {ymotionstep.%player%} <= 0:
+                if {ticksstep.%player%} = 2:
+                    {GUARD.CHECK.MOTION.B3} is true 
+                    difference between {GUARD::%player%::HIGHJUMPSTOP} and now > 0.8 second
+                    add 1 to {GUARD::MOTION.B3::%player%}
+                    {GUARD::MOTION.B3::%player%} > 1
+                    clearly(player, "Motion", "B-3", "{@MotionB3_Status}", "{@MotionB3_PunishVL}", "1", "%{ymotionstep.%player%}%")
+                    set {ticksstep.%player%} to 0
+                if {ticksstep.%player%} = 3:
+                    {GUARD.CHECK.MOTION.B4} is true 
+                    add 1 to {GUARD::MOTION.B4::%player%}
+                    {GUARD::MOTION.B4::%player%} > 1
+                    clearly(player, "Motion", "B-4", "{@MotionB4_Status}", "{@MotionB4_PunishVL}", "1", "%{ymotionstep.%player%}%")
+                    set {ticksstep.%player%} to 0
+                set {ticksstep.%player%} to 0
+            set {ylocstep2.%player%} to player's y location
+
+#--------------------------------------------------------
+#
+#         A N T I  H I G H J U M P + L O W J U M P 
+#
+#--------------------------------------------------------
+
+
+on any move:
+    {GUARD.CHECK.MOTION.B5} is true
+    set {ylochop.%player%} to player's y location
+    player's chestplate is not an elytra:
+        player is not flying:
+            set {_slime} to GA_Slime(player)
+            {_slime} is not set:
+                difference between {GUARD::%player%::BLOCKSTOP} and now > 1.5 second:
+                    difference between {GUARD::%player%::DAMAGE} and now > 0.8 second
+                    difference between {GUARD::%player%::GBBLOCK} and now > 1.25 second
+                    set {ymotionhop.%player%} to {ylochop.%player%} - {ylochop2.%player%}
+                    if {ymotionhop.%player%} > 0:
+                        set {tickshop.%player%} to {tickshop.%player%} + 1
+                        if {tickshop.%player%} = 1:
+                            if {ymotionhop.%player%} > 0:
+                                if {ymotionhop.%player%} < 0.42:
+                                    if {ymotionhop.%player%} != 0.41999998688697815:
+                                        clearly(player, "Motion", "B-5", "{@MotionB5_Status}", "{@MotionB5_PunishVL}", "1", "%{ymotionhop.%player%}%")
+                    if {ymotionhop.%player%} <= 0:
+                        set {tickshop.%player%} to 0
+    set {ylochop2.%player%} to player's y location
+
+#--------------------------------------------------------
+#
+#            A N T I    I N T E R A C T 
+#
+#--------------------------------------------------------
+
+on break:
+  {GUARD.CHECK.INTERACT.A} is true
+  if "%event-block%" is not "%targeted block%":
+    player's targeted block is not a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+    player's gamemode is not creative or spectator
+    clearly(player, "Interact", "A", "{@InteractA_Status}", "{@InteractA_PunishVL}", "1", "%player's targeted block%")
+    if {@LagBack} is true:
+      cancel event
+  else:
+    stop
+
+on left click:
+  {GUARD.CHECK.INTERACT.B} is true
+  event-block is cake or any bed or dragon egg
+  if clicked block is not targeted block:
+    player's gamemode is not creative or spectator
+    player's targeted block is not a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+    clearly(player, "Interact", "B", "{@InteractB_Status}", "{@InteractB_PunishVL}", "1", "%player's targeted block%")
+    if {@LagBack} is true:
+      cancel event
+
+on right click:
+  {GUARD.CHECK.INTERACT.C} is true
+  event-block is cake or any bed or dragon egg
+  if clicked block is not targeted block:
+    player's gamemode is not creative or spectator
+    player's targeted block is not a flower, skeleton skull, player skull, zombie skull, creeper skull, wither skeleton skull, string, tripwire string, tripwire hook, button, banner, sign, flower pot, lever, door, trapdoor, iron trapdoor, pressure plate, slab, short grass, carpet, iron bar, fence, fence gate, glass pane, stained glass pane, stairs, slabs, player head, vines, ladder, end portal, redstone torch, torch, wall torch, chest, ender chest, trapped chest or brewing stand
+    clearly(player, "Interact", "C", "{@InteractC_Status}", "{@InteractC_PunishVL}", "1", "%player's targeted block%")
+    if {@LagBack} is true:
+      cancel event
+
+#--------------------------------------------------------
+#
+#            A N T I  N O S L O W
+#
+#--------------------------------------------------------
+
+#--------------------------------------------------------
+#
+#            A N T I  K B
+#
+#--------------------------------------------------------
+
+on damage:
+  damage cause is not thorns, magma, unknown, contact, suffocation, fall, potion, lava, burning, fire, poison, starvation or wither
+  "%damage cause%" != "unknown"
+  block under victim is not magma block
+  victim is not burning
+  victim doesn't have poison
+  victim doesn't have wither
+  set {GUARD::%victim%::VELOCITY.DAMAGE} to now
+
+on any move:
+  {GUARD.CHECK.VELOCITY.A} is true
+  "%player's helmet%" does not contain "Netherite"
+  "%player's chestplate%" does not contain "Netherite"
+  "%player's leggings%" does not contain "Netherite"
+  "%player's boots%" does not contain "Netherite"
+  block at player is air or void air, grass or flower
+  block above player is air or void air, grass or flower
+  block north of player is air or void air, grass or flower
+  block east of player is air or void air, grass or flower
+  block west of player is air or void air, grass or flower
+  block south of player is air or void air, grass or flower
+  block north east of player is air or void air, grass or flower
+  block south east of player is air or void air, grass or flower
+  block north west of player is air or void air, grass or flower
+  block south west of player is air or void air, grass or flower
+  block north of block above player is air or void air, grass or flower
+  block east of block above player is air or void air, grass or flower
+  block west of block above player is air or void air, grass or flower
+  block south of block above player is air or void air, grass or flower
+  block north east of block above player is air or void air, grass or flower
+  block south east of block above player is air or void air, grass or flower
+  block north west of block above player is air or void air, grass or flower
+  block south west of block above player is air or void air, grass or flower
+  block at player is air or void air, grass or flower
+  block above player is air or void air, grass or flower
+  difference between {GUARD::%player%::VELOCITY.DAMAGE} and now < 1 second
+  G_GY(player)
+  set {_y} to ({GUARD::%player%::YP.LOC5} - player's y location)
+  if {_y} < 0.2:
+    {_y} > -0.01 
+    add 1 to {GUARD::%player%::VELOCITY.A}
+    {GUARD::%player%::VELOCITY.A} > {@VelocityA_Buffer}
+    clearly(player, "Velocity", "A", "{@VelocityA_Status}", "{@VelocityA_PunishVL}", "1", "%{_y}%")
+  else:
+    delete {GUARD::%player%::VELOCITY.A}
+
+#--------------------------------------------------------
+#
+#            A N T I  S P E E D
+#
+#--------------------------------------------------------
+
+function roundTo(n: number, r: number) :: number:
+  return round({_n} * 10^ {_r}) / 10^ {_r}
+
+function GA_SpeedHandler(p: player):
+  if {_p} has speed:
+    set {GUARD::%{_p}%::SPEEDSTOP} to now
+
+on any move:
+  player's fly mode is false
+  player is not riding 
+  GGX(player)
+  GGZ(player)
+  set {_x} to difference between {GUARD::%player%::X.LOC2} and player's x location
+  set {_z} to difference between {GUARD::%player%::Z.LOC2} and player's z location
+  set {_test} to sqrt({_x} ^ 2 + {_z} ^ 2)
+  set {_test} to roundTo({_test}, 7) * 10000000
+  if {_test} > 1000000:
+    {_test} != 1500000
+    {_test} / 100 = round({_test} / 100)
+    add 1 to {GUARD::%player%::SPEED.C}
+    {GUARD::%player%::SPEED.C} > {@SpeedC1_Buffer}
+    clearly(player, "Speed", "C-1", "{@SpeedC1_Status}", "{@SpeedC1_PunishVL}", "1", "%{_test}%")
+  else:
+    delete {GUARD::%player%::SPEED.C}
+  if {_x} > {_z}:
+    set {_speed} to {_x}
+  if {_z} > {_x}:
+    set {_speed} to {_z}
+  if {_x} = {_z}:
+    set {_speed} to {_x}
+  player's walk speed <= 0.201
+  block at player is water:
+    if {_speed} > 0.153:
+      player is not swimming
+      player doesn't have dolphins grace
+      if player's boots are not enchanted with depth strider: 
+        {GUARD.CHECK.SPEED.E1} is true
+        difference between {GUARD::%player%::DAMAGE} and now > 1 second
+        difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+        add 1 to {GUARD::%player%::SPEED.E1}
+        {GUARD::%player%::SPEED.E1} > {@SpeedE1_Buffer}
+        clearly(player, "Speed", "E-1", "{@SpeedE1_Status}", "{@SpeedE1_PunishVL}", "1", "%{_speed}%")
+      else:
+        if {_speed} > 0.285006:
+          {GUARD.CHECK.SPEED.E2} is true
+          difference between {GUARD::%player%::DAMAGE} and now > 1 second
+          add 1 to {GUARD::%player%::SPEED.E2}
+          difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+          {GUARD::%player%::SPEED.E2} > {@SpeedE2_Buffer}
+          clearly(player, "Speed", "E-2", "{@SpeedE2_Status}", "{@SpeedE2_PunishVL}", "1", "%{_speed}%")
+        else:
+          delete {GUARD::%player%::SPEED.E2}
+    else:
+      delete {GUARD::%player%::SPEED.E1}
+  block 2.5 above north player is air or void air
+  block 2.5 above south player is air or void air
+  block 2.5 above west player is air or void air
+  block 2.5 above east player is air or void air
+  block 2.66 above player is air or void air
+  block under player is not ice or packed ice or Blue ice or slab or stairs or slime block:
+    block 2 under player is not ice or packed ice or Blue ice or slab or stairs or slime block:
+      difference between {GUARD::%player%::BLOCKSTOP} and now > 1.25 second
+      block at player is not water:
+
+        set {_speed20} to ({_speed} * 20)
+
+        if {_speed} > 0.62:
+          {GUARD.CHECK.SPEED.B4} is true
+          difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+          difference between {GUARD::%player%::DAMAGE} and now > 1.25 second
+          difference between {GUARD::%player%::RESPAWN} and now > 1.25 second
+          cancel event
+          add 1 to {GUARD::%player%::SPEED.B4} if {_speed} < 8
+          add 2 to {GUARD::%player%::SPEED.B4} if {_speed} > 8
+          {GUARD::%player%::SPEED.B4} > 1
+          clearly(player, "Speed", "B-4", "{@SpeedB4_Status}", "{@SpeedB4_PunishVL}", "1", "%{_speed}%")
+        else:
+          delete {GUARD::%player%::SPEED.B4}
+
+        if {_speed20} > 6.82:
+          player is not riding 
+          {GUARD.CHECK.SPEED.B1} is true
+          difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+          difference between {GUARD::%player%::DAMAGE} and now > 1 second
+          {GUARD::%player%::WORLDCHANGE} is not set
+          {GUARD::%player%::TELEPORT} is not set
+          if {_speed20} < 15:
+            add 1 to {GUARD::%player%::SPEED.B11}
+            {GUARD::%player%::SPEED.B11} > 4
+            add 1 to {GUARD::SPEED.CB2::%player%}
+            {GUARD::SPEED.CB2::%player%} > 2
+            clearly(player, "Speed", "B-1", "{@SpeedB1_Status}", "{@SpeedB1_PunishVL}", "1", "%{_speed20}%")
+          else:  
+            if {_speed20} < 30:
+              add 1 to {GUARD::SPEED.CB2::%player%}
+              {GUARD::SPEED.CB2::%player%} > 2
+              clearly(player, "Speed", "B-1", "{@SpeedB1_Status}", "{@SpeedB1_PunishVL}", "1", "%{_speed20}%")
+        else:
+          delete {GUARD::%player%::SPEED.B11}
+    
+        if {_speed} > 0.353:
+          player is not riding 
+          {GUARD.CHECK.SPEED.B2} is true
+          difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+          difference between {GUARD::%player%::DAMAGE} and now > 1 second
+          {GUARD::%player%::WORLDCHANGE} is not set
+          {GUARD::%player%::TELEPORT} is not set
+          if {_speed} < 0.85:
+            add 1 to {GUARD::%player%::SPEED.B12}
+            {GUARD::%player%::SPEED.B12} > 2
+            add 1 to {GUARD::SPEED.CB1::%player%}
+            {GUARD::SPEED.CB1::%player%} > 2
+            clearly(player, "Speed", "B-2", "{@SpeedB2_Status}", "{@SpeedB2_PunishVL}", "1", "%{_speed}%")
+          else:
+            add 1 to {GUARD::SPEED.CB1::%player%}
+            {GUARD::SPEED.CB1::%player%} > 2
+            clearly(player, "Speed", "B-2", "{@SpeedB2_Status}", "{@SpeedB2_PunishVL}", "1", "%{_speed}%")
+        else:
+          delete {GUARD::%player%::SPEED.B12}
+
+        if {_speed} > 0.29:
+          block 0.3 under player is not air:
+            {GUARD.CHECK.SPEED.A1} is true
+            set {_b} to player's location 
+            remove 0.7 from y location of {_b}
+            block at {_b} is air or void air
+            difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+            difference between {GUARD::%player%::DAMAGE} and now > 1 second
+            add 1 to {GUARD::%player%::SPEED.A1}
+            {GUARD::%player%::SPEED.A1} > 6
+            add 1 to {GUARD::SPEED.CA1::%player%}
+            {GUARD::SPEED.CA1::%player%} > 5
+            clearly(player, "Speed", "A-1", "{@SpeedA1_Status}", "{@SpeedA1_PunishVL}", "1", "%{_speed}%")
+          else:
+            delete {GUARD::%player%::SPEED.A1}
+        else:
+          delete {GUARD::%player%::SPEED.A1}
+
+
+        GGL(player)
+        set y location of {GUARD::%player%::P.LOC2} to player's y location
+        set {_di} to distance between {GUARD::%player%::P.LOC2} and location of player
+
+        if {_di} > 0.34085:
+          {GUARD.CHECK.SPEED.B3} is true:
+            difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+            difference between {GUARD::%player%::DAMAGE} and now > 1.25 second
+            if {_di} < 3:
+              add 1 to {GUARD::%player%::SPEED.B2}
+              {GUARD::%player%::SPEED.B2} > 4
+              add 1 to {GUARD::SPEED.B22::%player%}
+              {GUARD::SPEED.B22::%player%} > 1
+              clearly(player, "Speed", "B-3", "{@SpeedB3_Status}", "{@SpeedB3_PunishVL}", "1", "%{_di}%")
+            else:
+              add 1 to {GUARD::SPEED.B22::%player%}
+              {GUARD::SPEED.B22::%player%} > 2
+              clearly(player, "Speed", "B-3", "{@SpeedB3_Status}", "{@SpeedB3_PunishVL}", "1", "%{_di}%")
+        else:
+          delete {GUARD::%player%::SPEED.B2}
+
+        if {_di} > 0.29:
+          block 0.3 under player is not air:
+            {GUARD.CHECK.SPEED.A2} is true
+            set {_b} to player's location 
+            remove 0.7 from y location of {_b}
+            block at {_b} is air or void air
+            difference between {GUARD::%player%::SPEEDSTOP} and now > 1.25 seconds
+            difference between {GUARD::%player%::DAMAGE} and now > 1 second
+            add 1 to {GUARD::%player%::SPEED.A2}
+            {GUARD::%player%::SPEED.A2} > 6
+            add 1 to {GUARD::SPEED.CA2::%player%}
+            {GUARD::SPEED.CA2::%player%} > 5
+            clearly(player, "Speed", "A-2", "{@SpeedA2_Status}", "{@SpeedA2_PunishVL}", "1", "%{_di}%")
+          else:
+            delete {GUARD::%player%::SPEED.A2}
+        else:
+          delete {GUARD::%player%::SPEED.A2}
+
+#---------------------------------------------------------------------------------------------------------------------------#
+
+on any move:
+  {_cooldown} is not set
+  set {_cooldown} to true
+  GA_GetPitch(player)
+  GA_GetYaw(player)
+  GA_SpeedHandler(player)
+  delete {_cooldown}
+
+  if {GUARD::%player%::WORLDCHANGE} is set:
+    {_stop} is not set 
+    set {_stop} to true 
+    wait 1.5 second 
+    delete {GUARD::%player%::WORLDCHANGE}
+    delete {_stop}
+
+
+function Reload(text: text):
+  set {GUARD.CHECK.MOTION.A1} to true
+  set {GUARD.CHECK.MOTION.A2} to true
+  set {GUARD.CHECK.MOTION.A3} to true
+  set {GUARD.CHECK.MOTION.A4} to true
+  set {GUARD.CHECK.MOTION.A5} to true
+  set {GUARD.CHECK.MOTION.A6} to true
+  set {GUARD.CHECK.MOTION.A7} to true
+  set {GUARD.CHECK.MOTION.A8} to true
+  set {GUARD.CHECK.MOTION.A9} to true
+  set {GUARD.CHECK.MOTION.B1} to false
+  set {GUARD.CHECK.MOTION.B2} to true
+  set {GUARD.CHECK.MOTION.B3} to true
+  set {GUARD.CHECK.MOTION.B4} to true
+  set {GUARD.CHECK.MOTION.B5} to false
+  set {GUARD.CHECK.SPEED.A1} to true
+  set {GUARD.CHECK.SPEED.A2} to true
+  set {GUARD.CHECK.SPEED.B1} to true
+  set {GUARD.CHECK.SPEED.B2} to true
+  set {GUARD.CHECK.SPEED.B3} to true
+  set {GUARD.CHECK.SPEED.B4} to true
+  set {GUARD.CHECK.SPEED.E1} to true
+  set {GUARD.CHECK.SPEED.E2} to true
+  set {GUARD.CHECK.FASTCLIMB.A} to true
+  set {GUARD.CHECK.NOFALL.A} to true
+  set {GUARD.CHECK.AUTOCLICKER.A} to true
+  set {GUARD.CHECK.AUTOCLICKER.B} to true
+  set {GUARD.CHECK.REACH.A} to true
+  set {GUARD.CHECK.REACH.B} to true
+  set {GUARD.CHECK.REACH.C} to true
+  set {GUARD.CHECK.KILLAURA.A} to true
+  set {GUARD.CHECK.KILLAURA.B} to true
+  set {GUARD.CHECK.KILLAURA.C} to true
+  set {GUARD.CHECK.KILLAURA.D} to true
+  set {GUARD.CHECK.AIM.A1} to true
+  set {GUARD.CHECK.AIM.A2} to true
+  set {GUARD.CHECK.AIM.A3} to true
+  set {GUARD.CHECK.AIM.B1} to true
+  set {GUARD.CHECK.AIM.B2} to true
+  set {GUARD.CHECK.AIM.C1} to true
+  set {GUARD.CHECK.AIM.D1} to true
+  set {GUARD.CHECK.AIM.D2} to true
+  set {GUARD.CHECK.JESUS.A} to true
+  set {GUARD.CHECK.JESUS.B} to true
+  set {GUARD.CHECK.JESUS.C} to true
+  set {GUARD.CHECK.TIMER.A} to true
+  set {GUARD.CHECK.SCAFFOLD.A} to true
+  set {GUARD.CHECK.SCAFFOLD.B} to true
+  set {GUARD.CHECK.SCAFFOLD.C} to true
+  set {GUARD.CHECK.SCAFFOLD.D} to true
+  set {GUARD.CHECK.INTERACT.A} to false 
+  set {GUARD.CHECK.INTERACT.B} to true 
+  set {GUARD.CHECK.INTERACT.C} to true
+  set {GUARD.CHECK.NOWEB.A} to true
+  set {GUARD.CHECK.NOWEB.B} to true
+  set {GUARD.CHECK.NOWEB.C} to true 
+  set {GUARD.CHECK.INVENTORY.A} to true
+  set {GUARD.CHECK.INVENTORY.B} to true
+  set {GUARD.CHECK.INVENTORY.C} to true
+  set {GUARD.CHECK.INVENTORY.D} to true
+  set {GUARD.CHECK.INVENTORY.E} to false
+  set {GUARD.CHECK.VELOCITY.A} to false
+  set {GUARD::CHECKS} to 56
+
+on join:
+    if {tempban.time::%player%} is set:
+        set join message to ""
+    delete {GUARD::%player%::*}
+    delete {GUARD::%player%::VL::*}
+    if player has permission "{@GUARDNotifyPermission}":
+        set {GUARD::%player%::ALERTS} to true
+        send "{@guard} Notifcations enabled."
+        {@WIPVersion} is true
+        send "{@guard} &cWarning! You are runing a WIP version of GUARD ! If you spot any falses please report them !"
+    else if {@TestMode} is true:
+        set {GUARD::%player%::ALERTS} to true
+        send "{@guard} Notifcations enabled."
+    if {tempban.time::%player%} is set:
+        set {_tempban} to  difference between now and {tempban.timestamp::%player%}
+        set {_tempban2} to  difference between {tempban.timestamp::%player%} and now
+        reduce {_tempban} by {tempban.time::%player%}
+        if difference between now and {tempban.timestamp::%player%} is bigger than {tempban.time::%player%}:
+            clear {tempban.time::%player%}
+            clear {tempban.timestamp::%player%}
+            unban player
+        if difference between now and {tempban.timestamp::%player%} is smaller than {tempban.time::%player%}:
+            set join message to ""
+            set {tempban.%player%} to true
+            kick player due to "{@guard} &cYour are banned for &e%{tempban.time::%player%}%&c from this server !"
+    else:
+        stop
+
+function clearly(p: player, cheat: text, type: text, dev: text, vl: text, tpvl: text, v: text):
+  set {_vl} to {_vl} parsed as a number
+  set {_tpvl} to {_tpvl} parsed as a number
+  if {_p} is a citizen:
+    stop
+  add 1 to {GUARD::VL::%{_cheat}%::%{_p}%}
+  add 1 to {GUARD::%{_p}%::VLGLOBAL}
+  set {_vv} to {GUARD::VL::%{_cheat}%::%{_p}%}
+  set {_ping} to {_p}'s ping
+  set {_pn} to {_p}
+  loop all players:
+    if {GUARD::%loop-player%::ALERTS} is true:
+      send formatted "<tooltip:&8» &fCheck: &7%{_cheat}% %nl%  &8» &fCheck Type: &7%{_type}% %nl%  &8» &fValue: &7%{_v}% %nl%  &8» &fCheck State: &7%{_dev}% %nl%%nl%&8» &fPlayer: &7%{_pn}% %nl%  &8» &fPlayer's VL: &7%{_vv}% %nl%  &8» &fPlayer's Ping: &7%{_ping}%  >{@guard} %{_p}%&7 failed &f%{_cheat}% &7(&9x%{_vv}%&7)" to loop-player
+
+  if {@LagBack} is true:
+    set {GUARD::%{_p}%::TELEPORT} to true
+    set {GUARD::%{_p}%::SPEEDSTOP} to true
+    teleport {_p} to {GUARD::%{_p}%::LAGBACK}
+    wait 2 ticks
+    delete {GUARD::%{_p}%::TELEPORT}
+    delete {GUARD::%{_p}%::SPEEDSTOP}
+  if {_vl} - {GUARD::VL::%{_cheat}%::%{_p}%} <= 0:
+    if {@TestMode} is true:
+      add 1 to {GUARD::KICKTESTMODE::%{_p}%}
+      send title "&cYou would be kicked by now." with subtitle "{@guard} &fUnfair Advantage &7&o(%{GUARD::KICKTESTMODE::%{_p}%}%&7&o)" to {_p} 
+      delete {GUARD::VL::%{_cheat}%::%{_p}%}
+    if {@Kick} is true:
+      {_kicking} is not set 
+      set {GUARD::%{_p}%::TELEPORT} to true
+      set {_kicking} to true
+      make server execute command "/guard kick %{_p}%"
+      delete {GUARD::%{_p}%::TELEPORT}
+      stop 
+    if {@Ban} is true:
+      make server execute command "/guard ban %{_p}% 30 day"
+
+command /guard [<text>] [<text>] [<text>] [<timespan>]:
+   permission: {@MainPermission}
+   trigger:
+      if arg 1 is not set:
+         send "           &9&lGUARD"
+         send ""
+         send "&7/guard &8| &fShow this pop up"
+         send "&7/guard version &8| &fShow GUARD version"
+         send "&7/guard notify &8| &fToggle GUARD alerts"
+         send "&7/guard kick &8| &fKick someone for 'Cheating'"
+         send "&7/guard ban &8| &fBan someone for 'Cheatin'"
+         send "&7/guard unban &8| &fUnban someone from GUARD"
+         send "&7/guard toggle &8| &fToggle GUARD checks manually"
+         send "&7/guard info &8| &fCheck flags informations about someone"
+         send ""
+         stop
+      if arg 1 is "toggle":
+         if arg 2 is set:
+            if arg 3 is set:
+               if {GUARD.CHECK.%arg 2%.%arg 3%} is true:
+                  set {GUARD.CHECK.%arg 2%.%arg 3%} to false
+                  send "{@guard} Check &e&l%arg 2% &7(%arg 3%&7) &f has been &cdisabled."
+                  stop
+               if {GUARD.CHECK.%arg 2%.%arg 3%} is false:
+                  set {GUARD.CHECK.%arg 2%.%arg 3%} to true
+                  send "{@guard} Check &e&l%arg 2% &7(%arg 3%&7) &f has been &aenabled."
+                  stop
+      if arg 1 is "kick":
+         if arg 2 is set:
+            set {_player} to arg 2 parsed as player
+            {GUARD::%{_player}%::KICKING} is not set
+            set {GUARD::%{_player}%::KICKING} to true
+            strike lightning effect at {_player}
+            kick {_player} due to "{@guard} &fYou were caught hacking by Guard (Anti-Cheat) ! &7&o&n(ID-G%random integer between 0 and 99999999999%&7)"
+            broadcast ""
+            broadcast "{@guard} {@KickMsg}"
+            broadcast ""
+            add 1 to {GUARD::%{_player}%::KICK}
+            delete {GUARD::%{_player}%::KICKING}
+            stop
+      if arg 1 is "info":
+         if arg 2 is set:
+            send "         {@guard}"
+            send "&fInformations about %arg 2%"
+            send ""
+            send "Kicked: &7%{GUARD::%arg 2%::KICK}% &fTimes"
+            send "Banned: &7%{GUARD::%arg 2%::BAN}% &fTimes"
+            send "Unbanned: &7%{GUARD::%arg 2%::UNBAN}% &fTimes"
+            send "Flagged: &7%{GUARD::%arg 2%::VLGLOBAL}% &fTimes"  
+            send "Double Checked: &7%{GUARD::%arg 2%::DOUBLEVL}% &fTimes"
+            send ""
+            stop
+      if arg 1 is "version":
+         send "{@guard} Versions: {@Version}"
+         stop
+      if arg 1 is "reload":
+         Reload("console")
+         send "{@guard} %{GUARD::CHECKS}% Checks were loaded."
+         delete {GUARD::CHECKS}
+         stop
+      if arg 1 is "notify":
+         if {GUARD::%player%::ALERTS} is not set:
+            set {GUARD::%player%::ALERTS} to false
+         if {GUARD::%player%::ALERTS} is false:
+            set {GUARD::%player%::ALERTS} to true
+            send "{@guard} Notifcations enabled"
+            stop
+         if {GUARD::%player%::ALERTS} is true:
+            set {GUARD::%player%::ALERTS} to false
+            send "{@guard} Notifcations disabled"
+            stop
+      if arg 1 is "ban":
+         if arg 2 is set:
+            set {_player} to arg 2 parsed as player
+            set {tempban.time::%{_player}%} to arg 3
+            set {tempban.%{_player}%} to true
+            set {tempban.timestamp::%{_player}%} to now
+            add 1 to {GUARD::%{_player}%::BAN}
+            kick {_player} due to "{@guard} &cYou have been banned for &e%{tempban.time::%{_player}%}% &cfrom this server !"
+            broadcast ""
+            broadcast "{@guard} {@BanMsg}"
+            broadcast ""
+            stop
+      if arg 1 is "unban":
+         if arg 2 is set:
+            delete {tempban.time::%arg 2%}
+            delete {tempban.timestamp::%arg 2%}
+            delete {tempban.%arg 2%}
+            add 1 to {GUARD::%arg 2%::UNBAN}
+            send "{@guard} %arg 2% has been unbanned."
+            stop
+every 2 minutes:
+   delete {GUARD::VL::*}
+every 8 second:
+   delete {GUARD::JESUSCOUNT::*}
+   delete {GUARD::DOUBLE::*}
+   delete {GUARD::KICKTESTMODE::*}
+every 3 second:
+   delete {GUARD::MOREPACKETS::*}
+   delete {InvalidHits::*}
+   delete {GUARD::SPEED.CB1::*}
+   delete {GUARD::SPEED.CB2::*}
+   delete {GUARD::SPEED.CD1::*}
+   delete {GUARD::SPEED.CD12::*}
+   delete {GUARD::SPEED.B22::*}
+   delete {GUARD::MOTION.A8::*}
+   delete {GUARD::SPEED.CA2::*}
+   delete {GUARD::SPEED.CA1::*}
+   delete {cpsL::*}
+   delete {cpsR::*}
+every 1 second:
+   delete {KillAuraC_Buffer::*}
+   delete {GUARD::MOVEPACKET::*}
+   delete {jesus::*}
+   delete {GUARD::NOWEB.B::*}
+   delete {GUARD::MOTION.B4::*}
+   delete {GUARD::MOTION.B3::*}
+on jump:
+   set {GUARD::%player%::LASTJUMP} to now
+on quit:
+   delete {GUARD::%player%::*}
+   if {tempban.time::%player%} is set:
+      set quit message to ""
+on script load:
+   send "&7&m---------------------------------------" to console
+   send "           &9&lGUARD" to console
+   send "          &9&lAntiCheat" to console
+   send "" to console
+   send "     &7&oVersion: {@Version}" to console
+   send "       &7&oAuthor: XIII___" to console
+   send "" to console
+   send "     &9Thanks for using Guard !" to console
+   send "&7&m---------------------------------------" to console
+on death:
+   G_DPL(victim)
+on respawn:
+   set {GUARD::%player%::RESPAWN} to now
+   set {GUARD::%player%::LAGBACK} to player's location
+on teleport:
+   set {GUARD::%player%::TELEPORT} to true
+   G_DPL(player)
+   wait 1 second
+   delete {GUARD::%player%::TELEPORT}
+on damage:
+   damage cause is attack or explosion
+   victim is not attacker
+   G_DPL(victim)
+on break:
+   {GUARD.CHECK.NOFALL.A} is true
+   if {time::%player%} is not set:
+      set {time::%player%} to true
+      wait 0.5 seconds
+      delete {time::%player%}
+on step on ice or packed ice or blue ice:
+   set {GUARD::%player%::SPEEDSTOP} to now
+on riptide:
+   G_DPL(player)
+function GGL(p: player):
+  set {GUARD::%{_p}%::P.LOC5} to {GUARD::%{_p}%::P.LOC4}
+  set {GUARD::%{_p}%::P.LOC4} to {GUARD::%{_p}%::P.LOC3}
+  set {GUARD::%{_p}%::P.LOC3} to {GUARD::%{_p}%::P.LOC2}
+  set {GUARD::%{_p}%::P.LOC2} to {GUARD::%{_p}%::P.LOC1}
+  set {GUARD::%{_p}%::P.LOC1} to {_p}'s location
+function GGX(p: player):
+  set {GUARD::%{_p}%::X.LOC5} to {GUARD::%{_p}%::X.LOC4}
+  set {GUARD::%{_p}%::X.LOC4} to {GUARD::%{_p}%::X.LOC3}
+  set {GUARD::%{_p}%::X.LOC3} to {GUARD::%{_p}%::X.LOC2}
+  set {GUARD::%{_p}%::X.LOC2} to {GUARD::%{_p}%::X.LOC1}
+  set {GUARD::%{_p}%::X.LOC1} to {_p}'s x location
+function GGZ(p: player):
+  set {GUARD::%{_p}%::Z.LOC5} to {GUARD::%{_p}%::Z.LOC4}
+  set {GUARD::%{_p}%::Z.LOC4} to {GUARD::%{_p}%::Z.LOC3}
+  set {GUARD::%{_p}%::Z.LOC3} to {GUARD::%{_p}%::Z.LOC2}
+  set {GUARD::%{_p}%::Z.LOC2} to {GUARD::%{_p}%::Z.LOC1}
+  set {GUARD::%{_p}%::Z.LOC1} to {_p}'s z location
+function G_GY(p: player):
+  set {GUARD::%{_p}%::YP.LOC11} to {GUARD::%{_p}%::YP.LOC10}
+  set {GUARD::%{_p}%::YP.LOC10} to {GUARD::%{_p}%::YP.LOC9}
+  set {GUARD::%{_p}%::YP.LOC9} to {GUARD::%{_p}%::YP.LOC8}
+  set {GUARD::%{_p}%::YP.LOC8} to {GUARD::%{_p}%::YP.LOC7}
+  set {GUARD::%{_p}%::YP.LOC7} to {GUARD::%{_p}%::YP.LOC6}
+  set {GUARD::%{_p}%::YP.LOC6} to {GUARD::%{_p}%::YP.LOC5}
+  set {GUARD::%{_p}%::YP.LOC5} to {GUARD::%{_p}%::YP.LOC4}
+  set {GUARD::%{_p}%::YP.LOC4} to {GUARD::%{_p}%::YP.LOC3}
+  set {GUARD::%{_p}%::YP.LOC3} to {GUARD::%{_p}%::YP.LOC2}
+  set {GUARD::%{_p}%::YP.LOC2} to {GUARD::%{_p}%::YP.LOC1}
+  set {GUARD::%{_p}%::YP.LOC1} to {_p}'s y location
+function G_DPL(p: player):
+  set {GUARD::%{_p}%::DAMAGE} to now
+on join:
+  G_DPL(player)
+  set {GUARD::%player%::SPEEDSTOP} to now
+  set {GUARD::%player%::HIGHJUMPSTOP} to now
+  set {GUARD::%player%::BLOCKPLACE.TIME} to now
+  set {GUARD::%player%::LASTJUMP} to now
+  set {GUARD::%player%::BLOCKSTOP} to now
+  set {GUARD::%player%::BLOCKSTOP2} to now
+  delete {GUARD::%player%::TELEPORT}
+  set {GUARD::%player%::RESPAWN} to now 
+  delete {GUARD::%player%::WORLDCHANGE}
+on world change:
+   G_DPL(player)
+   set {GUARD::%player%::WORLDCHANGE} to true 
+function GA_WC(p: player):
+   if {GUARD::%{_p}%::WORLDCHANGE} is set:
+      wait 2 second
+      delete {GUARD::%{_p}%::WORLDCHANGE}
+
+function spider(p: player) :: boolean:
+    set {_b} to {_p}'s location
+    remove 1 from y location of {_b}
+    block at {_b} is air or void air:
+        {_p}'s target block is not air
+        add 3 to y location of {_b}
+        block at {_b} is air or void air 
+        return true 
+    return false
+
+function inair(p: player) :: boolean:
+    set {_b} to {_p}'s location
+    remove 1 from y location of {_b}
+    block at {_b} is air or void air:
+        remove 1 from x location of {_b}
+        if block at {_b} is air or void air:
+            add 2 to x location of {_b}
+            block at {_b} is air or void air:
+                remove 1 from x location of {_b} 
+                remove 1 from z location of {_b}
+                block at {_b} is air or void air:
+                    add 2 to z location of {_b}
+                    block at {_b} is air or void air: 
+                        set {_b} to {_p}'s location
+                        remove 1 from x location of {_b}
+                        remove 1 from z location of {_b}
+                        block at {_b} is air or void air:
+                            add 2 to z location of {_b}
+                            block at {_b} is air or void air:
+                                set {_b} to {_p}'s location 
+                                add 1 to x location of {_b}
+                                remove 1 from z location of {_b}
+                                add 2 to z location of {_b}
+                                block at {_b} is air or void air: 
+                                    block south east under {_p} is air or void air
+                                    block south west under {_p} is air or void air
+                                    block north east under {_p} is air or void air
+                                    block north west under {_p} is air or void air
+                                    return true
+    return false
+function inair2(p: player) :: boolean:
+    set {_b} to {_p}'s location
+    remove 2 from y location of {_b}
+    block at {_b} is air or void air:
+        remove 1 from x location of {_b}
+        if block at {_b} is air or void air:
+            add 2 to x location of {_b}
+            block at {_b} is air or void air:
+                remove 1 from x location of {_b} 
+                remove 1 from z location of {_b}
+                block at {_b} is air or void air:
+                    add 2 to z location of {_b}
+                    block at {_b} is air or void air: 
+                        set {_b} to {_p}'s location
+                        remove 1 from x location of {_b}
+                        remove 1 from z location of {_b}
+                        block at {_b} is air or void air:
+                            add 2 to z location of {_b}
+                            block at {_b} is air or void air:
+                                set {_b} to {_p}'s location 
+                                add 1 to x location of {_b}
+                                remove 1 from z location of {_b}
+                                add 2 to z location of {_b}
+                                block at {_b} is air or void air: 
+                                    block 2 south east under {_p} is air or void air
+                                    block 2 south west under {_p} is air or void air
+                                    block 2 north east under {_p} is air or void air
+                                    block 2 north west under {_p} is air or void air
+                                    return true
+    return false
+function GA_Slime(p: player) :: boolean:
+  set {_find} to {_p}'s location
+  set {_count} to 255 - y coordinate of {_p}
+
+  loop 255 times:
+    if block at {_find} is slime block:
+      return true
+    else:
+      remove 1 from y coordinate of {_find}
+on any move:
+   if block at player is player head or cobweb or slime block or lily pad or soul sand or stairs or slabs or ladder or vines or snow layer or twisting vines or carpet or brewing stand or iron trapdoor or trapdoor or flower pot:
+      set {GUARD::%player%::BLOCKSTOP} to now  
+   if block 0.5 under player is player head or cobweb or slime block or lily pad or soul sand or stairs or slabs or ladder or vines or snow layer or twisting vines or carpet or brewing stand or iron trapdoor or trapdoor or flower pot:
+      set {GUARD::%player%::BLOCKSTOP} to now
+   if block under player is player head or cobweb or slime block or lily pad or soul sand or stairs or slabs or ladder or vines or snow layer or twisting vines or carpet or brewing stand or iron trapdoor or trapdoor or flower pot:
+      set {GUARD::%player%::BLOCKSTOP} to now
+on any move:
+   if block at player is water or lava:
+      set {GUARD::%player%::BLOCKSTOP2} to now  
+   if block 0.3 under player is water or lava:
+      set {GUARD::%player%::BLOCKSTOP2} to now
+on step on slime block:
+  set {GUARD::%player%::SLIME} to now
+on join:
+   wait 5 seconds
+   while player is online:
+      set {GUARD::%player%::LAGBACK} to player's location
+      wait 3 seconds
+
+on any move:
+  
+  difference between {GUARD::%player%::LASTDAMAGE} and now < 2.5 second
+
+  set {_Pitch} to getDP(player, 1) * 16777216
+  set {_PreviusPitch} to getDP(player, 2) * 16777216
+
+  set {_GCD} to getGCD({_Pitch}, {_PreviusPitch})
+
+  if {_GCD} < 400000:
+    {_GCD} > 0
+    add 1 to {GUARD::%player%::AIM.GCD}
+    {GUARD::%player%::AIM.GCD} > 10
+    clearly(player, "Aim", "CAC-Private-1", "&6Testing", "3", "1", "%{_GCD}%")
+  else:
+    delete {GUARD::%player%::AIM.GCD}
+function getGCD(current: number, previous: number) :: number:
+    if {_previous} <= 16384:
+        return {_current}
+    return getGCD({_previous}, mod({_current}, {_previous}))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Thanks for using GUARD <3
