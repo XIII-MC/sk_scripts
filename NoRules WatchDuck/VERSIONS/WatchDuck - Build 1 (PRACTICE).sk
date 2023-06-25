@@ -1,0 +1,15 @@
+options:
+   Version: Build_1_Practice
+on damage:
+  attacker is a player
+  damage cause is attack
+  victim is not attacker
+  set {_loc} to attacker's location
+  set {_vloc} to victim's location
+  wait 1 tick
+  set y coordinate of {_loc} to y coordinate of attacker
+  set {_loc} to distance between {_loc} and attacker's location
+  kick attacker due to "&b&lWatchDuck &8» &cUnfair Advantage" if {_loc} > 3
+  broadcast "" if {_loc} > 3
+  broadcast "&b&lWatchDuck &8» &c%attacker% &fhas been removed for &cUnfair Advantage" if {_loc} > 3
+  broadcast "" if {_loc} > 3

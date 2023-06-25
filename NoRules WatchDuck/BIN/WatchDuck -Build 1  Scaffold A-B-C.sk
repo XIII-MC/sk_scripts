@@ -1,0 +1,17 @@
+on place:
+  if y coordinate of event-block < y coordinate of player:
+    block under event-block is air or void air
+    player's gamemode is not creative or spectator
+    set {-WATCHDUCK::%player%::TEMP::OLDTIME} to {-WATCHDUCK::%player%::TEMP::NEWTIME}
+    set {-WATCHDUCK::%player%::TEMP::NEWTIME} to now
+    set {_DiffTime} to difference between {-WATCHDUCK::%player%::TEMP::OLDTIME} and {-WATCHDUCK::%player%::TEMP::NEWTIME}
+    maybe(player, "Scaffold", "A", 1, 1, true) if {_DiffTime} < 0.2 second
+    if {_DiffTime} > 0.2 second:
+      remove 1 from {-WATCHDUCK::%player%::TEMP::VERBOSE::SCAFFOLD::A} if {-WATCHDUCK::%player%::TEMP::VERBOSE::SCAFFOLD::A} >= 1
+    maybe(player, "Scaffold", "B", 2, 0.5, true) if player's targeted block is not event-block
+    if player's targeted block is not event-block:
+      cancel event if {-WATCHDUCK::%player%::TEMP::VERBOSE::SCAFFOLD::B} > 1
+    clearly(player, "Scaffold", "C", true) if player's pitch = 90
+    cancel event if player's pitch = 90
+    if {-WATCHDUCK::%player%::TEMP::VERBOSE::SCAFFOLD::B} >= 0.25:
+      remove 0.25 from {-WATCHDUCK::%player%::TEMP::VERBOSE::SCAFFOLD::B} if player's targeted block is event-block

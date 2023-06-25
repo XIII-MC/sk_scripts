@@ -1,0 +1,72 @@
+options:
+  #Where's WatchDuck running ?
+  Practice: true #True/False | Enable this if WatchDuck is running on Practice
+  Skywars: false #True/False | Enable this if WatchDuck is running on SkyWars
+  KitPvP: false #True/false | Enable this if WatchDuck is running on KitPvP
+
+  #Versions Listeners
+  Version_Core: 001
+  Version_Practice: 001
+  Version_Skywars: 000
+  Version_KitPvP: 000
+
+  #Permission Related
+  AlertPermission: watchduck.alerts #Text | Permission required to recieve WatchDuck alerts.
+  BypassPermission: watchduck.bypass #Text | Anyone with this permission will be exempt from WatchDuck.
+
+  #Customization
+  WD: &b&lWatchDuck &8» #Prefix used
+
+  #Alerts Related
+  Theme: 0 #Not coded yet
+  SendToConsole: true #True/False | Will send WatchDuck alerts to console.
+
+  #Punishements related
+  CanPunish: true #True/False | Allows WatchDuck to kick/ban (if configured to).
+  BroadcastPunishment: true #True/False | Will broadcast a message when a player gets kicked/banned by WatchDuck.
+  BroadcastMessage: &b&lWatchDuck &8» &c%{_Player}%&f has been removed for &cUnfair Advantage. #Text | Message sent when a player gets kicked/banned by WatchDuck.
+  KickMessage: &b&lWatchDuck &8» &cUnfair Advantage. #Text | Message displayed to the kicked player.
+  BanCommand: /ban %{_Player}% 2 #Text | Command used by WatchDuck to ban a player.
+
+  #Checks Config
+  TPAuraA_PunishVL: 12 #Number | After how many VLs WatchDuck will ban/kick the player.
+  TPAuraA_PunishMode: 1 #Mode = 0 - Does nothing | Mode = 1 - Kicks the player | Mode = 2 - Bans the player
+  TPAuraA_Cancel: true #True/False | Will cancel hits of the player using TPAura
+
+every 5 minutes:
+  delete {-WATCHDUCK-VLS::*}
+
+#Alert System
+function flag(Player: player, Cheat: text, PunishVL: number, PunishMode: number):
+  {_Player} doesn't have permission "{@BypassPermission}"
+  add 1 to {-WATCHDUCK-VLS::%{_Player}%::%{_Cheat}%}
+  send "{@WD} &f%{_Player}% &7flagged &f%{_Cheat}% &7(&bx%{-WATCHDUCK-VLS::%{_Player}%::%{_Cheat}%}%&7)" to all players where [input has permission "{@AlertPermission}"]
+  if {@SendToConsole} = true:
+    send "{@WD} &f%{_Player}% &7flagged &f%{_Cheat}% &7(&bx%{-WATCHDUCK-VLS::%{_Player}%::%{_Cheat}%}%&7)" to console
+  if {-WATCHDUCK-VLS::%{_Player}%::%{_Cheat}%} >= {_PunishVL}:
+    if {@CanPunish} = true:
+      if {_PunishMode} = 1:
+        kick {_Player} due to "{@KickMessage}"
+      if {_PunishMode} = 2:
+        make server execute command "{@BanCommand}"
+      if {@BroadcastPunishment} = true:
+        broadcast ""
+        broadcast "{@BroadcastMessage}"
+        broadcast ""
+
+#Checks
+
+#TPAura A | Practice = true | Build 0001 | Stable
+on damage:
+  {@Practice} = true
+  attacker is a player
+  projectile doesn't exist
+  if {-WD::%attacker%::TEMP::BLOCKEDHITS} = true:
+    {@TPAuraA_Cancel} = true
+    cancel event
+  wait 1 tick
+  if distance between victim's location and attacker's location > 10:
+    flag(attacker, "TPAura A", {@TPAuraA_PunishVL}, {@TPAuraA_PunishMode})
+    set {-WD::%attacker%::TEMP::BLOCKEDHITS} to true
+  else:
+    delete {-WD::%attacker%::TEMP::BLOCKEDHITS}

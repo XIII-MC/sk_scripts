@@ -1,0 +1,220 @@
+options:
+   Version: Build_1_KitPvP
+command /watchduck [<text>] [<offline player>]:
+  permission: watchduck.command.main
+  permission message: &b&lWatchDuck &8»&c Missing permissions.
+  trigger:
+    if arg 1 is "notify":
+      if arg 2 is not set:
+        if {-WATCHDUCK::%player%::TEMP::ALERTS::NOTIFY} is not set:
+          set {-WATCHDUCK::%player%::TEMP::ALERTS::NOTIFY} to true
+          send "&b&lWatchDuck &8»&f Notifications &aenabled"
+          stop
+        if {-WATCHDUCK::%player%::TEMP::ALERTS::NOTIFY} is set:
+          delete {-WATCHDUCK::%player%::TEMP::ALERTS::NOTIFY}
+          send "&b&lWatchDuck &8»&f Notifications &cdisabled"
+      else:
+        if {-WATCHDUCK::%arg 2%::TEMP::ALERTS::NOTIFY} is not set:
+          set {-WATCHDUCK::%arg 2%::TEMP::ALERTS::NOTIFY} to true
+          send "&b&lWatchDuck &8»&f Notifications &aenabled" to arg 2
+          send "&b&lWatchDuck &8»&f Notifications &aenabled&f for &3%arg 2%" to player
+          stop
+        if {-WATCHDUCK::%arg 2%::TEMP::ALERTS::NOTIFY} is set:
+          delete {-WATCHDUCK::%arg 2%::TEMP::ALERTS::NOTIFY}
+          send "&b&lWatchDuck &8»&f Notifications &cdisabled"
+          send "&b&lWatchDuck &8»&f Notifications &cdisabled&f for &3%arg 2%" to player
+    send "&b&lWatchDuck &8»&f &cUnknown command, use /watchduck help for help." if arg 1 is not "notify" or "help"
+    if arg 1 is "help":
+      send "&7&m-----------------------------------"
+      send ""
+      send "&7&oRunning: &3&o{@Version}"
+      send ""
+      send "&f/&bwatchduck &anotify &e(PLAYER) &8| &7&oToggle notifications"
+      send ""
+      send "&7&m-----------------------------------"
+    make player execute command "/watchduck help" if arg 1 is not set
+function WatchDuck_getDeltaY(p: player, n: number, r: boolean) :: number:
+  return y location of {-WATCHDUCK::%{_p}%::TEMP::LOC::%{_n}%} - y location of {-WATCHDUCK::%{_p}%::TEMP::PRELOC::%{_n}%} if {_r} is false
+  return difference between y location of {-WATCHDUCK::%{_p}%::TEMP::PRELOC::%{_n}%} and y location of {-WATCHDUCK::%{_p}%::TEMP::LOC::1} if {_r} is true
+function WatchDuck_getDeltaLoc(p: player, n: number, r: boolean) :: number:
+  set y location of {-WATCHDUCK::%{_p}%::TEMP::PRELOC::%{_n}%} to y location of {-WATCHDUCK::%{_p}%::TEMP::LOC::%{_n}%} if {_r} = true
+  return distance between {-WATCHDUCK::%{_p}%::TEMP::PRELOC::%{_n}%} and {-WATCHDUCK::%{_p}%::TEMP::LOC::%{_n}%}
+on teleport:
+  stop if difference between {-WATCHDUCK::%event-player%::TEMP::LASTTP} and now < 0.08 second
+  set {-WATCHDUCK::%event-player%::TEMP::LASTTP} to now
+  delete {-WATCHDUCK::%event-player%::TEMP::CONFIRMTP}
+  set {-WATCHDUCK::%event-player%::TEMP::TP} to true
+  wait 8 ticks
+  set {-WATCHDUCK::%event-player%::TEMP::CONFIRMTP} to true
+every 1 minutes:
+   delete {-WATCHDUCK::%all players%::TEMP::VL::*}
+on quit:
+   delete {-WATCHDUCK::%player%::TEMP::*}
+function maybe(p: player, cheat: text, type: text, mb: number, ba: number, lagback: boolean):
+  add {_ba} to {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::%{_cheat}%::%{_type}%}
+  clearly({_p}, {_cheat}, {_type}, {_lagback}) if {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::%{_cheat}%::%{_type}%} >= {_mb}
+function clearly(p: player, cheat: text, type: text, lagback: boolean):
+  {_p} is not flying
+  gamemode of {_p} is not creative or spectator
+  add 1 to {-WATCHDUCK::%{_p}%::TEMP::VL::%{_cheat}%::%{_type}%}
+  send "&b&lWatchDuck &8»&3 &3%{_p}%&7 &7failed &3%{_cheat}% &3%{_type}% &7(&bx%{-WATCHDUCK::%{_p}%::TEMP::VL::%{_cheat}%::%{_type}%}%&7)" to all players where [{-WATCHDUCK::%input%::TEMP::ALERTS::NOTIFY} = true]
+  {_lagback} = true
+  difference between {-WATCHDOG::%{_p}%::TEMP::NOCHANGE} and now > 0.1 second
+  set {-WATCHDOG::%{_p}%::TEMP::NOCHANGE} to now
+  loop 5 times:
+    teleport {_p} to {-WATCHDUCK::%{_p}%::TEMP::SETBACK}
+    wait 1 tick
+on any move:
+  player doesn't have permission "watchduck.bypass"
+  set {-WATCHDUCK::%player%::TEMP::PRELOC::5} to {-WATCHDUCK::%player%::TEMP::LOC::5}
+  set {-WATCHDUCK::%player%::TEMP::LOC::5} to {-WATCHDUCK::%player%::TEMP::PRELOC::4}
+  set {-WATCHDUCK::%player%::TEMP::PRELOC::4} to {-WATCHDUCK::%player%::TEMP::LOC::4}
+  set {-WATCHDUCK::%player%::TEMP::LOC::4} to {-WATCHDUCK::%player%::TEMP::PRELOC::3}
+  set {-WATCHDUCK::%player%::TEMP::PRELOC::3} to {-WATCHDUCK::%player%::TEMP::LOC::3}
+  set {-WATCHDUCK::%player%::TEMP::LOC::3} to {-WATCHDUCK::%player%::TEMP::PRELOC::2}
+  set {-WATCHDUCK::%player%::TEMP::PRELOC::2} to {-WATCHDUCK::%player%::TEMP::LOC::2}
+  set {-WATCHDUCK::%player%::TEMP::LOC::2} to {-WATCHDUCK::%player%::TEMP::PRELOC::1}
+  set {-WATCHDUCK::%player%::TEMP::PRELOC::1} to {-WATCHDUCK::%player%::TEMP::LOC::1}
+  set {-WATCHDUCK::%player%::TEMP::LOC::1} to location of player
+  if {-WATCHDUCK::%player%::TEMP::NOCHANGE} is not set:
+    set {-WATCHDUCK::%player%::TEMP::SETBACK} to player's location if player is on ground
+  delete {-WATCHDUCK::%player%::TEMP::DAMAGE} if player is on ground
+  delete {-WATCHDUCK::%player%::TEMP::STOP::SLIME} if block under player is not slime block or air
+  delete {-WATCHDUCK::%player%::TEMP::NOCHANGE} if difference between {-WATCHDUCK::%player%::TEMP::NOCHANGE} and now > 1 second
+  if player's hunger level < 3:
+    cancel event if player is sprinting
+    maybe(player, "Sprint", "A", 5, 1, false) if player is sprinting
+  delete {-WATCHDUCK::%player%::TEMP::VERBOSE::SPRINT::A} if player's hunger level >= 3
+  set {-WATCHDUCK::%player%::TEMP::JUMPBOOST} to now if player has jump boost
+  set {-WATCHDUCK::%player%::TEMP::JUMPBOOST} to tier of potion effect jump boost of player if difference between {-WATCHDUCK::%player%::TEMP::JUMPBOOST} and now < 1.2 second
+  set {-WATCHDUCK::%player%::TEMP::JUMPBOOST} to 0 if difference between {-WATCHDUCK::%player%::TEMP::JUMPBOOST} and now > 1.2 second
+  WatchDuck_Check_Fly_AG(player)
+  WatchDuck_Check_Motion_A(player)
+  WatchDuck_Check_Speed_A(player)
+  delete {-WATCHDUCK::%player%::TEMP::TP} if {-WATCHDUCK::%player%::TEMP::CONFIRMTP} = true
+function WatchDuck_Check_Fly_AG(p: player):
+  difference between {-WATCHDOG::%{_p}%::TEMP::NOCHANGE} and now > 0.05 second
+  set {_FlightAPrediction} to ({-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} - 0.08) * 0.9800000190734863
+  set {-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} to WatchDuck_getDeltaY({_p}, 1, false)
+  if {_p} is not on ground:
+    difference between {-WATCHDUCK::%{_p}%::TEMP::FLY::A} and now > 0.6 second
+    loop all blocks in radius 2 around {_p}:
+      stop if loop-block is cobweb
+    add {-WATCHDUCK::%{_p}%::TEMP::JUMPBOOST} + 1 to {_FA1} if difference between {-WATCHDUCK::%{_p}%::TEMP::JUMPBOOST} and now < 1.2 second
+    add 9 to {_FA1} if difference between {-WATCHDUCK::%{_p}%::TEMP::UNSAFEDAMAGE} and now < 1.2 second
+    add 5 to {_FA3} if difference between {-WATCHDUCK::%{_p}%::TEMP::UNSAFEDAMAGE} and now < 1.2 second
+    loop all blocks in radius 2 around {_p}:
+      stop if loop-block is flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest
+    maybe({_p}, "Fly", "A", ({_FA1} + 7), 1, true) if {-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} > 0
+    maybe({_p}, "Fly", "B", 6, 1, true) if {-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} > {_FlightAPrediction}
+    maybe({_p}, "Fly", "C", ({_FA3} + 6), 1, true) if abs({-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} - {_FlightAPrediction}) > 0
+    maybe({_p}, "Fly", "D", ({_FA3} + 6), 1, true) if {-WATCHDUCK::%{_p}%::TEMP::FLYA::Y} != {_FlightAPrediction}
+  if block 0.08 under {_p} is not air:
+    delete {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::FLY::*}
+  if {_p} is on ground:
+    delete {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::FLY::*}
+  if {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::FLY::E} >= 0.5:
+    remove 0.5 from {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::FLY::E} if WatchDuck_getDeltaY({_p}, 1, false) < 0.05
+  if {_p} is not on ground:
+    loop all blocks in radius 2 around {_p}:
+      stop if loop-block is water or lava or trapdoor or iron trapdoor or flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest
+    maybe({_p}, "Fly", "F", 2, 0.5, true) if WatchDuck_getDeltaY({_p}, 1, false) = 0
+    delete {-WATCHDUCK::%{_p}%::TEMP::VERBOSE::FLY::F} if WatchDuck_getDeltaY({_p}, 1, false) != 0
+  if {-WATCHDUCK::%{_p}%::TEMP::TP} is not set:
+    add ({-WATCHDUCK::%{_p}%::TEMP::JUMPBOOST} * 0.157) to {_height} if difference between {-WATCHDUCK::%{_p}%::TEMP::JUMPBOOST} and now < 1.2 second
+    clearly({_p}, "Fly", "G", true) if WatchDuck_getDeltaY({_p}, 1, false) > {_height} + 0.84
+  if WatchDuck_getDeltaY({_p}, 1, false) > 0.05:
+    loop all blocks in radius 2 around {_p}:
+      stop if loop-block is water or lava or flower pot or carpet or slime block or soul sand or snow layers or brewing stand or slabs or stairs or cake or any bed or fence or flower pot or Weeping Vine or Weeping Vine block or ladder or vines or twisting vine block or twisting vine or snow layers or lily pad or chest or trapped chest or ender chest
+    maybe({_p}, "Fly", "E", 7, 0.5, true) if difference between {-WATCHDUCK::%{_p}%::TEMP::FLY::E} and now > 0.6 second
+function WatchDuck_Check_Speed_A(p: player):
+  {-WATCHDUCK::%{_p}%::TEMP::TP} is not set
+  if {-WATCHDUCK::%{_p}%::TEMP::VL::SPEED::A} = 5 or 10 or 15 or 20 or 25 or 30 or 35 or 40 or 45 or 50 or 55 or 60 or 65 or 70 or 75 or 80 or 85 or 90 or 95 or 100:
+    send title "&4⚠ &b&lWatchDuck &4⚠" with subtitle "&cYou are going too fast! Please slow down!" to {_p} if WatchDuck_getDeltaLoc({_p}, 1, true) > 1
+    send "&b&lWatchDuck &8» &cYou are going too fast! Please slow down!" to {_p} if WatchDuck_getDeltaLoc({_p}, 1, true) > 1
+  clearly({_p}, "Speed", "A", true) if WatchDuck_getDeltaLoc({_p}, 1, true) > 1
+function WatchDuck_Check_Motion_A(p: player):
+  WatchDuck_getDeltaY({_p}, 1, false) != 0
+  loop all blocks in radius 2 around {_p}:
+    stop if loop-block is ladder or vines or cobweb or slime block or any stairs or any slabs or trapdoor or iron trapdoor or snow layer or any carpet or brewing stand or redstone repeater or redstone comparator or lava or water or any bed or hopper
+  clearly({_p}, "Motion", "A", true) if WatchDuck_getDeltaY({_p}, 2, false) + WatchDuck_getDeltaY({_p}, 1, true) = 0
+  clearly({_p}, "Motion", "A", true) if WatchDuck_getDeltaY({_p}, 1, true) - WatchDuck_getDeltaY({_p}, 2, false) = 0
+  set {-WATCHDUCK::%{_p}%::TEMP::CANCELDAMAGE} to true if WatchDuck_getDeltaY({_p}, 1, true) - WatchDuck_getDeltaY({_p}, 2, false) = 0
+  set {-WATCHDUCK::%{_p}%::TEMP::CANCELDAMAGE} to true if WatchDuck_getDeltaY({_p}, 2, false) + WatchDuck_getDeltaY({_p}, 1, true) = 0
+on chat:
+  clearly(player, "Chat", "A", false) if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+  cancel event if message contains "⛟" or "⛍" or "⛌" or "⛗" or "⛗"
+on place:
+  loop "FLY::E", "FLY::A":
+    set {-WATCHDUCK::%player%::TEMP::%loop-value%} to now
+on join:
+  set {-WATCHDUCK::%player%::TEMP::ALERTS::NOTIFY} to true if player has permission "watchduck.auto"
+  send "&b&lWatchDuck &8»&f Notifications &aenabled &7(Auto)" if player has permission "watchduck.auto"
+  loop "FLY::E", "FLY::A", "LASTTP", "NOCHANGE":
+    set {-WATCHDUCK::%player%::TEMP::%loop-value%} to now
+on quit:
+  delete {-WATCHDUCK::%player%::*}
+on damage:
+  damage cause is attack
+  attacker is a player
+  set {_loc} to attacker's location
+  set {_vloc} to victim's location
+  wait 1 tick
+  set y coordinate of {_loc} to y coordinate of attacker
+  set {_loc} to distance between {_loc} and attacker's location
+  clearly(attacker, "BadPacket", "C", false) if {_loc} > 3
+  kick attacker due to "&b&lWatchDuck &8» &cUnfair Advantage" if {_loc} > 3
+  broadcast "" if {_loc} > 3
+  broadcast "&b&lWatchDuck &8» &c%attacker% &fhas been removed for &cUnfair Advantage" if {_loc} > 3
+  broadcast "" if {_loc} > 3
+on any move:
+    set {_LastTime} to {-WATCHDUCK::%player%::TEMP::TIME}
+    set {-WATCHDUCK::%player%::TEMP::TIME} to now
+    set {_Diff2} to "%difference between {_LastTime} and now%"
+    replace all " seconds" or " second" or " minute" or " minutes" or " hour" or " hours" or " days" or " day" in {_Diff2} with ""
+    set {_Diff} to {_Diff2} parsed as number
+    set {_Diff} to {_Diff} * 1000
+    set {_LastBal} to {-WATCHDUCK::%player%::TEMP::BALANCE}
+    set {-WATCHDUCK::%player%::TEMP::BALANCE} to (50 - {_Diff})
+    if difference between {_LastBal} and {-WATCHDUCK::%player%::TEMP::BALANCE} > 48:
+        set {-WATCHDUCK::%player%::TEMP::LASTFROZE} to 0
+    else:
+        if {-WATCHDUCK::%player%::TEMP::LASTFROZE} < 2:
+            add 1 to {-WATCHDUCK::%player%::TEMP::LASTFROZE}
+            delete {-WATCHDUCK::%player%::TEMP::VERBOSE::TIMER::A}
+        else if {-WATCHDUCK::%player%::TEMP::LASTFROZE} <= 2:
+            set {-WATCHDUCK::%player%::TEMP::BALANCE} to -10 if {-WATCHDUCK::%player%::TEMP::BALANCE} > 5
+            set {-WATCHDUCK::%player%::TEMP::BALANCE} to -20 if {-WATCHDUCK::%player%::TEMP::BALANCE} < -100
+            add 1 to {-WATCHDUCK::%player%::TEMP::LASTFROZE}
+        else:
+            add 1 to {-WATCHDUCK::%player%::TEMP::LASTFROZE}
+            if {-WATCHDUCK::%player%::TEMP::LASTFROZE} > 6:
+                set {-WATCHDUCK::%player%::TEMP::BALANCE} to -20 if {-WATCHDUCK::%player%::TEMP::BALANCE} < -100
+    if {-WATCHDUCK::%player%::TEMP::BALANCE} > 0:
+        maybe(player, "Timer", "A", 6, 1, false) if {-WATCHDUCK::%player%::TEMP::LASTFROZE} > 6
+        if {-WATCHDUCK::%player%::TEMP::VERBOSE::TIMER::A} >= 6:
+            cancel event if {-WATCHDUCK::%player%::TEMP::LASTFROZE} > 6
+    delete {-WATCHDUCK::%player%::TEMP::VERBOSE::TIMER::A} if {-WATCHDUCK::%player%::TEMP::BALANCE} < 0
+on heal:
+  if difference between {-WATCHDUCK::%player%::TEMP::LASTHEAL} and now < 0.4 seconds:
+    cancel event if player doesn't have regeneration
+    clearly(player, "BadPacket", "A", true) if player doesn't have regeneration
+  set {-WATCHDUCK::%player%::TEMP::LASTHEAL} to now
+on step on slime block:
+  set {-WATCHDUCK::%player%::TEMP::STOP::SLIME} to true
+on damage:
+  attacker is a player
+  projectile does not exist
+  cancel event if {-WATCHDUCK::%attacker%::TEMP::ARM} is not set
+  maybe(attacker, "BadPacket", "B", 1, 1, true) if {-WATCHDUCK::%attacker%::TEMP::ARM} is not set
+  delete {-WATCHDUCK::%attacker%::TEMP::ARM}
+  delete {-WATCHDUCK::%attacker%::TEMP::VL::BADPACKET::E} if {-WATCHDUCK::%attacker%::TEMP::ARM} is true
+on arm swing:
+  set {-WATCHDUCK::%player%::TEMP::ARM} to true
+on damage:
+  projectile doesn't exist
+  cancel event if {-WATCHDUCK::%attacker%::TEMP::NOATTACK} = true
+  set {-WATCHDUCK::%victim%::TEMP::DAMAGE} to true if {-WATCHDUCK::%victim%::TEMP::CANCELDAMAGE} is not set
+  delete {-WATCHDUCK::%victim%::TEMP::CANCELDAMAGE}
+  delete {-WATCHDUCK::%attacker%::TEMP::NOATTACK}
+  set {-WATCHDUCK::%victim%::TEMP::UNSAFEDAMAGE} to now if attacker is not victim
