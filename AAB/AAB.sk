@@ -1,0 +1,120 @@
+options:
+  AAB: &3&lAAB &8»
+  Version: 1.0.0
+
+  AAB_Permission_Notify: AAB.Notify
+  AAB_Kick_Auto: true
+  AAB_Kick_Message: Timed out.
+
+  AAB_Permission_AAB: AAB.Command.Main
+  AAB_PermissionMessage: Unknown command. Type ""help"" for help.
+
+#Alert Logger
+
+function aab(Player: player, Crasher: text, Type: text, Debug: text, PunishVL: number, AutoPunish: boolean):
+  set {_IP} to ip of {_Player}
+  add 1 to {-AAB::VLS::%{_IP}%::%{_Type}%}
+  send "{@AAB} &f%{_Player}% &7failed &f%{_Crasher}% %{_Type}% &7(&3x%{-AAB::VLS::%{_IP}%::%{_Type}%}%&7)" to all players where [input has permission "{@AAB_Permission_Notify}"]
+  send "{@AAB} &f%{_Player}% &7failed &f%{_Crasher}% %{_Type}% &7(&3x%{-AAB::VLS::%{_IP}%::%{_Type}%}%&7)" to console
+  if {_PunishVL} >= {-AAB::VLS::%{_IP}%::%{_Type}%}:
+    {@AAB_Kick_Auto} = true
+    set {-AAB::PLAYER::KICKED::%{_Player}%} to true if {_AutoPunish} = true
+    kick {_Player} due to "{@AAB_Kick_Message}" if {_AutoPunish} = true
+    add 1 to {-AAB::BOTS::BLOCKED} if {_AutoPunish} = true
+    add 1 to {-AAB::BOTS::BPS} if {_AutoPunish} = true
+
+#Cache Cleaner | Stable
+
+every 1.25 second:
+   delete {-AAB::PACKET::SWING::*}
+   set {-AAB::BOTS::BPS} to 0
+
+every 5 second:
+   if {-AAB::SERVER::PLAYERJOIN} < 5:
+      add 1 to {-AAB::SERVER::PAUSE}
+      delete {-AAB::SERVER::WHITELISTED} if {-AAB::SERVER::PAUSE} > 6
+   delete {-AAB::SERVER::PAUSE} if {-AAB::SERVER::PLAYERJOIN} >= 5
+   set {-AAB::SERVER::PLAYERJOIN} to 0
+
+every minute:
+  set {-AAB::BOTS::BLOCKED} to 0
+
+#Crasher 20A | TESTING
+
+on arm swing:
+  add 1 to {-AAB::PACKET::SWING::%player%}
+  aab(player, "Crasher", "20A", "%{-AAB::PACKET::SWING::%player%}%", 20, true) if {-AAB::PAKCKET::SWING::%player%} >= 25
+  cancel event if {-AAB::PAKCKET::SWING::%player%} >= 25
+
+#Crasher 3B | TESTING
+ 
+on command:
+  aab(player, "Crasher", "3B", command, 3, true) if command contains "/calc"
+  cancel event if command contains "/calc"
+
+#Crasher 5C | TESTING
+
+on join:
+  if {-AAB::PLAYER::VERIFIED::%player%} is not set:
+    set join message to ""
+    kick player due to "{@AAB} &aConnection verified. Please reconnect."
+    add 1 to {-AAB::BOTS::BLOCKED}
+    add 1 to {-AAB::BOTS::BPS}
+    stop
+  add 1 to {-AAB::SERVER::PLAYERJOIN}
+  kick player due to "{@AAB} &cPlease rejoin later." if {-AAB::SERVER::WHITELISTED} = true
+  add 1 to {-AAB::BOTS::BLOCKED} if {-AAB::SERVER::WHITELISTED} = true
+  add 1 to {-AAB::BOTS::BPS} if {-AAB::SERVER::WHITELISTED} = true
+  set join message to "" if {-AAB::SERVER::WHITELISTED} = true
+  aab(player, "Crasher", "5C", player's ip, 5, true) if {-AAB::SERVER::PLAYERJOIN} >= 5
+  set {-AAB::SERVER::WHITELISTED} to true if {-AAB::SERVER::PLAYERJOIN} >= 5
+  set {-AAB::PLAYER::CONNECTED::%player's ip%} to true if player is online
+  wait 2 second
+  {-AAB::PLAYER::KEY::%player%} is not set
+  set {-AAB::PLAYER::TELEPORT::%player%} to player's location
+  set {_Key} to "%random number between 999 and 999999999%" parsed as a number
+  set {-AAB::SERVER::KEYS::%player%} to {_Key}
+  send formatted "<tooltip:Click me!><cmd: /AABVerify %{_Key}%>{@AAB} &fTo get verified. Click &a&l&nHERE &f!" to player
+  wait 15 second
+  kick player due to "{@AAB} &cYou took too long to verify !" if {-AAB::PLAYER::KEY::%player%} is not set
+  add 1 to {-AAB::BOTS::BLOCKED} if {-AAB::PLAYER::KEY::%player%} is not set
+  add 1 to {-AAB::BOTS::BPS} if {-AAB::PLAYER::KEY::%player%} is not set
+
+on join:
+  while player is online:
+    teleport player to {-AAB::PLAYER::TELEPORT::%player%} if {-AAB::PLAYER::KEY::%player%} is not set
+    send action bar "&a%{-AAB::BOTS::BLOCKED}%&a/min &8| &a%{-AAB::BOTS::BPS}%&a/sec" to player if player is op
+    wait 1 tick
+
+on chat:
+  cancel event if {-AAB::PLAYER::KEY::%player%} != true
+  send "{@AAB} &cVerify yourself first !" if {-AAB::PLAYER::KEY::%player%} != true
+
+command /AABVerify [<number>]:
+  trigger:
+    kick player due to "{@AAB} &cWrong key !" if difference between {-AAB::SERVER::KEYS::%player%} and arg 1 > 0.01
+    add 1 to {-AAB::BOTS::BLOCKED} if difference between {-AAB::SERVER::KEYS::%player%} and arg 1 > 0.01
+    add 1 to {-AAB::BOTS::BPS} if difference between {-AAB::SERVER::KEYS::%player%} and arg 1 > 0.01
+    set {-AAB::PLAYER::KEY::%player%} to true if difference between {-AAB::SERVER::KEYS::%player%} and arg 1 < 0.01
+    send "{@AAB} &aYou've been verified !" if difference between {-AAB::SERVER::KEYS::%player%} and arg 1 < 0.01
+
+#Crasher 1D | TESTING
+
+on join:
+  aab(player, "Crasher", "1D", player's ip, 1, false) if {-AAB::PLAYER::CONNECTED::%player's ip%} = true
+
+on quit:
+  if {-AAB::PLAYER::VERIFIED::%player%} is not set:
+    set quit message to ""
+    set {-AAB::PLAYER::VERIFIED::%player%} to true
+  set quit message to "" if {-AAB::SERVER::WHITELISTED} = true
+  set quit message to "" if {-AAB::PLAYER::KICKED::%player's ip%}
+  delete {-AAB::PLAYER::CONNECTED::%player's ip%}
+
+command /aab [<text>] [<offline player>]:
+  permission: {@AAB_Permission_AAB}
+  permission message: {@AAB_PermissionMessage}
+  trigger:
+    if arg 1 is "reset":
+      delete {-AAB::*}
+      send "{@AAB} &aAAB reseted !"
