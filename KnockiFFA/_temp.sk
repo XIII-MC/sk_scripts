@@ -1,0 +1,40 @@
+on join:
+  edit score id "ONLINE.%player%" to "&fConnected: &b%number of all players%" and 4
+     
+every 5 seconds:
+    loop all players:
+        set {_p} to loop-player
+        wait a tick
+        edit score id "KILLS.%{_p}%" to "&fKills: &a%{KBFFA::%{_p}%::STATS::KILLS}%" and 11
+        edit score id "DEATH.%{_p}%" to "&fDeaths: &a%{KBFFA::%{_p}%::STATS::DEATH}%" and 10
+        edit score id "KILLSTREAK.%{_p}%" to "&fKillStreak: &b%{_p}'s level%" and 9
+        edit score id "BESTKILLSTREAK.%{_p}%" to "&fBest KillStreak: &b%{KBFFA::%{_p}%::STATS::BESTKILLSTREAK}%" and 8
+        edit score id "MAP" to "&fMap: &6%{KBFFA::MAP::CURRENT}%" and 6
+        edit score id "EVENT" to "&fEvent: &6%{KBFFA::EVENT::CURRENT}%" and 5
+        edit score id "MAP.TIMER" to "&fNext Map: &6%{KBFFA::MAP::TIMER}%" and 4
+        #edit score id "COINS.%{_p}%" to "&fCoins: &a%{KBFFA::%{_p}%::STATS::COINS}%" and 13
+        #edit score id "KDR.%{_p}%" to "&fK/D: &b%({KBFFA::%{_p}%::STATS::KILLS} / {KBFFA::%{_p}%::STATS::DEATH})%" and 9
+        #edit score id "LEVEL.%{_p}%" to "&fLevel: &e%{KBFFA::%{_p}%::STATS::LEVEL}%" and 7
+        #edit score id "XPBAR.%{_p}%" to "&fProgress: &e%{KBFFA::%{_p}%::STATS::XPBAR}%%%" and 6
+
+on join:
+    wait 13 ticks
+    wipe player's sidebar
+    wait 3 ticks
+    set name of sidebar of player to "  &6&lKnockbackFFA "
+    set score "&3                 " in sidebar of player to 14
+    set score "&fPlayer: &6%player%" in siderbar of player to 13
+    set score "&8                 " in sidebar of player to 12
+    set id based score "&fKills: &a%{KBFFA::%player%::STATS::KILLS}%" in sidebar of player to 11 with id "KILLS.%player%"
+    set id based score "&fDeaths: &a%{KBFFA::%player%::STATS::DEATH}%" in sidebar of player to 10 with id "DEATH.%player%"
+    set id based score "&fKillStreak: &b%player's level%" in sidebar of player to 9 with id "KILLSTREAK.%player%"
+    set id based score "&fBest KillStreak: &b%{KBFFA::%player%::STATS::BESTKILLSTREAK}%" in sidebar of player to 8 with id "BESTKILLSTREAK.%player%"
+    set score "&7                 " in sidebar of player to 7
+    set id based score "&fMap: &6%{KBFFA::MAP::CURRENT}%" in sidebar of player to 6 with id "MAP"
+    set id based score "&fEvent: &b%{KBFFA::EVENT::CURRENT}%" in sidebar of player to 5 with id "EVENT"
+    set id based score "&fNext Map: &6%{KBFFA::MAP::TIMER}%" in sidebar of player to 4 with id "MAP.TIMER"
+    set score "&2                 " in sidebar of player to 3
+    set id based score "&fPlayers: &b%number of all players%" in sidebar of player to 2 with id "ONLINE.%player%"
+    set score "&5                 " in sidebar of player to 1
+    set score "&efishkb.minehut.gg" in sidebar of player to 0
+    stop

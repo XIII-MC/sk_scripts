@@ -1,0 +1,231 @@
+function kffa_gui(p: player, g: number):
+  if {_g} = 0:
+    open chest with 3 rows named "              &8[ &2&o&nShops &8]" to {_p}
+    loop 35 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    set slot 11 of {_p}'s current inventory to blaze rod named "&6Item Skins" with lore "&7Click to visit !"
+    set slot 13 of {_p}'s current inventory to emerald block named "&5Block Skins" with lore "&7Click to visit !"
+    set slot 15 of {_p}'s current inventory to name tag named "&dTags" with lore "&7Click to visit !"
+  if {_g} = 1:
+    open chest with 4 rows named "         &8[ &6&o&nItem Skins Shop&r &8]" to {_p}
+    loop 35 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    set slot 31 of {_p}'s current inventory to oak sign named "&7&n&lGo back !" 
+    set slot 10 of {_p}'s current inventory to blaze rod named "&6Blaze Rod" with lore "&7Cost 25 Coins" #
+    set slot 11 of {_p}'s current inventory to bone named "&fBone" with lore "&7Cost 25 Coins" 
+    set slot 12 of {_p}'s current inventory to poppy named "&cPoppy" with lore "&7Cost 50 Coins"
+    set slot 13 of {_p}'s current inventory to shears named "&fShears" with lore "&7Cost 75 Coins"
+    set slot 14 of {_p}'s current inventory to potato named "&ePotato" with lore "&7Cost 100 Coins"
+    set slot 15 of {_p}'s current inventory to sugar cane named "&aSugar Cane" with lore "&7Cost 125 Coins" 
+    set slot 16 of {_p}'s current inventory to pufferfish named "&9Fish" with lore "&7Cost 150 Coins" 
+    set slot 19 of {_p}'s current inventory to emerald named "&2Emerald" with lore "&7Cost 175 Coins"
+    set slot 20 of {_p}'s current inventory to bread named "&6Baguette" with lore "&7Cost 200 Coins" 
+    set slot 21 of {_p}'s current inventory to iron hoe named "&fIron Hoe" with lore "&7Cost 225 Coins"
+    set slot 22 of {_p}'s current inventory to cookie named "&6Cookie" with lore "&7Cost 250 Coins" 
+    set slot 23 of {_p}'s current inventory to diamond hoe named "&bDiamond Hoe" with lore "&7Cost 275 Coins" 
+    set slot 24 of {_p}'s current inventory to nether star named "&3Nether Star" with lore "&7Cost 300 Coins"
+    set slot 25 of {_p}'s current inventory to ghast tear named "&7Ghast Tear" with lore "&7Cost 325 Coins"
+  if {_g} = 2:
+    open chest with 4 rows named "           &8[ &d&o&nTags Shop&r &8]" to {_p}
+    loop 35 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    set slot 31 of {_p}'s current inventory to oak sign named "&7&n&lGo back !" 
+    set slot 10 of {_p}'s current inventory to wooden sword named "&7&lApprentice" with lore "&7Cost 25 Coins"
+    set slot 11 of {_p}'s current inventory to iron axe named "&f&lFighter" with lore "&7Cost 50 Coins" 
+    set slot 12 of {_p}'s current inventory to diamond chestplate named "&e&lPro" with lore "&7Cost 75 Coins" 
+    set slot 13 of {_p}'s current inventory to bow named "&b&lSniper" with lore "&7Cost 100 Coins" 
+    set slot 14 of {_p}'s current inventory to ender pearl named "&a&lClutcher" with lore "&7Cost 125 Coins" 
+    set slot 15 of {_p}'s current inventory to eye of ender named "&c&lAnti-Void" with lore "&7Cost 150 Coins" 
+    set slot 16 of {_p}'s current inventory to diamond sword named "&5&l&oGamer" with lore "&7Cost 175 Coins" 
+    set slot 19 of {_p}'s current inventory to shield named "&3&lGUARD" with lore "&7Cost 200 Coins" 
+    set slot 20 of {_p}'s current inventory to feather named "&4&l&oHACKER" with lore "&7Cost 225 Coins" 
+    set slot 21 of {_p}'s current inventory to pink dye named "&d&l&oEgirl" with lore "&7Cost 250 Coins"
+    set slot 22 of {_p}'s current inventory to obsidian named "&0&l&o&n&k???" with lore "&7Cost 275 Coins"
+    set slot 23 of {_p}'s current inventory to red bed named "&6&l&o&nOk Bro" with lore "&7Cost 300 Coins" 
+    set slot 24 of {_p}'s current inventory to paper named "&a&l&o&nHOW TO HAKE??" with lore "&7Cost 325 Coins"
+    set slot 25 of {_p}'s current inventory to golden boots named "&d&lNo&4&lHacks&b&l&o&mJust&1&l&o&mJDS" with lore "&7Cost 350 Coins"
+  if {_g} = 3:
+    open chest with 4 rows named "        &8[ &a&o&nBlock Skins Shop&r &8]" to {_p}
+    loop 35 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    set slot 31 of {_p}'s current inventory to oak sign named "&7&n&lGo back !" 
+    set slot 10 of {_p}'s current inventory to grass block named "&2Grass Skin" with lore "&7Cost 25 Coins"
+    set slot 11 of {_p}'s current inventory to diamond ore named "&bOres Skin" with lore "&7Cost 50 Coins" 
+    set slot 12 of {_p}'s current inventory to green terracotta named "&aTerracotta Skin" with lore "&7Cost 75 Coins" 
+    set slot 13 of {_p}'s current inventory to white wool named "&fWool Skin" with lore "&7Cost 100 Coins" 
+    set slot 14 of {_p}'s current inventory to oak planks named "&ePlanks Skin" with lore "&7Cost 125 Coins"
+    set slot 15 of {_p}'s current inventory to lime stained glass named "&aStained Glass Skin" with lore "&7Cost 150 Coins" 
+    set slot 16 of {_p}'s current inventory to diamond block named "&bOres Blocks Skin" with lore "&7Cost 175 Coins"
+  if {_g} = 4:
+    set {KBFFA::%{_p}%::QUEST::KILL1} to 0 if {KBFFA::%{_p}%::QUEST::KILL1} is not set
+    set {KBFFA::%{_p}%::QUEST::KILL0} to 0 if {KBFFA::%{_p}%::QUEST::KILL0} is not set
+    set {KBFFA::%{_p}%::QUEST::KILLSTREAK} to 0 if {KBFFA::%{_p}%::QUEST::KILLSTREAK} is not set
+    set {KBFFA::%{_p}%::QUEST::BLOCK} to 0 if {KBFFA::%{_p}%::QUEST::BLOCK} is not set
+    set {KBFFA::%{_p}%::QUEST::PLAY} to 0 if {KBFFA::%{_p}%::QUEST::PLAY} is not set
+    set {KBFFA::%{_p}%::QUEST::ENDER} to 0 if {KBFFA::%{_p}%::QUEST::ENDER} is not set
+    set {KBFFA::%{_p}%::QUEST::PARKOUR} to 0 if {KBFFA::%{_p}%::QUEST::PARKOUR} is not set
+    open chest with 3 rows named "              &8[ &b&o&nQuests &8]" to {_p}
+    loop 35 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    if {KBFFA::%{_p}%::QUEST::KILL10} is not set:
+      set slot 10 of {_p}'s current inventory to red glass pane named "&cKill 10 players" with lore "&7&oClick to start &r&7[&6Prize: 10 Coins&7] !"
+    else:
+      set slot 10 of {_p}'s current inventory to green glass pane named "&cKill 10 players" with lore "&7&oClick to finish &r&8[%{KBFFA::%{_p}%::QUEST::KILL1}%&8/10]"
+    if {KBFFA::%{_p}%::QUEST::KILL100} is not set:
+      set slot 11 of {_p}'s current inventory to red glass pane named "&cKill 100 players" with lore "&7&oClick to start &r&7[&6Prize: 100 Coins&7] !"
+    else:
+      set slot 11 of {_p}'s current inventory to green glass pane named "&cKill 100 players" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::KILL0}%&8/100]"
+    if {KBFFA::%{_p}%::QUEST::KILLSTREAK10} is not set:
+      set slot 12 of {_p}'s current inventory to red glass pane named "&cGet a 10 kill streak" with lore "&7&oClick to start &r&7[&6Prize: 50 Coins&7] !"
+    else:
+      set slot 12 of {_p}'s current inventory to green glass pane named "&cGet a 10 kill streak" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::KILLSTREAK}%&8/10]"
+    if {KBFFA::%{_p}%::QUEST::BLOCK500} is not set:
+      set slot 13 of {_p}'s current inventory to red glass pane named "&cPlace 500 Blocks" with lore "&7&oClick to start &r&7[&6Prize: 50 Coins&7] !"
+    else:
+      set slot 13 of {_p}'s current inventory to green glass pane named "&cPlace 500 Blocks" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::BLOCK}%&8/500]"
+    if {KBFFA::%{_p}%::QUEST::ENDER50} is not set:
+      set slot 14 of {_p}'s current inventory to red glass pane named "&cShoot an Ender Pearl 50 Times" with lore "&7&oClick to start &r&7[&6Prize: 50 Coins&7] !"
+    else:
+      set slot 14 of {_p}'s current inventory to green glass pane named "&cShoot an Ender Pearl 50 Times" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::ENDER}%&8/50]"
+    if {KBFFA::%{_p}%::QUEST::PLAY1} is not set:
+      set slot 15 of {_p}'s current inventory to red glass pane named "&cPlay for 1 Hour" with lore "&7&oClick to start &r&7[&6Prize: 60 Coins&7] !"
+    else:
+      set slot 15 of {_p}'s current inventory to green glass pane named "&cPlay for 1 Hour" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::PLAY}%&8/60]"
+    if {KBFFA::%{_p}%::QUEST::PARKOUR1} is not set:
+      set slot 16 of {_p}'s current inventory to red glass pane named "&cFinish the Parkour" with lore "&7&oClick to start &r&7[&6Prize: 100 Coins&7] !"
+    else:
+      set slot 16 of {_p}'s current inventory to green glass pane named "&cFinish the Parkour" with lore "&7&oClick to finish !&r&8[%{KBFFA::%{_p}%::QUEST::PARKOUR}%&8/1]"
+  if {_g} = 5:
+    open chest with 5 rows named "             &8[ &5&o&nSettings&r &8]" to {_p}
+    loop 58 times:
+      add 1 to {_gui}
+      set slot {_gui} of {_p}'s current inventory to black glass pane named ""
+    set slot 0 of {_p}'s current inventory to barrier named "&c&l&nClose Menu"
+    set slot 10 of {_p}'s current inventory to dropper with name "&5Edit Kit" with lore "%nl%&7Click to edit your kit!"
+    set slot 12 of {_p}'s current inventory to book with name "&bQuests" with lore "%nl%&7Do quests to gain &a$$$"
+    set slot 14 of {_p}'s current inventory to ender eye with name "&2Spectate" with lore "%nl%&7Click to spectate%nl%&eUse /exit to stop spectating!"
+    set slot 16 of {_p}'s current inventory to gray dye with name "&cToggle Death Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &cdisabled&7." if {KBFFA::%{_p}%::SETTINGS::DEATHMESSAGE} is set
+    set slot 16 of {_p}'s current inventory to lime dye with name "&aToggle Death Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &aenabled&7." if {KBFFA::%{_p}%::SETTINGS::DEATHMESSAGE} is not set
+    set slot 28 of {_p}'s current inventory to gray dye with name "&cToggle KillStreak Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &cdisabled&7." if {KBFFA::%{_p}%::SETTINGS::KILLSTREAK} is set
+    set slot 28 of {_p}'s current inventory to lime dye with name "&aToggle KillStreak Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &aenabled&7." if {KBFFA::%{_p}%::SETTINGS::KILLSTREAK} is not set
+    set slot 30 of {_p}'s current inventory to gray dye with name "&cToggle Bounty Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &cdisabled&7." if {KBFFA::%{_p}%::SETTINGS::BOUNTY} is set
+    set slot 30 of {_p}'s current inventory to lime dye with name "&aToggle Bounty Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &aenabled&7." if {KBFFA::%{_p}%::SETTINGS::BOUNTY} is not set
+    set slot 32 of {_p}'s current inventory to gray dye with name "&cToggle Auto Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &cdisabled&7." if {KBFFA::%{_p}%::SETTINGS::BROADCAST} is set
+    set slot 32 of {_p}'s current inventory to lime dye with name "&aToggle Auto Messages" with lore "%nl%&7Click to toggle!%nl%&7Currently &aenabled&7." if {KBFFA::%{_p}%::SETTINGS::BROADCAST} is not set
+    set slot 34 of {_p}'s current inventory to gray dye with name "&cToggle Death Titles" with lore "%nl%&7Click to toggle!%nl%&7Currently &cdisabled&7." if {KBFFA::%{_p}%::SETTINGS::TITLE} is set
+    set slot 34 of {_p}'s current inventory to lime dye with name "&aToggle Death Titles" with lore "%nl%&7Click to toggle!%nl%&7Currently &aenabled&7." if {KBFFA::%{_p}%::SETTINGS::TITLE} is not set
+command /shop:
+  trigger:
+    kffa_gui(player, 0)
+command /quests:
+  trigger:
+    kffa_gui(player, 4)
+command /settings:
+  trigger:
+    kffa_gui(player, 5)
+on inventory click:
+  If inventory name of player's current inventory is "              &8[ &2&o&nShops &8]":
+    cancel event
+    kffa_gui(player, 1) if clicked slot is 11
+    kffa_gui(player, 2) if clicked slot is 15
+    kffa_gui(player, 3) if clicked slot is 13
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "         &8[ &6&o&nItem Skins Shop&r &8]":
+    cancel event
+    make player execute command "/§sblaze" if clicked slot is 10
+    make player execute command "/§sirong" if clicked slot is 11
+    make player execute command "/§sgoldg" if clicked slot is 12
+    make player execute command "/§sdiamondg" if clicked slot is 13
+    make player execute command "/§semeraldg" if clicked slot is 14
+    make player execute command "/§snetherite" if clicked slot is 15
+    make player execute command "/§sfish" if clicked slot is 16
+    make player execute command "/§shead" if clicked slot is 19
+    make player execute command "/§sbread" if clicked slot is 20
+    make player execute command "/§sironhoe" if clicked slot is 21
+    make player execute command "/§sbed" if clicked slot is 22
+    make player execute command "/§sdhoe" if clicked slot is 23
+    make player execute command "/§sstar" if clicked slot is 24
+    make player execute command "/§sdhead" if clicked slot is 25
+    kffa_gui(player, 0) if clicked slot is 31
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "           &8[ &d&o&nTags Shop&r &8]":
+    cancel event
+    make player execute command "/§scoal" if clicked slot is 10
+    make player execute command "/§siron" if clicked slot is 11
+    make player execute command "/§sgold" if clicked slot is 12
+    make player execute command "/§sdiamond" if clicked slot is 13
+    make player execute command "/§semerald" if clicked slot is 14
+    make player execute command "/§sunvoid" if clicked slot is 15
+    make player execute command "/§spclutch" if clicked slot is 16
+    make player execute command "/§svac" if clicked slot is 19
+    make player execute command "/§shaxx" if clicked slot is 20
+    make player execute command "/§sgod" if clicked slot is 21
+    make player execute command "/§smc" if clicked slot is 22
+    make player execute command "/§sangel" if clicked slot is 23
+    make player execute command "/§sangeld" if clicked slot is 24
+    make player execute command "/§sjds" if clicked slot is 25
+    kffa_gui(player, 0) if clicked slot is 31
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "        &8[ &a&o&nBlock Skins Shop&r &8]":
+    cancel event
+    make player execute command "/§sconc" if clicked slot is 10
+    make player execute command "/§sglass" if clicked slot is 11
+    make player execute command "/§swool" if clicked slot is 12
+    make player execute command "/§sblock" if clicked slot is 13
+    make player execute command "/§splanks" if clicked slot is 14
+    make player execute command "/§ssglass" if clicked slot is 15
+    make player execute command "/§soreblock" if clicked slot is 16
+    kffa_gui(player, 0) if clicked slot is 31
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "              &8[ &b&o&nQuests &8]":
+    cancel event
+    make player execute command "/§q1" if clicked slot is 10
+    make player execute command "/§q2" if clicked slot is 11
+    make player execute command "/§q3" if clicked slot is 12
+    make player execute command "/§q4" if clicked slot is 13
+    make player execute command "/§q5" if clicked slot is 14
+    make player execute command "/§q6" if clicked slot is 15
+    make player execute command "/§q7" if clicked slot is 16
+    kffa_gui(player, 4)
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "           &8[ &d&o&nTags Shop&r &8]":
+    cancel event
+    make player execute command "/§scoal" if clicked slot is 10
+    make player execute command "/§siron" if clicked slot is 11
+    make player execute command "/§sgold" if clicked slot is 12
+    make player execute command "/§sdiamond" if clicked slot is 13
+    make player execute command "/§semerald" if clicked slot is 14
+    make player execute command "/§sunvoid" if clicked slot is 15
+    make player execute command "/§spclutch" if clicked slot is 16
+    make player execute command "/§svac" if clicked slot is 19
+    make player execute command "/§shaxx" if clicked slot is 20
+    make player execute command "/§sgod" if clicked slot is 21
+    make player execute command "/§smc" if clicked slot is 22
+    make player execute command "/§sangel" if clicked slot is 23
+    make player execute command "/§sangeld" if clicked slot is 24
+    make player execute command "/§sjds" if clicked slot is 25
+    kffa_gui(player, 0) if clicked slot is 31
+    close player's inventory if clicked slot is 0
+  If inventory name of player's current inventory is "             &8[ &5&o&nSettings&r &8]":
+    cancel event
+    make player execute command "/kbffa editkit" if clicked slot is 10
+    make player execute command "/quests" if clicked slot is 12
+    make player execute command "/spectate" if clicked slot is 14
+    make player execute command "/toggledeathmessage" if clicked slot is 16
+    make player execute command "/togglekillstreakmessage" if clicked slot is 28
+    make player execute command "/togglebountymessage" if clicked slot is 30
+    make player execute command "/toggleautomessage" if clicked slot is 32
+    make player execute command "/toggletitlemessage" if clicked slot is 34
+    kffa_gui(player, 5)
+    kffa_gui(player, 0) if clicked slot is 31
+    close player's inventory if clicked slot is 0

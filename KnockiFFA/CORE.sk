@@ -1,0 +1,166 @@
+#Core KnockiFFA
+#Last Update 26/01/2021
+#By LananasBleu
+#For KnockiFFA
+#»
+options:
+   core: &6&lKBFFA &7»
+   ss: &8(&b&lAssistant&8) &7
+
+#/// PING / ANTIPINGSPOOF ///
+
+
+command /warn [<player>] [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            add 1 to {warns.%arg 1%}
+            send "&8[&c&lWarn&8] &7You have been warned ! Reason: &e%arg 2%&7. &7This is your &c%{warns.%arg 1%}% &7warn !" to arg 1
+            send "&8[&c&lWarn&8] &7%arg 1% has been warned for &e%arg 2%" to player
+            broadcast "&8[&c&lWarn&8] &c%player% &7warned &c%arg 1% &7reason &e%arg 2% &8[%{warns.%arg 1%}%&8/5]"
+            if {warns.%arg 1%} >= 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warns.%arg 1%} >= 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warns.%arg 1%} >= 5:
+               make server execute command "/tempban %arg 1% 7d 5 Warns"
+               stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            add 1 to {warns.%arg 1%}
+            send "&8[&c&lWarn&8] &7You have been warned ! &7This is your &c%{warns.%arg 1%}% &7warn !" to arg 1
+            send "&8[&c&lWarn&8] &7%arg 1% has been warned for &e%arg 2%" to player
+            broadcast "&8[&c&lWarn&8] &c%player% &7warned &c%arg 1% &8[%{warns.%arg 1%}%&8/5]"
+            if {warns.%arg 1%} = 3:
+               make server execute command "/mute %arg 1% 1h 3 warns"
+            if {warns.%arg 1%} = 4:
+               make server execute command "/kick %arg 1% 4 Warns"
+            if {warns.%arg 1%} = 5:
+               make server execute command "/tempban %arg 1% 7d 5 Warns"
+            stop
+      if arg 1 is not set:
+         send "&8[&c&lWarn&8] &cUsage /warn PLAYER REASON" to player
+         stop
+
+
+
+command /removewarn [<player>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         remove 1 from {warns.%arg 1%}
+         send "&8[&c&lWarn&8] &71 warn have been removed ! Be happy :D" to arg 1
+         send "&8[&c&lWarn&8] &7Removed 1 warn from &e%arg 1%" to player
+      if arg 1 is not set:
+         send "&8[&c&lWarn&8] &cUsage /removedwarn PLAYER"
+
+command /ban [<offline player>] [<text>]:
+   permission: MODERATOR
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            if arg 1 has permission "ban.bypass":
+               send "&8[&4&lBan&8] &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {banned.%arg 1%} to true
+            set {banner.%arg 1%} to player 
+            set {bantime.%arg 1%} to now
+            set {_banr::*} to "&cYou are permanently banned from &e&l&oKnocki&cFFA &c.", "&7Reason: &cNot Specified", "&cBy: &c[STAFF] &7%player%" and "&6If you think this is a mistake then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+            ban arg 1 due to "%{_banr::*}%"
+            kick arg 1 due to "%{_banr::*}%"
+            broadcast "&8[&4&lBan&8] &c%arg 1% &7has been permanently banned by &c%player%"
+            send "&8[&4&lBan&8] &c%arg 1% &7has been succecfuly banned!" to player
+            add arg 1 to {banlist::*}
+            stop
+      if arg 1 is set:
+         if arg 2 is set:
+            if arg 1 has permission "ban.bypass":
+               send "&8[&4&lBan&8] &cYou can't ban this person !" to player
+               stop
+            make server execute command "/smite %arg 1%"
+            add 1 to {bans.%arg 1%}
+            set {banned.%arg 1%} to true
+            set {banner.%arg 1%} to player 
+            set {banreason.%arg 1%} to arg 2
+            set {bantime.%arg 1%} to now
+            set {_banr::*} to "&cYou are permanently banned from &e&l&oKnocki&cFFA &c.", "&7Reason: &c%arg 2%", "&cBy: &c[STAFF] &7%player%" and "&6If you think this is a mistake then please appeal here: &bhttps://discord.gg/HjEVzx28P9"
+            ban arg 1 due to "%{_banr::*}%"
+            kick arg 1 due to "%{_banr::*}%"
+            broadcast "&8[&4&lBan&8] &c%arg 1% &7has been permanently banned by &c%player% &7reason &e%arg 2%"
+            send "&8[&4&lBan&8] &c%arg 1% &7has been succecfuly banned for &6%arg 2%" to player
+            add arg 1 to {banlist::*}
+            stop
+      if arg 1 is not set:
+         send "&8[&4&lBan&8] &cUsage /ban PLAYER REASON" to player
+         stop
+
+command /bans:
+   permission: HELPER
+   trigger:
+      send "&8[&4&lBan&8] &cBanned Players: &f%{banlist::*}%" to player
+
+command /unban [<text>]:
+   permission: SMODERATOR
+   trigger:
+      if arg 1 is set:
+         unban arg 1
+         send "&8[&4&lBan&8] &7You succecfuly unbanned &e%arg 1%"
+         remove arg 1 from {banlist::*}
+         add 1 to {unbans.%arg 1%}
+         set {tempban.%arg 1%} to false
+         clear {tempban.timestamp::%arg 1%}
+         clear {tempban.time::%arg 1%}
+         set {vacban.%arg 1%} to false
+         set {banned.%arg 1%} to false
+         clear {banner.%arg 1%}
+         clear {banreason.%arg 1%}
+         clear {bantime.%arg 1%}
+         stop
+      if arg 1 is not set:
+         send "&8[&4&lBan&8] &cUsage: /unban PLAYER"
+         stop
+
+command /spectate:
+   permission: spectate
+   trigger:
+      if "%region at player%" contain "spawn":
+         if {spectate.%player%} is not set:
+            set {spectate.%player%} to false
+         if {spectate.%player%} is false:
+            set {spectate.%player%} to true
+            set player's gamemode to spectator
+            send "&8[&9&lGame&8] &7You are now spectating."
+            stop
+         if {spectate.%player%} is true:
+            set {spectate.%player%} to false
+            set player's gamemode to survival
+            send "&8[&9&lGame&8] &cYou are no longer spectating."
+            stop
+
+
+
+
+
+#/// ALERT ///
+
+
+#/// AUTOSAVE / AUTOVANISH ///
+
+
+#/// STORE ///
+
+command /buy:
+   trigger:
+      send "&bStore Link: &fhttps://fishnet.tebex.io/"
+
+command /store:
+   trigger:
+      send "&bStore Link: &fhttps://fishnet.tebex.io/"
+
+#/// EVENTS ///
+
+#/// FREEZE ///
+

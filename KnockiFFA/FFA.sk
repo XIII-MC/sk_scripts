@@ -1,0 +1,1800 @@
+options:
+   core: &6&lKBFFA &7» 
+   staff: &4&lSTAFF &7»
+   kill: &4&lKill &7» &c
+   death: &4&lDeath &7» &c
+   version: 0.2.2
+   speed-cooldown: 15
+   jump-cooldown: 15
+   bow-cooldown: 15  
+   kill-message: &8[&4&lKill&8] &c%{_p}% &7has been killed by &c%{_killer}%
+   death-message: &8[&4&lDeath&8] &c%{_p}% &7died.
+   PermMsg: &6&lKBFFA &7» &cMissing Permissions.
+
+   KBFFA_Permission_SilentJoin: HELPER
+   KBFFA_Permission_SilentQuit: HELPER
+   KBFFA_Permission_Staff: STAFF
+   KBFFA_Permission_SetEdit: ADMIN
+   KBFFA_Permission_Import: ADMIN
+   KBFFA_Permission_Statsreset: MODERATOR
+   KBFFA_Permission_ReportView: STAFF
+   KBFFA_Permission_SetEdit: ADMIN
+   KBFFA_Permission_UpgradesReset: MODERATOR
+   KBFFA_Permission_SetSpawn: ADMIN
+   KBFFA_Permission_StaffChat: HELPER
+
+on projectile shoot:
+  add 1 to {KBFFA::%shooter%::STATS::ENDERPEARL} if projectile is ender pearl
+on projectile shoot:
+  add 1 to {KBFFA::%shooter%::STATS::ARROWS} if projectile is arrow
+on left click:
+   add 1 to {KBFFA::%player%::STATS::LEFTCLICK}
+on right click:
+   add 1 to {KBFFA::%player%::STATS::RIGHTCLICK}
+on hunger meter change:
+   cancel event
+on craft:
+  cancel event if player's gamemode is not creative
+on right click on anvil:
+  cancel event if player's gamemode is not creative 
+on inventory click:
+  cancel event if event-item is gold pressure plate or feather
+  {-KBFFA::%player%::TEMP::EDITING} is not set
+  cancel event if player's gamemode is not creative
+on drop: 
+   cancel event 
+on death:
+   cancel event
+   kffa_death(victim)
+on damage:
+  cancel event if {-KBFFA::%attacker%::FROZEN} is set
+  cancel event if {-KBFFA::%victim%::FROZEN} is set
+  play sound "entity.experience_orb.pickup" with volume 10 and pitch 1 at attacker for attacker
+  set {-KBFFA::%victim%::TEMP::LASTHIT} to attacker if attacker is not victim
+  kffa_death(victim) if "%damage cause%" contains "void"
+  if damage is greater than or equal to health of victim:
+    cancel event
+    kffa_death(victim)
+on first join:
+   if {KBFFA::%player%::JOINV2} is not set:
+      delete {KBFFA::%player%::*}
+      set {KBFFA::%player%::STATS::KILLS} to 0
+      set {KBFFA::%player%::STATS::COINS} to 0
+      set {KBFFA::%player%::STATS::DEATH} to 0
+      set {KBFFA::%player%::STATS::BLOCKPLACE} to 0
+      set {KBFFA::%player%::STATS::ARROWS} to 0
+      set {KBFFA::%player%::STATS::ENDERPEARL} to 0
+      set {KBFFA::%player%::STATS::LEFTCLICK} to 0
+      set {KBFFA::%player%::STATS::RIGHTCLICK} to 0
+      set {KBFFA::%player%::JOINV2} to true
+      add 1 to {KBFFA::PLAYERJOINCOUNT}
+      broadcast "{@core} &6%player% &7joined for the first time ! &8(##%{KBFFA::PLAYERJOINCOUNT}%)"
+on region enter:
+  wait 1 ticks
+  kffa_clear(player) if "%region at player%" contains "jump"
+on region enter:
+  wait 1 ticks
+  "%region at player%" contains "void"
+  player's gamemode is not creative or spectator
+  difference between {-KBFFA::%player%::TEMP::TIMESPAN::DEATHCOOLDOWN} and now > 0.6 second
+  set {-KBFFA::%player%::TEMP::TIMESPAN::DEATHCOOLDOWN} to now
+  kffa_death(player)
+on region leave:
+  wait 1 ticks
+  "%region at player%" contains "pvp"
+  stop if player's gamemode is creative or spectator
+  kffa_equip(player) if "%region at player%" does not contain "spawn"
+  kffa_clear(player)
+
+function kffa_hub(p: player):
+  wait 2 ticks
+  if "%region at {_p}%" contains "spawn":
+    kffa_clear({_p})
+    set slot 2 of {_p} to emerald named "&2Shop &7(Right-Click)"
+    set slot 4 of {_p} to paper named "&eStatistics &7(Right-Click)"
+    set slot 6 of {_p} to command block named "&dSettings &7(Right-Click)"
+
+on right click with emerald:
+  wait 2 tick
+  make player execute command "/shop" if "%region at player%" contains "spawn"
+on right click with command block:
+  wait 2 tick
+  make player execute command "/settings" if "%region at player%" contains "spawn"
+on right click with paper:
+  wait 2 tick
+  make player execute command "/kbffa stats" if "%region at player%" contains "spawn"
+
+command /toggletitlemessage:
+  trigger:
+    if {KBFFA::%player%::SETTINGS::TITLE} is not set:
+      set {KBFFA::%player%::SETTINGS::TITLE} to true
+      send "{@core} &cDeath Titles disabled."
+      make player execute command "/settings"
+      stop
+    else:
+      delete {KBFFA::%player%::SETTINGS::TITLE}
+      send "{@core} &aDeath Titles enabled."
+      make player execute command "/settings"
+
+command /toggledeathmessage:
+  trigger:
+    if {KBFFA::%player%::SETTINGS::DEATHMESSAGE} is not set:
+      set {KBFFA::%player%::SETTINGS::DEATHMESSAGE} to true
+      send "{@core} &cDeath messages disabled."
+      make player execute command "/settings"
+      stop
+    else:
+      delete {KBFFA::%player%::SETTINGS::DEATHMESSAGE}
+      send "{@core} &aDeath messages enabled."
+      make player execute command "/settings"
+
+command /togglekillstreakmessage:
+  trigger:
+    if {KBFFA::%player%::SETTINGS::KILLSTREAK} is not set:
+      set {KBFFA::%player%::SETTINGS::KILLSTREAK} to true
+      send "{@core} &cKillStreak messages disabled."
+      make player execute command "/settings"
+      stop
+    else:
+      delete {KBFFA::%player%::SETTINGS::KILLSTREAK}
+      send "{@core} &aKillStreak messages enabled."
+      make player execute command "/settings"
+
+command /toggleautomessage:
+  trigger:
+    if {KBFFA::%player%::SETTINGS::BROADCAST} is not set:
+      set {KBFFA::%player%::SETTINGS::BROADCAST} to true
+      send "{@core} &cAutoBroadcast messages disabled."
+      make player execute command "/settings"
+      stop
+    else:
+      delete {KBFFA::%player%::SETTINGS::BROADCAST}
+      send "{@core} &aAutoBroadcast messages enabled."
+      make player execute command "/settings"
+
+command /togglebountymessage:
+  trigger:
+    if {KBFFA::%player%::SETTINGS::BOUNTY} is not set:
+      set {KBFFA::%player%::SETTINGS::BOUNTY} to true
+      send "{@core} &cBounty messages disabled."
+      make player execute command "/settings"
+      stop
+    else:
+      delete {KBFFA::%player%::SETTINGS::BOUNTY}
+      send "{@core} &aBounty messages enabled."
+      make player execute command "/settings"
+
+command /spectate:
+  trigger:
+    wait 2 ticks
+    if "%region at player%" contains "spawn":
+      kffa_clear(player)
+      set player's gamemode to spectator
+      send "{@core} &aYou are now a spectator, to exit spectate mode do /exit."
+
+command /exit:
+  trigger:
+    if player's gamemode is spectator:
+      teleport player to {KBFFA::SPAWN}
+      kffa_clear(player)
+      kffa_hub(player)
+      set player's gamemode to survival
+      send "{@core} &aYou are no longer spectating."
+
+on join:
+   set {KBFFA::%player%::STATS::BESTKILLSTREAK} to 0 if {KBFFA::%player%::STATS::BESTKILLSTREAK} is not set
+   set {KBFFA::%player%::STATS::XPBARPKILL} to 25 if {KBFFA::%player%::STATS::XPBARPKILL} is not set
+   set {KBFFA::%player%::STATS::XPBAR} to 0 if {KBFFA::%player%::STATS::XPBAR} is not set
+   set {KBFFA::%player%::STATS::XP} to 0 if {KBFFA::%player%::STATS::XP} is not set
+   set {KBFFA::%player%::STATS::LEVELXP} to 100 if {KBFFA::%player%::STATS::LEVELXP} is not set
+   set {KBFFA::%player%::STATS::LEVEL} to 1 if {KBFFA::%player%::STATS::LEVEL} is not set
+   set {KBFFA::%player%::STATS::DISPLAYEDLEVEL} to "&7%{KBFFA::%player%::STATS::LEVEL}%" if {KBFFA::%player%::STATS::DISPLAYEDLEVEL} is not set
+   kffa_hub(player)
+   set join message to ""
+   if {KBFFA::%player%::PUNISH::BAN::STATE} is not set:
+      broadcast "&7(&2&l+&7) &7%player%" if player doesn't have permission "{@KBFFA_Permission_SilentJoin}"
+   else:
+      if {KBFFA::%player%::PUNISH::BAN::TIMESPAN} is not set:
+         wait 8 ticks
+         kick player due to "{@core} &cYou were banned for ever, &c%{KBFFA::%player%::PUNISH::BAN::REASON}%&7." if {KBFFA::%player%::PUNISH::BAN::REASON} is set
+         kick player due to "{@core} &cYou were banned for ever&7." if {KBFFA::%player%::PUNISH::BAN::REASON} is not set
+         stop
+      if difference between {KBFFA::%player%::PUNISH::BAN::DATE} and {_now} >= {KBFFA::%player%::PUNISH::BAN::TIMESPAN}:
+         delete {KBFFA::%player%::PUNISH::BAN::*}
+         send "{@staff} &c%player% &7has been automaticly unbanned." to all players where [input has permission "LibertyCity.ban.alert"]
+         send "{@core} &aYou were automaticly unbanned." to player
+         stop
+      send "{@staff} &c%player% &7tried to join but he is banned &c%{KBFFA::%player%::PUNISH::BAN::TIMESPAN}% &7&o(%difference between {_now} and {KBFFA::%player%::PUNISH::BAN::DATE}%&7&o restante)." to all players where [input has permission "LibertyCity.ban.alert"]
+      wait 8 ticks
+      kick player due to "{@core} &cYou were banned for &c%{KBFFA::%player%::PUNISH::BAN::TIMESPAN}%, &c%difference between {_now} and {KBFFA::%player%::PUNISH::BAN::DATE}%&7." if {KBFFA::%player%::PUNISH::BAN::REASON} is set
+      kick player due to "{@core} &cYou were banned for &c%difference between {_now} and {KBFFA::%player%::PUNISH::BAN::DATE}%&7." if {KBFFA::%player%::PUNISH::BAN::REASON} is not set
+   set {-KBFFA::%player%::TEMP::TIMESPAN::DEATHCOOLDOWN} to now
+   teleport player to {KBFFA::SPAWN}
+on quit:
+  set quit message to ""
+  if {KBFFA::%player%::PUNISH::BAN::STATE} is not set:
+    set quit message to "&7(&c&l-&7) &7%player%" if player doesn't have permission "{@KBFFA_Permission_SilentQuit}"
+
+command /kbffa [<text>] [<offline player>]:
+  trigger:
+
+    if arg 1 is not set:
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-="
+      send ""
+      send "&4&lOwner(s) &7» &cXIII___, CallumlousTV"
+      send "&b&lStaff &7» Preceding, Rath_Faster, Vagdedes2"
+      send ""
+      send "&6Server Core &7» v{@version}"
+      send "&6Developer &7» &cXIII___"
+      send ""
+      send "&7&oType /kbffa help for more."
+      send ""
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-="
+
+    if arg 1 is "help":
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-="
+      send ""
+      send "&7Available Commands"
+      send ""
+      send "&e/kbffa &6help &7- &aShow this message."
+      send "&e/kbffa &6editkit &7- &aEdit your slot placements."
+      send "&e/kbffa &6stats &7- &aSend your statistics."
+      send "&e/kbffa &6kitreset &7- &aReset your custom kit."
+      send "&e/kbffa &6playtime &7- &aSends how long you played on the server"
+      send ""
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-="
+      if player has permission "{@KBFFA_Permission_Staff}":
+        send "&c&lStaff Commands"
+        send ""
+        send "&e/kbffa &6setedit &7- &aSet edit point to player's position."
+        send "&e/kbffa &6kit &7- &aGive the player his kit."
+        send "&e/kbffa &6skinsreset &7- &aReset selected player's skins."
+        send "&e/kbffa &6blockskinsreset &7- &aReset selected player's block skins."
+        send "&e/kbffa &6import &7- &aImport death and kill messages."
+        send "&e/kbffa &6setspawn &7- &aSet spawn to your location."
+        send ""
+        send "&e=-=-=-=-=-=-=-=-=-=-=-=-="
+
+    if arg 1 is "playtime":
+      if arg 2 is not set:
+        send "{@core} &7You played: &a%difference between player's first login and now%"
+      else:
+        send "{@core} &7'&e%arg 2%&7' played: &a%difference between arg 2's first login and now%" to player
+
+    if arg 1 is "editkit":
+      if "%region at player%" contains "spawn":
+        wait 1 ticks
+        if {-KBFFA::%player%::TEMP::EDITING} is not set:
+          set {-KBFFA::%player%::TEMP::EDITING} to true
+          send "{@core} &aYou are now editing your slots placement !"
+          teleport player to {KBFFA::EDITPOSITION}
+          kffa_equip(player)
+          stop
+        else:
+          send "{@core} &7Saving your slots placement..."
+          inventoryManager("save", player)
+          kffa_hub(player)
+          send "{@core} &aSuccess ! Your slots placement were saved."
+          teleport player to {KBFFA::SPAWN}
+          delete {-KBFFA::%player%::TEMP::EDITING}
+      else:
+        send "{@core} &cError ! You need to be at spawn !"
+        play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "stats":
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      send ""
+      send "        &6&l Your Statistics"
+      send ""
+      send "&7Kills &7» &6%{KBFFA::%player%::STATS::KILLS}%"
+      send "&7Deaths &7» &6%{KBFFA::%player%::STATS::DEATH}%"
+      send "&7KDR &7» &6%({KBFFA::%player%::STATS::KILLS} / {KBFFA::%player%::STATS::DEATH})%"
+      send "&7Coins &7» &6%{KBFFA::%player%::STATS::COINS}%"
+      send ""
+      send "&7Blocks Placed &7» &6%{KBFFA::%player%::STATS::BLOCKPLACE}%"
+      send "&7Enderpearl Shoots &7» &6%{KBFFA::%player%::STATS::ENDERPEARL}%"
+      send "&7Arrows Shot &7» &6%{KBFFA::%player%::STATS::ARROWS}%"
+      send "&7You left clicked &7» &6%{KBFFA::%player%::STATS::LEFTCLICK}% &6Times"
+      send "&7You right clicked &7» &6%{KBFFA::%player%::STATS::RIGHTCLICK}% &6Times"
+      send ""
+      send "&e=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
+    if arg 1 is "kitreset":
+      send "{@core} &7Reseting your kit..."
+      delete {KBFFA::%player%::INVENTORY::ITEMS::*}
+      delete {KBFFA::%player%::INVENTORY::SECONDHAND::*}
+      delete {KBFFA::%player%::CUSTOMKIT}
+      send "{@core} &aSuccess! Your kit was reseted."
+
+   #STAFF COMMANDS
+
+    if arg 1 is "setedit":
+      if player has permission "{@KBFFA_Permission_SetEdit}":
+        set {KBFFA::EDITPOSITION} to player's position
+        send "{@core} &aSuccess ! Edit postion set to your current position !"
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "statsreset":
+      if player has permission "{@KBFFA_Permission_Statsreset}":
+        if arg 2 is not set:
+          send "{@core} &cError ! Usage: /kbffa statsreset PLAYER"
+          play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+        else:
+          send "{@core} &7Resetting '&e%arg 2%&7' statistics..."
+          delete {KBFFA::%arg 2%::STATS::*}
+          send "{@core} &aSuccess ! Statistics for '&e%arg 2%&a' were reseted."
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "import":
+      if player has permission "{@KBFFA_Permission_Import}":
+        send "{@core} &7Preparing for importation..."
+        delete {KBFFA::MESSAGE::DEATH::*}
+        delete {KBFFA::MESSAGE::KILL::*}
+        send "{@core} &7Importing..."
+        add "&7has been killed by"  to {KBFFA::MESSAGE::KILL::*}
+        add "&7got oofed by" to {KBFFA::MESSAGE::KILL::*}
+        add "&7got eaten by" to {KBFFA::MESSAGE::KILL::*}
+        add "&7got destroyed by" to {KBFFA::MESSAGE::KILL::*}
+        add "&7got yeeted off the map by" to {KBFFA::MESSAGE::KILL::*}
+        add "&7died" to {KBFFA::MESSAGE::DEATH::*}
+        add "&7got eaten by the void !" to {KBFFA::MESSAGE::DEATH::*}
+        add "&7slipped on a banana !" to {KBFFA::MESSAGE::DEATH::*}
+        add "&7jumped off the edge !" to {KBFFA::MESSAGE::DEATH::*}
+        add "&7missed his clutch !" to {KBFFA::MESSAGE::DEATH::*}
+        send "{@core} &aSuccess ! Importation done."
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "skinsreset":
+      if player has permission "{@KBFFA_Permission_UpgradesReset}":
+        if arg 2 is set:
+          send "{@core} Deleting '&e%arg 2%&7' skins..."
+          delete {KBFFA::%arg 2%::SKIN::*}
+          send "{@core} &aSuccess ! Skins for '&e%arg 2%&7' deleted !"
+        else:
+          send "{@core} &cError ! Usage: /kbffa skinsreset PLAYER"
+          play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "blockskinsreset":
+      if player has permission "{@KBFFA_Permission_UpgradesReset}":
+        if arg 2 is set:
+          send "{@core} Deleting '&e%arg 2%&7' block skins..."
+          delete {KBFFA::%arg 2%::BLOCKSKIN::*}
+          send "{@core} &aSuccess ! Block Skins for '&e%arg 2%&7' deleted !"
+        else:
+          send "{@core} &cError ! Usage: /kbffa blockskinsreset PLAYER"
+          play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "setspawn":
+      if player has permission "{@KBFFA_Permission_SetSpawn}":
+        send "{@core} Setting spawn location..."
+        set {KBFFA::SPAWN} to player's location
+        send "{@core} &aSuccess ! Spawn location set to your current location."
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "sc" or "staffchat":
+      if player has Permissions "{@KBFFA_Permission_StaffChat}":
+        if {KBFFA::%player%::STAFFCHAT} is not set:
+          set {KBFFA::%player%::STAFFCHAT} to true
+          send "{@core} &aNow talking in staff chat."
+          stop
+        if {KBFFA::%player%::STAFFCHAT} is set:
+          delete {KBFFA::%player%::STAFFCHAT}
+          send "{@core} &cNo longer talking in staff chat."
+          stop
+      else:
+        send "{@core} &cMissing Permissions."
+        play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+    if arg 1 is "debug_1":
+      if player has permission "ADMIN":
+        set {_color} to "&0&l" or "&1&l" or "&2&l" or "&3&l" or "&4&l" or "&5&l" or "&6&l" or "&7&l" or "&8&l" or "&9&l" or "&b&l" or "&d&l" or "&e&l" or "&c&l" or "&a&l" or "&f&l"
+        send "{@core} &aDebug ended &7> %{_color}%%{KBFFA::%player%::STATS::LEVEL}%"
+      else:
+        send "{@core} &cMissing Permissions."
+
+    if arg 1 is "levelreset":
+      if player has permission "MOD":
+        if arg 2 is set:
+          set {KBFFA::%arg 2%::STATS::XPBARPKILL} to 25
+          set {KBFFA::%arg 2%::STATS::XPBAR} to 0
+          set {KBFFA::%arg 2%::STATS::LEVEL} to 1
+          set {KBFFA::%arg 2%::STATS::LEVELXP} to 100
+          set {KBFFA::%arg 2%::STATS::XP} to 0
+          send "{@core} &aLevel resetted for '&e%arg 2%&a'"
+        else:
+          send "{@core} &cError! Usage: /kbffa levelreset PLAYER"
+      else:
+        send "{@core} &cMissing Permissions."
+
+command /tp [<player>] [<player>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         if arg 2 is not set:
+            teleport player to arg 1
+            send "{@core} &7You've teleported to %arg 1%"
+         if arg 2 is set:
+            teleport arg 1 to arg 2
+            send "{@core} &7You've been teleported to %arg 2%" to arg 1
+            send "{@core} &7You've been teleported to %arg 1%" to arg 2
+            send "{@core} &7You've been teleported %arg 1% to %arg 2%" to player
+      if arg 1 is not set:
+         send "{@core} &cError ! Usage /tp [<player>] [<player>]"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /chatclear:
+   permission: HELPER
+   permission message: {@PermMsg}
+   aliases: cc, clearchat
+   trigger:
+      loop 200 times:
+         broadcast " "
+      broadcast "{@core} &7%player%&7 cleared the chat !"
+
+command /mutechat:
+   permission: HELPER
+   aliases: mc
+   permission message: {@PermMsg}
+   trigger:
+      if {KBFFA::CHAT} is not set:
+         set {KBFFA::CHAT} to true
+         broadcast "{@core} &cChat has been muted by %player%"
+         stop
+      if {KBFFA::CHAT} is set:
+         delete {KBFFA::CHAT}
+         broadcast "{@core} &aChat is no longer muted."
+
+command /freeze [<player>]:
+  permission: HELPER
+  permission message: {@PermMsg}
+  trigger:
+    if arg 1 is not set:
+      send "{@core} &cError ! Usage: /freeze PLAYER"
+      play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+    else:
+      if {-KBFFA::%arg 1%::FROZEN} is not set:
+        set {-KBFFA::%arg 1%::FROZEN} to true
+        set {KBFFA::%arg 1%::TEMP::FREEZEPOS} to location of arg 1
+        send "{@core} &cYou were frozen ! Please read your chat carefuly." to arg 1
+        send title "&9&lFROZEN !" with subtitle "&cRead you chat carefuly !" to arg 1
+        send "{@core} &aSuccess ! '&e%arg 1%&a' frozen !"
+        stop
+      if {-KBFFA::%arg 1%::FROZEN} is set:
+        delete {-KBFFA::%arg 1%::FROZEN}
+        send "{@core} &aYou were unfrozen." to arg 1
+        send "{@core} &aSuccess ! '&e%arg 1%&a' unfrozen !"
+on any move:
+  teleport player to {KBFFA::SPAWN} if {-KBFFA::%player%::FROZEN} is set
+
+on step on beacon:
+  if player's gamemode is not spectator or creative:
+    teleport player to {KBFFA::SPAWN}
+    kffa_hub(player)
+    add 1 to {KBFFA::%player%::QUEST::PARKOUR}
+    broadcast "{@core} &6&lGG &e%player% &7just finished the parkour !"
+
+command /ping [<player>]:
+  aliases: /p
+  trigger:
+    if arg 1 is not set:
+      send "&6&lKBFFA &7» &7Your ping: %player's ping%"
+    else:
+      send "&6&lKBFFA &7» &7%arg 1%&7's ping: %player-arg's ping%"
+
+every 10 minutes:
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &cCheating is &4&l&oNOT &callowed !" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   wait 1 minutes
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &2Don't forget to join our discord server using /discord !" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   wait 1 minutes
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &cHackers ? Use /report to report them ! Thanks !" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   wait 1 minutes
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &2Need help ? Use /kbffa help or ask players and staff members :)" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   wait 1 minutes
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &cA skin too expensive ? Make us know on /discord !" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   wait 1 minute
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "{@core} &2Want to apply on our server ? Do /discord and go in apply !" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+   send "" to all players where [{KBFFA::%input%::SETTINGS::BROADCAST} is not set]
+
+command /alert [<text>]:
+   permission: ADMIN
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         broadcast ""
+         broadcast "{@core} &f%arg 1%"
+         broadcast "{@core} &f%arg 1%"
+         broadcast "{@core} &f%arg 1%"
+         broadcast ""
+         stop
+      if arg 1 is not set:
+         send "{@core} &cError ! Usage: /alert MESSAGE"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /vanish [<offline player>]:
+  permission: HELPER
+  permission message: {@PermMsg}
+  aliases: v
+  trigger:
+    if arg 1 is not set:
+      if {-KBFFA::%player%::VANISHED} is not set:
+        hide the player from all players
+        send "{@core} &7You are now &cvanished&7."
+        set fly mode of player to true
+        set {-KBFFA::%player%::VANISHED} to true
+      else:
+        reveal the player from all players
+        send "{@core} &7You are &cno longer vanished&7."
+        set fly mode of player to false
+        delete {-KBFFA::%player%::VANISHED}
+
+on join:
+  loop all players:
+    if {-KBFFA::%loop-player%::VANISHED} is true:
+      reveal the loop-player from all players
+      hide the loop-player from all players
+
+every 5 seconds:
+  loop all players:
+    if {-KBFFA::%loop-player%::VANISHED} is true:
+      loop all players:
+        if loop-player-2 has permission "HELPER":
+          reveal the loop-player-1 from loop-player-2
+
+command /kick [<player>] [<text>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            set {_arg} to arg 2
+            replace all "-s" with "" in {_arg}
+            kick arg 1 due to "{@core} &7You were kicked from the server, &c%{_arg}%&7." if arg 2 is set
+         kick arg 1 due to "{@core} &7You were kicked from the server." if arg 2 is not set
+         broadcast "{@core} &c%arg 1% &7has been kicked by &c%player%&7." if arg 2 is not set 
+         if arg 2 doesn't contain "-s":
+            broadcast "{@core} &c%arg 1% &7has been kicked by &c%player%&7, &c%arg 2%&7." if arg 2 is set
+            send "{@staff} &c%arg 1% &7has been kicked by &c%player%&7, &c%arg 2%&7." to all players where [input has permission "LibertyCity.kick.alert"] if arg 2 is set
+         send "{@staff} &c%arg 1% &7has been kicked by &c%player%&7." to all players where [input has permission "LibertyCity.kick.alert"] if arg 2 is not set
+         send "{@staff} &c%arg 1% &7has been silently kicked by &c%player%&7, &c%arg 2%&7." to all players where [input has permission "LibertyCity.kick.alert"] if arg 2 contains "-s"
+      else:
+         send "{@core} &cError ! Usage: /kick PLAYER REASON (-s)"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /cooldownchat [<time span>]:
+   permission: SMODERATOR
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is not set:
+         send "&6&lKBFFA &7» &cError ! Usage : /cooldownchat <TimeSpan>"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+         stop
+      set {cdchat} to arg 1
+      send "&6&lKBFFA &7» &7Time defined to &e%arg 1%"
+      broadcast "&6&lKBFFA &7» &7Chat cooldown is now %arg 1%"
+
+command /cooldownchatp [<text>]:
+   permission: SMODERATOR
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is not set:
+         send "&6&lKBFFA &7» &cUsage: /cooldownchatp <permission>"
+         stop
+      set {cdperm} to arg 1
+      send "&6&lKBFFA &7» &7Permission set to &e%arg 1%"
+
+command /mute [<offline player>] [<text>] [<text>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         arg 2 is set
+         if arg 2 is "perm":
+            set {KBFFA::%arg 1%::PUNISH::MUTE::STATE} to true 
+            set {KBFFA::%arg 1%::PUNISH::MUTE::BY} to player
+            add 1 to {KBFFA::%arg 1%::PUNISH::MUTE::COUNT}
+            if arg 3 is not set:
+               send "{@core} &cYou were muted to for ever&7." to arg 1
+               broadcast "{@core} &c%arg 1% &7has been muted by &c%player%&7."
+               send "{@staff} &c%arg 1% &7has been muted by &c%player%&7." to all players where [input has permission "HELPER"]
+            else:
+               set {_r} to arg 3
+               replace all "-s" and "-rp" and " " and "-hrp" and "-police" and "-gang" with "" in {_r}
+               set {KBFFA::%arg 1%::PUNISH::MUTE::REASON} to {_r}
+               if arg 3 contains "-s":
+                  send "{@core} &cYou were muted to for ever, &c%{_r}%&7." to arg 1
+                  send "{@staff} &c%arg 1% &7has been silently muted by &c%player%&7, &c%{_r}%&7." to all players where [input has permission "HELPER"]
+                  stop
+               send "{@core} &cYou were muted to for ever, &c%arg 3%&7." to arg 1
+               broadcast "{@core} &c%arg 1% &7has been muted by &c%player%&7, &c%arg 3%&7."
+               send "{@staff} &c%arg 1% &7has been muted by &c%player%&7, &c%arg 3%&7." to all players where [input has permission "HELPER"]
+         if arg 2 isn't "perm":
+            set {KBFFA::%arg 1%::PUNISH::MUTE::STATE} to true 
+            set {KBFFA::%arg 1%::PUNISH::MUTE::BY} to player
+            add 1 to {KBFFA::%arg 1%::PUNISH::MUTE::COUNT}
+            set {_arg} to arg 2
+            replace all " " with "" in {_arg}
+            replace all "s" with " seconds" in {_arg} if arg 2 contain "s"
+            replace all "a" with " year" in {_arg} if arg 2 contain "a"
+            replace all "h" with " hours" in {_arg} if arg 2 contain "h"
+            replace all "mo" with " month" in {_arg} if arg 2 contain "mo"
+            replace all "min" with " minute" in {_arg} if arg 2 contain "min"
+            set {KBFFA::%arg 1%::PUNISH::MUTE::DATE} to now
+            set {KBFFA::%arg 1%::PUNISH::MUTE::TIMESPAN} to {_arg} parsed as a time span
+            if arg 3 is not set:
+               send "{@core} &cYou were muted for &c%{_arg}%&7." to arg 1
+               broadcast "{@core} &c%arg 1% &7has been muted by &c%player%&7, for &c%{_arg}%&7."
+               send "{@staff} &c%arg 1% &7has been muted by &c%player%&7, for &c%{_arg}%&7." to all players where [input has permission "HELPER"]
+            else:
+               set {_r} to arg 3
+               replace all "-s" and "-rp" and " " and "-hrp" and "-police" and "-gang" with "" in {_r}
+               set {KBFFA::%arg 1%::PUNISH::MUTE::REASON} to {_r}
+               if arg 3 contains "-s":
+                  send "{@core} &cYou were muted for &c%{_arg}%, &c%{_r}%&7." to arg 1
+                  send "{@staff} &c%arg 1% &7has been silently muted by &c%player%&7 for &c%{_arg}%&7, &c%{_r}%&7." to all players where [input has permission "HELPER"]
+                  stop
+               send "{@core} &cYou were muted for &c%{_arg}%, &c%arg 3%&7." to arg 1
+               broadcast "{@core} &c%arg 1% &7has been muted by &c%player%&7 for &c%{_arg}%&7, &c%arg 3%&7."
+               send "{@staff} &c%arg 1% &7has been muted by &c%player%&7 for &c%{_arg}%&7, &c%arg 3%&7." to all players where [input has permission "HELPER"]
+
+      else:
+         send "{@core} &cError ! Usage: /mute PLAYER perm/time REASON (-s)"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /unban [<offline player>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         delete {KBFFA::%arg 1%::PUNISH::BAN::*}
+         unban arg 1
+         send "{@staff} &c%player% &7unbanned &c%arg 1%&7." to all players where [input has permission "MODERATOR"]
+      else:
+         send "{@core} &cError ! Usage: /unban PLAYER"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /unmute [<offline player>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         delete {KBFFA::%arg 1%::PUNISH::MUTE::*}
+         send "{@core} &aYou were unmuted." to arg 1 
+         send "{@staff} &c%player% &7unmuted &c%arg 1% &7." to all players where [input has permission "HELPER"]
+      else:
+         send "{@core} &cError ! Usage: /unmute PLAYER"
+         play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+command /ban [<offline player>] [<text>] [<text>]:
+   permission: HELPER
+   permission message: {@PermMsg}
+   trigger:
+      if arg 1 is set:
+         arg 2 is set
+         if arg 2 is "perm":
+            set {KBFFA::%arg 1%::PUNISH::BAN::STATE} to true 
+            set {KBFFA::%arg 1%::PUNISH::BAN::BY} to player
+            add 1 to {KBFFA::%arg 1%::PUNISH::BAN::COUNT}
+            if arg 3 is not set:
+               ban arg 1 due to "{@core} &cYou were banned for ever&7."
+               kick arg 1 due to "{@core} &cYou were banned for ever&7."
+               broadcast "{@core} &c%arg 1% &7has been banned by &c%player%&7."
+               send "{@staff} &c%arg 1% &7has been banned by &c%player%&7." to all players where [input has permission "MODERATOR"]
+            else:
+               set {_r} to arg 3
+               replace all "-s" with "" in {_r}
+               set {KBFFA::%arg 1%::PUNISH::BAN::REASON} to {_r}
+               if arg 3 contains "-s":
+                  kick arg 1 due to "{@core} &cYou were banned for ever, &c%{_r}%&7."
+                  ban arg 1 due to "{@core} &cYou were banned for ever, &c%{_r}%&7."
+                  send "{@staff} &c%arg 1% &7has been silently banned by &c%player%&7, &c%{_r}%&7." to all players where [input has permission "MODERATOR"]
+                  stop
+               ban arg 1 due to "{@core} &cYou were banned for ever, &c%arg 3%&7."
+               kick arg 1 due to "{@core} &cYou were banned for ever&7."
+               broadcast "{@core} &c%arg 1% &7has been banned by &c%player%&7, &c%arg 3%&7."
+               send "{@staff} &c%arg 1% &7has been banned by &c%player%&7, &c%arg 3%&7." to all players where [input has permission "MODERATOR"]
+         if arg 2 isn't "perm":
+            set {KBFFA::%arg 1%::PUNISH::BAN::STATE} to true 
+            set {KBFFA::%arg 1%::PUNISH::BAN::BY} to player
+            add 1 to {KBFFA::%arg 1%::PUNISH::BAN::COUNT}
+            set {_arg} to arg 2
+            replace all " " with "" in {_arg}
+            replace all "s" with " seconds" in {_arg} if arg 2 contain "s"
+            replace all "a" with " year" in {_arg} if arg 2 contain "a"
+            replace all "h" with " hours" in {_arg} if arg 2 contain "h"
+            replace all "mo" with " month" in {_arg} if arg 2 contain "mo"
+            replace all "min" with " minute" in {_arg} if arg 2 contain "min"
+            set {KBFFA::%arg 1%::PUNISH::BAN::DATE} to now
+            set {KBFFA::%arg 1%::PUNISH::BAN::TIMESPAN} to {_arg} parsed as a time span
+            if arg 3 is not set:
+               kick arg 1 due to "{@core} &chas been banned for &c%{_arg}%&7."
+               broadcast "{@core} &c%arg 1% &7has been banned by &c%player%&7, for &c%{_arg}%&7."
+               send "{@staff} &c%arg 1% &7has been banned by &c%player%&7, for &c%{_arg}%&7." to all players where [input has permission "MODERATOR"]
+            else:
+               set {_r} to arg 3
+               replace all "-s" with "" in {_r}
+               set {KBFFA::%arg 1%::PUNISH::BAN::REASON} to {_r}
+               if arg 3 contains "-s":
+                  kick arg 1 due to "{@core} &cYou were banned for &c%{_arg}%, &c%{_r}%&7."
+                  send "{@staff} &c%arg 1% &7has been silently banned by &c%player%&7, &c%{_r}%&7." to all players where [input has permission "MODERATOR"]
+                  stop
+               kick arg 1 due to "{@core} &cYou were banned for &c%{_arg}%, &c%{_r}%&7."
+               broadcast "{@core} &c%arg 1% &7has been banned by &c%player%&7, &c%{_r}%&7."
+               send "{@staff} &c%arg 1% &7has been banned by &c%player%&7, &c%{_r}%&7." to all players where [input has permission "MODERATOR"]
+
+      else:
+         send "{@core} &cUsage: /ban [PLAYER] [TIME,PERM][S(seconds),H(hours),MIN(minutes),MO(month),J(days),A(years)] (REASON) (-s)"
+
+on chat:
+  cancel event
+  if {KBFFA::%player%::STAFFCHAT} is set:
+    send "&c&lStaffChat &7» &f%player% : &f%message%" to all players where [input has permission "{@KBFFA_Permission_StaffChat}"]
+    stop 
+  if {KBFFA::CHAT} is set:
+    player doesn't have permission "talk"
+    send "{@core} &cChat is currently muted."
+    play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+    stop
+  if {KBFFA::%player%::PUNISH::MUTE::STATE} is set:
+    set {_now} to now
+    if {KBFFA::%player%::PUNISH::MUTE::TIMESPAN} is not set:
+      {KBFFA::%player%::PUNISH::MUTE::STATE} is set
+      send "{@core} &cYou've been muted for ever&7." to player
+      play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+      stop
+  if difference between {KBFFA::%player%::PUNISH::MUTE::DATE} and {_now} >= {KBFFA::%player%::PUNISH::MUTE::TIMESPAN}:
+    {KBFFA::%player%::PUNISH::MUTE::STATE} is set
+    delete {KBFFA::%player%::PUNISH::MUTE::*}
+    send "{@staff} &c%player% &7has been automaticly unmuted." to all players where [input has permission "HELPER"]
+    send "{@core} &aYou've been unmuted." to player
+  if {KBFFA::%player%::PUNISH::MUTE::STATE} is set:
+    send "{@core} &cYou were muted for &c%difference between {KBFFA::%player%::PUNISH::MUTE::DATE} and now%, &c%{KBFFA::%player%::PUNISH::MUTE::REASON}%&7." if {KBFFA::%player%::PUNISH::MUTE::REASON} is set
+    send "{@core} &cYou were muted for &c%difference between {KBFFA::%player%::PUNISH::MUTE::DATE} and now%&7." if {KBFFA::%player%::PUNISH::MUTE::REASON} is not set
+    stop
+  if difference between {-KBFFA::%player%::TEMP::LASTCHAT} and now < {cdchat}:
+    send "&6&lKBFFA &7» &cError ! Your talking too fast !" if player doesn't have permission "%{cdperm}%"
+    play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player if player doesn't have permission "%{cdperm}%"
+    stop if player doesn't have permission "%{cdperm}%"
+  set {-KBFFA::%player%::TEMP::LASTCHAT} to now
+  if player has permission "VIP":
+    broadcast "&8[&7%{KBFFA::%player%::STATS::DISPLAYEDLEVEL}%✪&8] %colored player's prefix%&7%player%%colored player's suffix% &7» &f%message%"
+  else:
+    broadcast "&8[&7%{KBFFA::%player%::STATS::DISPLAYEDLEVEL}%✪&8] %colored player's prefix%&7%player%%colored player's suffix% &7» %message%"
+on place:
+   if {-KBFFA::%player%::TEMP::EDITING} is true:
+      cancel event
+on projectile shoot:
+   if {KBFFA::%shooter%::TEMP::EDITING} is true:
+      cancel event
+on quit:
+   make server execute command "/ban %player% perm -s" if {-KBFFA::%player%::FROZEN} is set
+   if {-KBFFA::%player%::TEMP::EDITING} is true:
+      inventoryManager("save", player)
+      delete {KBFFA::%player%::TEMP::*}
+      delete {-KBFFA::%player%::TEMP::*}
+
+function inventoryManager(action: text, p: player):
+   if {_action} is "save":
+      clear {KBFFA::%{_p}%::INVENTORY::SECONDHAND::*}
+      clear {KBFFA::%{_p}%::INVENTORY::ITEMS::*}
+      loop 36 times:
+         add slot (loop-number - 1) of {_p}'s inventory to {KBFFA::%{_p}%::INVENTORY::ITEMS::*}
+      set {KBFFA::%{_p}%::INVENTORY::SECONDHAND::*} to slot 40 of {_p}'s inventory
+      set {KBFFA::%{_p}%::CUSTOMKIT} to true
+   if {_action} is "give":
+      set {_s} to 0
+      loop {KBFFA::%{_p}%::INVENTORY::ITEMS::*}:
+         set slot {_s} of {_p}'s inventory to loop-value
+         add 1 to {_s}
+      set slot 40 of {_p}'s inventory to {KBFFA::%{_p}%::INVENTORY::SECONDHAND::*}
+
+command /discord:
+   trigger:
+      send "{@core} &7Here is our discord &b&ohttps://discord.gg/4Z27HnU"
+
+function kffa_death(p: player):
+   wait 1 ticks
+   stop if "%region at {_p}%" contains "spawn"
+   if {-KBFFA::%{_p}%::TEMP::LASTHIT} is set:
+      set {_killer} to {-KBFFA::%{_p}%::TEMP::LASTHIT}
+      kffa_hub({_p})
+      teleport {_p} to {KBFFA::SPAWN}
+      kffa_level({_killer})
+      add 1 to {KBFFA::%{_killer}%::QUEST::KILL1} if {KBFFA::%{_killer}%::QUEST::KILL10} is set
+      add 1 to {KBFFA::%{_killer}%::QUEST::KILL0} if {KBFFA::%{_killer}%::QUEST::KILL100} is set
+      add 1 to {KBFFA::%{_killer}%::QUEST::KILLSTREAK} if {KBFFA::%{_killer}%::QUEST::KILLSTREAK10} is set
+      apply regeneration 2 to {_killer} for 5 seconds
+      if {KBFFA::%{_p}%::BOUNTY} is true:
+         delete {KBFFA::%{_p}%::BOUNTY}
+         add {KBFFA::%{_p}%::BOUNTY::AMOUNT} to {KBFFA::%{_killer}%::STATS::COINS}
+         delete {KBFFA::%{_p}%::BOUNTY::AMOUNT}
+         send "&6&lBOUNTY! &c%{_killer}% &7collected the bounty from &c%{_p}%" to all players where [{KBFFA::%input%::SETTINGS::BOUNTY} is not set]
+      set {KBFFA::%{_p}%::STATS::DEATH} to ({KBFFA::%{_p}%::STATS::DEATH} + 1)
+      set {KBFFA::%{_killer}%::STATS::COINS} to ({KBFFA::%{_killer}%::STATS::COINS} + 1)
+      set {KBFFA::%{_killer}%::STATS::KILLS} to ({KBFFA::%{_killer}%::STATS::KILLS} + 1)
+      add 1 to level of {_killer}
+      play sound "entity.experience_orb.pickup" with volume 50 and pitch 60 at {_killer} for {_killer}
+      play sound "block.anvil.destroy" with volume 50 and pitch 60 at {_p} for {_p}
+      send "&a&lKILL! &7on %{_p}% &6+1 Coin &b+25 EXP &7!" to {_killer}
+      send "&c&lDEATH! &7by %{_killer}% &7!" to {_p}
+      send title "&c&lYOU DIED!" with subtitle "&7You were killed by &c%{_killer}%" to {_p} if {KBFFA::%{_p}%::SETTINGS::TITLE} is not set
+      set {_random} to random element out of {KBFFA::MESSAGE::KILL::*}
+      send "&c%{_p}%&7 %{_random}% &c%{_killer}% &7!" to all players where [{KBFFA::%input%::SETTINGS::DEATHMESSAGE} is not set]
+      set {_xp} to level of {_killer}
+      if {_xp} >= 2:
+         set {KBFFA::%{_killer}%::QUEST::KILLSTREAK} to ({KBFFA::%{_killer}%::QUEST::KILLSTREAK} + 1) if {KBFFA::%{_killer}%::QUEST::QUEST::KILLSTREAK10} is set
+         send "&c%{_killer}% &7is on a &c%{_xp}% &7kill streak !" to all players where [{KBFFA::%input%::SETTINGS::KILLSTREAK} is not set]
+      if {_xp} > {KBFFA::%{_killer}%::STATS::BESTKILLSTREAK}:
+         set {KBFFA::%{_killer}%::STATS::BESTKILLSTREAK} to {_xp}
+      give {_killer} 1 arrow if {_xp} >= 5
+      if {_xp} >= 10:
+         stop if {KBFFA::%{_killer}%::BOUNTY::AMOUNT} >= 10
+         add 10 to {KBFFA::%{_killer}%::BOUNTY::AMOUNT}
+         send "&6&lBOUNTY! &c%{_killer}% &7has now a bounty of &610 Coins &7!" to all players where [{KBFFA::%input%::SETTINGS::BOUNTY} is not set]
+         set {KBFFA::%{_killer}%::BOUNTY} to true
+   else:
+      set {_random} to random element out of {KBFFA::MESSAGE::DEATH::*}
+      send "&c%{_p}%&7 %{_random}%" to all players where [{KBFFA::%input%::SETTINGS::DEATHMESSAGE} is not set]
+      send "&c&lDEATH! &7by void &7!" to {_p}
+      send title "&c&lYOU DIED!" with subtitle "&7You died !" to {_p} if {KBFFA::%{_p}%::SETTINGS::TITLE} is not set
+      set {KBFFA::%{_p}%::STATS::DEATH} to ({KBFFA::%{_p}%::STATS::DEATH} + 1)
+      delete {KBFFA::%{_p}%::QUEST::KILLSTREAK} if {KBFFA::%{_p}%::QUEST::KILLSTREAK10} is set
+      teleport {_p} to {KBFFA::SPAWN}
+      play sound "block.anvil.destroy" with volume 50 and pitch 60 at {_p} for {_p}
+      kffa_hub({_p})
+      teleport {_p} to {KBFFA::SPAWN}
+
+command /report [<player>] [<text>]:
+  trigger:
+    if arg 1 is not set:
+      send "{@core} &cError ! Usage: /report PLAYER REASON"
+      play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+    if arg 1 is set:
+      if arg 2 is not set:
+        send "{@core} &7Sending your report..."
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "&c=-=-=-=-=-= &4&lREPORT &c=-=-=-=-=-=" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "     &a%player% &7reported &c%arg 1%" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "     &7Reason &7» &cNot Specified." to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "&c=-=-=-=-=-= &4&lREPORT &c=-=-=-=-=-=" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "{@core} &aSuccess ! Your report has been sent and will be reviewed."
+      else:
+        send "{@core} &7Sending your report..."
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "&c=-=-=-=-=-= &4&lREPORT &c=-=-=-=-=-=" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "     &a%player% &7reported &c%arg 1%" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "     &7Reason &7» &c%arg 2%." to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "&c=-=-=-=-=-= &4&lREPORT &c=-=-=-=-=-=" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "" to all players where [input has permission "{@KBFFA_Permission_ReportView}"]
+        send "{@core} &aSuccess ! Your report has been sent and will be reviewed."
+
+command /coins [<text>] [<offline player>] [<number>]:
+  permission: OP 
+  permission message: {@PermMsg}
+  trigger:
+    set {KBFFA::%arg 2%::STATS::COINS} to ({KBFFA::%arg 2%::STATS::COINS} + arg 3) if arg 1 is "add"
+    set {KBFFA::%arg 2%::STATS::COINS} to ({KBFFA::%arg 2%::STATS::COINS} - arg 3) if arg 1 is "remove"
+    set {KBFFA::%arg 2%::STATS::COINS} to arg 3 if arg 1 is "set"
+
+on right click:
+  if "%location of clicked block%" is "x: -39.5, y: 30.5, z: -0.5":
+    if {KBFFA::%player%::CHRISTMAS::DAY14} is not set:
+      set {KBFFA::%player%::CHRISTMAS::DAY14} to true 
+      add 100 to {KBFFA::%player%::STATS::COINS}
+      send "{@core} &aYou found Day 14 present ! You found &6100 coins &ain the present !"
+    else:
+      send "{@core} &cYou already collected this present !"
+
+on right click:
+  if "%location of clicked block%" is "x: -16.5, y: 28.5, z: 17.5":
+    if {KBFFA::%player%::CHRISTMAS::DAY15} is not set:
+      set {KBFFA::%player%::CHRISTMAS::DAY15} to true 
+      add 20 to {KBFFA::%player%::STATS::COINS}
+      send "{@core} &aYou found Day 15 present ! You found &620 coins &ain the present !"
+    else:
+      send "{@core} &cYou already collected this present !"
+
+on right click:
+  if "%location of clicked block%" is "x: 45.5, y: 27.5, z: 8.5":
+    if {KBFFA::%player%::CHRISTMAS::DAY16} is not set:
+      set {KBFFA::%player%::CHRISTMAS::DAY16} to true 
+      add 30 to {KBFFA::%player%::STATS::COINS}
+      send "{@core} &aYou found Day 16 present ! You found &630 coins &ain the present !"
+    else:
+      send "{@core} &cYou already collected this present !"
+
+command /bounty [<player>] [<number>]:
+  trigger:
+    if arg 1 is not set:
+      send "{@core} &cError ! Usage: /bounty PLAYER AMOUNT"
+      play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+    else:
+      if arg 2 is set:
+        if arg 2 != 0:
+          if "%arg 2%" doesn't contain "-" or "." or ",":
+            if {KBFFA::%player%::STATS::COINS} >= arg 2:
+              send "{@core} Validating your bounty..."
+              set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - arg 2)
+              add arg 2 to {KBFFA::%arg 1%::BOUNTY::AMOUNT}
+              set {KBFFA::%arg 1%::BOUNTY} to true
+              send "&6&lBOUNTY! %{KBFFA::%arg 1%::BOUNTY::AMOUNT}%&6&l Coins &7on &c%arg 1% &7!" to all players where [{KBFFA::%input%::SETTINGS::BOUNTY} is not set]
+              send "{@core} &aSuccess ! Bounty validated."
+            else:
+              send "{@core} &cError ! You don't have enough coins !"
+              play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+          else:
+            send "{@core} &cError ! Bounty invalid."
+            play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+        else:
+          send "{@core} &cError ! Bounty invalid."
+          play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+      else:
+        send "{@core} &cError ! Usage: /bounty PLAYER AMOUNT"
+        play sound "minecraft:block.note_block.didgeridoo" with volume 10 and pitch 1 at player for player
+
+on break:
+  cancel event if player's gamemode is not creative
+
+function kffa_level(p: player):
+  add 25 to {KBFFA::%{_p}%::STATS::XP}
+  add {KBFFA::%{_p}%::STATS::XPBARPKILL} to {KBFFA::%{_p}%::STATS::XPBAR}
+  if {KBFFA::%{_p}%::STATS::XP} >= {KBFFA::%{_p}%::STATS::LEVELXP}:
+    set {KBFFA::%{_p}%::STATS::XP} to 0
+    send title "&b&lLEVEL UP!" with subtitle "&7[%{KBFFA::%{_p}%::STATS::LEVEL}%&7] ⇢ &7[%{KBFFA::%{_p}%::STATS::LEVEL} + 1%&7]" to {_p}
+    add 1 to {KBFFA::%{_p}%::STATS::LEVEL}
+    set {_color} to "&0&l" or "&1&l" or "&2&l" or "&3&l" or "&4&l" or "&5&l" or "&6&l" or "&7&l" or "&8&l" or "&9&l" or "&b&l" or "&d&l" or "&e&l" or "&c&l" or "&a&l" or "&f&l"
+    set {KBFFA::%{_p}%::STATS::DISPLAYEDLEVEL} to "%{_color}%%{KBFFA::%{_p}%::STATS::LEVEL}%"
+    play sound "minecraft:entity.player.levelup" with volume 10 and pitch 1 at {_p} for {_p}
+    set {KBFFA::%{_p}%::STATS::XPBAR} to 0
+    set {KBFFA::%{_p}%::STATS::LEVELXP} to ({KBFFA::%{_p}%::STATS::LEVEL} * 75)
+    set {KBFFA::%{_p}%::STATS::XPBARPKILL} to (100 / ({KBFFA::%{_p}%::STATS::LEVELXP} / 25))
+
+On place:
+   if player's gamemode is not creative:
+      cancel event if event-block is not lime wool or green terracotta or grass block or diamond ore or diamond block or white wool or lime stained glass or oak planks
+   cancel event if event-block is gold pressure plate
+   if y location of event-block >= 32:
+      set {_loc} to player's location
+      cancel event if player's gamemode is not creative
+      send "{@core} &cBuild limit reached !"
+      play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+      stop
+   else:
+      add 1 to {KBFFA::%player%::QUEST::BLOCK} if {KBFFA::%player%::QUEST::BLOCK500} is set
+      set {KBFFA::%player%::STATS::BLOCKPLACE} to ({KBFFA::%player%::STATS::BLOCKPLACE} + 1)
+
+   if player's gamemode is not creative:
+      if block at event-block is grass block:
+         wait 6 seconds
+         set block at event-block to podzol
+         wait 3 second
+         set block at event-block to coarse dirt
+         wait 1 second
+         set block at event-block to air
+         if amount of grass block in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 grass block if "%region at player%" does not contain "spawn"
+
+      if block at event-block is green terracotta:
+         wait 6 seconds
+         set block at event-block to yellow terracotta
+         wait 3 second
+         set block at event-block to red terracotta
+         wait 1 second
+         set block at event-block to air
+         if amount of green terracotta in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 green terracotta if "%region at player%" does not contain "spawn"
+
+      if block at event-block is diamond ore:
+         wait 6 seconds
+         set block at event-block to gold ore
+         wait 3 second
+         set block at event-block to iron ore
+         wait 1 second
+         set block at event-block to air
+         if amount of diamond ore in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 diamond ore if "%region at player%" does not contain "spawn"
+
+      if block at event-block is white wool:
+         wait 6 seconds
+         set block at event-block to light gray wool
+         wait 3 second
+         set block at event-block to gray wool
+         wait 1 second
+         set block at event-block to air
+         if amount of white wool in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 white wool if "%region at player%" does not contain "spawn"
+
+      if block at event-block is oak planks:
+         wait 6 seconds
+         set block at event-block to birch planks
+         wait 3 second
+         set block at event-block to acacia planks
+         wait 1 second
+         set block at event-block to air
+         if amount of oak planks in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 oak planks if "%region at player%" does not contain "spawn"
+
+      if block at event-block is lime stained glass:
+         wait 6 seconds
+         set block at event-block to yellow stained glass
+         wait 3 second
+         set block at event-block to red stained glass
+         wait 1 second
+         set block at event-block to air
+         if amount of lime stained glass in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 lime stained glass if "%region at player%" does not contain "spawn"
+
+      if block at event-block is diamond block:
+         wait 6 seconds
+         set block at event-block to gold block
+         wait 3 second
+         set block at event-block to iron block
+         wait 1 second
+         set block at event-block to air
+         if amount of diamond block in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 diamond block if "%region at player%" does not contain "spawn"
+
+      if block at event-block is lime wool:
+         wait 6 seconds
+         set block at event-block to yellow wool
+         wait 3 second
+         set block at event-block to red wool
+         wait 1 second
+         set block at event-block to air
+         if amount of lime wool in player's inventory is less than 48:
+            wait 2 ticks
+            give player 1 lime wool if "%region at player%" does not contain "spawn"
+
+function kffa_clear(p: player):  
+   clear {_p}'s inventory
+   clear {_p}'s level
+   heal {_p}
+   extinguish {_p}
+   clear {KBFFA::%{_p}%::QUEST::KILLSTREAK}
+   make server execute command "/effect clear %{_p}%"
+   delete {-KBFFA::%{_p}%::TEMP::LASTHIT}
+   delete {-KBFFA::%{_p}%::TEMP::SPEEDCOOLDOWN}
+   delete {-KBFFA::%{_p}%::TEMP::JUMPBOOSTCOOLDOWN}
+
+command /minecraft:me:
+  trigger:
+    send "{@core} &cNo."
+
+function kffa_equip(p: player):  
+   wait 1 ticks
+   "%region at {_p}%" contains "pvp"
+   kffa_clear({_p})
+   if {KBFFA::%{_p}%::CUSTOMKIT} is true:
+      inventoryManager("give",{_p})
+      stop
+   set slot 0 of {_p} to unbreakable stick of sharpness 1 and knockback 1 named "&6&lPuncher"
+   set slot 0 of {_p} to blaze rod of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::BLAZE} is true
+   set slot 0 of {_p} to bone of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::BONE} is true
+   set slot 0 of {_p} to poppy of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::POPPY} is true
+   set slot 0 of {_p} to shears of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::SHEARS} is true
+   set slot 0 of {_p} to potato of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::POTATO} is true
+   set slot 0 of {_p} to sugar cane of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::SUGARCANE} is true
+   set slot 0 of {_p} to emerald of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::EMERALD} is true
+   set slot 0 of {_p} to unbreakable iron hoe of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::IRONHOE} is true
+   set slot 0 of {_p} to unbreakable diamond hoe of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::DIAMONDHOE} is true
+   set slot 0 of {_p} to ghast tear of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::GHASTTEAR} is true
+   set slot 0 of {_p} to pufferfish of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::FISH} is true
+   set slot 0 of {_p} to bread of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::BREAD} is true
+   set slot 0 of {_p} to cookie of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::COOKIE} is true
+   set slot 0 of {_p} to nether star of sharpness 1 and knockback 1 named "&6&lPuncher" if {KBFFA::%{_p}%::SKIN::NETHERSTAR} is true 
+   set slot 2 of {_p} to unbreakable bow named "&7︻デ═一"
+   set slot 1 of {_p} to 48 lime wool
+   set slot 1 of {_p} to 48 grass block if {KBFFA::%{_p}%::BLOCKSKIN::GRASS} is true
+   set slot 1 of {_p} to 48 green terracotta if {KBFFA::%{_p}%::BLOCKSKIN::TERRACOTTA} is true
+   set slot 1 of {_p} to 48 diamond ore if {KBFFA::%{_p}%::BLOCKSKIN::ORES} is true
+   set slot 1 of {_p} to 48 white wool if {KBFFA::%{_p}%::BLOCKSKIN::WOOL} is true
+   set slot 1 of {_p} to 48 oak planks if {KBFFA::%{_p}%::BLOCKSKIN::PLNAKS} is true
+   set slot 1 of {_p} to 48 lime stained glass if {KBFFA::%{_p}%::BLOCKSKIN::STAINEDGLASS} is true
+   set slot 1 of {_p} to 48 diamond block if {KBFFA::%{_p}%::BLOCKSKIN::OREBLOCKS} is true
+   set slot 6 of {_p} to gold pressure plate named "&2Jump Boost"
+   set slot 7 of {_p} to feather named "&3Speed"      
+   set slot 8 of {_p} to ender pearl    
+   set slot 9 of {_p} to arrow
+
+on right click with feather or gold pressure plate:
+   wait 2 ticks
+   stop if "%region at player%" contains "jump"
+   stop if {-KBFFA::%player%::TEMP::EDITING} is true
+   if name of event-item is "&3Speed":
+      stop if {-KBFFA::%player%::TEMP::SPEEDCOOLDOWN} is set
+      set {-KBFFA::%player%::TEMP::SPEEDCOOLDOWN} to "SET"
+      apply speed 3 to player for 5 seconds
+      set {_int} to {@speed-cooldown}
+      loop {_int} times:
+         {-KBFFA::%player%::TEMP::SPEEDCOOLDOWN} is set
+         set slot 7 of player to {_int} of feather of sharpness 1 named "&c%{_int}% &3Speed"
+         remove 1 from {_int}
+         if {_int} is 0:
+            set slot 7 of player to feather named "&3Speed"
+            delete {-KBFFA::%player%::TEMP::SPEEDCOOLDOWN}
+            stop
+         wait a second
+   if name of event-item is "&2Jump Boost":
+      stop if {-KBFFA::%player%::TEMP::JUMPBOOSTCOOLDOWN} is set
+      set {-KBFFA::%player%::TEMP::JUMPBOOSTCOOLDOWN} to "SET"
+      set {_int} to {@jump-cooldown}
+      apply jump boost 3 to player for 5 seconds
+      loop {_int} times:
+         {-KBFFA::%player%::TEMP::JUMPBOOSTCOOLDOWN} is set
+         set slot 6 of player to {_int} of clock of sharpness 1 named "&c%{_int}% &2Jump Boost"
+         remove 1 from {_int}
+         if {_int} is 0:
+            set slot 6 of player to gold pressure plate named "&2Jump Boost"
+            delete {-KBFFA::%player%::TEMP::JUMPBOOSTCOOLDOWN}
+            stop
+         wait a second  
+
+command /§scoal:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 25:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &7&lApprentice"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 25)
+         send "{@core} &aYou purchased &7&lApprentice &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 25:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§siron:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 50:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &f&lFighter"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 50)
+         send "{@core} &aYou purchased &f&lFighter &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 50:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sgold:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 75:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &e&lPro"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 75)
+         send "{@core} &aYou purchased &e&lPro &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 75:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sdiamond:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 100:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &b&lSniper"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 100) 
+         send "{@core} &aYou purchased &b&lSniper &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 100:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§semerald:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 125:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &a&lClutcher"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 125)
+         send "{@core} &aYou purchased &a&lClutcher &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 125:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§spclutch:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 150:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &5&l&oGamer"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 150)
+         send "{@core} &aYou purchased &5&l&oGamer &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 150:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sunvoid:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 175:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &c&lAnti-Void"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 175)
+         send "{@core} &aYou purchased &c&lAnti-Void &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 175:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§svac:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 200:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &3&lGUARD"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 200)
+         send "{@core} &aYou purchased &3&lGUARD &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 200:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§shaxx:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 225:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &4&l&oHACKER"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 225)
+         send "{@core} &aYou purchased &4&l&oHACKER &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 225:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sgod:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 250:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &d&l&oEgirl"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 250)
+         send "{@core} &aYou purchased &d&l&oEgirl &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 250:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§smc:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 275:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &0&l&o&n&k???"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 275)
+         send "{@core} &aYou purchased &0&l&o&n&k??? &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 275:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sangel:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 300:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &6&l&o&nOk Bro"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 300)
+         send "{@core} &aYou purchased &6&l&o&nOk Bro &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 300:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sangeld:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 325:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &a&l&o&nHOW TO HAKE??"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 325)
+         send "{@core} &aYou purchased &a&l&o&nHOW TO HAKE?? &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 325:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sjds:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 350:
+         make server execute command "/lp user %player% meta setsuffix "" &8| &d&lNo&4&lHacks&b&l&o&mJust&1&l&o&mJDS"" "
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 350)
+         send "{@core} &aYou purchased &d&lNo&4&lHacks&b&l&o&mJust&1&l&o&mJDS &atag !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 350:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sblaze:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 25:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 25) 
+         send "{@core} &aYou purchased &6Blaze Rod &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::BLAZE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 25:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sirong:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 25:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 25)
+         send "{@core} &aYou purchased &fBone &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::BONE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 25:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sgoldg:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 50:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 50)
+         send "{@core} &aYou purchased &cPoppy &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::POPPY} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 50:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sdiamondg:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 75:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 75)
+         send "{@core} &aYou purchased &fShears &askin"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::SHEARS} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 75:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§semeraldg:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 100:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 100)
+         send "{@core} &aYou purchased &ePotato &askin"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::POTATO} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 100:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§snetherite:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 125:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 125) 
+         send "{@core} &aYou purchased &aSugar Cane &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::SUGARCANE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 125:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sfish:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 150:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 150)
+         send "{@core} &aYou purchased &9Fish &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::FISH} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 150:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§shead:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 175:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 175)
+         send "{@core} &aYou purchased &2Emerald &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::EMERALD} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 175:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sbread:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 100:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 100) 
+         send "{@core} &aYou purchased &6Baguette &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::BREAD} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 100:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sironhoe:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 200:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 200)
+         send "{@core} &aYou purchased &fIron Hoe &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::IRONHOE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 200:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sbed:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 100:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 100)
+         send "{@core} &aYou purchased &6Cookie &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::COOKIE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 100:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sdhoe:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 225:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 225)
+         send "{@core} &aYou purchased &bDiamond Hoe &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::DIAMONDHOE} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 225:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sstar:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 300:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 300)
+         send "{@core} &aYou purchased &3Nether Star &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::NETHERSTAR} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 300:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sdhead:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 325:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 325)
+         send "{@core} &aYou purchased &7Ghast Tear &askin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::SKIN::*}
+         set {KBFFA::%player%::SKIN::GHASTTEAR} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 325:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sconc:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 25:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 25)
+         send "{@core} &aYou purchased &2Grass &ablock skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::GRASS} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 25:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sglass:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 50:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 50)
+         send "{@core} &aYou purchased &bOres &ablock skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::ORES} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 50:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§swool:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 75:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 75)
+         send "{@core} &aYou purchased Terracotta block skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::TERRACOTTA} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 75:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§sblock:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 100:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 100)
+         send "{@core} &aYou purchased &fWool &ablock skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::WOOL} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 100:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§splanks:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 125:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 125)
+         send "{@core} &aYou purchased &ePlanks &ablock skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::PLANKS} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 125:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§ssglass:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 150:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 150)
+         send "{@core} &aYou purchased Stained Glass block skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::STAINEDGLASS} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 150:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+command /§soreblock:
+   trigger:
+      if {KBFFA::%player%::STATS::COINS} >= 175:
+         set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} - 175)
+         send "{@core} &aYou purchased &bOres Blocks &ablock skin !"
+         play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::BLOCKSKIN::*}
+         set {KBFFA::%player%::BLOCKSKIN::OREBLOCKS} to true
+         stop
+      if {KBFFA::%player%::STATS::COINS} < 175:
+         send "{@core} &cError ! You don't have enough Coins !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+
+on shoot:
+   if projectile is ender pearl:
+      if {KBFFA::%shooter%::QUEST::ENDER50} is set:
+         add 1 to {KBFFA::%shooter%::QUEST::ENDER}
+
+every 1 minute:
+   loop all players:
+      if {KBFFA::%loop-player%::QUEST::PLAY1} is set:
+         add 1 to {KBFFA::%loop-player%::QUEST::PLAY}
+
+command /§q1:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::KILL10::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::KILL10} is not set:
+         set {KBFFA::%player%::QUEST::KILL10} to true
+         send "{@core} &7Quest &c10 Kills &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::KILL1}
+         stop
+      if {KBFFA::%player%::QUEST::KILL10} is set:
+         if {KBFFA::%player%::QUEST::KILL1} < 10:
+            send "{@core} &7You still need some kills to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::KILL1} >= 10:
+            send "{@core} &7You finished the quest ! You got 10 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 10)
+            delete {KBFFA::%player%::QUEST::KILL1}
+            set {KBFFA::%player%::QUEST::KILL10::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::KILL10}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q2:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::KILL100::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::KILL100} is not set:
+         set {KBFFA::%player%::QUEST::KILL100} to true
+         send "{@core} &7Quest &c100 Kills &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::KILL0}
+         stop
+      if {KBFFA::%player%::QUEST::KILL100} is set:
+         if {KBFFA::%player%::QUEST::KILL0} < 100:
+            send "{@core} &7You still need some kills to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::KILL0} >= 100:
+            send "{@core} &7You finished the quest ! You got 100 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 100)
+            delete {KBFFA::%player%::QUEST::KILL0}
+            set {KBFFA::%player%::QUEST::KILL100::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::KILL100}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q3:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::KILLSTREAK10::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::KILLSTREAK10} is not set:
+         set {KBFFA::%player%::QUEST::KILLSTREAK10} to true
+         send "{@core} &7Quest &c10 KillStreak &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::KILLSTREAK}
+         stop
+      if {KBFFA::%player%::QUEST::KILLSTREAK10} is set:
+         if {KBFFA::%player%::QUEST::KILLSTREAK} < 10:
+            send "{@core} &7You still need some kills to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::KILLSTREAK} >= 10:
+            send "{@core} &7You finished the quest ! You got 50 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 50)
+            delete {KBFFA::%player%::QUEST::KILLSTREAK10}
+            set {KBFFA::%player%::QUEST::KILLSTREAK10::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::KILLSTREAK}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q4:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::BLOCK500::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::BLOCK500} is not set:
+         set {KBFFA::%player%::QUEST::BLOCK500} to true
+         send "{@core} &7Quest &c500 Blocks Place &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::BLOCK}
+         stop
+      if {KBFFA::%player%::QUEST::BLOCK500} is set:
+         if {KBFFA::%player%::QUEST::BLOCK} < 500:
+            send "{@core} &7You still need to place some blocks to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::BLOCK} >= 500:
+            send "{@core} &7You finished the quest ! You got 50 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 50)
+            delete {KBFFA::%player%::QUEST::BLOCK500}
+            set {KBFFA::%player%::QUEST::BLOCK500::COOLDOWN} to now
+            delete {KBFFA::%player%::BLOCK5}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q5:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::ENDER50::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::ENDER50} is not set:
+         set {KBFFA::%player%::QUEST::ENDER50} to true
+         send "{@core} &7Quest &c50 Ender Pearl Shoot &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::ENDER}
+         stop
+      if {KBFFA::%player%::QUEST::ENDER50} is set:
+         if {KBFFA::%player%::QUEST::ENDER} < 50:
+            send "{@core} &7You still need to shoot some ender pearls to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::ENDER} >= 50:
+            send "{@core} &7You finished the quest ! You got 50 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 50)
+            delete {KBFFA::%player%::QUEST::ENDER50}
+            set {KBFFA::%player%::QUEST::ENDER50::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::ENDER}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q6:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::PLAY1::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::PLAY1} is not set:
+         set {KBFFA::%player%::QUEST::PLAY1} to true
+         send "{@core} &7Quest &c1 Hour Playtime &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::PLAY}
+         stop
+      if {KBFFA::%player%::QUEST::PLAY1} is set:
+         if {KBFFA::%player%::QUEST::PLAY} < 60:
+            send "{@core} &7You still need some minutes to finish this quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::PLAY} >= 60:
+            send "{@core} &7You finished the quest ! You got 60 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 60)
+            delete {KBFFA::%player%::QUEST::PLAY1}
+            set {KBFFA::%player%::QUEST::PLAY1::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::PLAY}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player
+
+command /§q7:
+   trigger:
+      make player execute command "/quests"
+      if difference between {KBFFA::%player%::QUEST::PARKOUR1::COOLDOWN} and now < 30 minutes:
+         send "{@core} &7Sorry but you need to wait 30 minutes to do it again !"
+         play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+         stop
+      if {KBFFA::%player%::QUEST::PARKOUR1} is not set:
+         set {KBFFA::%player%::QUEST::PARKOUR1} to true
+         send "{@core} &7Quest &cParkour &7has been started !"
+         play sound "minecraft:block.note_block.harp" with volume 10 and pitch 1 at player for player
+         delete {KBFFA::%player%::QUEST::PARKOUR}
+         stop
+      if {KBFFA::%player%::QUEST::PARKOUR1} is set:
+         if {KBFFA::%player%::QUEST::PARKOUR} < 1:
+            send "{@core} &7You still need to finish the parkour to finish the quest !"
+            play sound "minecraft:entity.villager.no" with volume 10 and pitch 1 at player for player
+            stop
+         if {KBFFA::%player%::QUEST::PARKOUR} >= 1:
+            send "{@core} &7You finished the quest ! You got 100 Coins !"
+            set {KBFFA::%player%::STATS::COINS} to ({KBFFA::%player%::STATS::COINS} + 100)
+            delete {KBFFA::%player%::QUEST::PARKOUR1}
+            set {KBFFA::%player%::QUEST::PARKOUR1::COOLDOWN} to now
+            delete {KBFFA::%player%::QUEST::PARKOUR}
+            play sound "minecraft:ui.toast.challenge_complete" with volume 10 and pitch 1 at player for player

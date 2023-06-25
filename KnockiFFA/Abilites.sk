@@ -1,0 +1,512 @@
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {KBFFA::%victim%::UPGRADES::17} is true:
+            if victim is sneaking:
+               make server execute command "/effect give %victim% weakness 4 3"
+               make server execute command "/effect give %victim% slowness 4 3"
+               damage victim by 4 hearts
+               send action bar "{@core} &aYour &2Reducer &aabiltiy canceled your knockback !" to victim
+               send action bar "{@core} &4%victim% &ccanceled his knockback with his &2Reducer &cabiltiy !" to attacker
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {KBFFA::%attacker%::UPGRADE::21} is true:
+            push victim backwards at speed 0.7
+            send action bar "{@core} &aYour &cKnocker &aabiltiy has been used ! " to attacker
+            send action bar "{@core} &cYou got pushed backwards ! &4%attacker% &cused his Knocker abiltiy !" to victim
+
+on damage:
+   if attacker is player:
+      if victim is player:
+         if {KBFFA::%attacker%::UPGRADES::22} is true:
+            make server execute command "/effect give %victim% weekness 5 1"
+            send action bar "{@core} &aYour &8Weaker &aabiltiy has been used ! " to attacker
+            send action bar "{@core} &cYou got &8Weakness &c, &4%attacker% &cused his &8Weaker &cAbilities !" to victim
+
+command /upgrades:
+   trigger:
+      wait 5 ticks
+      if "%region at player%" contains "spawn":
+         open chest with 6 rows named "                 &2&l&oShop Upgrades" to player
+         format slot 10 of player with feather named "&fSpeed I" with lore "&7Cost 15 Coins" to close then run [make player execute command "/§speed1"]
+         format slot 11 of player with feather named "&fSpeed II" with lore "&7Cost 30 Coins" to close then run [make player execute command "/§speed2"] if {KBFFA::%player%::UPGRADES::1} is true
+         format slot 12 of player with feather named "&fSpeed III" with lore "&7Cost 60 Coins" to close then run [make player execute command "/§speed3"] if {KBFFA::%player%::UPGRADES::2} is true
+
+         format slot 14 of player with rabbit foot named "&aJump Boost I" with lore "&7Cost 60 Coins" to close then run [make player execute command "/§jump1"]
+         format slot 15 of player with rabbit foot named "&aJump Boost II" with lore "&7Cost 75 Coins" to close then run [make player execute command "/§jump2"]
+         format slot 16 of player with rabbit foot named "&aJump Boost III" with lore "&7Cost 90 Coins" to close then run [make player execute command "/§jump3"]
+         format slot 23 of player with stone pickaxe named "&eHaste I" with lore "&7Cost 255 Coins" to close then run [make player execute command "/§haste1"]
+         format slot 24 of player with iron pickaxe named "&eHaste II" with lore "&7Cost 270 Coins" to close then run [make player execute command "/§haste2"]
+         format slot 25 of player with diamond pickaxe named "&eHaste III" with lore "&7Cost 300 Coins" to close then run [make player execute command "/§haste3"]
+
+         format slot 19 of player with anvil named "&2Reducer I" with lore "&7Cost 300 Coins" to close then run [make player execute command "/§ikbr1"]
+
+         format slot 28 of player with stone sword named "&dRegeneration I" with lore "&7Cost 300 Coins" to close then run [make player execute command "/§regeneration1"]
+         format slot 29 of player with iron sword named "&dRegeneration II" with lore "&7Cost 340 Coins" to close then run [make player execute command "/§regeneration2"]
+         format slot 30 of player with diamond sword named "&dRegeneration III" with lore "&7Cost 370 Coins" to close then run [make player execute command "/§regeneration3"]
+
+         format slot 20 of player with stick named "&cKnocker I" with lore "&7Cost 370 Coins" to close then run [make player execute command "/§ikb1"]
+
+         format slot 21 of player with wooden sword named "&8Weaker I" with lore "&7Cost 400 Coins" to close then run [make player execute command "/§week1"]
+         loop 50 times:
+            set {_gui} to -1
+            add 1 to {_gui}
+            format slot {_gui} of player with black glass pane named "" to be unstealable if {_gui} != 10 or 11 or 12 or 14 or 15 or 16 or 23 or 24 or 25 or 19 or 28 or 29 or 30 or 20 or 21 or 49
+         format slot 49 of player with sign named "&7&oGo back !" to close then run [make player execute command "/shop"]
+
+on join:
+   if {KBFFA::%player%::UPGRADES::1} is not set:
+      set {KBFFA::%player%::UPGRADES::1} to false 
+   if {KBFFA::%player%::UPGRADES::2} is not set:
+      set {KBFFA::%player%::UPGRADES::2} to false 
+   if {KBFFA::%player%::UPGRADES::3} is not set:
+      set {KBFFA::%player%::UPGRADES::3} to false 
+   if {KBFFA::%player%::UPGRADES::4} is not set:
+      set {KBFFA::%player%::UPGRADES::4} to false 
+   if {KBFFA::%player%::UPGRADES::5} is not set:
+      set {KBFFA::%player%::UPGRADES::5} to false 
+   if {KBFFA::%player%::UPGRADES::6} is not set:
+      set {KBFFA::%player%::UPGRADES::6} to false 
+   if {KBFFA::%player%::UPGRADES::7} is not set:
+      set {KBFFA::%player%::UPGRADES::7} to false 
+   if {KBFFA::%player%::UPGRADES::8} is not set:
+      set {KBFFA::%player%::UPGRADES::8} to false 
+   if {KBFFA::%player%::UPGRADES::9} is not set:
+      set {KBFFA::%player%::UPGRADES::9} to false 
+   if {KBFFA::%player%::UPGRADES::10} is not set:
+      set {KBFFA::%player%::UPGRADES::10} to false 
+   if {KBFFA::%player%::UPGRADES::11} is not set:
+      set {KBFFA::%player%::UPGRADES::11} to false 
+   if {KBFFA::%player%::UPGRADES::12} is not set:
+      set {KBFFA::%player%::UPGRADES::12} to false 
+   if {KBFFA::%player%::UPGRADES::13} is not set:
+      set {KBFFA::%player%::UPGRADES::13} to false 
+   if {KBFFA::%player%::UPGRADES::14} is not set:
+      set {KBFFA::%player%::UPGRADES::14} to false 
+   if {KBFFA::%player%::UPGRADES::15} is not set:
+      set {KBFFA::%player%::UPGRADES::15} to false 
+   if {KBFFA::%player%::UPGRADES::16} is not set:
+      set {KBFFA::%player%::UPGRADES::16} to false 
+   if {KBFFA::%player%::UPGRADES::17} is not set:
+      set {KBFFA::%player%::UPGRADES::17} to false 
+   if {KBFFA::%player%::UPGRADES::18} is not set:
+      set {KBFFA::%player%::UPGRADES::18} to false 
+   if {KBFFA::%player%::UPGRADES::19} is not set:
+      set {KBFFA::%player%::UPGRADES::19} to false 
+   if {KBFFA::%player%::UPGRADES::20} is not set:
+      set {KBFFA::%player%::UPGRADES::20} to false 
+   if {KBFFA::%player%::UPGRADES::21} is not set:
+      set {KBFFA::%player%::UPGRADES::21} to false 
+   if {KBFFA::%player%::UPGRADES::22} is not set:
+      set {KBFFA::%player%::UPGRADES::22} to false 
+
+command /§speed1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::1} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 15:
+            set {KBFFA::%player%::UPGRADES::1} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Speed I Upgrade." to player
+            set metadata value "KBFFA::STATS::COINS" of player to (metadata value "KBFFA::STATS::COINS" of player - 15)
+            stop
+         if metadata value "KBFFA::STATS::COINS" of player < 15:
+            send "{@core} &cError ! You don't have enought Coins !"
+            stop
+      if {KBFFA::%player%::UPGRADES::1} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§speed2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::2} is false:
+         if {KBFFA::%player%::UPGRADES::1} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 30:
+               set {KBFFA::%player%::UPGRADES::2} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased Speed II Upgrade." to player
+               set metadata value "KBFFA::STATS::COINS" of player to (metadata value "KBFFA::STATS::COINS" of player - 30)
+               stop
+         if metadata value "KBFFA::STATS::COINS" of player < 30:
+            send "{@core} &cError ! You don't have enought Coins !"
+            stop
+      if {KBFFA::%player%::UPGRADES::2} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§speed3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::3} is false:
+         if {KBFFA::%player%::UPGRADES::1} is true:
+            if {KBFFA::%player%::UPGRADES::2} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 60:
+                  set {KBFFA::%player%::UPGRADES::3} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased Speed III Upgrade." to player
+                  set metadata value "KBFFA::STATS::COINS" of player to (metadata value "KBFFA::STATS::COINS" of player - 60)
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 30:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::3} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+
+#JUMP BOOST
+command /§jump1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::4} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 60:
+            set {KBFFA::%player%::UPGRADES::4} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Jump Boost I Upgrade." to player
+            set metadata value "KBFFA::STATS::COINS" of player to (metadata value "KBFFA::STATS::COINS" of player - 60)
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 60:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::4} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§jump2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::5} is false:
+         if {KBFFA::%player%::UPGRADES::4} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 75:
+               set {KBFFA::%player%::UPGRADES::5} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased Jump Boost II Upgrade." to player
+               set metadata value "KBFFA::STATS::COINS" of player to (metadata value "KBFFA::STATS::COINS" of player - 75)
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 75:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::5} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§jump3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::6} is false:
+         if {KBFFA::%player%::UPGRADES::4} is true:
+            if {KBFFA::%player%::UPGRADES::5} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 90:
+                  set {KBFFA::%player%::UPGRADES::6} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased Jump Boost III Upgrade." to player
+                  remove 90 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 90:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::6} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#lime wool
+command /§sand1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::7} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 90:
+            set {KBFFA::%player%::UPGRADES::7} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased lime wool I Upgrade." to player
+            remove 90 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 90:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::7} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§sand2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::8} is false:
+         if {KBFFA::%player%::UPGRADES::7} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 125:
+               set {KBFFA::%player%::UPGRADES::8} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased lime wool II Upgrade." to player
+               remove 125 from metadata value "KBFFA::STATS::COINS" of player
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 125:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::8} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§sand3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::9} is false:
+         if {KBFFA::%player%::UPGRADES::8} is true:
+            if {KBFFA::%player%::UPGRADES::7} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 150:
+                  set {KBFFA::%player%::UPGRADES::9} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased lime wool III Upgrade." to player
+                  remove 150 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 150:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::9} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§sand4:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::10} is false:
+         if {KBFFA::%player%::UPGRADES::8} is true:
+            if {KBFFA::%player%::UPGRADES::7} is true:
+               if {KBFFA::%player%::UPGRADES::9} is true:
+                  if metadata value "KBFFA::STATS::COINS" of player >= 200:
+                     set {KBFFA::%player%::UPGRADES::10} to true
+                     send "{@core} &aThanks for your purchase ! &eYou purchased lime wool IV Upgrade." to player
+                     remove 200 from metadata value "KBFFA::STATS::COINS" of player
+                     stop
+         if metadata value "KBFFA::STATS::COINS" of player < 200:
+            send "{@core} &cError ! You don't have enought Coins !"
+            stop
+         if {KBFFA::%player%::UPGRADES::10} is true:
+            send "{@core} &cError ! You alerdy bought this upgrade !"
+            stop
+
+#SLOWNESS
+command /§slow1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::11} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 200:
+            set {KBFFA::%player%::UPGRADES::11} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Slowness I Upgrade." to player
+            remove 200 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 200:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::11} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§slow2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::12} is false:
+         if {KBFFA::%player%::UPGRADES::11} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 230:
+               set {KBFFA::%player%::UPGRADES::12} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased Slowness II Upgrade." to player
+               remove 230 from metadata value "KBFFA::STATS::COINS" of player
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 230:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::12} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§slow3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::13} is false:
+         if {KBFFA::%player%::UPGRADES::11} is true:
+            if {KBFFA::%player%::UPGRADES::12} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 255:
+                  set {KBFFA::%player%::UPGRADES::13} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased Slowness III Upgrade." to player
+                  remove 255 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 255:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::13} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#HASTE
+command /§haste1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::14} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 255:
+            set {KBFFA::%player%::UPGRADES::14} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Haste I Upgrade." to player
+            remove 255 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 255:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::14} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§haste2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::15} is false:
+         if {KBFFA::%player%::UPGRADES::14} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 270:
+               set {KBFFA::%player%::UPGRADES::15} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased Haste II Upgrade." to player
+               remove 270 from metadata value "KBFFA::STATS::COINS" of player
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 270:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::15} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§haste3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::16} is false:
+         if {KBFFA::%player%::UPGRADES::14} is true:
+            if {KBFFA::%player%::UPGRADES::15} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 300:
+                  set {KBFFA::%player%::UPGRADES::16} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased Haste III Upgrade." to player
+                  remove 300 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 300:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::16} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#REDUCER
+command /§ikbr1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::17} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 300:
+            set {KBFFA::%player%::UPGRADES::17} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Reducer I Upgrade." to player
+            remove 300 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 300:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::17} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#regeneration
+command /§regeneration1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::18} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 300:
+            set {KBFFA::%player%::UPGRADES::18} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased regeneration I Upgrade." to player
+            remove 300 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 300:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::18} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§regeneration2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::19} is false:
+         if {KBFFA::%player%::UPGRADES::18} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 340:
+               set {KBFFA::%player%::UPGRADES::19} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased regeneration II Upgrade." to player
+               remove 300 from metadata value "KBFFA::STATS::COINS" of player
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 300:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::19} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§regeneration3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::20} is false:
+         if {KBFFA::%player%::UPGRADES::19} is true:
+            if {KBFFA::%player%::UPGRADES::18} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 370:
+                  set {KBFFA::%player%::UPGRADES::20} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased regeneration III Upgrade." to player
+                  remove 370 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 370:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::20} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#KNOCKER
+command /§ikb1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::21} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 370:
+            set {KBFFA::%player%::UPGRADES::21} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Knocker I Upgrade." to player
+            remove 370 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 370:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::21} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#WEAKER
+command /§week1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::22} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 400:
+            set {KBFFA::%player%::UPGRADES::22} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Weaker I Upgrade." to player
+            remove 400 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 400:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::22} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+#Armor
+command /§iarmor1:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::23} is false:
+         if metadata value "KBFFA::STATS::COINS" of player >= 400:
+            set {KBFFA::%player%::UPGRADES::23} to true
+            send "{@core} &aThanks for your purchase ! &eYou purchased Weaker I Upgrade." to player
+            remove 400 from metadata value "KBFFA::STATS::COINS" of player
+            stop
+      if metadata value "KBFFA::STATS::COINS" of player < 400:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::22} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§iarmor2:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::24} is false:
+         if {KBFFA::%player%::UPGRADES::23} is true:
+            if metadata value "KBFFA::STATS::COINS" of player >= 450:
+               set {KBFFA::%player%::UPGRADES::24} to true
+               send "{@core} &aThanks for your purchase ! &eYou purchased Armor II Upgrade." to player
+               remove 450 from metadata value "KBFFA::STATS::COINS" of player
+               stop
+      if metadata value "KBFFA::STATS::COINS" of player < 450:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::25} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
+
+command /§iarmor3:
+   trigger:
+      if {KBFFA::%player%::UPGRADES::25} is false:
+         if {KBFFA::%player%::UPGRADES::24} is true:
+            if {KBFFA::%player%::UPGRADES::23} is true:
+               if metadata value "KBFFA::STATS::COINS" of player >= 500:
+                  set {KBFFA::%player%::UPGRADES::25} to true
+                  send "{@core} &aThanks for your purchase ! &eYou purchased Armor III Upgrade." to player
+                  remove 500 from metadata value "KBFFA::STATS::COINS" of player
+                  stop
+      if metadata value "KBFFA::STATS::COINS" of player < 500:
+         send "{@core} &cError ! You don't have enought Coins !"
+         stop
+      if {KBFFA::%player%::UPGRADES::25} is true:
+         send "{@core} &cError ! You alerdy bought this upgrade !"
+         stop
