@@ -1,0 +1,275 @@
+#Core KnockiFFA
+#Last Update 26/01/2021
+#By LananasBleu
+#For KnockiFFA
+#»
+options:
+   Prefix: &6&lKBFFA &l&8»
+   ss: &8(&b&lAssistant&8) &7
+   PermMessage: &fUnknown command.
+
+command /ping:
+  trigger:
+    send "&8&m+------------------------------------------+" to player 
+    send "&8&l» &fYou have a ping of &2%player's ping%&f!" to player
+    send "&8&m+------------------------------------------+" to player 
+
+command /chat [<text>] [<text>] [<time span>]:
+  permission: MOD
+  permission message: {@PermMessage}
+  trigger:
+      if arg 1 is not set:
+        send "&8&m+------------------------------------------+" to player 
+        send "&b/chat cooldown global <time span> &7- &fSet a chat cooldown." if player has permission "MOD"
+        send "&b/chat mute &7- &fToggle the global chat." if player has permission "HELPER"
+        send "&b/chat cooldownperm <permission> &7- &fSet a chat cooldown bypass permission." if player has permission "ADMIN"
+        send "&b/chat clear &7- &fClears chat" if player has permission "HELPER"
+
+on load:
+   if {KBFFA::CHAT::PERM} is not set:
+      set {KBFFA::CHAT::PERM} to op
+   if {KBFFA::CHAT::COOLDOWN} is not set:
+      set {KBFFA::CHAT::COOLDOWN} to 3 seconds
+on chat:
+  player doesn't have permission "%{cdperm}%"
+  send "&cYou are talking too fast !" to player if difference between {KBFFA::CHAT::%player%::LASTMESSAGE} and now < {KBFFA::CHAT::COOLDOWN}
+  cancel event if difference between {KBFFA::CHAT::%player%::LASTMESSAGE} and now < {KBFFA::CHAT::COOLDOWN}
+  set {KBFFA::CHAT::%player%::LASTMESSAGE} to now
+
+on chat:
+   if {chat} is true:
+      if player has permission "talk":
+         uncancel event
+         stop
+   if {chat} is true:
+      cancel event
+      send "&8[&3&lChat&8] &cChat is currently muted !"
+
+#/// ALERT ///
+
+command /alert [<text>]:
+   permission: ADMIN
+   trigger:
+      if arg 1 is set:
+         broadcast ""
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast "&e&lALERT &7» &f%arg 1%"
+         broadcast ""
+         stop
+      if arg 1 is not set:
+         send "&8[&e&lAlert&8] &cUsage: /alert MESSAGE"
+         stop
+
+command /kick [<player>] [<text>]:
+   permission: HELPER
+   trigger:
+      if arg 1 is set:
+         if arg 2 is set:
+            kick arg 1 due to "&8[&4&lKick&8] &cYou were kicked from the server. Reason: &e%arg 2% &cBy: &e%player%"
+            broadcast "&8[&4&lKick&8] &c%arg 1% &7has been kicked by &c%player% &creason &e%arg 2%"
+            send "&8[&4&lKick&8] &c%arg 1% &7has been kicked out of the server due to &e%arg 2%" to player
+            stop
+      if arg 1 is set:
+         if arg 2 is not set:
+            kick arg 1 due to "&8[&4&lKick&8] &cYou were kicked from the server.&cBy: &e%player%"
+            broadcast "&8[&4&lKick&8] &c%arg 1% &7has been kicked by &c%player%"
+            send "&8[&4&lKick&8] &c%arg 1% &7has been kicked out of the server" to player
+            stop
+
+
+#/// AUTOSAVE / AUTOVANISH ///
+
+every 2 second:
+   loop all players:
+      if {vanish.%loop-player%} is true:
+         send action bar "&8[&e&lVanish&8] &7You are currently vanished !" to loop-player
+
+every 1 minutes:
+   make server execute command "/save-all"
+
+#/// STORE ///
+
+command /buy:
+   trigger:
+      send "&bStore Link: &fhttps://fishnet.tebex.io/"
+
+command /store:
+   trigger:
+      send "&bStore Link: &fhttps://fishnet.tebex.io/"
+
+#/// EVENTS ///
+
+command /event:
+   permission: EVENTS
+   trigger:
+      wait 1 tick
+      open chest with 1 row named "&2&l&oEvent Hosting" to player
+      format slot 2 of player with diamond sword named "&cLast Man Standing (LMS)" with lore "&7Click to host ! (Cost 500 points)" to close then run [make player execute command "/§sLMS"]
+      format slot 4 of player with arrow named "&7Cancel Event" with lore "&7Click to close the menu." to close
+      format slot 6 of player with blue wool named "&9Capture The Wool (CTW)" with lore "&7Click to host ! (Cost 500 points)" to close then run [make player execute command "/§sCTF"]
+
+command /§sLMS:
+   permission: EVENTS
+   trigger:
+      if {event.LMS} is true:
+         send "&8[&c&lSystem&8] &cEvent alerdy hosted!"
+         stop
+      if {points.%player%} >= 500:
+         remove 500 from {points.%player%}
+         send "&8[&c&lSystem&8] &7Event has been hosted!"
+         broadcast "&7&m-------------------------"
+         broadcast " %player's display name% &7is hosting "
+         broadcast " an event ! &cLast Man Standing (LMS)"
+         broadcast " &7The event will start in 1 minute!"
+         broadcast "&7&m-------------------------"
+         wait 30 second
+         broadcast ""
+         broadcast "&cThe Last Man Standing event will start in 30s !"
+         broadcast "&cJump down in the PvP zone to enter !"
+         broadcast ""
+         wait 30 second
+         set {event.LMS} to true
+         loop all players:
+            if "%region at loop-player%" contain "spawn" or "train":
+               stop
+            clear {e.all.players::*}
+            add loop-player to {e.all.players::*}
+            send "&8[&c&lSystem&8] &7You have been registered for &cLast Man Standing &cEvent &7!" to {e.all.players::*}
+            set {event.LMS.ALIVE.%{e.all.players::*}%} to true
+         broadcast ""
+         broadcast "&cLast Man Standing event has started !"
+         broadcast "&c&l%{_all.players::*}% &7are the targets!"
+         broadcast ""
+
+command /eventstop:
+   permission: ADMIN
+   trigger:
+      set {event.LMS} to false
+      set {event.CTW} to false
+
+every 1 second:
+   if {event.LMS} is true:
+      if {%{e.all.players::*}%} = 1:
+         broadcast ""
+         broadcast "&7Event has ended ! &e%{e.all.players::*}% &7won the event !"
+         broadcast ""
+         send "&8[&c&lSystem&8] &7You won the event ! Here is your prize: &e150 Points" to {e.all.players::*}
+         add 150 to {points.%{e.all.players::*}%}
+         set {event.LMS} to false
+         set {event.LMS.ALIVE.%{e.all.players::*}%} to false
+
+command /§sCTF:
+   permission: EVENTS
+   trigger:
+      if {event.CTW} is true:
+         send "&8[&c&lSystem&8] &cEvent alerdy hosted!"
+         stop
+      if {points.%player%} >= 500:
+         remove 500 from {points.%player%}
+         send "&8[&c&lSystem&8] &7Event has been hosted!"
+         broadcast "&7&m-------------------------"
+         broadcast " %player's display name% &7is hosting "
+         broadcast " an event ! &9Capture The Wool (CTW)"
+         broadcast " &7The event will start in 1 minute!"
+         broadcast "&7&m-------------------------"
+         wait 30 second
+         broadcast ""
+         broadcast "&cCapture The Wool event will start in 30s !"
+         broadcast "&cJump down in the PvP zone to enter !"
+         broadcast ""
+         wait 30 second
+         set {event.CTW} to true
+         loop all players:
+            clear {event.CTW.wool.%loop-player%}
+            clear {event.CTW.cd.%loop-player%}
+            if "%region at loop-player%" contain "spawn" or "train":
+               stop
+            add loop-player to {_all.players::*}
+            send "&8[&c&lSystem&8] &7You have been registered for &9Capture The Wool Event &7!" to {_all.players::*}
+            if {_wool} is not set:
+               set {_wool} to true
+               set {_x} to random element of {_all.players::*}
+               give {_x} 1 blue wool named "&9Keep Me !"
+            broadcast ""
+            broadcast "&c&l%{_x}% &7has the wool !"
+            broadcast ""
+            set {event.CTW.wool.%{_x}%} to true
+            set {event.CTW.cd.%{_x}%} to 45
+            broadcast ""
+            broadcast "&9Capture The Wool event has started !"
+            broadcast ""
+            set {_wool} to false
+
+on quit:
+   if {event.CTW.wool.%player%} is true:
+      set {event.CTW.wool.%player%} to false
+      set {_x} to random element of {_all.players::*}
+      give {_x} 1 blue wool named "&9Keep Me !"
+      broadcast ""
+      broadcast "&c&l%{_x}% &7has the wool !"
+      broadcast ""
+      set {event.CTW.wool.%{_x}%} to true
+      set {event.CTW.cd.%{_x}%} to 45
+
+on place:
+   if event-block is blue wool: 
+      cancel event
+
+
+every 1 second:
+   if {event.CTW} is true:
+      loop all players:
+         if {event.CTW.wool.%loop-player%} is true:
+            if {event.CTW.cd.%loop-player%} = 0:
+               broadcast ""
+               broadcast "&e%loop-player% &7 has won the &9Capture The Wool &7event !"
+               broadcast ""
+               send "&8[&c&lSystem&8] &7You won the event ! Here is your prize: &e150 Points" to loop-player
+               add 150 to {points.%loop-player%}
+               set {event.CTW} to false
+               clear {event.CTW.wool.%loop-player%}
+               stop
+            remove 1 from {event.CTW.cd.%loop-player%}
+
+#/// FREEZE ///
+
+command /freeze [<player>]:
+   permission: freeze.use
+   trigger:
+      if {freeze.%arg 1%} is not set:
+         set {freeze.%arg 1%} to false
+      if arg 1 is set:
+         if {freeze.%arg 1%} is false:
+            set {freeze.%arg 1%} to true
+            send "&8[&1&lFreeze&8] &e%arg 1% &7is now frozen !" to player
+            send "&8[&1&lFreeze&8] &4&lYou have been frozen ! Please send us your F3 on /discord in chat , by pressing F3 and then F2 on your keyboard. Or admit to be hacking by saying yes i'm hacking in the chat." to arg 1
+            stop
+         if {freeze.%arg 1%} is true:
+            set {freeze.%arg 1%} to false
+            send "&8[&1&lFreeze&8] &e%arg 1% &7has been unfreeze" to player
+            send "&8[&1&lFreeze&8] &2You were unfroze !" to arg 1
+            stop
+
+on quit:
+   if {freeze.%player%} is true:
+      make server execute command "/ban %player% Logging Off While Begin Frozen"
+
+on any move:
+	if {freeze.%player%} is true:
+		cancel event
+
+on damage:
+   if {freeze.%attacker%} is true:
+      cancel event
+   if {freeze.%victim%} is true:
+      send "&8[&c&lSystem&8] &c%victim% &cis currently froze you may not attack" to attacker
+      cancel event
+
+#/// RULES ///
+
+command /rules:
+   trigger:
+      send "&eUsing too much caps, swearing, flooding, spamming, toxicity, discrimination, disrespecting other players, abusing colisions (pushing players in pvp zone or in the void) , annoying players or staff , trash talking , bypassing chat filter = 1 Warn"
+      send "&6Advertising, /msg spam,  false information, not talking English in chat = 15 Minutes Mute"
+      send "&cThreads, exploting a bug, cheating, inappropriate skin , name  or cape = Permanent ban"
