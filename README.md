@@ -13,7 +13,7 @@ In this skript bin there's MANY anticheats. This includes a lot of private/premi
 You can find:
 - Guard (Versions from 3-4y ago to the latest dev build)
 - Anayo (A combat oriented anticheat that had both free & premium versions)
-- AntiFisher (My fish private anticheat that i used on most my servers)
+- AntiFisher (My first private anticheat that i used on most my servers)
 - Pentagon (Basicaly AntiFisher but renamed with a few new checks and fixes)
 - DragonChaser (Again AntiFisher just under a different name)
 - WatchDuck (The skript version of NoRules's anticheat that never got used since it was judged "too good" by the owners...)
