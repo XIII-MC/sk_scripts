@@ -1,0 +1,22 @@
+on teleport:
+    set {-GUARD::%player%::TEMP::TIMESPAN::LASTTP} to now
+    set {-GUARD::%player%::TEMP::TP} to true 
+    delete {-GUARD::%player%::TEMP::VL::JUMP::*}
+    delete {-GUARD::%player%::TEMP::VL::FLY::C}
+    delete {-GUARD::%player%::TEMP::VL::STEP::A}
+    wait 8 tick
+    set {-GUARD::%player%::TEMP::CONFIRMTP} to true if difference between {-GUARD::%player%::TEMP::TIMESPAN::LASTTP} and now > 0.25 second
+
+on load:
+  wait 1 seconds
+  send "[Guard] &eUpdate found, please update Guard." to console if text from "https://pastebin.com/raw/0c5FwkSn" doesn't contain "001"
+  set {-GUARD::LOADER::UPDATE} to true if text from "https://pastebin.com/raw/0c5FwkSn" doesn't contain "001"
+  send "[Guard] &7Loading Guard..." to console
+  enable script file "Guard/Guard.sk"
+  send "[Guard] &7Finished (E000)." to console
+on unload:
+  disable script file "Guard/Guard.sk"
+  send "[Guard] &7Finished (E000)." to console
+on join:
+  {-GUARD::LOADER::UPDATE} = true
+  send "&9&lGUARD &8» &cPlease update Guard now! New update found." to player if player has permission "guard.update"
